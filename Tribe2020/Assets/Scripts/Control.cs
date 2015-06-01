@@ -1,18 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pointer : MonoBehaviour {
+public class Control : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
-	public Transform markerObject;
 	public GameObject block;
+	public GameObject floor, campfire;
+	public Transform markerObject;
+	public GridManager gridMgr;
 	public ArrayList blocks;
+
+	public enum Block {Floor, Campfire};
+	private Block _curBlock;
 
 	// Use this for initialization
 	void Start(){
+		_curBlock = Block.Floor;
+
+		floor = GameObject.Find ("ent_block");
+		campfire = GameObject.Find ("ent_campfire");
+
 		blocks = new ArrayList();
 		ground = (GameObject)GameObject.Find ("ent_ground");
 		groundPlane = ground.GetComponent<Collider> ();
+
+		gridMgr = GameObject.Find("mgr_grid").GetComponent<GridManager>();
 	}
 
 	void Update(){
@@ -33,8 +45,17 @@ public class Pointer : MonoBehaviour {
 			GameObject colBlock = CollidesWithBlock();
 
 			if(colBlock == null){
-				GameObject newBlock =
-					(GameObject)Instantiate(block, markerObject.transform.position, Quaternion.identity);
+				gridMgr.AddCell(markerObject.position.x, markerObject.position.z);
+
+				GameObject newBlock;
+				if(_curBlock == Block.Floor){
+					newBlock =(GameObject)Instantiate(
+						floor, markerObject.transform.position, Quaternion.identity);
+				} else{
+					newBlock =(GameObject)Instantiate(
+						campfire, markerObject.transform.position, Quaternion.identity);
+				}
+
 				blocks.Add(newBlock);
 			} else{
 				blocks.Remove(colBlock);
@@ -53,5 +74,13 @@ public class Pointer : MonoBehaviour {
 			}
 		}
 		return null;
+	}
+
+	public void OnFloorPressed(){
+		_curBlock = Block.Floor;
+	}
+
+	public void OnCampFirePressed(){
+		_curBlock = Block.Campfire;
 	}
 }
