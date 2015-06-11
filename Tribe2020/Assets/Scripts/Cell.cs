@@ -8,11 +8,13 @@ public class Cell : MonoBehaviour {
 	private Cell[] _neighbours;
 	public float energy;
 	private bool _isInitialized;
+	public GameObject block;
 
 	// Use this for initialization
 	void Start () {
 		type = Block.Void;
 		_isInitialized = false;
+		block = new GameObject();
 	}
 	
 	// Update is called once per frame
@@ -38,7 +40,8 @@ public class Cell : MonoBehaviour {
 		}
 	}
 
-	public void InitNeighbours(Cell nw, Cell n, Cell ne, Cell e, Cell se, Cell s, Cell sw, Cell w){
+	public void InitNeighbours(
+		Cell nw, Cell n, Cell ne, Cell e, Cell se, Cell s, Cell sw, Cell w){
 		_nw = nw;
 		_n  = n;
 		_ne = ne;
@@ -54,6 +57,18 @@ public class Cell : MonoBehaviour {
 	public void SetType(Block type){
 		this.type = type;
 //		UpdateNeighbours(this);
+	}
+
+	public void SetBlock(GameObject block){
+		this.block = block;
+		print ("SetBlock: " + block);
+	}
+
+	public void Reset(){
+		print (block);
+		Destroy(block);
+		type = Block.Empty;
+		print (block);
 	}
 
 //	public void UpdateNeighbours(Cell orig){
