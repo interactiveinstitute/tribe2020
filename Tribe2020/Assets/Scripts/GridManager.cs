@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class GridManager : MonoBehaviour {
-	public const int xMax = 40, yMax = 40, zMax = 40;
-	public const int offset = -20;
+	public const int xMax = 10, yMax = 10, zMax = 10;
+	public const int offset = -5;
 	public Cell[,,] cells;
 	public GameObject floor, campfire;
 	public ParticleSystem pm;
