@@ -2,23 +2,26 @@
 using System.Collections;
 
 public class Cell : MonoBehaviour {
-	public enum Block {Void, Empty, Floor, Campfire};
-	public Block type;
+	public GridManager.Block type;
 	private Cell _nw, _n, _ne, _e, _se, _s, _sw, _w;
 	private Cell[] _neighbours;
 	public float energy;
 	private bool _isInitialized;
-	public GameObject block;
+	public GameObject block, ui;
 
 	// Use this for initialization
 	void Start () {
-		type = Block.Void;
-		_isInitialized = false;
-		block = new GameObject();
+		GameObject entBlockObj = GameObject.Find("ent_block");
+		GameObject uiCellObj = GameObject.Find("ui_cell");
+
+//		block = Instantiate(entBlockObj, new Vector3(), Quaternion.identity) as GameObject;
+//		ui = Instantiate(uiCellObj, new Vector3(), Quaternion.identity) as GameObject;
+
+		type = GridManager.Block.Void;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update(){
 		if(_isInitialized){
 			float total = 0;
 			foreach(Cell c in _neighbours){
@@ -40,6 +43,13 @@ public class Cell : MonoBehaviour {
 		}
 	}
 
+	public void Init(Vector3 pos){
+		print("cell created");
+
+//		block.transform.position = pos;
+//		ui.transform.position = pos;
+	}
+
 	public void InitNeighbours(
 		Cell nw, Cell n, Cell ne, Cell e, Cell se, Cell s, Cell sw, Cell w){
 		_nw = nw;
@@ -54,7 +64,7 @@ public class Cell : MonoBehaviour {
 		_isInitialized = true;
 	}
 
-	public void SetType(Block type){
+	public void SetType(GridManager.Block type){
 		this.type = type;
 //		UpdateNeighbours(this);
 	}
@@ -67,7 +77,7 @@ public class Cell : MonoBehaviour {
 	public void Reset(){
 		print (block);
 		Destroy(block);
-		type = Block.Empty;
+		type = GridManager.Block.Empty;
 		print (block);
 	}
 
