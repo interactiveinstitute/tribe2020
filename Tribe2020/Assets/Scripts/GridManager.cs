@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GridManager : MonoBehaviour {
 	public const int xMax = 10, yMax = 10, zMax = 10;
-	public const int offset = -5;
+	public const int offset = 0;
 	public GameObject[,,] cells;
 	public GameObject cell, floor, campfire;
 	public ParticleSystem pm;
@@ -13,9 +13,10 @@ public class GridManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		cell = GameObject.Find ("ent_cell");
-		floor = GameObject .Find ("ent_block");
-		campfire = GameObject.Find ("ent_campfire");
+		cell 	= GameObject.Find("ent_cell");
+
+		floor 	= GameObject.Find("ent_block");
+		campfire = GameObject.Find("ent_campfire");
 
 		_ps = new ParticleSystem.Particle[this.pm.particleCount];
 		pm.GetParticles(_ps);
@@ -27,16 +28,22 @@ public class GridManager : MonoBehaviour {
 
 					Vector3 pos = new Vector3(x, y, z) * 5;
 
-					GameObject newCell = Instantiate(cell, pos, Quaternion.identity) as GameObject;
+					GameObject newCell =
+						Instantiate(cell, pos, Quaternion.identity) as GameObject;
 
 					cells[x, y, z] = newCell;
-					cells[x, y, z].GetComponent<Cell>().Init(pos);
+//					cells[x, y, z].GetComponent<Cell>().Init(pos);
 
-					if(x > 0 && y > 0 && z > 0 && x < xMax-1 && y < yMax-1 && z < zMax-1){
-						cells[x, y, z].GetComponent<Cell>().SetType(Block.Empty);
+					if(x > offset && y > offset && z > offset &&
+					   x < xMax-1 && y < yMax-1 && z < zMax-1){
+						SetType(x, y, z, Block.Floor);
+//						print("just set to floor " + GetType(x, y, z));
 					} else{
-						cells[x, y, z].GetComponent<Cell>().SetType(Block.Void);
+						SetType(x, y, z, Block.Void);
+//						print("just set to void " + GetType(x, y, z));
+//						cells[x, y, z].GetComponent<Cell>().SetType(Block.Void);
 					}
+//					print(x+";"+y+";"+z+": "+cells[x, y, z].GetComponent<Cell>().GetType());
 				}
 			}
 		}
@@ -49,23 +56,32 @@ public class GridManager : MonoBehaviour {
 //		_ps[0].position = pos;
 	}
 
-	public void AddBlock(int x, int y, int z, Block type){
-		if(x > offset && x < xMax-offset &&
-		   y > offset && y < yMax-offset &&
-		   z > offset && z < zMax-offset){
-			Vector3 pos = new Vector3(x * 5, y * 5, z * 5);
-			GameObject blockObj = TypeToObject(type);
-			GameObject newBlock = (GameObject)Instantiate(
-				blockObj, pos, Quaternion.identity);
-			cells[x, y, z].GetComponent<Cell>().SetBlock(newBlock);
+	public void SetType(int x, int y, int z, Block type){
+		if(x > offset && y > offset && z > offset &&
+		   x < xMax-1 && y < yMax-1 && z < zMax-1){
+			cells[x, y, z].GetComponent<Cell>().SetType(type);
+		} else{
+			print("cannot set type here");
 		}
 	}
 
-	public void RemoveBlock(GameObject obj){
-		Vector3 pos = obj.transform.position / 5;
-
-		cells[(int)pos.x, (int)pos.y, (int)pos.z].GetComponent<Cell>().Reset();
+	public Block GetType(int x, int y, int z){
+		print (x + ";" + y + ";" + z + ": " + cells[x, y, z].GetComponent<Cell>().GetType());
+		return cells[x, y, z].GetComponent<Cell>().GetType();
 	}
+
+
+//	public GameObject GetBlock(int x, int y, int z){
+//		return cells[x, y, z];
+////		return cells[x, y, z].GetComponent<Cell>().block;
+//	}
+
+//
+//	public void RemoveBlock(GameObject obj){
+//		Vector3 pos = obj.transform.position / 5;
+//		
+//		cells[(int)pos.x, (int)pos.y, (int)pos.z].GetComponent<Cell>().Reset();
+//	}
 
 //	public GameObject CollidesWithBlock(int x, int y, int z, GameObject otherObj){
 //		Collider col = otherObj.GetComponent<Collider>();
@@ -78,22 +94,18 @@ public class GridManager : MonoBehaviour {
 //		}
 //	}
 
-	public GameObject GetBlock(int x, int y, int z){
-		return cells[x, y, z].GetComponent<Cell>().block;
-	}
+//	public void ResetParticles(){
+//		pm.SetParticles(_ps, _ps.Length);
+//	}
 
-	public void ResetParticles(){
-		pm.SetParticles(_ps, _ps.Length);
-	}
-
-	public static GameObject TypeToObject(Block type){
-		switch (type) {
-		case Block.Floor:
-			return GameObject.Find ("ent_block");
-		case Block.Campfire:
-			return GameObject.Find ("ent_campfire");
-		default:
-			return null;
-		}
-	}
+//	public static GameObject TypeToObject(Block type){
+//		switch (type) {
+//		case Block.Floor:
+//			return GameObject.Find ("ent_block");
+//		case Block.Campfire:
+//			return GameObject.Find ("ent_campfire");
+//		default:
+//			return null;
+//		}
+//	}
 }

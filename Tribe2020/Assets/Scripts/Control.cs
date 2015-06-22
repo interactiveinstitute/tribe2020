@@ -42,19 +42,31 @@ public class Control : MonoBehaviour {
 		}
 #endif
 #if UNITY_EDITOR || UNITY_WEBPLAYER
-		if(Input.mousePosition.x > Screen.width - 100){
-			camPos.x += 100 * Time.deltaTime;
-		}else if (Input.mousePosition.x < 100){
-			camPos.x -= 100 * Time.deltaTime;
-		}
-		
-		if(Input.mousePosition.y > Screen.height - 100){
+//		if(Input.mousePosition.x > Screen.width - 100){
+//			camPos.x += 100 * Time.deltaTime;
+//		}else if (Input.mousePosition.x < 100){
+//			camPos.x -= 100 * Time.deltaTime;
+//		}
+//		
+//		if(Input.mousePosition.y > Screen.height - 10d0){
+//			camPos.z += 100 * Time.deltaTime;
+//		}else if (Input.mousePosition.y < 100){
+//			camPos.z -= 100 * Time.deltaTime;
+//		}
+
+		if(Input.GetKey ("w")){
 			camPos.z += 100 * Time.deltaTime;
-		}else if (Input.mousePosition.y < 100){
+		} else if(Input.GetKey ("s")){
 			camPos.z -= 100 * Time.deltaTime;
+		} else if(Input.GetKey ("a")){
+			camPos.x -= 100 * Time.deltaTime;
+		} else if(Input.GetKey ("d")){
+			camPos.x += 100 * Time.deltaTime;
 		}
 		
 		cameraHolder.transform.position = camPos;
+
+
 #endif
 
 		//Position marker according to grid
@@ -71,14 +83,39 @@ public class Control : MonoBehaviour {
 		if(Input.GetMouseButtonDown(0)&&
 		   Input.mousePosition.x < Screen.width - 200){
 			Vector3 pos = markerObject.transform.position / 5;
+			int x = (int)pos.x;
+			int y = (int)pos.y;
+			int z = (int)pos.z;
 
-			GameObject colBlock = gridMgr.GetBlock((int)pos.x, (int)pos.y, (int)pos.z);
-
-			if(colBlock == null){
-				gridMgr.AddBlock((int)pos.x, (int)pos.y, (int)pos.z, _curBlock);
-			} else{
-				gridMgr.RemoveBlock(colBlock);
+			switch(gridMgr.GetType(x, y, z)){
+			case GridManager.Block.Empty :
+				gridMgr.SetType(x, y, z, GridManager.Block.Floor);
+				//colBlock.GetComponent<Cell>().SetType(GridManager.Block.Floor);
+				break;
+			case GridManager.Block.Void :
+				break;
+			default:
+				//colBlock.GetComponent<Cell>().SetType(GridManager.Block.Empty);
+				gridMgr.SetType(x, y, z, GridManager.Block.Empty);
+				break;
 			}
+
+//			GameObject colBlock = gridMgr.GetBlock(x, y, z);
+//			if(colBlock != null){
+////				print(x+"; "+y+" ;"+z+": "+gridMgr.GetType(x, y, z));
+//
+//
+////				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Floor);
+////				gridMgr.AddBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Floor);
+//			}
+
+//			if(colBlock == null){
+//				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, _curBlock);
+////				gridMgr.AddBlock((int)pos.x, (int)pos.y, (int)pos.z, _curBlock);
+//			} else{
+//				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Empty);
+////				gridMgr.RemoveBlock(colBlock);
+//			}
 		}
 	}
 

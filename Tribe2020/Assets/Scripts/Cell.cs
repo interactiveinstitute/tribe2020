@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Cell : MonoBehaviour {
-	public GridManager.Block type;
+	private GridManager.Block _type;
 	private Cell _nw, _n, _ne, _e, _se, _s, _sw, _w;
 	private Cell[] _neighbours;
 	public float energy;
@@ -10,41 +10,40 @@ public class Cell : MonoBehaviour {
 	public GameObject block, ui;
 
 	// Use this for initialization
-	void Start () {
-		GameObject entBlockObj = GameObject.Find("ent_block");
-		GameObject uiCellObj = GameObject.Find("ui_cell");
+	void Start(){
+		block = GameObject.Find("ent_block");
+		ui = GameObject.Find("ui_cell");
 
 //		block = Instantiate(entBlockObj, new Vector3(), Quaternion.identity) as GameObject;
 //		ui = Instantiate(uiCellObj, new Vector3(), Quaternion.identity) as GameObject;
 
-		type = GridManager.Block.Void;
+		type = GridManager.Block.Empty;
 	}
 	
 	// Update is called once per frame
 	void Update(){
-		if(_isInitialized){
-			float total = 0;
-			foreach(Cell c in _neighbours){
-				total += c.energy;
-			}
-
-			foreach(Cell c in _neighbours){
-				if(c.energy < this.energy){
-					c.energy ++;
-					this.energy --;
-				} else if(c.energy > this.energy){
-					c.energy --;
-					this.energy ++;
-				}
-			}
-
-//			float total = _nw.energy + _n.energy + _ne.energy + _e.energy + _se.energy +
-//				_s.energy + _sw.energy + _w.energy;
-		}
+//		if(_isInitialized){
+//			float total = 0;
+//			foreach(Cell c in _neighbours){
+//				total += c.energy;
+//			}
+//
+//			foreach(Cell c in _neighbours){
+//				if(c.energy < this.energy){
+//					c.energy ++;
+//					this.energy --;
+//				} else if(c.energy > this.energy){
+//					c.energy --;
+//					this.energy ++;
+//				}
+//			}
+//
+////			float total = _nw.energy + _n.energy + _ne.energy + _e.energy + _se.energy +
+////				_s.energy + _sw.energy + _w.energy;
+//		}
 	}
 
 	public void Init(Vector3 pos){
-		print("cell created");
 
 //		block.transform.position = pos;
 //		ui.transform.position = pos;
@@ -65,21 +64,35 @@ public class Cell : MonoBehaviour {
 	}
 
 	public void SetType(GridManager.Block type){
-		this.type = type;
+		_type = type;
+
+		switch(_type){
+		case GridManager.Block.Empty:
+			block.GetComponent<MeshRenderer>().enabled = false;
+			break;
+		case GridManager.Block.Floor:
+			block.GetComponent<MeshRenderer>().enabled = true;
+			break;
+		default:
+			block.GetComponent<MeshRenderer>().enabled = false;
+			break;
+		}
 //		UpdateNeighbours(this);
 	}
 
-	public void SetBlock(GameObject block){
-		this.block = block;
-		print ("SetBlock: " + block);
+	public GridManager.Block GetType(){
+//		print ("from cell " + this.type);
+		return _type;
 	}
 
-	public void Reset(){
-		print (block);
-		Destroy(block);
-		type = GridManager.Block.Empty;
-		print (block);
-	}
+//	public void SetBlock(GameObject block){
+//		this.block = block;
+//	}
+
+//	public void Reset(){
+//		Destroy(block);
+//		type = GridManager.Block.Empty;
+//	}
 
 //	public void UpdateNeighbours(Cell orig){
 //		if(nw != orig){ nw.UpdateNeighbours(this); }
