@@ -4,8 +4,10 @@ using System.Collections;
 public class Control : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
+
 	public Transform markerObject;
 	public GridManager gridMgr;
+
 	public GameObject cameraHolder;
 
 	private GridManager.Block _curBlock;

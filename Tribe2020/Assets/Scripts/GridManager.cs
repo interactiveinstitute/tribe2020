@@ -32,23 +32,19 @@ public class GridManager : MonoBehaviour {
 						Instantiate(cell, pos, Quaternion.identity) as GameObject;
 
 					cells[x, y, z] = newCell;
-//					cells[x, y, z].GetComponent<Cell>().Init(pos);
+					cells[x, y, z].GetComponent<Cell>().Init();
 
 					if(x > offset && y > offset && z > offset &&
 					   x < xMax-1 && y < yMax-1 && z < zMax-1){
 						SetType(x, y, z, Block.Floor);
-//						print("just set to floor " + GetType(x, y, z));
 					} else{
-						SetType(x, y, z, Block.Void);
-//						print("just set to void " + GetType(x, y, z));
-//						cells[x, y, z].GetComponent<Cell>().SetType(Block.Void);
+						SetType(x, y, z, Block.Void);;
 					}
-//					print(x+";"+y+";"+z+": "+cells[x, y, z].GetComponent<Cell>().GetType());
 				}
 			}
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update(){
 //		Vector3 pos = _ps [0].position;
@@ -57,9 +53,14 @@ public class GridManager : MonoBehaviour {
 	}
 
 	public void SetType(int x, int y, int z, Block type){
-		if(x > offset && y > offset && z > offset &&
-		   x < xMax-1 && y < yMax-1 && z < zMax-1){
-			cells[x, y, z].GetComponent<Cell>().SetType(type);
+		if(x >= offset && y >= offset && z >= offset &&
+		   x < xMax && y < yMax && z < zMax){
+			Cell cell = cells[x, y, z].GetComponent<Cell>();
+//			Debug.Log ("within borders, " + cell.GetType());
+			if(cells[x, y, z].GetComponent<Cell>().GetType() != Block.Void){
+//				Debug.Log ("GridMgr SetType: " + type);
+				cells[x, y, z].GetComponent<Cell>().SetType(type);
+			}
 		} else{
 			print("cannot set type here");
 		}

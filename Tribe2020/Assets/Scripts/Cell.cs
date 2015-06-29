@@ -7,17 +7,14 @@ public class Cell : MonoBehaviour {
 	private Cell[] _neighbours;
 	public float energy;
 	private bool _isInitialized;
-	public GameObject block, ui;
+	private GameObject _block, _ui;
 
 	// Use this for initialization
 	void Start(){
-		block = GameObject.Find("ent_block");
-		ui = GameObject.Find("ui_cell");
-
-//		block = Instantiate(entBlockObj, new Vector3(), Quaternion.identity) as GameObject;
-//		ui = Instantiate(uiCellObj, new Vector3(), Quaternion.identity) as GameObject;
-
-		type = GridManager.Block.Empty;
+//		_block = transform.Find("ent_block").gameObject;
+//		_ui = transform.Find("ui_cell").gameObject;
+//
+//		SetType (GridManager.Block.Empty);
 	}
 	
 	// Update is called once per frame
@@ -43,10 +40,10 @@ public class Cell : MonoBehaviour {
 //		}
 	}
 
-	public void Init(Vector3 pos){
-
-//		block.transform.position = pos;
-//		ui.transform.position = pos;
+	public void Init(){
+		_block = transform.Find("ent_block").gameObject;
+		_ui = transform.Find("ui_cell").gameObject;
+		SetType (GridManager.Block.Empty);
 	}
 
 	public void InitNeighbours(
@@ -66,15 +63,20 @@ public class Cell : MonoBehaviour {
 	public void SetType(GridManager.Block type){
 		_type = type;
 
+//		Debug.Log ("Cell, SetType: now " + _type);
+
 		switch(_type){
 		case GridManager.Block.Empty:
-			block.GetComponent<MeshRenderer>().enabled = false;
+			_block.GetComponent<MeshRenderer>().enabled = false;
+			Debug.Log("set to empty");
 			break;
 		case GridManager.Block.Floor:
-			block.GetComponent<MeshRenderer>().enabled = true;
+			_block.GetComponent<MeshRenderer>().enabled = true;
+			Debug.Log("set to floor");
 			break;
 		default:
-			block.GetComponent<MeshRenderer>().enabled = false;
+			_block.GetComponent<MeshRenderer>().enabled = false;
+			Debug.Log("set to void");
 			break;
 		}
 //		UpdateNeighbours(this);
@@ -82,6 +84,7 @@ public class Cell : MonoBehaviour {
 
 	public GridManager.Block GetType(){
 //		print ("from cell " + this.type);
+//		Debug.Log ("Cell, GetType() : "+_type);
 		return _type;
 	}
 
