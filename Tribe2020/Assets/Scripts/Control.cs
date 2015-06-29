@@ -13,10 +13,12 @@ public class Control : MonoBehaviour {
 	private GridManager.Block _curBlock;
 	private int _curLevel;
 
+	private string _state = "idle";
+
 	// Use this for initialization
 	void Start(){
 		_curBlock = GridManager.Block.Floor;
-		_curLevel = 0;
+		_curLevel = 1;
 
 		ground = (GameObject)GameObject.Find("ent_ground");
 		groundPlane = ground.GetComponent<Collider>();
@@ -35,12 +37,18 @@ public class Control : MonoBehaviour {
 		float speed = 100;
 		float tSpeed = 0.1F;
 
+		Vector3 tmpPos = ground.transform.position;
+		tmpPos.y = _curLevel * 5;
+		ground.transform.position = tmpPos;
+
 #if UNITY_ANDROID
-		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+		if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved) {
 			// Get movement of the finger since last frame
 			Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
 			// Move object across XY plane
 			camTransform.Translate(-touchDeltaPosition.x * tSpeed, -touchDeltaPosition.y * tSpeed, 0);
+		} else if(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended){
+
 		}
 #endif
 #if UNITY_EDITOR || UNITY_WEBPLAYER
@@ -67,22 +75,26 @@ public class Control : MonoBehaviour {
 		}
 		
 		cameraHolder.transform.position = camPos;
-
-
 #endif
 
 		//Position marker according to grid
-		if(groundPlane.Raycast(ray, out hit, 10000.0f)){
-			markerObject.position = ray.GetPoint(hit.distance);
-			Vector3 pos = markerObject.position;
-			pos.x = Mathf.Floor(pos.x / 5) * 5;
-			pos.y = _curLevel * 5;
-			pos.z = Mathf.Floor(pos.z / 5) * 5;
-			markerObject.position = pos;
-		}
+		Vector3 mPos = PointOnGround(Input.mousePosition, groundPlane);
+		mPos.x = Mathf.Floor(mPos.x / 5) * 5;
+		mPos.y = _curLevel * 5;
+		mPos.z = Mathf.Floor(mPos.z / 5) * 5;
+		markerObject.position = mPos;
+
+//		if(groundPlane.Raycast(ray, out hit, 10000.0f)){
+//			markerObject.position = ray.GetPoint(hit.distance);
+//			Vector3 pos = markerObject.position;
+//			pos.x = Mathf.Floor(pos.x / 5) * 5;
+//			pos.y = _curLevel * 5;
+//			pos.z = Mathf.Floor(pos.z / 5) * 5;
+//			markerObject.position = pos;
+//		}
 
 		//If mouse click, add or delete block depending on if space vacant
-		if(Input.GetMouseButtonDown(0)&&
+		if(Input.GetMouseButtonDown(0) &&
 		   Input.mousePosition.x < Screen.width - 200){
 			Vector3 pos = markerObject.transform.position / 5;
 			int x = (int)pos.x;
@@ -119,6 +131,21 @@ public class Control : MonoBehaviour {
 ////				gridMgr.RemoveBlock(colBlock);
 //			}
 		}
+	}
+
+	private void SetMarker(float x, float y, float z){
+		markerObject.transform.position = new Vector3 (x, y, z);
+		_state = "marker_set";
+	}
+
+	private Vector3 PointOnGround(Vector2 screenCoord, Collider plane){
+		Ray ray = Camera.main.ScreenPointToRay(screenCoord);
+		RaycastHit hit;
+
+		if(plane.Raycast(ray, out hit, 10000.0f)){
+			return ray.GetPoint(hit.distance);
+		}
+		return new Vector3();
 	}
 
 	public void OnFloorPressed(){

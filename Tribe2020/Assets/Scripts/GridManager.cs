@@ -36,7 +36,7 @@ public class GridManager : MonoBehaviour {
 
 					if(x > offset && y > offset && z > offset &&
 					   x < xMax-1 && y < yMax-1 && z < zMax-1){
-						SetType(x, y, z, Block.Floor);
+						SetType(x, y, z, Block.Empty);
 					} else{
 						SetType(x, y, z, Block.Void);;
 					}
