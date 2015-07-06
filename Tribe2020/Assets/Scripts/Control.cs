@@ -5,7 +5,7 @@ public class Control : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
 
-	public Transform markerObject;
+	private GameObject _marker, _marker2, _selectArea;
 	public GridManager gridMgr;
 
 	public GameObject cameraHolder;
@@ -13,10 +13,18 @@ public class Control : MonoBehaviour {
 	private GridManager.Block _curBlock;
 	private int _curLevel;
 
-	private string _state = "idle";
+	public const string IDLE = "state_idle";
+	public const string AREA = "state_area";
+	public const string LINE = "state_line";
+
+	private string _state = IDLE;
 
 	// Use this for initialization
 	void Start(){
+		_marker = GameObject.FindWithTag("ui_pointer") as GameObject;
+		_marker2 = GameObject.FindWithTag("ui_pointer2") as GameObject;
+		_selectArea = GameObject.FindWithTag("ui_selection") as GameObject;
+
 		_curBlock = GridManager.Block.Floor;
 		_curLevel = 1;
 
@@ -29,12 +37,12 @@ public class Control : MonoBehaviour {
 	}
 
 	void Update(){
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
+//		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//		RaycastHit hit;
 
 		Vector3 camPos = cameraHolder.transform.position;
 		Transform camTransform = cameraHolder.transform;
-		float speed = 100;
+//		float speed = 100;
 		float tSpeed = 0.1F;
 
 		Vector3 tmpPos = ground.transform.position;
@@ -78,64 +86,82 @@ public class Control : MonoBehaviour {
 #endif
 
 		//Position marker according to grid
-		Vector3 mPos = PointOnGround(Input.mousePosition, groundPlane);
-		mPos.x = Mathf.Floor(mPos.x / 5) * 5;
-		mPos.y = _curLevel * 5;
-		mPos.z = Mathf.Floor(mPos.z / 5) * 5;
-		markerObject.position = mPos;
+		Vector3 pos = PointOnGround(Input.mousePosition, groundPlane);
+		pos.x = Mathf.Floor (pos.x / 5);
+		pos.y = _curLevel;
+		pos.z = Mathf.Floor (pos.z / 5);
 
-//		if(groundPlane.Raycast(ray, out hit, 10000.0f)){
-//			markerObject.position = ray.GetPoint(hit.distance);
-//			Vector3 pos = markerObject.position;
-//			pos.x = Mathf.Floor(pos.x / 5) * 5;
-//			pos.y = _curLevel * 5;
-//			pos.z = Mathf.Floor(pos.z / 5) * 5;
-//			markerObject.position = pos;
-//		}
+		Vector3 newPos = pos * 5;
+
+		switch(_state){
+		case IDLE:
+			_marker.transform.position = newPos;
+			break;
+		case AREA:
+			if (Input.GetMouseButton(0)) {
+				_marker2.transform.position = newPos;
+				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
+			}
+			break;
+		case LINE:
+			if (Input.GetMouseButton(0)) {
+				Vector3 basePos = _marker.transform.position;
+				if(Mathf.Abs(basePos.x - newPos.x) >
+				   Mathf.Abs(basePos.z - newPos.z)){
+					_marker2.transform.position = new Vector3(newPos.x, basePos.y, basePos.z);
+				} else{
+					_marker2.transform.position = new Vector3(basePos.x, basePos.y, newPos.z);
+				}
+				DrawSelectionArea(basePos, _marker2.transform.position);
+			}
+			break;
+		default:
+			break;
+		}
 
 		//If mouse click, add or delete block depending on if space vacant
-		if(Input.GetMouseButtonDown(0) &&
-		   Input.mousePosition.x < Screen.width - 200){
-			Vector3 pos = markerObject.transform.position / 5;
-			int x = (int)pos.x;
-			int y = (int)pos.y;
-			int z = (int)pos.z;
-
-			switch(gridMgr.GetType(x, y, z)){
-			case GridManager.Block.Empty :
-				gridMgr.SetType(x, y, z, GridManager.Block.Floor);
-				//colBlock.GetComponent<Cell>().SetType(GridManager.Block.Floor);
-				break;
-			case GridManager.Block.Void :
-				break;
-			default:
-				//colBlock.GetComponent<Cell>().SetType(GridManager.Block.Empty);
-				gridMgr.SetType(x, y, z, GridManager.Block.Empty);
-				break;
-			}
-
-//			GameObject colBlock = gridMgr.GetBlock(x, y, z);
-//			if(colBlock != null){
-////				print(x+"; "+y+" ;"+z+": "+gridMgr.GetType(x, y, z));
-//
-//
-////				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Floor);
-////				gridMgr.AddBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Floor);
-//			}
-
-//			if(colBlock == null){
-//				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, _curBlock);
-////				gridMgr.AddBlock((int)pos.x, (int)pos.y, (int)pos.z, _curBlock);
-//			} else{
-//				gridMgr.SetBlock((int)pos.x, (int)pos.y, (int)pos.z, GridManager.Block.Empty);
-////				gridMgr.RemoveBlock(colBlock);
-//			}
+		if(Input.GetMouseButtonDown(0)){
+			OnClick((int)pos.x, _curLevel, (int)pos.z);
 		}
 	}
 
+	private void OnClick(int x, int y, int z){
+		if (Input.mousePosition.x < Screen.width - 100) {
+//			if (gridMgr.GetType (x, y, z) == GridManager.Block.Empty) {
+//				gridMgr.SetType (x, y, z, GridManager.Block.Floor);
+//			} else {
+//				gridMgr.SetType (x, y, z, GridManager.Block.Empty);
+//			}
+
+			switch(_state){
+			case IDLE:
+				_state = AREA;
+//				_marker2.transform.position = _marker.transform.position;
+				break;
+			case AREA:
+				break;
+			case LINE:
+				break;
+			default:
+				break;
+			}
+			Debug.Log ("OnClick: " + _state);
+		}
+
+
+	}
+
 	private void SetMarker(float x, float y, float z){
-		markerObject.transform.position = new Vector3 (x, y, z);
+		_marker.transform.position = new Vector3 (x, y, z);
 		_state = "marker_set";
+	}
+
+	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
+		_selectArea.transform.position = basePos + (edgePos - basePos) / 2;
+		Vector3 tmpScale = _selectArea.transform.localScale;
+		tmpScale.x = (edgePos.x - basePos.x) / 10 + 0.5f * Mathf.Sign(edgePos.x - basePos.x);
+		tmpScale.z = (edgePos.z - basePos.z) / 10 + 0.5f * Mathf.Sign(edgePos.z - basePos.z);
+		_selectArea.transform.localScale = tmpScale;
 	}
 
 	private Vector3 PointOnGround(Vector2 screenCoord, Collider plane){
@@ -147,8 +173,12 @@ public class Control : MonoBehaviour {
 		}
 		return new Vector3();
 	}
-
+	
 	public void OnFloorPressed(){
+		_curBlock = GridManager.Block.Floor;
+	}
+
+	public void OnWallPressed(){
 		_curBlock = GridManager.Block.Floor;
 	}
 

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class GridManager : MonoBehaviour {
-	public const int xMax = 10, yMax = 10, zMax = 10;
+	public const int xMax = 5, yMax = 5, zMax = 5;
 	public const int offset = 0;
 	public GameObject[,,] cells;
 	public GameObject cell, floor, campfire;
@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour {
 		if(x >= offset && y >= offset && z >= offset &&
 		   x < xMax && y < yMax && z < zMax){
 			Cell cell = cells[x, y, z].GetComponent<Cell>();
-//			Debug.Log ("within borders, " + cell.GetType());
+			Debug.Log ("SetType: "+x+","+y+","+z);
 			if(cells[x, y, z].GetComponent<Cell>().GetType() != Block.Void){
 //				Debug.Log ("GridMgr SetType: " + type);
 				cells[x, y, z].GetComponent<Cell>().SetType(type);
@@ -67,6 +67,7 @@ public class GridManager : MonoBehaviour {
 	}
 
 	public Block GetType(int x, int y, int z){
+		Debug.Log ("GetType: "+x+","+y+","+z);
 		print (x + ";" + y + ";" + z + ": " + cells[x, y, z].GetComponent<Cell>().GetType());
 		return cells[x, y, z].GetComponent<Cell>().GetType();
 	}
