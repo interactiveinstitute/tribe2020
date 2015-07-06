@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Control : MonoBehaviour {
 	public Collider groundPlane;
@@ -8,12 +10,15 @@ public class Control : MonoBehaviour {
 	private GameObject _marker, _marker2, _selectArea;
 	public GridManager gridMgr;
 
+	private Text _debug1, _debug2;
+
 	public GameObject cameraHolder;
 
 	private GridManager.Block _curBlock;
 	private int _curLevel;
 
 	public const string IDLE = "state_idle";
+	public const string SPOT = "state_spot";
 	public const string AREA = "state_area";
 	public const string LINE = "state_line";
 
@@ -24,6 +29,7 @@ public class Control : MonoBehaviour {
 		_marker = GameObject.FindWithTag("ui_pointer") as GameObject;
 		_marker2 = GameObject.FindWithTag("ui_pointer2") as GameObject;
 		_selectArea = GameObject.FindWithTag("ui_selection") as GameObject;
+//		_selectedCells = new List<Vector3> ();
 
 		_curBlock = GridManager.Block.Floor;
 		_curLevel = 1;
@@ -34,6 +40,9 @@ public class Control : MonoBehaviour {
 		gridMgr = GameObject.Find("mgr_grid").GetComponent<GridManager>();
 
 		cameraHolder = GameObject.Find("camera_holder");
+
+		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
+		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
 	}
 
 	void Update(){
@@ -98,13 +107,13 @@ public class Control : MonoBehaviour {
 			_marker.transform.position = newPos;
 			break;
 		case AREA:
-			if (Input.GetMouseButton(0)) {
+			if (Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100) {
 				_marker2.transform.position = newPos;
 				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
 			}
 			break;
 		case LINE:
-			if (Input.GetMouseButton(0)) {
+			if (Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100) {
 				Vector3 basePos = _marker.transform.position;
 				if(Mathf.Abs(basePos.x - newPos.x) >
 				   Mathf.Abs(basePos.z - newPos.z)){
@@ -123,6 +132,9 @@ public class Control : MonoBehaviour {
 		if(Input.GetMouseButtonDown(0)){
 			OnClick((int)pos.x, _curLevel, (int)pos.z);
 		}
+
+		_debug1.text = "x: "+(_marker.transform.position.x / 5);
+		_debug2.text = "z: "+(_marker.transform.position.z / 5);
 	}
 
 	private void OnClick(int x, int y, int z){
@@ -138,6 +150,8 @@ public class Control : MonoBehaviour {
 				_state = AREA;
 //				_marker2.transform.position = _marker.transform.position;
 				break;
+			case SPOT:
+				break;
 			case AREA:
 				break;
 			case LINE:
@@ -145,7 +159,7 @@ public class Control : MonoBehaviour {
 			default:
 				break;
 			}
-			Debug.Log ("OnClick: " + _state);
+//			Debug.Log ("OnClick: " + _state);
 		}
 
 
@@ -162,6 +176,27 @@ public class Control : MonoBehaviour {
 		tmpScale.x = (edgePos.x - basePos.x) / 10 + 0.5f * Mathf.Sign(edgePos.x - basePos.x);
 		tmpScale.z = (edgePos.z - basePos.z) / 10 + 0.5f * Mathf.Sign(edgePos.z - basePos.z);
 		_selectArea.transform.localScale = tmpScale;
+	}
+
+	private List<Vector3> StoreSelection(Vector3 startPos, Vector3 endPos){
+		int startX = (int)(Mathf.Min(startPos.x, endPos.x));
+		int startZ = (int)(Mathf.Min(startPos.z, endPos.z));
+		int endX = (int)(Mathf.Max(startPos.x, endPos.x));
+		int endZ = (int)(Mathf.Max(startPos.z, endPos.z));
+		int width = endX - startX + 1;
+		int height = endZ - startZ + 1;
+		List<Vector3> storedCells = new List<Vector3> ();
+
+		Debug.Log ("start: "+startX+","+startZ);
+		Debug.Log ("end: "+endX+","+endZ);
+		Debug.Log ("size: "+width+","+height);
+
+		for (int x = 0; x < width; x++) {
+			for(int z = 0; z < height; z++){
+				storedCells.Add(new Vector3(startX + x, 1, startZ + z));
+			}
+		}
+		return storedCells;
 	}
 
 	private Vector3 PointOnGround(Vector2 screenCoord, Collider plane){
@@ -184,6 +219,18 @@ public class Control : MonoBehaviour {
 
 	public void OnCampFirePressed(){
 		_curBlock = GridManager.Block.Campfire;
+	}
+
+	public void OnOKPressed(){
+		switch (_state) {
+		case AREA:
+			List<Vector3> storedCells = StoreSelection(_marker.transform.position / 5, _marker2.transform.position / 5);
+			gridMgr.SetType(storedCells, _curBlock);
+			_state = IDLE;
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void OnUpPressed(){

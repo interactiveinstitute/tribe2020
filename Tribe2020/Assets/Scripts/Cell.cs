@@ -68,15 +68,15 @@ public class Cell : MonoBehaviour {
 		switch(_type){
 		case GridManager.Block.Empty:
 			_block.GetComponent<MeshRenderer>().enabled = false;
-			Debug.Log("set to empty");
+//			Debug.Log("set to empty");
 			break;
 		case GridManager.Block.Floor:
 			_block.GetComponent<MeshRenderer>().enabled = true;
-			Debug.Log("set to floor");
+//			Debug.Log("set to floor");
 			break;
 		default:
 			_block.GetComponent<MeshRenderer>().enabled = false;
-			Debug.Log("set to void");
+//			Debug.Log("set to void");
 			break;
 		}
 //		UpdateNeighbours(this);
