@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour {
-	public const int xMax = 10, yMax = 3, zMax = 10;
+	public const int xMax = 150, yMax = 50, zMax = 150;
+	private int _curUpdateLayer = 0;
 	public const int offset = 0;
 	public GameObject[,,] cells;
+	private CellPure[,,] cellPures;
 	public GameObject cell, floor, campfire;
 	public ParticleSystem pm;
 	private ParticleSystem.Particle[] _ps;
@@ -23,24 +25,28 @@ public class GridManager : MonoBehaviour {
 		pm.GetParticles(_ps);
 
 		cells = new GameObject[xMax, yMax, zMax];
+		cellPures = new CellPure[xMax, yMax, zMax];
+
 		for(int x = 0; x < xMax; x++){
 			for(int y = 0; y < yMax; y++){
 				for(int z = 0; z < zMax; z++){
 
-					Vector3 pos = new Vector3(x, y, z) * 5;
+					cellPures[x, y, z] = new CellPure();
 
-					GameObject newCell =
-						Instantiate(cell, pos, Quaternion.identity) as GameObject;
-
-					cells[x, y, z] = newCell;
-					cells[x, y, z].GetComponent<Cell>().Init();
-
-					if(x > offset && y > offset && z > offset &&
-					   x < xMax-1 && y < yMax-1 && z < zMax-1){
-						SetType(new Vector3(x, y, z), Block.Empty);
-					} else{
-						SetType(new Vector3(x, y, z), Block.Void);;
-					}
+//					Vector3 pos = new Vector3(x, y, z) * 5;
+//
+//					GameObject newCell =
+//						Instantiate(cell, pos, Quaternion.identity) as GameObject;
+//
+//					cells[x, y, z] = newCell;
+//					cells[x, y, z].GetComponent<Cell>().Init();
+//
+//					if(x > offset && y > offset && z > offset &&
+//					   x < xMax-1 && y < yMax-1 && z < zMax-1){
+//						SetType(new Vector3(x, y, z), Block.Empty);
+//					} else{
+//						SetType(new Vector3(x, y, z), Block.Void);;
+//					}
 				}
 			}
 		}
@@ -48,6 +54,14 @@ public class GridManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update(){
+		_curUpdateLayer = (_curUpdateLayer + 1) % yMax;
+
+		for(int x = 0; x < xMax; x++){
+			for(int z = 0; z < zMax; z++){
+				cellPures[x, _curUpdateLayer, z].Update();
+			}
+		}
+
 //		Vector3 pos = _ps [0].position;
 //		pos.y = 10;
 //		_ps[0].position = pos;

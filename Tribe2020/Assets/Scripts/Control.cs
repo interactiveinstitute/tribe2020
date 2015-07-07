@@ -22,7 +22,8 @@ public class Control : MonoBehaviour {
 	public const string AREA = "state_area";
 	public const string LINE = "state_line";
 
-	private string _state = IDLE;
+	private string _state;
+//	= IDLE;
 
 	// Use this for initialization
 	void Start(){
@@ -43,6 +44,8 @@ public class Control : MonoBehaviour {
 
 		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
 		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
+
+		SetState (IDLE);
 	}
 
 	void Update(){
@@ -147,7 +150,8 @@ public class Control : MonoBehaviour {
 
 			switch(_state){
 			case IDLE:
-				_state = AREA;
+				SetState(AREA);
+//				_state = AREA;
 //				_marker2.transform.position = _marker.transform.position;
 				break;
 			case SPOT:
@@ -165,10 +169,10 @@ public class Control : MonoBehaviour {
 
 	}
 
-	private void SetMarker(float x, float y, float z){
-		_marker.transform.position = new Vector3 (x, y, z);
-		_state = "marker_set";
-	}
+//	private void SetMarker(float x, float y, float z){
+//		_marker.transform.position = new Vector3 (x, y, z);
+//		_state = "marker_set";
+//	}
 
 	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
 		_selectArea.transform.position = basePos + (edgePos - basePos) / 2;
@@ -208,6 +212,26 @@ public class Control : MonoBehaviour {
 		}
 		return new Vector3();
 	}
+
+	public void SetState(string newState){
+		_state = newState;
+
+		switch (_state) {
+		case IDLE:
+			_marker2.GetComponent<Renderer>().enabled = false;
+			_marker2.transform.position = new Vector3(-100, 0, -100);
+			_selectArea.GetComponent<Renderer>().enabled = false;
+			_selectArea.transform.position = new Vector3(-100, 0, -100);
+			_selectArea.transform.localScale = new Vector3(1, 1, 1);
+			break;
+		case AREA:
+			_marker2.GetComponent<Renderer>().enabled = true;
+			_selectArea.GetComponent<Renderer>().enabled = true;
+			break;
+		default:
+			break;
+		}
+	}
 	
 	public void OnFloorPressed(){
 		_curBlock = GridManager.Block.Floor;
@@ -226,7 +250,19 @@ public class Control : MonoBehaviour {
 		case AREA:
 			List<Vector3> storedCells = StoreSelection(_marker.transform.position / 5, _marker2.transform.position / 5);
 			gridMgr.SetType(storedCells, _curBlock);
-			_state = IDLE;
+			SetState (IDLE);
+//			_state = IDLE;
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void OnCancelPressed(){
+		switch (_state) {
+		case AREA:
+			SetState(IDLE);
+//			_state = IDLE;
 			break;
 		default:
 			break;
