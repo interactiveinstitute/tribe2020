@@ -8,7 +8,7 @@ public class GridManager : MonoBehaviour {
 	public const int offset = 0;
 	public GameObject[,,] cells;
 	private CellPure[,,] cellPures;
-	public GameObject cell, floor, campfire;
+	public GameObject PREFAB_CELL, PREFAB_FLOOR, PREFAB_FIRE;
 	public ParticleSystem pm;
 	private ParticleSystem.Particle[] _ps;
 
@@ -16,10 +16,10 @@ public class GridManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		cell 	= GameObject.Find("ent_cell");
+		PREFAB_CELL = GameObject.Find("ent_cell");
 
-		floor 	= GameObject.Find("ent_block");
-		campfire = GameObject.Find("ent_campfire");
+		PREFAB_FLOOR = GameObject.Find("ent_block");
+		PREFAB_FIRE = GameObject.Find("ent_campfire");
 
 		_ps = new ParticleSystem.Particle[this.pm.particleCount];
 		pm.GetParticles(_ps);
@@ -31,8 +31,6 @@ public class GridManager : MonoBehaviour {
 			for(int y = 0; y < yMax; y++){
 				for(int z = 0; z < zMax; z++){
 
-					cellPures[x, y, z] = new CellPure();
-
 //					Vector3 pos = new Vector3(x, y, z) * 5;
 //
 //					GameObject newCell =
@@ -41,12 +39,14 @@ public class GridManager : MonoBehaviour {
 //					cells[x, y, z] = newCell;
 //					cells[x, y, z].GetComponent<Cell>().Init();
 //
-//					if(x > offset && y > offset && z > offset &&
-//					   x < xMax-1 && y < yMax-1 && z < zMax-1){
+					if(x > offset && y > offset && z > offset &&
+					   x < xMax-1 && y < yMax-1 && z < zMax-1){
+						cellPures[x, y, z] = new CellPure(Block.Empty);
 //						SetType(new Vector3(x, y, z), Block.Empty);
-//					} else{
-//						SetType(new Vector3(x, y, z), Block.Void);;
-//					}
+					} else{
+						cellPures[x, y, z] = new CellPure(Block.Void);
+//						SetType(new Vector3(x, y, z), Block.Void);
+					}
 				}
 			}
 		}
@@ -71,16 +71,23 @@ public class GridManager : MonoBehaviour {
 		int x = (int)cellCoord.x;
 		int y = (int)cellCoord.y;
 		int z = (int)cellCoord.z;
+
+//		if(x >= offset && y >= offset && z >= offset &&
+//		   x < xMax && y < yMax && z < zMax){
+//			Cell cell = cells[x, y, z].GetComponent<Cell>();
+//			if(cells[x, y, z].GetComponent<Cell>().GetType() != Block.Void){
+//				cells[x, y, z].GetComponent<Cell>().SetType(type);
+//			}
+//		} else{
+//		}
+
 		if(x >= offset && y >= offset && z >= offset &&
 		   x < xMax && y < yMax && z < zMax){
-			Cell cell = cells[x, y, z].GetComponent<Cell>();
-//			Debug.Log ("SetType: "+x+","+y+","+z);
-			if(cells[x, y, z].GetComponent<Cell>().GetType() != Block.Void){
-//				Debug.Log ("GridMgr SetType: " + type);
-				cells[x, y, z].GetComponent<Cell>().SetType(type);
+			CellPure cell = cellPures[x, y, z];
+			if(cellPures[x, y, z].GetType() != Block.Void){
+				cellPures[x, y, z].SetType(type);
 			}
 		} else{
-//			Debug.Log ("SetType, cannot set type here: "+x+","+y+","+z);
 		}
 	}
 

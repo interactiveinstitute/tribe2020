@@ -7,10 +7,11 @@ public class Control : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
 
-	private GameObject _marker, _marker2, _selectArea;
-	public GridManager gridMgr;
+	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
+	private GridManager _gridMgr;
+	private MeshManager _meshMgr;
 
-	private Text _debug1, _debug2;
+	private Text _debug1, _debug2, _debug3;
 
 	public GameObject cameraHolder;
 
@@ -21,6 +22,7 @@ public class Control : MonoBehaviour {
 	public const string SPOT = "state_spot";
 	public const string AREA = "state_area";
 	public const string LINE = "state_line";
+	public const string MARK = "marked_mesh";
 
 	private string _state;
 //	= IDLE;
@@ -30,6 +32,7 @@ public class Control : MonoBehaviour {
 		_marker = GameObject.FindWithTag("ui_pointer") as GameObject;
 		_marker2 = GameObject.FindWithTag("ui_pointer2") as GameObject;
 		_selectArea = GameObject.FindWithTag("ui_selection") as GameObject;
+		_outline = GameObject.FindWithTag("outline") as GameObject;
 //		_selectedCells = new List<Vector3> ();
 
 		_curBlock = GridManager.Block.Floor;
@@ -38,12 +41,14 @@ public class Control : MonoBehaviour {
 		ground = (GameObject)GameObject.Find("ent_ground");
 		groundPlane = ground.GetComponent<Collider>();
 
-		gridMgr = GameObject.Find("mgr_grid").GetComponent<GridManager>();
+		_gridMgr = GameObject.FindWithTag("grid_manager").GetComponent<GridManager>();
+		_meshMgr = GameObject.FindWithTag("mesh_manager").GetComponent<MeshManager>();
 
 		cameraHolder = GameObject.Find("camera_holder");
 
 		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
 		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
+		_debug3 = GameObject.FindWithTag ("debug_3").GetComponent<Text> ();
 
 		SetState (IDLE);
 	}
@@ -127,6 +132,9 @@ public class Control : MonoBehaviour {
 				DrawSelectionArea(basePos, _marker2.transform.position);
 			}
 			break;
+		case MARK:
+			_marker.transform.position = newPos;
+			break;
 		default:
 			break;
 		}
@@ -138,6 +146,7 @@ public class Control : MonoBehaviour {
 
 		_debug1.text = "x: "+(_marker.transform.position.x / 5);
 		_debug2.text = "z: "+(_marker.transform.position.z / 5);
+		_debug3.text = _state;
 	}
 
 	private void OnClick(int x, int y, int z){
@@ -150,9 +159,14 @@ public class Control : MonoBehaviour {
 
 			switch(_state){
 			case IDLE:
-				SetState(AREA);
-//				_state = AREA;
-//				_marker2.transform.position = _marker.transform.position;
+				_curMarked = _meshMgr.CollidesWithBlock(_marker);
+				if(_curMarked != null){
+					_outline.transform.position = _curMarked.transform.position;
+					_outline.transform.localScale = _curMarked.transform.localScale * 1.1f;
+					SetState(MARK);
+				} else{
+					SetState(AREA);
+				}
 				break;
 			case SPOT:
 				break;
@@ -160,13 +174,20 @@ public class Control : MonoBehaviour {
 				break;
 			case LINE:
 				break;
+			case MARK:
+				_curMarked = _meshMgr.CollidesWithBlock(_marker);
+				if(_curMarked != null){
+					_outline.transform.position = _curMarked.transform.position;
+					_outline.transform.localScale = _curMarked.transform.localScale * 1.1f;
+				} else{
+					SetState(IDLE);
+				}
+				break;
 			default:
 				break;
 			}
 //			Debug.Log ("OnClick: " + _state);
 		}
-
-
 	}
 
 //	private void SetMarker(float x, float y, float z){
@@ -223,10 +244,14 @@ public class Control : MonoBehaviour {
 			_selectArea.GetComponent<Renderer>().enabled = false;
 			_selectArea.transform.position = new Vector3(-100, 0, -100);
 			_selectArea.transform.localScale = new Vector3(1, 1, 1);
+			_outline.GetComponent<Renderer>().enabled = false;
 			break;
 		case AREA:
 			_marker2.GetComponent<Renderer>().enabled = true;
 			_selectArea.GetComponent<Renderer>().enabled = true;
+			break;
+		case MARK:
+			_outline.GetComponent<Renderer>().enabled = true;
 			break;
 		default:
 			break;
@@ -248,10 +273,17 @@ public class Control : MonoBehaviour {
 	public void OnOKPressed(){
 		switch (_state) {
 		case AREA:
-			List<Vector3> storedCells = StoreSelection(_marker.transform.position / 5, _marker2.transform.position / 5);
-			gridMgr.SetType(storedCells, _curBlock);
+			List<Vector3> storedCells = StoreSelection(
+				_marker.transform.position / 5, _marker2.transform.position / 5);
+			_gridMgr.SetType(storedCells, _curBlock);
+			_meshMgr.AddMesh(_marker.transform.position, _marker2.transform.position, _curBlock);
 			SetState (IDLE);
 //			_state = IDLE;
+			break;
+		case MARK:
+			_meshMgr.DestroyMesh(_curMarked);
+//			Destroy(_curMarked);
+			SetState (IDLE);
 			break;
 		default:
 			break;
@@ -263,6 +295,9 @@ public class Control : MonoBehaviour {
 		case AREA:
 			SetState(IDLE);
 //			_state = IDLE;
+			break;
+		case MARK:
+			SetState(IDLE);
 			break;
 		default:
 			break;
