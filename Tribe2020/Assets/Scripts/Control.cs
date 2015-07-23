@@ -145,7 +145,9 @@ public class Control : MonoBehaviour {
 		}
 
 		_debug1.text = "x: "+(_marker.transform.position.x / 5);
-		_debug2.text = "z: "+(_marker.transform.position.z / 5);
+//		_debug2.text = "z: "+(_marker.transform.position.z / 5);
+		float vertExtent = Camera.main.GetComponent<Camera>().orthographicSize;
+		_debug2.text = "" + vertExtent * Screen.width / Screen.height;
 		_debug3.text = _state;
 	}
 

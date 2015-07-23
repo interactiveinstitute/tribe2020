@@ -27,11 +27,26 @@ public class GridManager : MonoBehaviour {
 		cells = new GameObject[xMax, yMax, zMax];
 		cellPures = new CellPure[xMax, yMax, zMax];
 
+//		for(int x = 0; x < 20; x++){
+//			for(int y = 0; y < 20; y++){
+//				float rX = x + y - x % 2;
+//				float rZ = x;
+//
+//				Vector3 pos = new Vector3(rX, 0, rZ) * 5;
+//				
+//
+//				GameObject uiCell = GameObject.Find ("UICell");
+//				GameObject energyUI =
+//					Instantiate(uiCell, pos, Quaternion.identity) as GameObject;
+//			}
+//		}
+
 		for(int x = 0; x < xMax; x++){
 			for(int y = 0; y < yMax; y++){
 				for(int z = 0; z < zMax; z++){
-
 //					Vector3 pos = new Vector3(x, y, z) * 5;
+
+//					
 //
 //					GameObject newCell =
 //						Instantiate(cell, pos, Quaternion.identity) as GameObject;
@@ -100,7 +115,21 @@ public class GridManager : MonoBehaviour {
 
 	public Block GetType(int x, int y, int z){
 //		print (x + ";" + y + ";" + z + ": " + cells[x, y, z].GetComponent<Cell>().GetType());
-		return cells[x, y, z].GetComponent<Cell>().GetType();
+		return cellPures[x, y, z].GetType();
+	}
+
+	public Block GetType(Vector3 pos){
+		int x = (int)pos.x;
+		int y = (int)pos.y;
+		int z = (int)pos.z;
+		return cellPures[x, y, z].GetType();
+	}
+
+	public float GetHeat(Vector3 pos){
+		int x = (int)pos.x;
+		int y = (int)pos.y;
+		int z = (int)pos.z;
+		return cellPures[x, y, z].Heat;
 	}
 
 
