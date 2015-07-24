@@ -65,6 +65,26 @@ public class GridManager : MonoBehaviour {
 				}
 			}
 		}
+
+		//Set Neighbours
+		for (int x = 0; x < xMax; x++) {
+			for (int y = 0; y < yMax; y++) {
+				for (int z = 0; z < zMax; z++) {
+					if(cellPures[x, y, z].GetType() != Block.Void){
+						cellPures[x, y, z].Init(
+							cellPures[x - 1, y, z + 1], //NW
+							cellPures[x, y, z + 1], //N
+							cellPures[x + 1, y, z + 1], //NE
+							cellPures[x + 1, y, z], //E
+							cellPures[x + 1, y, z - 1], //SE
+							cellPures[x, y, z - 1], //S
+							cellPures[x - 1, y, z - 1], //SW
+							cellPures[x - 1, y, z]  //W
+						);
+					}
+				}
+			}
+		}
 	}
 
 	// Update is called once per frame
@@ -115,21 +135,42 @@ public class GridManager : MonoBehaviour {
 
 	public Block GetType(int x, int y, int z){
 //		print (x + ";" + y + ";" + z + ": " + cells[x, y, z].GetComponent<Cell>().GetType());
-		return cellPures[x, y, z].GetType();
+		if (IsWithinBounds (x, y, z)) {
+			return cellPures [x, y, z].GetType ();
+		}
+
+		return Block.Void;
 	}
 
 	public Block GetType(Vector3 pos){
 		int x = (int)pos.x;
 		int y = (int)pos.y;
 		int z = (int)pos.z;
-		return cellPures[x, y, z].GetType();
+
+		return GetType (x, y, z);
+
+//		if (IsWithinBounds (x, y, z)) {
+//			return cellPures [x, y, z].GetType ();
+//		}
+//
+//		return Block.Void;
 	}
 
 	public float GetHeat(Vector3 pos){
 		int x = (int)pos.x;
 		int y = (int)pos.y;
 		int z = (int)pos.z;
-		return cellPures[x, y, z].Heat;
+
+		if (IsWithinBounds (x, y, z)) {
+			return cellPures [x, y, z].Heat;
+		}
+
+		return 0f;
+	}
+
+	private bool IsWithinBounds(int x, int y, int z){
+		return x >= offset && y >= offset && z >= offset &&
+			x < xMax && y < yMax && z < zMax;
 	}
 
 

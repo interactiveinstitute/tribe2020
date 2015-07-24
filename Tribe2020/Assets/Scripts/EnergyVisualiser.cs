@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class EnergyVisualiser : MonoBehaviour {
-	private List<UICell> _cells;
+//	private List<UICell> _cells;
 	private GridManager _gridMgr;
+//	private CellPure[,] _cells;
 
 	private Collider _groundPlane;
 
@@ -12,7 +13,8 @@ public class EnergyVisualiser : MonoBehaviour {
 	void Start () {
 		 GameObject CELL_FEEDBACK = GameObject.FindWithTag("cell_feedback");
 
-		_cells = new List<UICell> ();
+//		_cells = new List<UICell> ();
+//		_cells = new CellPure[13, 27];
 		_gridMgr = GameObject.FindWithTag("grid_manager").GetComponent<GridManager>();
 
 		_groundPlane = GameObject.Find("ent_ground").GetComponent<Collider>() as Collider;
@@ -30,10 +32,13 @@ public class EnergyVisualiser : MonoBehaviour {
 			}
 		}
 
-		foreach (Transform child in transform) {
-			UICell uiCell = child.GetComponent<UICell>();
-			_cells.Add(uiCell);
-		}
+//		foreach (Transform child in transform) {
+////			UICell uiCell = child.GetComponent<UICell>();
+////			_cells.Add(uiCell);
+//
+////			CellPure cellScript = child.GetComponent<CellPure>();
+////			cellScript.Init();
+//		}
 	}
 	
 	// Update is called once per frame
@@ -54,6 +59,7 @@ public class EnergyVisualiser : MonoBehaviour {
 
 			Vector3 checkPos = transform.position;
 			checkPos.x = checkPos.x + child.transform.position.x;
+			checkPos.y = 5f;
 			checkPos.z = checkPos.z + child.transform.position.z;
 			checkPos /= 5;
 
