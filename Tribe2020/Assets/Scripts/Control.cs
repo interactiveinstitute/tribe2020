@@ -18,6 +18,9 @@ public class Control : MonoBehaviour {
 	private GridManager.Block _curBlock;
 	private int _curLevel;
 
+	private GameObject _eVis;
+	private bool _eVisToggle = true;
+
 	public const string IDLE = "state_idle";
 	public const string SPOT = "state_spot";
 	public const string AREA = "state_area";
@@ -25,7 +28,6 @@ public class Control : MonoBehaviour {
 	public const string MARK = "marked_mesh";
 
 	private string _state;
-//	= IDLE;
 
 	// Use this for initialization
 	void Start(){
@@ -46,10 +48,14 @@ public class Control : MonoBehaviour {
 
 		cameraHolder = GameObject.Find("camera_holder");
 
+		_eVis = GameObject.Find("Energy Visualiser") as GameObject;
+
+		//Debug interface
 		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
 		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
 		_debug3 = GameObject.FindWithTag ("debug_3").GetComponent<Text> ();
 
+		//Set inital game state
 		SetState (IDLE);
 	}
 
@@ -59,7 +65,7 @@ public class Control : MonoBehaviour {
 
 		Vector3 camPos = cameraHolder.transform.position;
 		Transform camTransform = cameraHolder.transform;
-//		float speed = 100;
+
 		float tSpeed = 0.1F;
 
 		Vector3 tmpPos = ground.transform.position;
@@ -153,12 +159,6 @@ public class Control : MonoBehaviour {
 
 	private void OnClick(int x, int y, int z){
 		if (Input.mousePosition.x < Screen.width - 100) {
-//			if (gridMgr.GetType (x, y, z) == GridManager.Block.Empty) {
-//				gridMgr.SetType (x, y, z, GridManager.Block.Floor);
-//			} else {
-//				gridMgr.SetType (x, y, z, GridManager.Block.Empty);
-//			}
-
 			switch(_state){
 			case IDLE:
 				_curMarked = _meshMgr.CollidesWithBlock(_marker);
@@ -188,14 +188,8 @@ public class Control : MonoBehaviour {
 			default:
 				break;
 			}
-//			Debug.Log ("OnClick: " + _state);
 		}
 	}
-
-//	private void SetMarker(float x, float y, float z){
-//		_marker.transform.position = new Vector3 (x, y, z);
-//		_state = "marker_set";
-//	}
 
 	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
 		_selectArea.transform.position = basePos + (edgePos - basePos) / 2;
@@ -259,7 +253,8 @@ public class Control : MonoBehaviour {
 			break;
 		}
 	}
-	
+
+	//OnPress events for the interface buttons
 	public void OnFloorPressed(){
 		_curBlock = GridManager.Block.Floor;
 	}
@@ -273,18 +268,21 @@ public class Control : MonoBehaviour {
 	}
 
 	public void OnOKPressed(){
+		List<Vector3> storedCells;
+
 		switch (_state) {
 		case AREA:
-			List<Vector3> storedCells = StoreSelection(
+			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
 			_gridMgr.SetType(storedCells, _curBlock);
 			_meshMgr.AddMesh(_marker.transform.position, _marker2.transform.position, _curBlock);
 			SetState (IDLE);
-//			_state = IDLE;
 			break;
 		case MARK:
+			storedCells = StoreSelection(
+				_marker.transform.position / 5, _marker2.transform.position / 5);
+			_gridMgr.SetType(storedCells, GridManager.Block.Empty);
 			_meshMgr.DestroyMesh(_curMarked);
-//			Destroy(_curMarked);
 			SetState (IDLE);
 			break;
 		default:
@@ -296,7 +294,6 @@ public class Control : MonoBehaviour {
 		switch (_state) {
 		case AREA:
 			SetState(IDLE);
-//			_state = IDLE;
 			break;
 		case MARK:
 			SetState(IDLE);
@@ -312,5 +309,11 @@ public class Control : MonoBehaviour {
 
 	public void OnDownPressed(){
 		_curLevel--;
+	}
+
+	public void OnCheckboxChanged(bool value){
+		Debug.Log (value);
+		_eVisToggle = !_eVisToggle;
+		_eVis.GetComponent<EnergyVisualiser> ().SetVisible(_eVisToggle);
 	}
 }

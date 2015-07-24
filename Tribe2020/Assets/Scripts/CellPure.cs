@@ -3,10 +3,11 @@ using System.Collections;
 
 public class CellPure {
 	private GridManager.Block _type;
-//	private CellPure _nw, _n, _ne, _e, _se, _s, _sw, _w;
 	private CellPure[] _neighbours;
+
 	private float _heat;
 	private float _heatEmittance;
+
 	private bool _isInitialized = false;
 
 	public CellPure(GridManager.Block type){
@@ -35,11 +36,11 @@ public class CellPure {
 
 			foreach(CellPure c in _neighbours){
 				if(c.Heat < this.Heat){
-					c.Heat = c.Heat + 1;
-					this.Heat = this.Heat - 1;
+					c.Heat = c.Heat + 3;
+					this.Heat = this.Heat - 3;
 				} else{ 
-					c.Heat = c.Heat - 1;
-					this.Heat = this.Heat + 1;
+					c.Heat = c.Heat - 3;
+					this.Heat = this.Heat + 3;
 				}
 			}
 
@@ -51,6 +52,14 @@ public class CellPure {
 
 	public void SetType(GridManager.Block type){
 		_type = type;
+
+		if (type == GridManager.Block.Campfire) {
+			_heatEmittance = 255f;
+		} else if (type == GridManager.Block.Void) {
+			_heatEmittance = 0f;
+		} else {
+			_heatEmittance = -1f;
+		}
 	}
 
 	public GridManager.Block GetType(){
