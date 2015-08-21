@@ -8,9 +8,12 @@ public class Cell : MonoBehaviour {
 	public float energy;
 	private bool _isInitialized;
 	private GameObject _block, _ui;
+	private GameObject _energyUI;
 
 	// Use this for initialization
 	void Start(){
+		GameObject uiCell = GameObject.Find ("UICell");
+//		_energyUI = Instantiate(uiCell, transform.position, Quaternion.identity) as GameObject;
 //		_block = transform.Find("ent_block").gameObject;
 //		_ui = transform.Find("ui_cell").gameObject;
 //

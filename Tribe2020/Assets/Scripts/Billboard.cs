@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Billboard : MonoBehaviour {
+	public bool isActive = true;
 
 	// Use this for initialization
 	void Start () {
@@ -10,6 +11,7 @@ public class Billboard : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+		if(isActive)
+			transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
 	}
 }
