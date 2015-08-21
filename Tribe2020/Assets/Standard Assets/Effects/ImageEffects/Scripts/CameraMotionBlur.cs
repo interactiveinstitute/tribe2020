@@ -22,7 +22,7 @@ namespace UnityStandardAssets.ImageEffects
         // settings
         public MotionBlurFilter filterType = MotionBlurFilter.Reconstruction;
         public bool  preview = false;				// show how blur would look like in action ...
-        public Vector3 previewScale = Vector3.one;	// ... given this movement vector
+        public Vector3 pre_viewscale = Vector3.one;	// ... given this movement vector
 
         // params
         public float movementScale = 0.0f;
@@ -197,7 +197,7 @@ namespace UnityStandardAssets.ImageEffects
                 // generate an artifical 'previous' matrix to simulate blur look
                 Matrix4x4 viewMat = _camera.worldToCameraMatrix;
                 Matrix4x4 offset = Matrix4x4.identity;
-                offset.SetTRS(previewScale * 0.3333f, Quaternion.identity, Vector3.one); // using only translation
+                offset.SetTRS(pre_viewscale * 0.3333f, Quaternion.identity, Vector3.one); // using only translation
                 Matrix4x4 projMat = GL.GetGPUProjectionMatrix (_camera.projectionMatrix, true);
                 prevViewProjMat = projMat * offset * viewMat;
                 motionBlurMaterial.SetMatrix ("_PrevViewProj", prevViewProjMat);
@@ -238,7 +238,7 @@ namespace UnityStandardAssets.ImageEffects
                 }
 
                 if (preview) // crude approximation
-                    motionBlurMaterial.SetVector ("_BlurDirectionPacked", new Vector4 (previewScale.y, previewScale.x, 0.0f, previewScale.z) * 0.5f * _camera.fieldOfView);
+                    motionBlurMaterial.SetVector ("_BlurDirectionPacked", new Vector4 (pre_viewscale.y, pre_viewscale.x, 0.0f, pre_viewscale.z) * 0.5f * _camera.fieldOfView);
                 else
                     motionBlurMaterial.SetVector ("_BlurDirectionPacked", blurVector);
             }

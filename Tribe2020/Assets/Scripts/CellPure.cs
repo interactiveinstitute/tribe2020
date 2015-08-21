@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//This is the model for a cell within the energy simulation
 public class CellPure {
 	private GridManager.Block _type;
 	private CellPure[] _neighbours;
@@ -26,7 +27,8 @@ public class CellPure {
 		_isInitialized = true;
 	}
 	
-	// Update is called once per frame
+	// This is not an implementation of MonoBehaviours Update, so it needs
+	// to be called manually
 	public void Update () {
 		if (_isInitialized) {
 			float total = 0;
@@ -50,6 +52,7 @@ public class CellPure {
 		}
 	}
 
+	// Set the type of block which occupied this cell
 	public void SetType(GridManager.Block type){
 		_type = type;
 

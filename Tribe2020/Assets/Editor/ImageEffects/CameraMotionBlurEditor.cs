@@ -11,7 +11,7 @@ namespace UnityStandardAssets.ImageEffects
 
         SerializedProperty filterType;
         SerializedProperty preview;
-        SerializedProperty previewScale;
+        SerializedProperty pre_viewscale;
         SerializedProperty movementScale;
         SerializedProperty jitter;
         SerializedProperty rotationScale;
@@ -30,7 +30,7 @@ namespace UnityStandardAssets.ImageEffects
             filterType = serObj.FindProperty ("filterType");
 
             preview = serObj.FindProperty ("preview");
-            previewScale = serObj.FindProperty ("previewScale");
+            pre_viewscale = serObj.FindProperty ("pre_viewscale");
 
             movementScale = serObj.FindProperty ("movementScale");
             rotationScale = serObj.FindProperty ("rotationScale");
@@ -91,7 +91,7 @@ namespace UnityStandardAssets.ImageEffects
 
             EditorGUILayout.PropertyField (preview, new GUIContent("Preview"));
             if (preview.boolValue)
-                EditorGUILayout.PropertyField (previewScale, new GUIContent(""));
+                EditorGUILayout.PropertyField (pre_viewscale, new GUIContent(""));
 
             serObj.ApplyModifiedProperties();
         }

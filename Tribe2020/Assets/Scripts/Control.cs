@@ -11,14 +11,15 @@ public class Control : MonoBehaviour {
 	private GridManager _gridMgr;
 	private MeshManager _meshMgr;
 
-	private Text _debug1, _debug2, _debug3;
+	private Text _debug1, _debug2, _debug3, _debug4;
 
 	public GameObject cameraHolder;
 
 	private GridManager.Block _curBlock;
 	private int _curLevel;
 
-	private GameObject _eVis;
+	//Energy Visualiser
+	private EnergyVisualiser _eVis;
 	private bool _eVisToggle = true;
 
 	public const string IDLE = "state_idle";
@@ -38,22 +39,24 @@ public class Control : MonoBehaviour {
 //		_selectedCells = new List<Vector3> ();
 
 		_curBlock = GridManager.Block.Floor;
-		_curLevel = 1;
+		_curLevel = 0;
 
-		ground = (GameObject)GameObject.Find("ent_ground");
+		ground = GameObject.FindWithTag("ent_ground") as GameObject;
 		groundPlane = ground.GetComponent<Collider>();
 
 		_gridMgr = GameObject.FindWithTag("grid_manager").GetComponent<GridManager>();
 		_meshMgr = GameObject.FindWithTag("mesh_manager").GetComponent<MeshManager>();
 
-		cameraHolder = GameObject.Find("camera_holder");
+		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
 
-		_eVis = GameObject.Find("Energy Visualiser") as GameObject;
+//		_eVis = GameObject.Find("Energy Visualiser") as GameObject;
+		_eVis = GameObject.Find("Energy Visualiser").GetComponent<EnergyVisualiser>();
 
 		//Debug interface
 		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
 		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
 		_debug3 = GameObject.FindWithTag ("debug_3").GetComponent<Text> ();
+		_debug4 = GameObject.FindWithTag ("debug_4").GetComponent<Text> ();
 
 		//Set inital game state
 		SetState (IDLE);
@@ -115,6 +118,7 @@ public class Control : MonoBehaviour {
 		pos.z = Mathf.Floor (pos.z / 5);
 
 		Vector3 newPos = pos * 5;
+		newPos += new Vector3(0f, 2.5f, 0f);
 
 		switch(_state){
 		case IDLE:
@@ -155,6 +159,7 @@ public class Control : MonoBehaviour {
 		float vertExtent = Camera.main.GetComponent<Camera>().orthographicSize;
 		_debug2.text = "" + vertExtent * Screen.width / Screen.height;
 		_debug3.text = _state;
+		_debug4.text = "heat: " + _gridMgr.GetHeat(_marker.transform.position / 5);
 	}
 
 	private void OnClick(int x, int y, int z){
@@ -192,7 +197,9 @@ public class Control : MonoBehaviour {
 	}
 
 	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
-		_selectArea.transform.position = basePos + (edgePos - basePos) / 2;
+		Vector3 pos = basePos + (edgePos - basePos) / 2;
+		pos.y = _curLevel + 0.2f;
+		_selectArea.transform.position = pos;
 		Vector3 tmpScale = _selectArea.transform.localScale;
 		tmpScale.x = (edgePos.x - basePos.x) / 10 + 0.5f * Mathf.Sign(edgePos.x - basePos.x);
 		tmpScale.z = (edgePos.z - basePos.z) / 10 + 0.5f * Mathf.Sign(edgePos.z - basePos.z);
@@ -305,15 +312,17 @@ public class Control : MonoBehaviour {
 
 	public void OnUpPressed(){
 		_curLevel++;
+		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	public void OnDownPressed(){
 		_curLevel--;
+		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	public void OnCheckboxChanged(bool value){
 		Debug.Log (value);
 		_eVisToggle = !_eVisToggle;
-		_eVis.GetComponent<EnergyVisualiser> ().SetVisible(_eVisToggle);
+		_eVis.SetVisible(_eVisToggle);
 	}
 }
