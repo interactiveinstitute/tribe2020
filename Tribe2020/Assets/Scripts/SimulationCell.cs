@@ -2,16 +2,16 @@
 using System.Collections;
 
 //This is the model for a cell within the energy simulation
-public class CellPure {
-	private GridManager.Block _type;
-	private CellPure[] _neighbours;
+public class SimulationCell {
+	private SimulationManager.Block _type;
+	private SimulationCell[] _neighbours;
 
 	private float _heat;
 	private float _heatEmittance;
 
 	private bool _isInitialized = false;
 
-	public CellPure(GridManager.Block type){
+	public SimulationCell(SimulationManager.Block type){
 		_type = type;
 		_heat = Random.value * 60;
 		_heatEmittance = -1f;
@@ -19,10 +19,10 @@ public class CellPure {
 
 	// Use this for initialization
 	public void Init (
-		CellPure nw, CellPure n, CellPure ne, CellPure e,
-		CellPure se, CellPure s, CellPure sw, CellPure w) {
+		SimulationCell nw, SimulationCell n, SimulationCell ne, SimulationCell e,
+		SimulationCell se, SimulationCell s, SimulationCell sw, SimulationCell w) {
 
-		_neighbours = new CellPure[8]{nw, n, ne, e, se, s, sw, w};
+		_neighbours = new SimulationCell[8]{nw, n, ne, e, se, s, sw, w};
 
 		_isInitialized = true;
 	}
@@ -32,11 +32,11 @@ public class CellPure {
 	public void Update () {
 		if (_isInitialized) {
 			float total = 0;
-			foreach(CellPure c in _neighbours){
+			foreach(SimulationCell c in _neighbours){
 				total += c.Heat;
 			}
 
-			foreach(CellPure c in _neighbours){
+			foreach(SimulationCell c in _neighbours){
 				if(c.Heat < this.Heat){
 					c.Heat = c.Heat + 1;
 					this.Heat = this.Heat - 1;
@@ -53,19 +53,19 @@ public class CellPure {
 	}
 
 	// Set the type of block which occupied this cell
-	public void SetType(GridManager.Block type){
+	public void SetBlockType(SimulationManager.Block type){
 		_type = type;
 
-		if (type == GridManager.Block.Campfire) {
+		if (type == SimulationManager.Block.Campfire) {
 			_heatEmittance = 60f;
-		} else if (type == GridManager.Block.Void) {
+		} else if (type == SimulationManager.Block.Void) {
 			_heatEmittance = 0f;
 		} else {
 			_heatEmittance = -1f;
 		}
 	}
 
-	public GridManager.Block GetType(){
+	public SimulationManager.Block GetBlockType(){
 		return _type;
 	}
 

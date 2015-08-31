@@ -5,7 +5,7 @@ public class SunMovement : MonoBehaviour {
 //	public Transform sun;
 	public float dayCycleInMinutes = 1;
 
-	private const float SECOND = 0.1f;
+	private const float SECOND = 1f;
 	private const float MINUTE = 60 * SECOND;
 	private const float HOUR = 60 * MINUTE;
 	private const float DAY = 24 * HOUR;

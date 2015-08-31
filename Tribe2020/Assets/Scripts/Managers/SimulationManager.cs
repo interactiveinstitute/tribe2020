@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GridManager : MonoBehaviour {
+public class SimulationManager : MonoBehaviour {
 	public const int xMax = 150, yMax = 50, zMax = 150;
 	private int _curUpdateLayer = 0;
 	public const int offset = 0;
-	private CellPure[,,] cellPures;
+	private SimulationCell[,,] _simCells;
 	public GameObject PREFAB_CELL, PREFAB_FLOOR, PREFAB_FIRE;
-	public ParticleSystem pm;
 	private ParticleSystem.Particle[] _ps;
 
 	public enum Block {Void, Empty, Floor, Campfire, Coffee, Toilet};
@@ -20,10 +19,7 @@ public class GridManager : MonoBehaviour {
 		PREFAB_FLOOR = GameObject.Find("ent_block");
 		PREFAB_FIRE = GameObject.Find("ent_campfire");
 
-		_ps = new ParticleSystem.Particle[this.pm.particleCount];
-		pm.GetParticles(_ps);
-
-		cellPures = new CellPure[xMax, yMax, zMax];
+		_simCells = new SimulationCell[xMax, yMax, zMax];
 
 		//Instantiate all cells, void if at border and empty otherwise
 		for(int x = 0; x < xMax; x++){
@@ -31,9 +27,9 @@ public class GridManager : MonoBehaviour {
 				for(int z = 0; z < zMax; z++){
 					if(x > offset && y > offset && z > offset &&
 					   x < xMax-1 && y < yMax-1 && z < zMax-1){
-						cellPures[x, y, z] = new CellPure(Block.Empty);
+						_simCells[x, y, z] = new SimulationCell(Block.Empty);
 					} else{
-						cellPures[x, y, z] = new CellPure(Block.Void);
+						_simCells[x, y, z] = new SimulationCell(Block.Void);
 					}
 				}
 			}
@@ -43,16 +39,16 @@ public class GridManager : MonoBehaviour {
 		for (int x = 0; x < xMax; x++) {
 			for (int y = 0; y < yMax; y++) {
 				for (int z = 0; z < zMax; z++) {
-					if(cellPures[x, y, z].GetType() != Block.Void){
-						cellPures[x, y, z].Init(
-							cellPures[x - 1, y, z + 1], //NW
-							cellPures[x, y, z + 1], //N
-							cellPures[x + 1, y, z + 1], //NE
-							cellPures[x + 1, y, z], //E
-							cellPures[x + 1, y, z - 1], //SE
-							cellPures[x, y, z - 1], //S
-							cellPures[x - 1, y, z - 1], //SW
-							cellPures[x - 1, y, z]  //W
+					if(_simCells[x, y, z].GetBlockType() != Block.Void){
+						_simCells[x, y, z].Init(
+							_simCells[x - 1, y, z + 1], //NW
+							_simCells[x, y, z + 1], //N
+							_simCells[x + 1, y, z + 1], //NE
+							_simCells[x + 1, y, z], //E
+							_simCells[x + 1, y, z - 1], //SE
+							_simCells[x, y, z - 1], //S
+							_simCells[x - 1, y, z - 1], //SW
+							_simCells[x - 1, y, z]  //W
 						);
 					}
 				}
@@ -67,7 +63,7 @@ public class GridManager : MonoBehaviour {
 		//Update one layer at a time to decrease lag
 		for(int x = 0; x < xMax; x++){
 			for(int z = 0; z < zMax; z++){
-				cellPures[x, _curUpdateLayer, z].Update();
+				_simCells[x, _curUpdateLayer, z].Update();
 			}
 		}
 	}
@@ -80,9 +76,9 @@ public class GridManager : MonoBehaviour {
 
 		if(x >= offset && y >= offset && z >= offset &&
 		   x < xMax && y < yMax && z < zMax){
-			CellPure cell = cellPures[x, y, z];
-			if(cellPures[x, y, z].GetType() != Block.Void){
-				cellPures[x, y, z].SetType(type);
+//			SimulationCell cell = _simCells[x, y, z];
+			if(_simCells[x, y, z].GetBlockType() != Block.Void){
+				_simCells[x, y, z].SetBlockType(type);
 			}
 		} else{
 		}
@@ -98,7 +94,7 @@ public class GridManager : MonoBehaviour {
 
 	public Block GetType(int x, int y, int z){
 		if (IsWithinBounds (x, y, z)) {
-			return cellPures [x, y, z].GetType ();
+			return _simCells [x, y, z].GetBlockType ();
 		}
 
 		return Block.Void;
@@ -118,7 +114,7 @@ public class GridManager : MonoBehaviour {
 		int z = (int)pos.z;
 
 		if (IsWithinBounds (x, y, z)) {
-			return cellPures [x, y, z].Heat;
+			return _simCells [x, y, z].Heat;
 		}
 
 		return 0f;

@@ -20,7 +20,7 @@ public class MeshManager : MonoBehaviour {
 	
 	}
 
-	public void AddMesh(Vector3 start, Vector3 end, GridManager.Block type){
+	public void AddMesh(Vector3 start, Vector3 end, SimulationManager.Block type){
 		Vector3 pos = start + (end - start) / 2;
 		GameObject newMesh = Instantiate(TypeToObject(type), pos, Quaternion.identity) as GameObject;
 
@@ -52,15 +52,15 @@ public class MeshManager : MonoBehaviour {
 		//	}
 	}
 
-	private GameObject TypeToObject(GridManager.Block type){
+	private GameObject TypeToObject(SimulationManager.Block type){
 		switch (type) {
-		case GridManager.Block.Floor:
+		case SimulationManager.Block.Floor:
 			return WALL;
-		case GridManager.Block.Campfire:
+		case SimulationManager.Block.Campfire:
 			return CAMPFIRE;
-		case GridManager.Block.Coffee:
+		case SimulationManager.Block.Coffee:
 			return COFFEE_MACHINE;
-		case GridManager.Block.Toilet:
+		case SimulationManager.Block.Toilet:
 			return TOILET;
 		default:
 			return WALL;

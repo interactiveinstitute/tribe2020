@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CellFeedback : MonoBehaviour {
+public class EnergyVisualiserCell : MonoBehaviour {
 	private Material _material;
 	private MeshRenderer _renderer;
 

@@ -23,7 +23,7 @@ public class SimpleAI : MonoBehaviour {
 			_agent.SetDestination (coffee.transform.position);
 		}
 
-		Debug.Log(_waterLevel);
+//		Debug.Log(_waterLevel);
 
 //		_agent.SetDestination (new Vector3 (20f, 0f, 20f));
 //		if (_agent.isPathStale) {

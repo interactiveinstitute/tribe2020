@@ -3,19 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class Control : MonoBehaviour {
+public class InputManager : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
 
 	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
-	private GridManager _gridMgr;
+	private SimulationManager _gridMgr;
 	private MeshManager _meshMgr;
 
 	private Text _debug1, _debug2, _debug3, _debug4;
 
 	public GameObject cameraHolder;
 
-	private GridManager.Block _curBlock;
+	private SimulationManager.Block _curBlock;
 	private int _curLevel;
 
 	//Energy Visualiser
@@ -38,14 +38,14 @@ public class Control : MonoBehaviour {
 		_outline = GameObject.FindWithTag("outline") as GameObject;
 //		_selectedCells = new List<Vector3> ();
 
-		_curBlock = GridManager.Block.Floor;
+		_curBlock = SimulationManager.Block.Floor;
 		_curLevel = 0;
 
 		ground = GameObject.FindWithTag("ent_ground") as GameObject;
 		groundPlane = ground.GetComponent<Collider>();
 
-		_gridMgr = GameObject.FindWithTag("grid_manager").GetComponent<GridManager>();
-		_meshMgr = GameObject.FindWithTag("mesh_manager").GetComponent<MeshManager>();
+		_gridMgr = GameObject.FindWithTag("managers").GetComponent<SimulationManager>();
+		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
 
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
 
@@ -215,9 +215,9 @@ public class Control : MonoBehaviour {
 		int height = endZ - startZ + 1;
 		List<Vector3> storedCells = new List<Vector3> ();
 
-		Debug.Log ("start: "+startX+","+startZ);
-		Debug.Log ("end: "+endX+","+endZ);
-		Debug.Log ("size: "+width+","+height);
+//		Debug.Log ("start: "+startX+","+startZ);
+//		Debug.Log ("end: "+endX+","+endZ);
+//		Debug.Log ("size: "+width+","+height);
 
 		for (int x = 0; x < width; x++) {
 			for(int z = 0; z < height; z++){
@@ -263,23 +263,23 @@ public class Control : MonoBehaviour {
 
 	//OnPress events for the interface buttons
 	public void OnFloorPressed(){
-		_curBlock = GridManager.Block.Floor;
+		_curBlock = SimulationManager.Block.Floor;
 	}
 
 	public void OnWallPressed(){
-		_curBlock = GridManager.Block.Floor;
+		_curBlock = SimulationManager.Block.Floor;
 	}
 
 	public void OnCampFirePressed(){
-		_curBlock = GridManager.Block.Campfire;
+		_curBlock = SimulationManager.Block.Campfire;
 	}
 
 	public void OnCoffeePressed(){
-		_curBlock = GridManager.Block.Coffee;
+		_curBlock = SimulationManager.Block.Coffee;
 	}
 
 	public void OnToiletPressed(){
-		_curBlock = GridManager.Block.Toilet;
+		_curBlock = SimulationManager.Block.Toilet;
 	}
 
 	public void OnOKPressed(){
@@ -296,7 +296,7 @@ public class Control : MonoBehaviour {
 		case MARK:
 			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
-			_gridMgr.SetType(storedCells, GridManager.Block.Empty);
+			_gridMgr.SetType(storedCells, SimulationManager.Block.Empty);
 			_meshMgr.DestroyMesh(_curMarked);
 			SetState (IDLE);
 			break;
@@ -329,7 +329,7 @@ public class Control : MonoBehaviour {
 	}
 
 	public void OnCheckboxChanged(bool value){
-		Debug.Log (value);
+//		Debug.Log (value);
 		_eVisToggle = !_eVisToggle;
 		_eVis.SetVisible(_eVisToggle);
 	}
