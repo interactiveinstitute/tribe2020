@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MeshManager : MonoBehaviour {
-	public GameObject WALL, CAMPFIRE;
+	public GameObject WALL, CAMPFIRE, COFFEE_MACHINE, TOILET;
 	private List<GameObject> _meshes;
 	
 	// Use this for initialization
 	void Start () {
 		WALL = GameObject.Find("Block Wall");
 		CAMPFIRE = GameObject.Find("Block Campfire");
+		COFFEE_MACHINE = GameObject.Find ("Block Coffee Machine");
+		TOILET = GameObject.Find ("Block Toilet");
 		_meshes = new List<GameObject>();
 	}
 	
@@ -56,6 +58,10 @@ public class MeshManager : MonoBehaviour {
 			return WALL;
 		case GridManager.Block.Campfire:
 			return CAMPFIRE;
+		case GridManager.Block.Coffee:
+			return COFFEE_MACHINE;
+		case GridManager.Block.Toilet:
+			return TOILET;
 		default:
 			return WALL;
 		}

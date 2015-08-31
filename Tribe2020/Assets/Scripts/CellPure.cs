@@ -13,7 +13,7 @@ public class CellPure {
 
 	public CellPure(GridManager.Block type){
 		_type = type;
-		_heat = Random.value * 255;
+		_heat = Random.value * 60;
 		_heatEmittance = -1f;
 	}
 
@@ -38,11 +38,11 @@ public class CellPure {
 
 			foreach(CellPure c in _neighbours){
 				if(c.Heat < this.Heat){
-					c.Heat = c.Heat + 3;
-					this.Heat = this.Heat - 3;
+					c.Heat = c.Heat + 1;
+					this.Heat = this.Heat - 1;
 				} else{ 
-					c.Heat = c.Heat - 3;
-					this.Heat = this.Heat + 3;
+					c.Heat = c.Heat - 1;
+					this.Heat = this.Heat + 1;
 				}
 			}
 
@@ -57,7 +57,7 @@ public class CellPure {
 		_type = type;
 
 		if (type == GridManager.Block.Campfire) {
-			_heatEmittance = 255f;
+			_heatEmittance = 60f;
 		} else if (type == GridManager.Block.Void) {
 			_heatEmittance = 0f;
 		} else {

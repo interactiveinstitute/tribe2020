@@ -274,6 +274,14 @@ public class Control : MonoBehaviour {
 		_curBlock = GridManager.Block.Campfire;
 	}
 
+	public void OnCoffeePressed(){
+		_curBlock = GridManager.Block.Coffee;
+	}
+
+	public void OnToiletPressed(){
+		_curBlock = GridManager.Block.Toilet;
+	}
+
 	public void OnOKPressed(){
 		List<Vector3> storedCells;
 

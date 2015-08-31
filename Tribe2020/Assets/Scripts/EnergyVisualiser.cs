@@ -59,7 +59,7 @@ public class EnergyVisualiser : MonoBehaviour {
 			float heat = _gridMgr.GetHeat(checkPos);
 
 			CellFeedback cf = child.GetComponent<CellFeedback>();
-			cf.SetColor(new Color(0.5f, heat / 255, 0.5f));
+			cf.SetColor(new Color(0.5f, heat / 60, 0.5f));
 		}
 	}
 

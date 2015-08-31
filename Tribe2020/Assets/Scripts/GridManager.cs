@@ -11,7 +11,7 @@ public class GridManager : MonoBehaviour {
 	public ParticleSystem pm;
 	private ParticleSystem.Particle[] _ps;
 
-	public enum Block {Void, Empty, Floor, Campfire};
+	public enum Block {Void, Empty, Floor, Campfire, Coffee, Toilet};
 
 	// Use this for initialization
 	void Start(){
