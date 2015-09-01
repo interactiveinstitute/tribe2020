@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MeshManager : MonoBehaviour {
+public class MeshManager : MonoBehaviour{
 	public GameObject WALL, CAMPFIRE, COFFEE_MACHINE, TOILET;
 	private List<GameObject> _meshes;
 	
 	// Use this for initialization
-	void Start () {
+	void Start(){
 		WALL = GameObject.Find("Block Wall");
 		CAMPFIRE = GameObject.Find("Block Campfire");
 		COFFEE_MACHINE = GameObject.Find ("Block Coffee Machine");
@@ -16,19 +16,20 @@ public class MeshManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update(){
 	}
 
 	public void AddMesh(Vector3 start, Vector3 end, SimulationManager.Block type){
 		Vector3 pos = start + (end - start) / 2;
-		GameObject newMesh = Instantiate(TypeToObject(type), pos, Quaternion.identity) as GameObject;
+		GameObject newMesh =
+			Instantiate(TypeToObject(type), pos, Quaternion.identity) as GameObject;
 
-		float scaleX = Mathf.Max (start.x, end.x) - Mathf.Min (start.x, end.x) + 5;
-		float scaleZ = Mathf.Max (start.z, end.z) - Mathf.Min (start.z, end.z) + 5;
-
-		newMesh.transform.localScale = new Vector3(scaleX, 5, scaleZ);
-		_meshes.Add (newMesh);
+//		float scaleX = Mathf.Max(start.x, end.x) - Mathf.Min(start.x, end.x) + 2;
+//		float scaleZ = Mathf.Max(start.z, end.z) - Mathf.Min(start.z, end.z) + 2;
+//
+//		newMesh.transform.localScale = new Vector3(scaleX, 10, scaleZ);
+		newMesh.transform.localScale = TypeToScale(type, start.x, end.x, start.z, end.z);
+		_meshes.Add(newMesh);
 	}
 
 	public GameObject CollidesWithBlock(GameObject otherObj){
@@ -53,7 +54,7 @@ public class MeshManager : MonoBehaviour {
 	}
 
 	private GameObject TypeToObject(SimulationManager.Block type){
-		switch (type) {
+		switch(type){
 		case SimulationManager.Block.Floor:
 			return WALL;
 		case SimulationManager.Block.Campfire:
@@ -65,5 +66,27 @@ public class MeshManager : MonoBehaviour {
 		default:
 			return WALL;
 		}
+	}
+
+	private Vector3 TypeToScale(
+		SimulationManager.Block type, float x1, float x2, float z1, float z2){
+		Vector3 scale = new Vector3();
+		switch(type){
+		case SimulationManager.Block.Floor:
+			scale.x = Mathf.Max(x1, x2) - Mathf.Min(x1, x2) + 2;
+			scale.y = 10;
+			scale.z = Mathf.Max(z1, z2) - Mathf.Min(z1, z2) + 2;
+			break;
+		case SimulationManager.Block.Campfire:
+		case SimulationManager.Block.Coffee:
+		case SimulationManager.Block.Toilet:
+		default:
+			scale.x = Mathf.Max(x1, x2) - Mathf.Min(x1, x2) + 5;
+			scale.y = 5;
+			scale.z = Mathf.Max(z1, z2) - Mathf.Min(z1, z2) + 5;
+			break;
+		}
+
+		return scale;
 	}
 }
