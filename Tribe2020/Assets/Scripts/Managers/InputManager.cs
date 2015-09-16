@@ -8,10 +8,10 @@ public class InputManager : MonoBehaviour {
 	public GameObject ground;
 
 	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
-	private SimulationManager _gridMgr;
+	private SimulationManager _simMgr;
 	private MeshManager _meshMgr;
 
-	private Text _debug1, _debug2, _debug3, _debug4;
+	private Text _debug1, _debug2, _debug3, _debug4, _debugY;
 
 	public GameObject cameraHolder;
 
@@ -44,7 +44,7 @@ public class InputManager : MonoBehaviour {
 		ground = GameObject.FindWithTag("ent_ground") as GameObject;
 		groundPlane = ground.GetComponent<Collider>();
 
-		_gridMgr = GameObject.FindWithTag("managers").GetComponent<SimulationManager>();
+		_simMgr = GameObject.FindWithTag("managers").GetComponent<SimulationManager>();
 		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
 
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
@@ -57,6 +57,7 @@ public class InputManager : MonoBehaviour {
 		_debug2 = GameObject.FindWithTag ("debug_2").GetComponent<Text> ();
 		_debug3 = GameObject.FindWithTag ("debug_3").GetComponent<Text> ();
 		_debug4 = GameObject.FindWithTag ("debug_4").GetComponent<Text> ();
+		_debugY = GameObject.FindWithTag ("debug_y").GetComponent<Text> ();
 
 		//Set inital game state
 		SetState (IDLE);
@@ -155,11 +156,14 @@ public class InputManager : MonoBehaviour {
 		}
 
 		_debug1.text = "x: "+(_marker.transform.position.x / 5);
-//		_debug2.text = "z: "+(_marker.transform.position.z / 5);
-		float vertExtent = Camera.main.GetComponent<Camera>().orthographicSize;
-		_debug2.text = "" + vertExtent * Screen.width / Screen.height;
+		_debugY.text = "y: "+(_marker.transform.position.y / 5);
+		_debug2.text = "z: "+(_marker.transform.position.z / 5);
+//		float vertExtent = Camera.main.GetComponent<Camera>().orthographicSize;
+//		_debug2.text = "" + vertExtent * Screen.width / Screen.height;
 		_debug3.text = _state;
-		_debug4.text = "heat: " + _gridMgr.GetHeat(_marker.transform.position / 5);
+		Vector3 heatCoord =
+			new Vector3 (_marker.transform.position.x / 5, 1, _marker.transform.position.z / 5);
+		_debug4.text = "heat: " + _simMgr.GetHeat(heatCoord);
 	}
 
 	private void OnClick(int x, int y, int z){
@@ -267,7 +271,7 @@ public class InputManager : MonoBehaviour {
 	}
 
 	public void OnWallPressed(){
-		_curBlock = SimulationManager.Block.Floor;
+		_curBlock = SimulationManager.Block.Wall;
 	}
 
 	public void OnCampFirePressed(){
@@ -289,14 +293,14 @@ public class InputManager : MonoBehaviour {
 		case AREA:
 			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
-			_gridMgr.SetType(storedCells, _curBlock);
+			_simMgr.SetType(storedCells, _curBlock);
 			_meshMgr.AddMesh(_marker.transform.position, _marker2.transform.position, _curBlock);
 			SetState (IDLE);
 			break;
 		case MARK:
 			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
-			_gridMgr.SetType(storedCells, SimulationManager.Block.Empty);
+			_simMgr.SetType(storedCells, SimulationManager.Block.Empty);
 			_meshMgr.DestroyMesh(_curMarked);
 			SetState (IDLE);
 			break;

@@ -72,7 +72,7 @@ public class MeshManager : MonoBehaviour{
 		SimulationManager.Block type, float x1, float x2, float z1, float z2){
 		Vector3 scale = new Vector3();
 		switch(type){
-		case SimulationManager.Block.Floor:
+		case SimulationManager.Block.Wall:
 			scale.x = Mathf.Max(x1, x2) - Mathf.Min(x1, x2) + 2;
 			scale.y = 10;
 			scale.z = Mathf.Max(z1, z2) - Mathf.Min(z1, z2) + 2;
