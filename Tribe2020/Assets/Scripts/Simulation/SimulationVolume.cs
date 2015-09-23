@@ -1,44 +1,72 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 //This is the model for a cell within the energy simulation
-public class SimulationVolume {
+public class SimulationVolume{
+	public enum DIRECTIONS {UP, DOWN, NORTH, SOUTH, EAST, WEST};
+	public enum TYPE {VOID, FACE, VOLUME};
+	protected SimulationCell[] _faces;
+
 	private SimulationManager _simMgr;
 	private SimulationManager.Block _type;
 	private SimulationVolume[] _neighbours;
-	private Dictionary<string, SimulationFace> _faces;
+//	private Dictionary<string, SimulationFace> _faces;
 
 	private float _heat;
 	private float _heatEmittance;
 	private float _transmission;
 
-	private float _temperature;
-	private float _isolation;
+	//Properties
+	private float _energy;
+	private float _mass;
+	private float _constant;
+
+//	private 
+
+	private float _xTransfer, _yTransfer, zTransfer; //NS, UD, EW
 
 	private bool _isInitialized = false;
 
-	public SimulationVolume(): this(SimulationManager.Block.Empty){
+	public SimulationVolume(){
 	}
 
-	public SimulationVolume(SimulationManager simMgr, SimulationManager.Block type, Vector3 pos){
-		_simMgr = simMgr;
 
-		_type = type;
-		_heat = Random.value * 60;
-		_heat = 20;
-		_heatEmittance = -1f;
-		_transmission = 1f;
+	//TODO Orientations
+	//We have various orientations of wall as well as if they are a type
+	//of cross section (|, L, T, +)
 
-		_faces = new Dictionary<string, SimulationFace>();
-		_simMgr.SetFace("up", this, pos + new Vector3 (0, 1, 0));
-
-		_faces.Add("down", 	this, pos + new Vector3(0, -1, 0));
-		_faces.Add("north", _simMgr.GetFace(pos, pos + new Vector3(1, 0, 0)));
-		_faces.Add("south", _simMgr.GetFace(pos, pos + new Vector3(-1, 0, 0)));
-		_faces.Add("west", 	_simMgr.GetFace(pos, pos + new Vector3(0, 0, -1)));
-		_faces.Add("east", 	_simMgr.GetFace(pos, pos + new Vector3(0, 0, 1)));
+	// Use this for initialization
+	public void Start(SimulationCell u, SimulationCell d, SimulationCell n, SimulationCell s
+	                  , SimulationCell e, SimulationCell w){
+		_faces[(int)DIRECTIONS.UP]	= u;
+		_faces[(int)DIRECTIONS.DOWN] = d;
+		_faces[(int)DIRECTIONS.NORTH]= n;
+		_faces[(int)DIRECTIONS.SOUTH]= s;
+		_faces[(int)DIRECTIONS.EAST] = e;
+		_faces[(int)DIRECTIONS.WEST] = w;
 	}
+
+
+
+//	public SimulationVolume(SimulationManager simMgr, SimulationManager.Block type, Vector3 pos){
+//		_simMgr = simMgr;
+//
+//		_type = type;
+//		_heat = Random.value * 60;
+//		_heat = 20;
+//		_heatEmittance = -1f;
+//		_transmission = 1f;
+//
+//		_faces = new Dictionary<string, SimulationFace>();
+//		_simMgr.SetFace("up", this, pos + new Vector3 (0, 1, 0));
+//
+//		_faces.Add("down", 	this, pos + new Vector3(0, -1, 0));
+//		_faces.Add("north", _simMgr.GetFace(pos, pos + new Vector3(1, 0, 0)));
+//		_faces.Add("south", _simMgr.GetFace(pos, pos + new Vector3(-1, 0, 0)));
+//		_faces.Add("west", 	_simMgr.GetFace(pos, pos + new Vector3(0, 0, -1)));
+//		_faces.Add("east", 	_simMgr.GetFace(pos, pos + new Vector3(0, 0, 1)));
+//	}
 
 	// Use this for initialization
 	public void Init(
@@ -71,9 +99,9 @@ public class SimulationVolume {
 		_isInitialized = true;
 	}
 
-	public void SetFace(string direction, SimulationVolume north){
-		_faces.Add(direction, north);
-	}
+//	public void SetFace(string direction, SimulationVolume north){
+//		_faces.Add(direction, north);
+//	}
 	
 	// This is not an implementation of MonoBehaviours Update, so it needs
 	// to be called manually
@@ -104,9 +132,9 @@ public class SimulationVolume {
 //		if (!_isInitialized)
 //			return null;
 
-		foreach (SimulationFace face in _faces) {
-			face.Update();
-		}
+//		foreach (SimulationFace face in _faces) {
+//			face.Update();
+//		}
 	}
 
 	// Set the type of block which occupied this cell
@@ -145,13 +173,13 @@ public class SimulationVolume {
 		set { _transmission = value;}
 	}
 
-	public float Temperature{
-		get { return _temperature;}
-		set { _temperature = value;}
-	}
-
-	public float Isolation{
-		get { return _isolation;}
-		set { _isolation = value;}
-	}
+//	public float Temperature{
+//		get { return _temperature;}
+//		set { _temperature = value;}
+//	}
+//
+//	public float Isolation{
+//		get { return _isolation;}
+//		set { _isolation = value;}
+//	}
 }

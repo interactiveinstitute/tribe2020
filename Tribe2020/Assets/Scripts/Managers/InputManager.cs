@@ -48,9 +48,8 @@ public class InputManager : MonoBehaviour {
 		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
 
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-
-//		_eVis = GameObject.Find("Energy Visualiser") as GameObject;
-		_eVis = GameObject.Find("Energy Visualiser").GetComponent<EnergyVisualiser>();
+		
+//		_eVis = GameObject.Find("Energy Visualiser").GetComponent<EnergyVisualiser>();
 
 		//Debug interface
 		_debug1 = GameObject.FindWithTag ("debug_1").GetComponent<Text> ();
@@ -163,7 +162,7 @@ public class InputManager : MonoBehaviour {
 		_debug3.text = _state;
 		Vector3 heatCoord =
 			new Vector3 (_marker.transform.position.x / 5, 1, _marker.transform.position.z / 5);
-		_debug4.text = "heat: " + _simMgr.GetHeat(heatCoord);
+//		_debug4.text = "heat: " + _simMgr.GetHeat(heatCoord);
 	}
 
 	private void OnClick(int x, int y, int z){
@@ -324,17 +323,16 @@ public class InputManager : MonoBehaviour {
 
 	public void OnUpPressed(){
 		_curLevel++;
-		_eVis.SetFloor(_curLevel * 5f + 0.1f);
+//		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	public void OnDownPressed(){
 		_curLevel--;
-		_eVis.SetFloor(_curLevel * 5f + 0.1f);
+//		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	public void OnCheckboxChanged(bool value){
-//		Debug.Log (value);
-		_eVisToggle = !_eVisToggle;
-		_eVis.SetVisible(_eVisToggle);
+//		_eVisToggle = !_eVisToggle;
+//		_eVis.SetVisible(_eVisToggle);
 	}
 }
