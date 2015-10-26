@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SimulationCell{
+public class ESCell{
 	public enum FACE {UP = 0, DOWN = 1, NORTH = 2, SOUTH = 3, EAST = 4, WEST = 5};
-	protected SimulationCell[] _faces;
+	protected ESCell[] _faces;
 
 	public enum TYPE {VOID, FACE, VOLUME, EMPTY};
 	private TYPE _type;
@@ -14,17 +14,25 @@ public class SimulationCell{
 	private float _mass;
 	private float _constant;
 
-	public SimulationCell(TYPE type){
+	private float _thermalEnergy;
+	private float _uValue;
+	private float _temperature;
+
+	public ESCell(TYPE type){
 		_type = type;
 		if(_type != TYPE.VOID){
-			_faces = new SimulationCell[6];
+			_faces = new ESCell[6];
 		}
 		_isInitialized = false;
 	}
 
+	// Set Volume
+	public void SetVolume(TYPE type){
+		_type = type;
+	}
+
 	// Use this for initialization
-	public void SetFaces(SimulationCell u, SimulationCell d, SimulationCell n, SimulationCell s
-	           , SimulationCell e, SimulationCell w){
+	public void SetFaces(ESCell u, ESCell d, ESCell n, ESCell s, ESCell e, ESCell w){
 		_faces[(int)FACE.UP] 	= u;
 		_faces[(int)FACE.DOWN] = d;
 		_faces[(int)FACE.NORTH]= n;
@@ -35,22 +43,30 @@ public class SimulationCell{
 		_isInitialized = true;
 	}
 
-	public void SetFace(int dir, SimulationCell face){
-		_faces[dir] = face;
+	public void SetFace(FACE dir, ESCell face){
+		_faces[(int)dir] = face;
 
-		foreach(SimulationCell f in _faces){
+		foreach(ESCell f in _faces){
 			if(f == null) return;
 		}
 		
 		_isInitialized = true;
 	}
 
-	public void SetType(TYPE type){
+	public ESCell GetFace(FACE dir){
+		return _faces[(int)dir];
+	}
+
+	public void SetCellType(TYPE type){
+	}
+
+	public TYPE GetCellType(){
+		return _type;
 	}
 
 	public void SetFace(FACE dir, TYPE type){
-		SimulationCell face = _faces[(int)dir];
-		face.SetType(type);
+		ESCell face = _faces[(int)dir];
+		face.SetCellType(type);
 	}
 	
 	// Update is called once per frame
@@ -59,7 +75,7 @@ public class SimulationCell{
 			return;
 
 		if(_type == TYPE.FACE){
-			foreach(SimulationCell other in _faces){
+			foreach(ESCell other in _faces){
 				if(this.Energy > other.Energy){
 					this.Energy -= 1 * Time.deltaTime;
 					other.Energy += 1 * Time.deltaTime;
@@ -69,7 +85,7 @@ public class SimulationCell{
 				}
 			}
 		} else if(_type == TYPE.VOLUME){
-			foreach(SimulationCell other in _faces){
+			foreach(ESCell other in _faces){
 				if(this.Energy > other.Energy){
 					this.Energy -= 1 * Time.deltaTime;
 					other.Energy += 1 * Time.deltaTime;

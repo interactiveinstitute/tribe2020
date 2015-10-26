@@ -1,19 +1,20 @@
-﻿               using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SimulationManager : MonoBehaviour {
+public class ESManager : MonoBehaviour {
 	public const int xMax = 150, yMax = 5, zMax = 150;
 	private int _curUpdateLayer = 0;
 	public const int offset = 0;
-	private SimulationVolume[,,] _simVolumes;
+//	private SimulationVolume[,,] _simVolumes;
 //	public GameObject PREFAB_CELL, PREFAB_FLOOR, PREFAB_FIRE;
 	private ParticleSystem.Particle[] _ps;
 
 	public enum Block {Void, Empty, Floor, Wall, Campfire, Coffee, Toilet};
 
-	private Dictionary<string, SimulationFace> _worldFaces;
-	private SimulationCell[,,] _cells;
+//	private Dictionary<string, SimulationFace> _worldFaces;
+	private ESCell[,,] _cells;
+	private ESCell _worldCell;
 
 	// Use this for initialization
 	void Start(){
@@ -22,8 +23,8 @@ public class SimulationManager : MonoBehaviour {
 //		PREFAB_FLOOR = GameObject.Find("ent_block");
 //		PREFAB_FIRE = GameObject.Find("ent_campfire");
 
-		_simVolumes = new SimulationVolume[xMax, yMax, zMax];
-		_cells = new SimulationCell[xMax, yMax, zMax];
+//		_simVolumes = new SimulationVolume[xMax, yMax, zMax];
+		_cells = new ESCell[xMax, yMax, zMax];
 
 //		_worldFaces = new Dictionary<string, SimulationFace> ();
 //		_worldFaces.Add("up", new SimulationFace());
@@ -47,22 +48,22 @@ public class SimulationManager : MonoBehaviour {
 				for(int z = 0; z < zMax; z++){
 					if(y % 2 == 0) {
 						if(x % 2 == 1 && z % 2 == 1) {
-							_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.FACE);
+							_cells[x, y, z] = new ESCell(ESCell.TYPE.FACE);
 						} else {
-							_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.VOID);
+							_cells[x, y, z] = new ESCell(ESCell.TYPE.VOID);
 						}
 					} else {
 						if(x % 2 == 0) {
 							if(z % 2 == 0) {
-								_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.VOID);
+								_cells[x, y, z] = new ESCell(ESCell.TYPE.VOID);
 							} else {
-								_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.FACE);
+								_cells[x, y, z] = new ESCell(ESCell.TYPE.FACE);
 							}
 						} else {
 							if(z % 2 == 0) {
-								_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.FACE);
+								_cells[x, y, z] = new ESCell(ESCell.TYPE.FACE);
 							} else {
-								_cells[x, y, z] = new SimulationCell(SimulationCell.TYPE.EMPTY);
+								_cells[x, y, z] = new ESCell(ESCell.TYPE.EMPTY);
 							}
 						}
 					}
@@ -216,16 +217,16 @@ public class SimulationManager : MonoBehaviour {
 		return pos * 2 + new Vector3(1, 1, 1);
 	}
 
-	public SimulationCell GetVolume(Vector3 pos){
+	public ESCell GetVolume(Vector3 pos){
 		Vector3 simPos = SpaceToSimCoord(pos);
 		return _cells[(int)simPos.x, (int)simPos.y, (int)simPos.z];
 	}
 
-	public void SetVolume(Vector3 pos, SimulationCell.TYPE type){
-		GetVolume(pos).SetType(type);
+	public void SetVolume(Vector3 pos, ESCell.TYPE type){
+		GetVolume(pos).SetCellType(type);
 	}
 
-	public void SetFace(Vector3 pos, SimulationCell.FACE face, SimulationCell.TYPE type){
+	public void SetFace(Vector3 pos, ESCell.FACE face, ESCell.TYPE type){
 		GetVolume(pos).SetFace(face, type);
 	}
 
@@ -237,18 +238,48 @@ public class SimulationManager : MonoBehaviour {
 	public void SetRoom(Vector3[][] simCells, string type){
 		for(int x = 0; x < simCells.Length; x++){
 			for(int z = 0; z < simCells[0].Length; z++){
-				//TODO add volumes with faces to each other
+				//Extract volume cell and set volume type
+				Vector3 pos = simCells[x][z];
+				ESCell cell = GetVolume(pos);
+				cell.SetVolume(ESCell.TYPE.VOLUME);
+				//West - East walls
 				if(x == 0){
-					// Special west
-				} else if(z == 0){
-					//Special south
-				} else if(x == simCells.Length - 1){
-					//Special east
-				} else if(z == simCells[0].Length - 1){
-					//Special North
+					cell.SetFace(ESCell.FACE.WEST, ESCell.TYPE.FACE);
+					ESCell westVolume = GetVolume(pos + new Vector3(-1, 0, 0));
+
+					if(!IsEmpty(westVolume)){
+						cell.GetFace(ESCell.FACE.WEST).SetFace(ESCell.FACE.WEST, westVolume);
+					} else{
+						cell.GetFace(ESCell.FACE.WEST).SetFace(ESCell.FACE.WEST, _worldCell.GetFace(ESCell.FACE.WEST));
+					}
 				}
+				if(x == simCells.Length - 1){
+					cell.SetFace(ESCell.FACE.EAST, ESCell.TYPE.FACE);
+				}
+				//North - South walls
+				if(z == 0){
+					cell.SetFace(ESCell.FACE.SOUTH, ESCell.TYPE.FACE);
+				}
+				if(z == simCells[0].Length - 1){
+					cell.SetFace(ESCell.FACE.NORTH, ESCell.TYPE.FACE);
+				}
+				//Up - Down walls
+				cell.SetFace(ESCell.FACE.UP, ESCell.TYPE.FACE);
+				cell.SetFace(ESCell.FACE.DOWN, ESCell.TYPE.FACE);
+
+				//TODO check for room outside room or set to world faces
+
+
 			}
 		}
+	}
+
+	public bool IsEmpty(ESCell cell){
+		return cell.GetCellType() == ESCell.TYPE.EMPTY;
+	}
+
+	public bool IsEmpty(Vector3 pos){
+		return GetVolume(pos).GetCellType() == ESCell.TYPE.EMPTY;
 	}
 
 	//TODO
@@ -264,18 +295,30 @@ public class SimulationManager : MonoBehaviour {
 		int y = (int)pos.y;
 		int z = (int)pos.z;
 		
-		if(x >= offset && y >= offset && z >= offset &&
-		   x < xMax && y < yMax && z < zMax){
+		if(x >= offset && y >= offset && z >= offset && x < xMax && y < yMax && z < zMax){
 
-			SetVolume(pos, SimulationCell.TYPE.VOLUME);
-
-			//			SimulationVolume cell = _simVolumes[x, y, z];
-			if(_simVolumes[x, y, z].GetBlockType() != Block.Void){
-				_simVolumes[x, y, z].SetBlockType(type);
-			}
+			SetVolume(pos, ESCell.TYPE.VOLUME);
 		} else{
 		}
 	}
+
+//	public void SetType(Vector3 pos, Block type){
+//		int x = (int)pos.x;
+//		int y = (int)pos.y;
+//		int z = (int)pos.z;
+//		
+//		if(x >= offset && y >= offset && z >= offset &&
+//		   x < xMax && y < yMax && z < zMax){
+//
+//			SetVolume(pos, SimulationCell.TYPE.VOLUME);
+//
+//			//			SimulationVolume cell = _simVolumes[x, y, z];
+////			if(_simVolumes[x, y, z].GetBlockType() != Block.Void){
+////				_simVolumes[x, y, z].SetBlockType(type);
+////			}
+//		} else{
+//		}
+//	}
 
 
 //	public SimulationFace GetFace(SimulationVolume v1, Vector3 v2){
@@ -345,33 +388,43 @@ public class SimulationManager : MonoBehaviour {
 //	}
 
 	//
-	public Block GetType(int x, int y, int z){
-		if (IsWithinBounds (x, y, z)) {
-			return _simVolumes [x, y, z].GetBlockType ();
-		}
+//	public Block GetType(int x, int y, int z){
+//		if (IsWithinBounds (x, y, z)) {
+//			return _simVolumes [x, y, z].GetBlockType ();
+//		}
+//
+//		return Block.Void;
+//	}
 
-		return Block.Void;
-	}
+//	public SimulationCell GetType(int x, int y, int z){
+//		if (IsWithinBounds (x, y, z)) {
+//			return _cells [x, y, z].GetType();
+//		}
+//
+//		return Block.Void;
+//	}
 
-	public Block GetType(Vector3 pos){
+	public ESCell.TYPE GetType(Vector3 pos){
 		int x = (int)pos.x;
 		int y = (int)pos.y;
 		int z = (int)pos.z;
 
-		return GetType (x, y, z);
+		return _cells[x, y, z].GetCellType();
+
+//		return GetType(x, y, z);
 	}
 
-	public float GetHeat(Vector3 pos){
-		int x = (int)pos.x;
-		int y = (int)pos.y;
-		int z = (int)pos.z;
-
-		if (IsWithinBounds (x, y, z)) {
-			return _simVolumes [x, y, z].Heat;
-		}
-
-		return 0f;
-	}
+//	public float GetHeat(Vector3 pos){
+//		int x = (int)pos.x;
+//		int y = (int)pos.y;
+//		int z = (int)pos.z;
+//
+//		if (IsWithinBounds (x, y, z)) {
+//			return _simVolumes [x, y, z].Heat;
+//		}
+//
+//		return 0f;
+//	}
 
 	private bool IsWithinBounds(int x, int y, int z){
 		return x >= offset && y >= offset && z >= offset &&

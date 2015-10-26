@@ -6,16 +6,19 @@ using UnityEngine.UI;
 public class InputManager : MonoBehaviour {
 	public Collider groundPlane;
 	public GameObject ground;
+	public GameObject okOption, cancelOption;
 
 	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
-	private SimulationManager _simMgr;
+	private ESManager _simMgr;
 	private MeshManager _meshMgr;
 
 	private Text _debug1, _debug2, _debug3, _debug4, _debugY;
 
 	public GameObject cameraHolder;
+	public float perspectiveZoomSpeed = 0.25f;
+	public float orthoZoomSpeed = 0.25f;
 
-	private SimulationManager.Block _curBlock;
+	private ESManager.Block _curBlock;
 	private int _curLevel;
 
 	//Energy Visualiser
@@ -23,6 +26,7 @@ public class InputManager : MonoBehaviour {
 	private bool _eVisToggle = true;
 
 	public const string IDLE = "state_idle";
+	public const string START = "state_start";
 	public const string SPOT = "state_spot";
 	public const string AREA = "state_area";
 	public const string LINE = "state_line";
@@ -38,13 +42,13 @@ public class InputManager : MonoBehaviour {
 		_outline = GameObject.FindWithTag("outline") as GameObject;
 //		_selectedCells = new List<Vector3> ();
 
-		_curBlock = SimulationManager.Block.Floor;
+		_curBlock = ESManager.Block.Floor;
 		_curLevel = 0;
 
 		ground = GameObject.FindWithTag("ent_ground") as GameObject;
 		groundPlane = ground.GetComponent<Collider>();
 
-		_simMgr = GameObject.FindWithTag("managers").GetComponent<SimulationManager>();
+		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
 		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
 
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
@@ -62,12 +66,14 @@ public class InputManager : MonoBehaviour {
 		SetState (IDLE);
 	}
 
+	//
 	void Update(){
 //		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 //		RaycastHit hit;
 
 		Vector3 camPos = cameraHolder.transform.position;
 		Transform camTransform = cameraHolder.transform;
+		Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
 		float tSpeed = 0.1F;
 
@@ -76,7 +82,8 @@ public class InputManager : MonoBehaviour {
 		ground.transform.position = tmpPos;
 
 #if UNITY_ANDROID
-		if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+		if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved && _state == IDLE)
+		    || (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Moved)) {
 			// Get movement of the finger since last frame
 			Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
 			// Move object across XY plane
@@ -111,6 +118,33 @@ public class InputManager : MonoBehaviour {
 		cameraHolder.transform.position = camPos;
 #endif
 
+		// Pinch Zooming
+		if(Input.touchCount == 2){
+			// Store both touches.
+			Touch touchZero = Input.GetTouch(0);
+			Touch touchOne = Input.GetTouch(1);
+			
+			// Find the position in the previous frame of each touch.
+			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+			
+			// Find the magnitude of the distance between the touches in each frame.
+			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+			
+			// Find the difference in the distances between each frame.
+			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+			
+			// Zoom differently depending on ortho or perspective
+			if (camera.orthographic){
+				camera.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+				camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
+			} else {
+				camera.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+				camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
+			}
+		}
+
 		//Position marker according to grid
 		Vector3 pos = PointOnGround(Input.mousePosition, groundPlane);
 		pos.x = Mathf.Floor (pos.x / 5);
@@ -124,19 +158,22 @@ public class InputManager : MonoBehaviour {
 		case IDLE:
 			_marker.transform.position = newPos;
 			break;
+		case START:
+			_marker.transform.position = newPos;
+			break;
 		case AREA:
-			if (Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100) {
+			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
 				_marker2.transform.position = newPos;
 				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
 			}
 			break;
 		case LINE:
-			if (Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100) {
+			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
 				Vector3 basePos = _marker.transform.position;
 				if(Mathf.Abs(basePos.x - newPos.x) >
 				   Mathf.Abs(basePos.z - newPos.z)){
 					_marker2.transform.position = new Vector3(newPos.x, basePos.y, basePos.z);
-				} else{
+				} else {
 					_marker2.transform.position = new Vector3(basePos.x, basePos.y, newPos.z);
 				}
 				DrawSelectionArea(basePos, _marker2.transform.position);
@@ -165,6 +202,7 @@ public class InputManager : MonoBehaviour {
 //		_debug4.text = "heat: " + _simMgr.GetHeat(heatCoord);
 	}
 
+	//
 	private void OnClick(int x, int y, int z){
 		if (Input.mousePosition.x < Screen.width - 100) {
 			switch(_state){
@@ -174,9 +212,10 @@ public class InputManager : MonoBehaviour {
 					_outline.transform.position = _curMarked.transform.position;
 					_outline.transform.localScale = _curMarked.transform.localScale * 1.1f;
 					SetState(MARK);
-				} else{
-					SetState(AREA);
 				}
+				break;
+			case START:
+				SetState(AREA);
 				break;
 			case SPOT:
 				break;
@@ -199,6 +238,7 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
+	//
 	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
 		Vector3 pos = basePos + (edgePos - basePos) / 2;
 		pos.y = _curLevel + 0.2f;
@@ -209,6 +249,7 @@ public class InputManager : MonoBehaviour {
 		_selectArea.transform.localScale = tmpScale;
 	}
 
+	//
 	private List<Vector3> StoreSelection(Vector3 startPos, Vector3 endPos){
 		int startX = (int)(Mathf.Min(startPos.x, endPos.x));
 		int startZ = (int)(Mathf.Min(startPos.z, endPos.z));
@@ -230,6 +271,7 @@ public class InputManager : MonoBehaviour {
 		return storedCells;
 	}
 
+	//
 	private Vector3 PointOnGround(Vector2 screenCoord, Collider plane){
 		Ray ray = Camera.main.ScreenPointToRay(screenCoord);
 		RaycastHit hit;
@@ -240,11 +282,14 @@ public class InputManager : MonoBehaviour {
 		return new Vector3();
 	}
 
+	//
 	public void SetState(string newState){
 		_state = newState;
 
 		switch (_state) {
 		case IDLE:
+			okOption.GetComponent<CanvasGroup>().interactable = false;
+			cancelOption.GetComponent<CanvasGroup>().interactable = false;
 			_marker2.GetComponent<Renderer>().enabled = false;
 			_marker2.transform.position = new Vector3(-100, 0, -100);
 			_selectArea.GetComponent<Renderer>().enabled = false;
@@ -252,11 +297,19 @@ public class InputManager : MonoBehaviour {
 			_selectArea.transform.localScale = new Vector3(1, 1, 1);
 			_outline.GetComponent<Renderer>().enabled = false;
 			break;
+		case START:
+			okOption.GetComponent<CanvasGroup>().interactable = true;
+			cancelOption.GetComponent<CanvasGroup>().interactable = true;
+			break;
 		case AREA:
+			okOption.GetComponent<CanvasGroup>().interactable = true;
+			cancelOption.GetComponent<CanvasGroup>().interactable = true;
 			_marker2.GetComponent<Renderer>().enabled = true;
 			_selectArea.GetComponent<Renderer>().enabled = true;
 			break;
 		case MARK:
+			okOption.GetComponent<CanvasGroup>().interactable = true;
+			cancelOption.GetComponent<CanvasGroup>().interactable = true;
 			_outline.GetComponent<Renderer>().enabled = true;
 			break;
 		default:
@@ -265,26 +318,34 @@ public class InputManager : MonoBehaviour {
 	}
 
 	//OnPress events for the interface buttons
-	public void OnFloorPressed(){
-		_curBlock = SimulationManager.Block.Floor;
+	public void OnSquarePressed(){
+		SetState(START);
+		_curBlock = ESManager.Block.Wall;
 	}
 
-	public void OnWallPressed(){
-		_curBlock = SimulationManager.Block.Wall;
+	//
+	public void OnCirclePressed(){
+		Debug.Log("Hej");
+		SetState(START);
+		_curBlock = ESManager.Block.Wall;
 	}
 
+	//
 	public void OnCampFirePressed(){
-		_curBlock = SimulationManager.Block.Campfire;
+		_curBlock = ESManager.Block.Campfire;
 	}
 
+	//
 	public void OnCoffeePressed(){
-		_curBlock = SimulationManager.Block.Coffee;
+		_curBlock = ESManager.Block.Coffee;
 	}
 
+	//
 	public void OnToiletPressed(){
-		_curBlock = SimulationManager.Block.Toilet;
+		_curBlock = ESManager.Block.Toilet;
 	}
 
+	//
 	public void OnOKPressed(){
 		List<Vector3> storedCells;
 
@@ -292,14 +353,15 @@ public class InputManager : MonoBehaviour {
 		case AREA:
 			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
-			_simMgr.SetType(storedCells, _curBlock);
-			_meshMgr.AddMesh(_marker.transform.position, _marker2.transform.position, _curBlock);
+//			_simMgr.SetType(storedCells, _curBlock);
+//			_meshMgr.AddMesh(_marker.transform.position, _marker2.transform.position, _curBlock);
+			_meshMgr.CreateRoom(_marker.transform.position, _marker2.transform.position, _curBlock);
 			SetState (IDLE);
 			break;
 		case MARK:
 			storedCells = StoreSelection(
 				_marker.transform.position / 5, _marker2.transform.position / 5);
-			_simMgr.SetType(storedCells, SimulationManager.Block.Empty);
+//			_simMgr.SetType(storedCells, ESManager.Block.Empty);
 			_meshMgr.DestroyMesh(_curMarked);
 			SetState (IDLE);
 			break;
@@ -308,6 +370,7 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
+	//
 	public void OnCancelPressed(){
 		switch (_state) {
 		case AREA:
@@ -321,16 +384,19 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
+	//
 	public void OnUpPressed(){
 		_curLevel++;
 //		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
+	//
 	public void OnDownPressed(){
 		_curLevel--;
 //		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
+	//
 	public void OnCheckboxChanged(bool value){
 //		_eVisToggle = !_eVisToggle;
 //		_eVis.SetVisible(_eVisToggle);

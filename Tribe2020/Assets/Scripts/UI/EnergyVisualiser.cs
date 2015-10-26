@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class EnergyVisualiser : MonoBehaviour {
 //	private List<UICell> _cells;
-	private SimulationManager _simMgr;
+	private ESManager _simMgr;
 //	private CellPure[,] _cells;
 
 //	private Collider _groundPlane;
@@ -13,7 +13,7 @@ public class EnergyVisualiser : MonoBehaviour {
 	void Start(){
 		 GameObject ENERGY_VISUALISER_CELL = GameObject.FindWithTag("cell_feedback");
 
-		_simMgr = GameObject.FindWithTag("managers").GetComponent<SimulationManager>();
+		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
 
 //		_groundPlane = GameObject.FindWithTag("ent_ground").GetComponent<Collider>();
 
@@ -58,10 +58,10 @@ public class EnergyVisualiser : MonoBehaviour {
 			checkPos.z = /*point.z + */child.transform.position.z;
 			checkPos /= 5;
 
-			float heat = _simMgr.GetHeat(checkPos);
+//			float heat = _simMgr.GetHeat(checkPos);
 
-			EnergyVisualiserCell cf = child.GetComponent<EnergyVisualiserCell>();
-			cf.SetColor(new Color(0.5f, heat / 60f, heat / 60f));
+//			EnergyVisualiserCell cf = child.GetComponent<EnergyVisualiserCell>();
+//			cf.SetColor(new Color(0.5f, heat / 60f, heat / 60f));
 		}
 	}
 
