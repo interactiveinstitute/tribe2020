@@ -33,7 +33,7 @@ public class CircleObject : MonoBehaviour {
 		_segments = (int) Mathf.Max(10, Mathf.Ceil(_radius));
 		_segLength = Mathf.PI * 2f * _radius / _segments + 0.5f;
 
-		Debug.Log(_segments);
+//		Debug.Log(_segments);
 		
 		for(int i = 0; i < _segments; i++) {
 			_meshes.Add(GameObject.CreatePrimitive(PrimitiveType.Cube));

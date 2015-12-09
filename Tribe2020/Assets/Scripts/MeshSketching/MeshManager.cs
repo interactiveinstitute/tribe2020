@@ -2,19 +2,66 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using System;
+using PrimitivesPro.MeshCutting;
+using Plane = PrimitivesPro.Utils.Plane;
+
 public class MeshManager : MonoBehaviour{
-	public GameObject WALL, CAMPFIRE, COFFEE_MACHINE, TOILET;
+	private static MeshManager _instance;
+
+	private GameObject SHAPE, WALL, FIRE, COFFEE, TOILET;
 	private enum ALIGNMENT { X = 0, Z = 1, SAME = 3 };
+
 //	private List<GameObject> _meshes;
 	public Transform map;
 
 	private BoundsOctree<GameObject> _meshes2;
+	private BoundsOctree<GameObject> _meshes3;
 	private List<GameObject> _removeMeshes;
 
 	private int _recursionCount = 0;
+
+	//PrimitivesPRO
+	public GameObject[] OriginalObjects = null;
+	
+	private GameObject OriginalObject;
+	private int objectIdx;
+//	private GameObject cut0, cut1;
+//	private Plane plane;
+//	private float GenerationTimeMS;
+	
+	private int success = 0;
+	private float minTime = float.MaxValue;
+	private float maxTime = float.MinValue;
+	private float sumTime = 0.0f;
+	private int sumSteps;
+	private float cutTimeout;
+	private bool triangulate = true;
+	private Vector3[] tweenAmount = new Vector3[2];
+	private float targetTweenTimeout;
+	
+	private MeshCutter cutter;
+
+	GameObject cube;
+	bool done = false;
+
+	public static MeshManager GetInstance(){
+		if(_instance != null) {
+			return _instance;
+		}
+
+		return null;
+	}
 	
 	// Use this for initialization
 	void Start(){
+		_instance = this;
+
+		SHAPE = Resources.Load("Shape") as GameObject;
+		WALL = Resources.Load("Wall Segment") as GameObject;
+		FIRE = Resources.Load("Block Campfire") as GameObject;
+		COFFEE = Resources.Load("Block Coffee Machine") as GameObject;
+		TOILET = Resources.Load("Block Toilet") as GameObject;
 //		WALL = GameObject.Find("Block Wall");
 //		CAMPFIRE = GameObject.Find("Block Campfire");
 //		COFFEE_MACHINE = GameObject.Find ("Block Coffee Machine");
@@ -23,19 +70,61 @@ public class MeshManager : MonoBehaviour{
 		Vector3 center = new Vector3(372.5f, 372.5f, 372.5f);
 		_meshes2 = new BoundsOctree<GameObject>(745, center, 1, 1.25f);
 		_removeMeshes = new List<GameObject>();
+
+		cutter = new MeshCutter();
+
+//		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+//		GameObject cube = GameObject.FindGameObjectWithTag("boxPro") as GameObject;
+//		Plane plane = new Plane(new Vector3(1, 0, 0), Vector3.zero);
+
+//		cube = Instantiate(SHAPE, Vector3.zero, Quaternion.identity) as GameObject;
+
+//		Cut(cube, Vector3.right);
 	}
 	
 	// Update is called once per frame
 	void Update(){
+
+//		if(!done) {
+//			Shape shape = cube.GetComponent<Shape>();
+//			shape.SetTube();
+//		
+//			Cut(cube, Vector3.forward);
+//			done = true;
+//		}
 	}
 
 	//
-	public void CreateRoom(Vector3 start, Vector3 end, ESManager.Block type){
-		AddMesh(start, new Vector3(start.x, start.y, end.z), type);
-		AddMesh(start, new Vector3(end.x, start.y, start.z), type);
-		AddMesh(end, new Vector3(start.x, start.y, end.z), type);
-		AddMesh(end, new Vector3(end.x, start.y, start.z), type);
+	public void CreateRoom(Vector3 start, Vector3 end){
+//		AddWall(start, new Vector3(start.x, start.y, end.z));
+//		AddWall(start, new Vector3(end.x, start.y, start.z));
+//		AddWall(end, new Vector3(start.x, start.y, end.z));
+//		AddWall(end, new Vector3(end.x, start.y, start.z));
+
+//		AddMesh(start, new Vector3(start.x, start.y, end.z), type);
+//		AddMesh(start, new Vector3(end.x, start.y, start.z), type);
+//		AddMesh(end, new Vector3(start.x, start.y, end.z), type);
+//		AddMesh(end, new Vector3(end.x, start.y, start.z), type);
 	}
+
+//	public void CreateCircleRoom(Vector3 center, float radius){
+//		GameObject wall = Instantiate(WALL, Vector3.zero, Quaternion.identity) as GameObject;
+//		Shape wallMesh = wall.GetComponent<Shape>();
+//		wallMesh.SetCircle(center, radius);
+//
+//		wall.transform.SetParent(map);
+//	}
+
+//	public void AddWall(Vector3 start, Vector3 end){
+//		GameObject wall = Instantiate(WALL, Vector3.zero, Quaternion.identity) as GameObject;
+//		Shape wallMesh = wall.GetComponent<Shape>();
+//		wallMesh.SetRectangle(start, end);
+//
+//		AddMesh(wall);
+////		RecursionAddMesh(wall);
+//
+////		wall.transform.SetParent(map);
+//	}
 
 	//
 	public void AddMesh(Vector3 pos, ESManager.Block type){
@@ -45,28 +134,29 @@ public class MeshManager : MonoBehaviour{
 	}
 
 	//
-	public void AddMesh(GameObject go){
-		GameObject newMesh = Instantiate(WALL, Vector3.zero, Quaternion.identity) as GameObject;
-//		GameObject stencil = so.ToGameObject();
+	public void AddMesh(GameObject mesh){
+//		GameObject newMesh = Instantiate(WALL, Vector3.zero, Quaternion.identity) as GameObject;
+//
+//		newMesh.transform.position = go.transform.position;
+//		newMesh.transform.rotation = go.transform.rotation;
+//		newMesh.transform.localScale = go.transform.localScale;
+//
+//		newMesh.transform.SetParent(map);
+		_recursionCount = 0;
 
-//		GameObject newMesh =
-//			Instantiate(WALL, go.transform.position, go.transform.rotation) as GameObject;
+		RecursionAddMesh(mesh);
+	}
 
-		newMesh.transform.position = go.transform.position;
-		newMesh.transform.rotation = go.transform.rotation;
-		newMesh.transform.localScale = go.transform.localScale;
-//		newMesh.tag = so.GetTag();
-//		go.transform.SetParent(map);
-//		GameObject newMesh =
-//			Instantiate(go, go.transform.position, go.transform.rotation) as GameObject;
-		newMesh.transform.SetParent(map);
+	public void AddMesh(Vector3 start, Vector3 end, ESManager.Block type){
+		_recursionCount = 0;
+		RecursionAddMesh(start, end, type);
 	}
 
 	//
-	public void AddMesh(Vector3 start, Vector3 end, ESManager.Block type){
+	public void RecursionAddMesh(Vector3 start, Vector3 end, ESManager.Block type){
 		FlushMeshes();
 
-		if(_recursionCount > 6) {
+		if(_recursionCount > 30){
 			return;
 		} else {
 			_recursionCount++;
@@ -89,8 +179,34 @@ public class MeshManager : MonoBehaviour{
 				CutIntersections(newMesh, go, type);
 			}
 		}
+	}
 
-		_recursionCount = 0;
+	public void RecursionAddMesh(GameObject mesh){
+		FlushMeshes();
+		
+		if(_recursionCount > 30){
+			return;
+		} else {
+			_recursionCount++;
+		}
+		
+//		GameObject obj = TypeToObject(type);
+//		Vector3 pos = start + (end - start) / 2;
+//		GameObject newMesh = Instantiate(obj, pos, Quaternion.identity) as GameObject;
+		mesh.transform.SetParent(map);
+		
+//		newMesh.transform.localScale = TypeToScale(type, start.x, end.x, start.z, end.z);
+		Bounds newBounds = mesh.GetComponentInChildren<Collider>().bounds;
+		
+		GameObject[] collidingBoxes = _meshes2.GetColliding(newBounds);
+		
+		if(collidingBoxes.Length == 0){
+			_meshes2.Add(mesh, newBounds);
+		} else {
+			foreach(GameObject go in collidingBoxes){
+//				CutIntersections(mesh, go);
+			}
+		}
 	}
 
 	//
@@ -106,9 +222,9 @@ public class MeshManager : MonoBehaviour{
 			_removeMeshes.Add(m1);
 			_removeMeshes.Add(m2);
 
-			AddMesh(ends1[0], ends2[0], ESManager.Block.Wall);
-			AddMesh(ends2[0], ends1[1], ESManager.Block.Wall);
-			AddMesh(ends1[1], ends2[1], ESManager.Block.Wall);
+			RecursionAddMesh(ends1[0], ends2[0], ESManager.Block.Wall);
+			RecursionAddMesh(ends2[0], ends1[1], ESManager.Block.Wall);
+			RecursionAddMesh(ends1[1], ends2[1], ESManager.Block.Wall);
 		} else {
 			// Crossing
 			Vector3 crossing = GetCrossing(m1, m2);
@@ -118,12 +234,93 @@ public class MeshManager : MonoBehaviour{
 			_removeMeshes.Add(m1);
 			_removeMeshes.Add(m2);
 
-			AddMesh(crossing, ends1[0], type);
-			AddMesh(crossing, ends1[1], type);
-			AddMesh(crossing, ends2[0], type);
-			AddMesh(crossing, ends2[1], type);
+			RecursionAddMesh(crossing, ends1[0], type);
+			RecursionAddMesh(crossing, ends1[1], type);
+			RecursionAddMesh(crossing, ends2[0], type);
+			RecursionAddMesh(crossing, ends2[1], type);
 		}
 	}
+
+	private void AddWall(GameObject mesh){
+		
+	}
+
+	private void AddCircleWall(GameObject mesh){
+		
+	}
+
+	private void Cut(GameObject mesh, Vector3 planeOrientation){
+		GameObject cut0, cut1;
+		Plane plane = new Plane(planeOrientation, Vector3.zero);
+		
+		try{
+			ContourData contour;
+
+			Vector4 dcs = MeshCutter.defaultCrossSection;
+			float time = cutter.Cut(mesh, plane, true, true, dcs, out cut0, out cut1, out contour);
+			
+			success++;
+			
+			if(time > maxTime){
+				maxTime = time;
+			}
+			
+			if(time < minTime){
+				minTime = time;
+			}
+			
+			sumTime += time;
+			sumSteps++;
+		} catch(Exception){
+			Debug.Log("Cutter exception!");
+			return;
+		}
+		
+		if(cut0 != null){
+			tweenAmount[0] = plane.Normal*0.02f;
+			tweenAmount[1] = plane.Normal*-0.02f;
+			targetTweenTimeout = 0.5f;
+			cutTimeout = 0.5f;
+		}
+
+		cut0.AddComponent<Shape>();
+		cut0.AddComponent<NavMeshObstacle>();
+
+		cut1.AddComponent<Shape>();
+		cut1.AddComponent<NavMeshObstacle>();
+	}
+
+	//
+//	private void CutIntersections(GameObject m1, GameObject m2){
+//		if(m1.transform.localScale == m2.transform.localScale) {
+//			// Same
+//			DestroyMesh(m1);
+//		} else if(GetAlignment(m1) == GetAlignment(m2)) {
+//			// Parallel
+//			Vector3[] ends1 = GetEnds(m1);
+//			Vector3[] ends2 = GetEnds(m2);
+//			
+//			_removeMeshes.Add(m1);
+//			_removeMeshes.Add(m2);
+//			
+//			RecursionAddMesh(ends1[0], ends2[0], ESManager.Block.Wall);
+//			RecursionAddMesh(ends2[0], ends1[1], ESManager.Block.Wall);
+//			RecursionAddMesh(ends1[1], ends2[1], ESManager.Block.Wall);
+//		} else {
+//			// Crossing
+//			Vector3 crossing = GetCrossing(m1, m2);
+//			Vector3[] ends1 = GetEnds(m1);
+//			Vector3[] ends2 = GetEnds(m2);
+//			
+//			_removeMeshes.Add(m1);
+//			_removeMeshes.Add(m2);
+//			
+//			RecursionAddMesh(crossing, ends1[0]);
+//			RecursionAddMesh(crossing, ends1[1]);
+//			RecursionAddMesh(crossing, ends2[0]);
+//			RecursionAddMesh(crossing, ends2[1]);
+//		}
+//	}
 
 	//
 	private ALIGNMENT GetAlignment(GameObject go){
@@ -225,9 +422,9 @@ public class MeshManager : MonoBehaviour{
 		case ESManager.Block.Floor:
 			return WALL;
 		case ESManager.Block.Campfire:
-			return CAMPFIRE;
+			return FIRE;
 		case ESManager.Block.Coffee:
-			return COFFEE_MACHINE;
+			return COFFEE;
 		case ESManager.Block.Toilet:
 			return TOILET;
 		default:

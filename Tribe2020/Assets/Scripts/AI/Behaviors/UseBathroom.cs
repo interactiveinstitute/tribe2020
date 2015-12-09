@@ -10,7 +10,7 @@ public class UseBathroom : AgentBehavior {
 	
 	public override void Start(){
 		_curState = WALK_TO_TOILET;
-		Debug.Log(WALK_TO_TOILET);
+//		Debug.Log(WALK_TO_TOILET);
 	}
 
 	public override void Update(SimpleAI ai){
@@ -31,7 +31,7 @@ public class UseBathroom : AgentBehavior {
 		if (_curState == WALK_TO_TOILET && tag == "toilet") {
 			_curState = USE_TOILET;
 			_delay = 5;
-			Debug.Log(USE_TOILET);
+//			Debug.Log(USE_TOILET);
 		}
 	}
 }
