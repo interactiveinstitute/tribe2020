@@ -57,6 +57,7 @@ public class InputManager : MonoBehaviour {
 
 	//Start is called once for initialization
 	void Start(){
+		Debug.Log(Screen.width + ", " + Screen.height);
 		_instance = this;
 
 		_marker = Load("UI/Marker");
@@ -516,9 +517,9 @@ public class InputManager : MonoBehaviour {
 
 	//
 	private bool PointerIsOutsideGUI(){
-		bool leftOfRightBar = Input.mousePosition.x < Screen.width - 70;
-		bool outsideSelectionBox = Input.mousePosition.x > 140 ||
-			Input.mousePosition.y < Screen.height - 50;
+		bool leftOfRightBar = Input.mousePosition.x < Screen.width - Screen.width * 0.1f;
+		bool outsideSelectionBox = Input.mousePosition.x > Screen.width * 0.1f ||
+			Input.mousePosition.y < Screen.height - Screen.height * 0.12f;
 
 		return leftOfRightBar && outsideSelectionBox;
 	}
