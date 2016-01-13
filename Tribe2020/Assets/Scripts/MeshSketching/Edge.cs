@@ -32,8 +32,8 @@ public class Edge : MonoBehaviour{
 
 	public void Refresh(Node n){
 		if(_isInit){
-			Vector3 start = n1.gameObject.transform.position;
-			Vector3 end = n2.gameObject.transform.position;
+			Vector3 start = n1.GetAnchorPoint(this);
+			Vector3 end = n2.GetAnchorPoint(this);
 			Vector3 center = start + (end - start) / 2;
 			
 			float distance = Vector3.Distance(start, end);
@@ -82,5 +82,10 @@ public class Edge : MonoBehaviour{
 		_buildMgr.RemoveBound(gameObject);
 
 		Destroy(gameObject);
+	}
+
+	//
+	public string Stringify(){
+		return "";
 	}
 }

@@ -3,23 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Room : MonoBehaviour {
-//	public GameObject NODE, EDGE, ROOM;
 	private static BuildManager _buildMgr;
 
 	private Material _material;
 	private List<Color> _colors;
 
-
-
 	private List<Node> _nodes;
 	private bool _isInit = false;
 
+	//
 	public void Init(){
 		Init(new List<Node>());
-//		_nodes = new List<Node>();
-//		_isInit = true;
 	}
 
+	//
 	public void Init(List<Node> nodes){
 		if(!_isInit) {
 			_buildMgr = BuildManager.GetInstance();
@@ -43,27 +40,26 @@ public class Room : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
+	//Use this for initialization
 	void Start(){
-//		if(!_isInit){
-//			Init();
-//		}
 	}
 	
-	// Update is called once per frame
+	//Update is called once per frame
 	void Update(){
 	
 	}
 
+	//
 	public void Refresh(Node n){
 		UpdateMesh();
 	}
 
+	//
 	public bool Equals(Room other){
-//		List<Node> otherList = other.GetNodes();
 		return Equals(other.GetNodes());
 	}
 
+	//
 	public bool Equals(List<Node> otherList){
 		if(_nodes.Count != otherList.Count){
 			return false;
@@ -78,10 +74,12 @@ public class Room : MonoBehaviour {
 		return true;
 	}
 
+	//
 	public List<Node> GetNodes(){
 		return _nodes;
 	}
 
+	//
 	public Vector3 GetPosition(){
 		float minX = Mathf.Infinity;
 		float minZ = Mathf.Infinity;
@@ -129,7 +127,8 @@ public class Room : MonoBehaviour {
 		float minY = Mathf.Infinity;
 		
 		List<Vector2> vertices2D = new List<Vector2>();
-		
+
+		float alt = -1 * _nodes[0].transform.position.y + 2.5f;
 		foreach(Node node in _nodes){
 			vertices2D.Add(new Vector2(node.transform.position.x, node.transform.position.z));
 			minX = Mathf.Min(minX, node.transform.position.x);
@@ -147,7 +146,7 @@ public class Room : MonoBehaviour {
 		// Create the Vector3 vertices
 		Vector3[] vertices = new Vector3[vertices2D.Count];
 		for(int i = 0; i < vertices.Length; i++){
-			vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+			vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, alt); 
 		}
 		
 		// Create the mesh
@@ -224,5 +223,15 @@ public class Room : MonoBehaviour {
 		}
 
 		Destroy(gameObject);
+	}
+
+	//
+	public string Stringify(){
+		string nodes = "";
+		foreach(Node n in _nodes) {
+			nodes += n.Stringify() + ",";
+		}
+		nodes = nodes.Substring(0, nodes.Length - 2);
+		return "{'nodes':[" + nodes + "]}";
 	}
 }

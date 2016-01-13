@@ -35,9 +35,10 @@ public class SimpleAI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update(){
-		_curBehavior.Update (this);
+		_curBehavior.Update(this);
 
-		if (_curTarget && Vector3.Distance (transform.position, _curTarget.transform.position) < 10) {
+		if(_curTarget &&
+		    Vector3.Distance(transform.position, _curTarget.transform.position) < 10) {
 			_curBehavior.OnHasReached(_curTarget.tag);
 		}
 
@@ -75,10 +76,19 @@ public class SimpleAI : MonoBehaviour {
 
 	public void GoTo(string tag){
 		_curTarget = FindNearestObject(tag);
+
+		if(_curTarget == null) {
+			return;
+		}
+
 		_agent.SetDestination(_curTarget.transform.position);
 	}
 
 	public GameObject FindNearestObject(string tag){
+		if(GameObject.FindGameObjectsWithTag(tag).Length == 0){
+			return null;
+		}
+
 		GameObject[] gos = GameObject.FindGameObjectsWithTag(tag);
 		GameObject target = gos[0];
 		float minDist = 9999;
@@ -98,6 +108,6 @@ public class SimpleAI : MonoBehaviour {
 		_curBehavior = _behaviors[Random.Range(0, _behaviors.Count)];
 		_curBehavior.Start();
 
-		Debug.Log ("done, now: " + _curBehavior);
+//		Debug.Log ("done, now: " + _curBehavior);
 	}
 }

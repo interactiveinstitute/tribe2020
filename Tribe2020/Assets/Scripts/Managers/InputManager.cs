@@ -4,7 +4,17 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour {
+	//Singleton features
 	private static InputManager _instance;
+	public static InputManager GetInstance(){
+		return _instance;
+	}
+
+	//Useful managers
+	private ESManager _simMgr;
+	private BuildManager _buildMgr;
+	private UIManager _uiMgr;
+	private SaveManager _saveMgr;
 
 	public Collider groundPlane;
 	public GameObject ground;
@@ -12,23 +22,19 @@ public class InputManager : MonoBehaviour {
 
 	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
 	private Vector3 _prevPosition;
-	private ESManager _simMgr;
-	private MeshManager _meshMgr;
-	private BuildManager _buildMgr;
+
 	private BoundsOctree<GameObject> _collisions;
 
-	private Text _debug1, _debug2, _debug3, _debug4, _debugY;
-
+	//Orientation interaction parameters
 	public GameObject cameraHolder;
 	private Camera _camera;
 	public float perspectiveZoomSpeed = 0.25f;
 	public float orthoZoomSpeed = 0.25f;
 
-	private ESManager.Block _curBlock;
-	private int _curShape = -1;
+	//Interaction parameters
 	private int _curLevel;
-	private GameObject _curNode;
-	private GameObject _curEdge;
+	private GameObject _curNode = null;
+	private GameObject _curEdge = null;
 
 	//Energy Visualiser
 	private EnergyVisualiser _eVis;
@@ -44,15 +50,12 @@ public class InputManager : MonoBehaviour {
 
 	private string _state;
 
-	public static InputManager GetInstance(){
-		if(_instance != null) {
-			return _instance;
-		}
-		
-		return null;
+	//Sort use instead of constructor
+	void Awake(){
+		_instance = this;
 	}
 
-	// Use this for initialization
+	//Start is called once for initialization
 	void Start(){
 		_instance = this;
 
@@ -61,63 +64,36 @@ public class InputManager : MonoBehaviour {
 		_selectArea = Load("UI/Selection");
 		_outline = Load("UI/Outline");
 		_prevPosition = Vector3.zero;
+
 		Vector3 center = new Vector3(372.5f, 372.5f, 372.5f);
 		_collisions = new BoundsOctree<GameObject>(745, center, 1, 1.25f);
-
-		_curBlock = ESManager.Block.Floor;
+		
 		_curLevel = 0;
 
 		ground = GameObject.FindWithTag("ent_ground") as GameObject;
 		groundPlane = ground.GetComponent<Collider>();
 
 		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
-		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
-		_buildMgr = GameObject.FindWithTag("managers").GetComponent<BuildManager>();
+		_buildMgr = BuildManager.GetInstance();
+		_uiMgr = UIManager.GetInstance();
+		_saveMgr = SaveManager.GetInstance();
 
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
 		_camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		
-//		_eVis = GameObject.Find("Energy Visualiser").GetComponent<EnergyVisualiser>();
-
-		//Debug interface
-		_debug1 = GameObject.FindWithTag("debug_1").GetComponent<Text>();
-		_debug2 = GameObject.FindWithTag("debug_2").GetComponent<Text>();
-		_debug3 = GameObject.FindWithTag("debug_3").GetComponent<Text>();
-		_debug4 = GameObject.FindWithTag("debug_4").GetComponent<Text>();
-		_debugY = GameObject.FindWithTag("debug_y").GetComponent<Text>();
-
 		//Set inital game state
 		SetState (IDLE);
-
-		GameObject LIST_ITEM = Resources.Load("UI/List Item") as GameObject;
-		GameObject thingList = GameObject.FindWithTag("thing_list") as GameObject;
-
-		List<string> things = new List<string>();
-		things.Add("Toilet");
-		things.Add("Campfire");
-		things.Add("Coffee");
-
-		List<GameObject> listItems = new List<GameObject>();
-		for(int i = 0; i < things.Count; i++){
-			string key = things[i];
-			listItems.Add(Instantiate(LIST_ITEM, Vector2.zero, Quaternion.identity) as GameObject);
-			listItems[i].GetComponentsInChildren<Text>()[0].text = things[i];
-			listItems[i].GetComponent<Button>().onClick.AddListener(() => OnItemPush(key));
-		}
-		AttachList(thingList, listItems);
-
-//		GameObject nObj = GameObject.FindGameObjectWithTag("node") as GameObject;
-//		Node node = nObj.GetComponent<Node>();
-//		node.AddNode().GetComponent<Node>().AddNode();
-		
-
-//		Debug.Log("here other is node:" + node);
 	}
 
-	//
+	//Update is called once per frame
 	void Update(){
 		UpdatePan(_camera);
 		UpdatePinch(_camera);
+
+		if(_curNode != null) {
+			_uiMgr.selectInfo.text = _curNode.GetComponent<Node>().ToString();
+			_curNode.transform.position = _marker.transform.position;
+		}
 
 		//Position marker according to grid
 		Vector3 pos = PointOnGround(Input.mousePosition, groundPlane);
@@ -128,40 +104,53 @@ public class InputManager : MonoBehaviour {
 		Vector3 newPos = pos * 5;
 		newPos += new Vector3(0f, 2.5f, 0f);
 
-		switch(_state){
-		case IDLE:
-			_marker.transform.position = newPos;
-			break;
-		case SPOT:
-		case CONFIRM:
-			_marker.transform.position = newPos;
-			break;
-		case START:
-			_marker.transform.position = newPos;
-			break;
-		case AREA:
-			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
-				_marker2.transform.position = newPos;
-				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
-			}
-			break;
-		case LINE:
-			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
-				Vector3 basePos = _marker.transform.position;
-				if(Mathf.Abs(basePos.x - newPos.x) >
-				   Mathf.Abs(basePos.z - newPos.z)){
-					_marker2.transform.position = new Vector3(newPos.x, basePos.y, basePos.z);
-				} else {
-					_marker2.transform.position = new Vector3(basePos.x, basePos.y, newPos.z);
-				}
-				DrawSelectionArea(basePos, _marker2.transform.position);
-			}
-			break;
-		case MARK:
-			_marker.transform.position = newPos;
-			break;
-		default:
-			break;
+		_marker.transform.position = newPos;
+
+//		switch(_state){
+//		case IDLE:
+//			_marker.transform.position = newPos;
+//			break;
+//		case SPOT:
+//		case CONFIRM:
+//			_marker.transform.position = newPos;
+//			break;
+//		case START:
+//			_marker.transform.position = newPos;
+//			break;
+//		case AREA:
+//			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
+//				_marker2.transform.position = newPos;
+//				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
+//			}
+//			break;
+//		case LINE:
+//			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
+//				Vector3 basePos = _marker.transform.position;
+//				if(Mathf.Abs(basePos.x - newPos.x) >
+//				   Mathf.Abs(basePos.z - newPos.z)){
+//					_marker2.transform.position = new Vector3(newPos.x, basePos.y, basePos.z);
+//				} else {
+//					_marker2.transform.position = new Vector3(basePos.x, basePos.y, newPos.z);
+//				}
+//				DrawSelectionArea(basePos, _marker2.transform.position);
+//			}
+//			break;
+//		case MARK:
+//			_marker.transform.position = newPos;
+//			break;
+//		default:
+//			break;
+//		}
+
+		//
+		if(Input.GetMouseButton(0)){
+			OnDrag();
+		}
+
+		//
+		if((newPos.x != _prevPosition.x || newPos.z != _prevPosition.z) && _curNode != null){
+			_curNode.GetComponent<Node>().Refresh();
+			_prevPosition = newPos;
 		}
 
 		//If mouse click, add or delete block depending on if space vacant
@@ -169,56 +158,30 @@ public class InputManager : MonoBehaviour {
 			OnTouchStart(_marker.transform.position);
 		}
 
+		//
 		if(Input.GetMouseButtonUp(0)){
 			OnTouchEnded(_marker.transform.position);
 		}
 
-//		if(Input.GetMouseButtonUp(0) && _curNode != null){
-//			_buildMgr.UpdateCollision(_curNode);
-//			Bounds curNodeBounds = _curNode.GetComponent<Collider>().bounds;
-//
-//			GameObject[] result = _buildMgr.GetCollidingNode(curNodeBounds);
-//			foreach(GameObject go in result){
-//				if(go != _curNode){
-////					Debug.Log("merging node " + go);
-//					_buildMgr.ConnectNodes(go.GetComponent<Node>(), _curNode.GetComponent<Node>());
-////					_buildMgr.MergeNodes(go.GetComponent<Node>(), _curNode.GetComponent<Node>());
-//				}
-//			}
-////			if(result.Length > 1){
-////
-////			}
-//			_curNode = null;
-//		}
-
+		//
 		if(Input.GetMouseButtonDown(1) && _curNode != null){
 			_buildMgr.UpdateCollision(_curNode);
 			_curNode = _buildMgr.AddNode(_curNode.transform.position, _curNode.GetComponent<Node>());
 		}
 
-		if(Input.GetMouseButton(0)){
-			OnDrag();
-		}
-
-		if((newPos.x != _prevPosition.x || newPos.z != _prevPosition.z) && _curNode != null){
-//			Debug.Log("marker moved");
-			_curNode.GetComponent<Node>().Refresh();
-			_prevPosition = newPos;
-		}
-
-		_debug1.text = "x: " + (_marker.transform.position.x / 5);
-		_debugY.text = "y: " + (_marker.transform.position.y / 5);
-		_debug2.text = "z: " + (_marker.transform.position.z / 5);
-//		float vertExtent = Camera.main.GetComponent<Camera>().orthographicSize;
-//		_debug2.text = "" + vertExtent * Screen.width / Screen.height;
-		_debug3.text = _state;
-		Vector3 heatCoord =
-			new Vector3 (_marker.transform.position.x / 5, 1, _marker.transform.position.z / 5);
-//		_debug4.text = "heat: " + _simMgr.GetHeat(heatCoord);
+		//Debug info
+		_uiMgr.debug1.text = "x: " + Input.mousePosition.x;
+		_uiMgr.debugY.text = "y: " + Input.mousePosition.y;
+		_uiMgr.debug2.text = "z: " + (Screen.height - 30);
+		_uiMgr.debug3.text = _state;
 	}
 
 	//
 	private void OnTouchStart(Vector3 touch){
+		if(!PointerIsOutsideGUI()){
+			return;
+		}
+
 		int x = (int)touch.x;
 		int z = (int)touch.z;
 		int y = _curLevel;
@@ -238,84 +201,93 @@ public class InputManager : MonoBehaviour {
 			}
 		}
 
-		if(firstNode != null) {
+		if(firstNode != null){
 			_curNode = firstNode;
 			Debug.Log("got node");
-		} else if(firstEdge != null) {
+		} else if(firstEdge != null){
 			_curEdge = firstEdge;
 			Debug.Log("got edge");
-		} else {
-			_buildMgr.CreateRoom(_marker.transform.position, 3);
 		}
-//			if(result[0].GetComponents<Node>().Length > 0){
-//
-//			}
-//			if(result[0].GetComponents<Edge>().Length > 0){
-//				
-//			}
-//		} else {
-//			_buildMgr.CreateRoom(_marker.transform.position);
-////			_curNode = _buildMgr.AddNode(_marker.transform.position);
-//		}
 
-		if(Input.mousePosition.x < Screen.width - 100){
-			_curMarked = _meshMgr.CollidesWithBlock(_marker);
-
-//			switch(_state){
-//			case IDLE:
-//				_curMarked = _meshMgr.CollidesWithBlock(_marker);
-//				if(_curMarked != null){
-//					_outline.transform.position = _curMarked.transform.position;
-//					_outline.transform.localScale = _curMarked.transform.localScale * 1.1f;
-//					SetState(MARK);
-//				}
-//				break;
-//			case START:
-//				SetState(AREA);
-//				break;
-//			case SPOT:
-//				SetState(CONFIRM);
-//				_marker2.transform.position = _marker.transform.position;
-//				break;
-//			case AREA:
-//				break;
-//			case LINE:
-//				break;
-//			case MARK:
-//				_curMarked = _meshMgr.CollidesWithBlock(_marker);
-//				if(_curMarked != null){
-//					_outline.transform.position = _curMarked.transform.position;
-//					_outline.transform.localScale = _curMarked.transform.localScale * 1.1f;
-//				} else{
-//					SetState(IDLE);
-//				}
-//				break;
-//			default:
-//				break;
-//			}
+		if(_curNode == null && _curEdge == null){
+			_buildMgr.CreateRoom(_marker.transform.position, 3);
 		}
 	}
 
+	//
 	private void OnTouchEnded(Vector3 lastTouch){
+		if(!PointerIsOutsideGUI()){
+			return;
+		}
+
 		//Released node
 		if(_curNode != null){
 			_buildMgr.UpdateCollision(_curNode);
 			Bounds curNodeBounds = _curNode.GetComponent<Collider>().bounds;
-		
 			GameObject[] result = _buildMgr.GetCollidingNode(curNodeBounds);
+			GameObject secondNode = null;
+			GameObject secondEdge = null;
+
 			foreach(GameObject go in result){
 				if(go.GetComponent<Node>() != null && go != _curNode){
-					_buildMgr.ConnectNodes(go.GetComponent<Node>(), _curNode.GetComponent<Node>());
+					secondNode = go;
+				}
+				
+				if(go.GetComponent<Edge>() != null){
+					secondEdge = go;
 				}
 			}
-			_curNode = null;
+
+			if(secondNode != null){
+				_buildMgr.ConnectNodes(
+					secondNode.GetComponent<Node>(), _curNode.GetComponent<Node>());
+			} else if(_curNode.GetComponent<Node>().IsNotConnected() && secondEdge != null){
+				_buildMgr.SplitEdge(
+					secondEdge.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
+			}
+
+//			foreach(GameObject go in result){
+//				if(go.GetComponent<Node>() != null && go != _curNode){
+//					_buildMgr.ConnectNodes(go.GetComponent<Node>(), _curNode.GetComponent<Node>());
+//					_curEdge = null;
+//					_curNode = null;
+//					Debug.Log("Node put on other node");
+//					return;
+//
+//				}
+//				else if(go.GetComponent<Edge>() != null){
+////					_buildMgr.SplitEdge(go.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
+//					_buildMgr.SplitEdge(go.GetComponent<Edge>(), lastTouch);
+//					_curEdge = null;
+//					_curNode = null;
+//					Debug.Log("Node put on edge");
+//					return;
+//				}
+//			}
+//			_curNode = null;
+
+		//Split edge with new node
 		} else if(_curEdge != null){
 			_buildMgr.SplitEdge(_curEdge.GetComponent<Edge>(), lastTouch);
-			_curEdge = null;
-			Debug.Log("Let go of edge");
 		}
+		
+		_curEdge = null;
+		_curNode = null;
 	}
 
+	//
+	private void OnTap(){
+	}
+
+	//
+	private void OnButtonTap(string button){
+	}
+
+	//
+	private void OnDoubleTap(){
+	}
+
+	//
 	private void OnDrag(){
 		if(_curNode != null) {
 			_curNode.transform.position = _marker.transform.position;
@@ -326,46 +298,58 @@ public class InputManager : MonoBehaviour {
 	public void SetState(string newState){
 		_state = newState;
 
-		switch (_state) {
+		switch(_state){
 		case IDLE:
-			okOption.GetComponent<CanvasGroup>().interactable = false;
-			cancelOption.GetComponent<CanvasGroup>().interactable = false;
-			_marker2.GetComponent<Renderer>().enabled = false;
-//			_marker2.transform.position = new Vector3(-100, 0, -100);
-			_selectArea.GetComponent<Renderer>().enabled = false;
-//			_selectArea.transform.position = new Vector3(-100, 0, -100);
-//			_selectArea.transform.localScale = new Vector3(1, 1, 1);
-			_outline.GetComponent<Renderer>().enabled = false;
+			SetActive(okOption, false);
+			SetActive(cancelOption, false);
+
+			SetVisible(_marker2, false);
+			SetVisible(_selectArea, false);
+			SetVisible(_outline, false);
 			break;
 		case SPOT:
-			okOption.GetComponent<CanvasGroup>().interactable = false;
-			cancelOption.GetComponent<CanvasGroup>().interactable = true;
+			SetActive(okOption, false);
+			SetActive(cancelOption, true);
 			break;
 		case CONFIRM:
-			okOption.GetComponent<CanvasGroup>().interactable = true;
-			cancelOption.GetComponent<CanvasGroup>().interactable = true;
-			_marker2.GetComponent<Renderer>().enabled = true;
+			SetActive(okOption, true);
+			SetActive(cancelOption, true);
+
+			SetVisible(_marker2, true);
 			break;
 		case START:
-			okOption.GetComponent<CanvasGroup>().interactable = true;
-			cancelOption.GetComponent<CanvasGroup>().interactable = true;
+			SetActive(okOption, true);
+			SetActive(cancelOption, true);
 			break;
 		case AREA:
-			okOption.GetComponent<CanvasGroup>().interactable = true;
-			cancelOption.GetComponent<CanvasGroup>().interactable = true;
-			_marker2.GetComponent<Renderer>().enabled = true;
-			_selectArea.GetComponent<Renderer>().enabled = true;
+			SetActive(okOption, true);
+			SetActive(cancelOption, true);
+
+			SetVisible(_marker2, true);
+			SetVisible(_selectArea, true);
 			break;
 		case MARK:
-			okOption.GetComponent<CanvasGroup>().interactable = true;
-			cancelOption.GetComponent<CanvasGroup>().interactable = true;
-			_outline.GetComponent<Renderer>().enabled = true;
+			SetActive(okOption, true);
+			SetActive(cancelOption, true);
+
+			SetVisible(_outline, true);
 			break;
 		default:
 			break;
 		}
 	}
 
+	//Help method for toggling interaction with buttons
+	private void SetActive(GameObject go, bool mode){
+		go.GetComponent<CanvasGroup>().interactable = mode;
+	}
+
+	//Help method for toggling visibility of game objects
+	private void SetVisible(GameObject go, bool mode){
+		go.GetComponent<Renderer>().enabled = mode;
+	}
+
+	//
 	public void UpdatePan(Camera camera){
 		Vector3 camPos = cameraHolder.transform.position;
 		Transform camTransform = cameraHolder.transform;
@@ -402,6 +386,7 @@ public class InputManager : MonoBehaviour {
 		#endif
 	}
 
+	//
 	public void UpdatePinch(Camera camera){
 		if(Input.touchCount == 2){
 			// Store both touches.
@@ -433,80 +418,32 @@ public class InputManager : MonoBehaviour {
 	//OnPress events for the interface buttons
 	public void OnSquarePressed(){
 		SetState(START);
-		_curShape = Shape.RECTANGLE;
-		_curBlock = ESManager.Block.Wall;
 	}
 
 	//
 	public void OnCirclePressed(){
 		SetState(START);
-		_curShape = Shape.CIRCLE;
-		_curBlock = ESManager.Block.Wall;
 	}
 
-//	//
-//	public void OnCampFirePressed(){
-//		_curBlock = ESManager.Block.Campfire;
-//	}
-//
-//	//
-//	public void OnCoffeePressed(){
-//		_curBlock = ESManager.Block.Coffee;
-//	}
-//
-//	//
-//	public void OnToiletPressed(){
-//		_curBlock = ESManager.Block.Toilet;
-//	}
-
+	//
 	public void OnItemPush(string tag){
-		switch(tag) {
-		case "Toilet":
-			_curBlock = ESManager.Block.Toilet;
-			break;
-		case "Campfire":
-			_curBlock = ESManager.Block.Campfire;
-			break;
-		case "Coffee":
-			_curBlock = ESManager.Block.Coffee;
-			break;
-		}
+		GameObject newObj = _buildMgr.CreateItem(Vector3.zero, tag);
+		_curNode = newObj;
+	}
 
-		SetState(SPOT);
+	//
+	public void OnSavePush(){
+		_saveMgr.Save();
+	}
+
+	//
+	public void OnLoadPush(){
+		_saveMgr.Load();
 	}
 
 	//
 	public void OnOKPressed(){
-		List<Vector3> storedCells;
-		Vector3 start = _marker.transform.position;
-		Vector3 end = _marker2.transform.position;
-		Vector3 center = start + (end - start) / 2;
 
-		switch(_state){
-		case CONFIRM:
-			_meshMgr.AddMesh(end, _curBlock);
-			SetState(IDLE);
-			break;
-		case AREA:
-			storedCells = StoreSelection(start / 5, end / 5);
-
-			if(_curShape == Shape.RECTANGLE){
-				_meshMgr.CreateRoom(start, end);
-			} else if(_curShape == Shape.CIRCLE){
-//				_meshMgr.CreateCircleRoom(center, Vector3.Distance(start, end) / 2);
-			}
-			SetState (IDLE);
-			break;
-		case MARK:
-			storedCells = StoreSelection(
-				_marker.transform.position / 5, _marker2.transform.position / 5);
-//			_simMgr.SetType(storedCells, ESManager.Block.Empty);
-			_meshMgr.DestroyMesh(_curMarked);
-			SetState (IDLE);
-			break;
-		default:
-			break;
-		}
 	}
 
 	//
@@ -526,19 +463,15 @@ public class InputManager : MonoBehaviour {
 	//
 	public void OnUpPressed(){
 		_curLevel++;
-//		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	//
 	public void OnDownPressed(){
 		_curLevel--;
-//		_eVis.SetFloor(_curLevel * 5f + 0.1f);
 	}
 
 	//
 	public void OnCheckboxChanged(bool value){
-//		_eVisToggle = !_eVisToggle;
-//		_eVis.SetVisible(_eVisToggle);
 	}
 
 	//
@@ -562,10 +495,6 @@ public class InputManager : MonoBehaviour {
 		int height = endZ - startZ + 1;
 		List<Vector3> storedCells = new List<Vector3> ();
 		
-		//		Debug.Log ("start: "+startX+","+startZ);
-		//		Debug.Log ("end: "+endX+","+endZ);
-		//		Debug.Log ("size: "+width+","+height);
-		
 		for (int x = 0; x < width; x++) {
 			for(int z = 0; z < height; z++){
 				storedCells.Add(new Vector3(startX + x, 1, startZ + z));
@@ -585,41 +514,28 @@ public class InputManager : MonoBehaviour {
 		return new Vector3();
 	}
 
-	//Help method for filling a gui list with list elements
-	private void AttachList(GameObject list, List<GameObject> elements){
-		Transform listTransform = list.transform;
-		ClearChildren(listTransform);
+	//
+	private bool PointerIsOutsideGUI(){
+		bool leftOfRightBar = Input.mousePosition.x < Screen.width - 70;
+		bool outsideSelectionBox = Input.mousePosition.x > 140 ||
+			Input.mousePosition.y < Screen.height - 50;
 
-		foreach(GameObject element in elements){
-			element.transform.SetParent(listTransform, false);
-		}
-		
-//		for(int i = 0; i < elements.Count; i++){
-//			elements[i].transform.SetParent(listTransform, false);
-//		}
+		return leftOfRightBar && outsideSelectionBox;
 	}
 
-	//Help method for clearing a game object of children
-	private void ClearChildren(Transform transform){
-		List<GameObject> children = new List<GameObject>();
-		foreach (Transform child in transform){
-			children.Add (child.gameObject);
-		}
-		children.ForEach(child => Destroy(child));
-	}
-
+	//
 	public GameObject Load(string path){
 		GameObject prefab = Resources.Load(path) as GameObject;
 		GameObject go = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;
 		return go;
 	}
 
+	//
 	public void AddCollision(GameObject obj){
 		_collisions.Add(obj, obj.GetComponent<Collider>().bounds);
-
-//		Debug.Log(_collisions.Count);
 	}
 
+	//
 	public void RemoveCollision(GameObject obj){
 		_collisions.Remove(obj);
 	}

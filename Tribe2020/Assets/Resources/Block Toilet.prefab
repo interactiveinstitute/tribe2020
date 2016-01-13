@@ -11,6 +11,7 @@ GameObject:
   - 33: {fileID: 3301114}
   - 65: {fileID: 6592462}
   - 23: {fileID: 2360096}
+  - 114: {fileID: 11467642}
   m_Layer: 0
   m_Name: Block Toilet
   m_TagString: toilet
@@ -69,8 +70,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148576}
   m_LocalRotation: {x: -1.1520229e-07, y: -.707106948, z: -.70710659, w: 1.15202347e-07}
-  m_LocalPosition: {x: -2.04999995, y: -.50999999, z: .455000013}
-  m_LocalScale: {x: .0399999991, y: .0399999991, z: .0399999991}
+  m_LocalPosition: {x: -1.64999998, y: -.5, z: .449999988}
+  m_LocalScale: {x: .0320000015, y: .0320000015, z: .0320000015}
   m_Children:
   - {fileID: 428936}
   m_Father: {fileID: 482216}
@@ -82,7 +83,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 119326}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.19999981, y: 2.5, z: 2.5}
+  m_LocalPosition: {x: 20, y: 2.5, z: 2.5}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children:
   - {fileID: 455386}
@@ -162,6 +163,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &11467642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 119326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ddc786c04fb7094380c804d5714dc9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NODE: {fileID: 186446, guid: 9cd46ac63131c424a9089a5ac152dbfd, type: 2}
+  EDGE: {fileID: 168176, guid: 3d30c732678a4b24492fcd3783bddbbb, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -3,35 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BuildManager : MonoBehaviour{
-//	private ShapeManager _shapeMgr;
-//	private static BuildManager _instance;
+	//Singleton features
 	private static BuildManager _instance;
-
-//	public InputManager _inputMgr;
-	public GameObject NODE, EDGE, ROOM;
-	public Transform graph;
-
-	private int _recusionCount = 0;
-
-	private BoundsOctree<GameObject> _nodeBounds;
-//	, _edgeBounds;
-//	private List<Node> _nodes;
-//	private List<Edge> _edges;
-//	private List<Room> _rooms;
-
-//	public static BuildManager GetInstance(){
-//		if(_instance == null) {
-//			_instance = this;
-//		}
-//
-//		return _instance;
-//	}
-
 	public static BuildManager GetInstance(){
 		return _instance;
 	}
 
-	//
+//	public const string TOILET = "Toilet";
+//	public const string CAMPFIRE = "Campfire";
+//	public const string COFFEE = "Coffee";
+//	public const string DOOR = "Door";
+//	public const string WINDOW = "Window";
+//	public const string STAIRS = "Stairs";
+
+	public GameObject NODE, EDGE, ROOM;
+	public List<GameObject> objects;
+	private Dictionary<string, GameObject> _objDictionary;
+
+	public GameObject TOILET, CAMPFIRE, COFFEE, DOOR, WINDOW;
+	public Transform graph;
+	private int _recusionCount = 0;
+
+	private BoundsOctree<GameObject> _nodeBounds;
+	
+	//Sort use instead of constructor
 	void Awake(){
 		Vector3 worldCenter = new Vector3(372.5f, 372.5f, 372.5f);
 		_nodeBounds = new BoundsOctree<GameObject>(745, worldCenter, 1, 1.25f);
@@ -39,20 +34,24 @@ public class BuildManager : MonoBehaviour{
 		_instance = this;
 	}
 
-	// Use this for initialization
+	//Use this for initialization
 	void Start(){
-//		_shapeMgr = GameObject.FindWithTag("managers").GetComponent<ShapeManager>();
-
-
-//		_edgeBounds = new BoundsOctree<GameObject>(745, worldCenter, 1, 1.25f);
-//		_nodes = new List<Node>();
-//		_edges = new List<Edge>();
-//		_rooms = new List<Room>();
+		_objDictionary = new Dictionary<string, GameObject>();
+		foreach(GameObject go in objects){
+			_objDictionary.Add(go.name, go);
+		}
 	}
 	
-	// Update is called once per frame
+	//Update is called once per frame
 	void Update(){
 	}
+
+	//
+	public void CreateRoom(string stringifiedRoom){
+//		JavaScriptSerializer js = new JavaScriptSerializer();
+//		Person [] persons =  js.Deserialize<Person[]>(json);
+	}
+
 
 	//
 	public void CreateRoom(Vector3 pos, int size){
@@ -72,9 +71,19 @@ public class BuildManager : MonoBehaviour{
 		nodes.Add(sw.GetComponent<Node>());
 		nodes.Add(se.GetComponent<Node>());
 		AddRoom(nodes);
+	}
 
-		//Create four nodes with edges in between
-		//Create volume mesh for them
+	//
+	public GameObject CreateItem(Vector3 pos, string type){
+		return Instantiate(_objDictionary[type], pos, Quaternion.identity) as GameObject;
+	}
+
+	//For doors and windows
+	public void CreateNodeObject(Vector3 pos, string objID){
+	}
+
+	//For objects not part of wall
+	public void CreateBlockObject(Vector3 pos, string objID){
 	}
 
 	//Add new node without edges to room graph
@@ -82,9 +91,6 @@ public class BuildManager : MonoBehaviour{
 		GameObject newNodeObj = Instantiate(NODE, pos, Quaternion.identity) as GameObject;
 		Node newNode = newNodeObj.GetComponent<Node>();
 		newNode.Init();
-
-//		_nodes.Add(newNode);
-//		_nodeBounds.Add(newNodeObj, newNodeObj.GetComponent<Collider>().bounds);
 
 		newNodeObj.transform.SetParent(graph);
 		return newNodeObj;
@@ -95,8 +101,6 @@ public class BuildManager : MonoBehaviour{
 		GameObject newNodeObj = Instantiate(NODE, pos, Quaternion.identity) as GameObject;
 		Node newNode = newNodeObj.GetComponent<Node>();
 		newNode.Init();
-
-//		_nodeBounds.Add(newNodeObj, newNodeObj.GetComponent<Collider>().bounds);
 
 		AddEdge(curNode, newNode);
 
@@ -118,9 +122,6 @@ public class BuildManager : MonoBehaviour{
 		Edge newEdge = newEdgeObj.GetComponent<Edge>();
 		newEdge.Init(node1, node2);
 
-//		_edges.Add(newEdge);
-//		_nodeBounds.Add(newEdgeObj, newEdgeObj.GetComponent<Collider>().bounds);
-
 		node1.AddEdge(node2, newEdge);
 		node2.AddEdge(node1, newEdge);
 
@@ -133,7 +134,6 @@ public class BuildManager : MonoBehaviour{
 		GameObject newRoomObj = Instantiate(ROOM, Vector3.up, Quaternion.identity) as GameObject;
 		Room newRoom = newRoomObj.GetComponent<Room>();
 		newRoom.Init(nodes);
-//		_rooms.Add(newRoom);
 
 		foreach(Node n in nodes){
 			n.AddRoom(newRoom);
@@ -146,60 +146,38 @@ public class BuildManager : MonoBehaviour{
 	//
 	public void ConnectNodes(Node node1, Node node2){
 		Room room = node1.GetRoom();
-		if(room.ContainsNode(node2)){;
+		if(room.ContainsNode(node2)){
+			Debug.Log("Removed node " + node2.ToString());
 			room.RemoveNode(node2);
 		} else{
-			Debug.Log("Connected node " + node1.ToString() + " and " + node2.ToString());
 			node1.ConnectNode(node2);
 			node2.ConnectNode(node1);
+			Debug.Log("Connected node " + node1.ToString() + " and " + node2.ToString());
 		}
 	}
-
-//	//Merge two nodes into one, updating connected edges and rooms
-//	public void MergeNodes(Node node1, Node node2){
-//		List<Node> neighbours = node2.GetNodes();
-//		List<Node> exclude = node1.GetNodes();
-//
-//		List<Room> rooms = node1.GetRooms();d
-//		rooms.AddRange(node2.GetRooms());
-//
-//		foreach(Node n in neighbours){
-//			AddEdge(node1, n);
-//		}
-//
-//		foreach(Room r in rooms){
-//			r.UpdateNodes(node1, node2);
-//		}
-//
-//		_nodeBounds.Remove(node2.gameObject);
-////		_nodes.Remove(node2);
-//		node2.Remove();
-//
-//		_recusionCount = 0;
-////		SearchForRoom(node1, null, new List<Node>(), exclude);
-////		SearchForRoom(node1, null, new List<Node>(), 0f);
-//		SearchForRoom(node1);
-//		Debug.Log("recursions: " + _recusionCount);
-//	}
 
 	//
 	public void SplitEdge(Edge edge, Vector3 pos){
 		GameObject newNodeObj = AddNode(pos);
 		Node newNode = newNodeObj.GetComponent<Node>();
 
-		AddEdge(newNode, edge.n1);
-		AddEdge(newNode, edge.n2);
+		SplitEdge(edge, pos, newNode);
+	}
 
+	//
+	public void SplitEdge(Edge edge, Vector3 pos, Node node){
+		AddEdge(node, edge.n1);
+		AddEdge(node, edge.n2);
+		
 		Room room = edge.n1.GetRoom();
-		room.AddNode(newNode, edge.n1, edge.n2);
-		newNode.AddRoom(room);
-
+		room.AddNode(node, edge.n1, edge.n2);
+		node.AddRoom(room);
+		
 		edge.Remove();
 	}
 
 	//
 	public GameObject[] GetCollidingNode(Bounds b){
-//		Bounds pb = _marker.GetComponent<Collider>().bounds;
 		GameObject[] result = _nodeBounds.GetColliding(b);
 
 		return result;
@@ -208,273 +186,7 @@ public class BuildManager : MonoBehaviour{
 	//
 	public void UpdateCollision(GameObject node){
 		node.GetComponent<Node>().Refresh();
-//		_nodeBounds.Remove(node);
-//		_nodeBounds.Add(node, node.GetComponent<Collider>().bounds);
-//
-//		List<Edge> edges = node.GetComponent<Node>().GetEdges();
-//		foreach(Edge edge in edges) {
-//			_nodeBounds.Remove(edge.gameObject);
-//			_nodeBounds.Add(edge.gameObject, edge.gameObject.GetComponent<Collider>().bounds);
-//		}
-
-
-//		foreach(Edge edge in node.GetComponent<Node>().GetEdges()){
-//			_nodeBounds.Remove(edge.gameObject);
-//			_nodeBounds.Add(edge.gameObject, edge.gameObject.GetComponent<Collider>().bounds);
-//		}
 	}
-
-//	void chordless_cycles(int* adjacency, int dim){
-//		for(int i=0; i<dim-2; i++){
-//			for(int j=i+1; j<dim-1; j++){
-//				if(!adjacency[i+j*dim])
-//					continue;
-//				list<vector<int> > candidates;
-//				for(int k=j+1; k<dim; k++){
-//					if(!adjacency[i+k*dim])
-//						continue;
-//					if(adjacency[j+k*dim]){
-//						cout << i+1 << " " << j+1 << " " << k+1 << endl;
-//						continue;
-//					}
-//					vector<int> v;
-//					v.resize(3);
-//					v[0]=j;
-//					v[1]=i;
-//					v[2]=k;
-//					candidates.push_back(v);
-//				}
-//				while(!candidates.empty()){
-//					vector<int> v = candidates.front();
-//					candidates.pop_front();
-//					int k = v.back();
-//					for(int m=i+1; m<dim; m++){
-//						if(find(v.begin(), v.end(), m) != v.end())
-//							continue;
-//						if(!adjacency[m+k*dim])
-//							continue;
-//						bool chord = false;
-//						int n;
-//						for(n=1; n<v.size()-1; n++)
-//							if(adjacency[m+v[n]*dim])
-//								chord = true;
-//						if(chord)
-//							continue;
-//						if(adjacency[m+j*dim]){
-//							for(n=0; n<v.size(); n++)
-//								cout<<v[n]+1<<" ";
-//							cout<<m+1<<endl;
-//							continue;
-//						}
-//						vector<int> w = v;
-//						w.push_back(m);
-//						candidates.push_back(w);
-//					}
-//				}
-//			}
-//		}
-//	}
-
-//	public void SearchForRoom(Node node, Node prev, List<Node> list, List<Node> exclude){
-//		_recusionCount++;
-//
-//		//Inf recursion guard
-//		if(_recusionCount > 200){
-//			Debug.Log("force stopped");
-//			return;
-//		}
-//
-//		if(list.Contains(node)){
-//			if(!ContainsRoom(list)){
-//				AddRoom(list);
-//				Debug.Log("Added new room");
-//			} else{
-//				Debug.Log("Found duplicate room");
-//			}
-//			return;
-//		}
-//
-//		list.Add(node);
-//
-//		foreach(Edge edge in node.GetEdges()){
-//			Node next = edge.GetOtherNode(node);
-//			if(next != prev && !exclude.Contains(next)){
-//				SearchForRoom(next, node, list, new List<Node>());
-//			}
-//		}
-//
-//		if(node.GetEdges().Count == 0) {
-//			Debug.Log("no edges");
-//		}
-//	}
-
-//	//
-//	public void SearchForRoom0(Node node){
-//		foreach(Edge edge in node.GetEdges()){
-//			List<Node> list = new List<Node>();
-//			list.Add(node);
-//
-//			Node next = edge.GetOtherNode(node);
-//
-//			float nextAngle = AngleFromNodeToNode(node, next);
-//			float tmpAngle = (nextAngle - 0 + 360) % 360;
-//			Debug.Log("Start, " + node.ToString() + "->" + next.ToString() + ": " + tmpAngle);
-//
-////			SearchForRoom(edge.GetOtherNode(node), node, list);
-//			SearchForRoom(node, next, node, list, AngleFromNodeToNode(node, next));
-////			SearchForRoom(next, node, list, 180);
-////			SearchForRoom(edge.GetOtherNode(node), node, list, 0f);
-//		}
-//	}
-
-	//
-//	public void SearchForRoom2(Node start, Node node, Node prev, List<Node> list, float prevAngle){
-//		Debug.Log(_recusionCount + " " +
-//		          prev.ToString() + " -> " + node.ToString());
-//		_recusionCount++;
-//
-//		//Inf recursion guard
-//		if(_recusionCount > 200){
-//			Debug.Log("Force stopped");
-//			return;
-//		}
-//
-//		if(start == node) {
-//			if(PathContainsExistingRoom(list)){
-//				Debug.Log("Room would contain smaller room");
-//			} else if(ContainsRoom(list)){
-//				Debug.Log("Duplicate room");
-//			} else{
-//				AddRoom(list);
-//				Debug.Log("Added new room");
-//			}
-//			return;
-//		}
-//
-//		if(list.Contains(node)) {
-//			Debug.Log("Back on old path");
-////			return;
-//		}
-//
-//
-////		if(list.Contains(node)){
-////			if(!ContainsRoom(list)){
-////				AddRoom(list);
-////				Debug.Log("Added new room");
-////			} else{
-////				Debug.Log("Duplicate room");
-////			}
-////			return;
-////		}
-//
-//		list.Add(node);
-//
-//		Node nextNode = null;
-//		float maxAngle = -1 * Mathf.Infinity;
-//		float nextAngle = 0;
-//
-//		foreach(Edge edge in node.GetEdges()){
-//			Node tmpNode = edge.GetOtherNode(node);
-////			float tmpAngle = AngularDifference(edge.GetRotationFrom(node), prevAngle);
-//			if(tmpNode != prev){
-////				nextNode = tmpNode;
-//				nextAngle = AngleFromNodeToNode(node, tmpNode);
-////				float tmpAngle = edge.GetRotationFrom(node, prevAngle);
-//				float tmpAngle = (nextAngle - prevAngle + 360) % 360;
-//
-//				Debug.Log(node.ToString() + "->" + tmpNode.ToString() + ": " + tmpAngle);
-//
-//				if(tmpAngle >= maxAngle){
-//					nextNode = tmpNode;
-//					maxAngle = tmpAngle;
-////					if(node.GetEdges().Count > 2)
-////						Debug.Log("+new max " + tmpAngle + " -> " + nextNode.ToString());
-//				}
-//			}
-//		}
-//
-//		if(nextNode != null){
-////			if(maxAngle < 180){
-////				Debug.Log("Counterclock-wise");
-////				return;
-////			}
-//			SearchForRoom(start, nextNode, node, list, nextAngle);
-//		}
-//	}
-
-//	public void SearchForRoom1(Node node, Node prev, List<Node> list){
-//		Debug.Log(_recusionCount + " " +
-//			prev.ToString() + " -> " + node.ToString());
-////		Debug.Log(_recusionCount + " " +
-////		          prev.ToString() + " -> " + node.ToString() +
-////		          ", angle:" + "?" +
-////		          ", list:" + list.Count +
-////		          ", edges: " + node.GetEdges().Count);
-//		_recusionCount++;
-//		
-//		//Inf recursion guard
-//		if(_recusionCount > 200){
-//			Debug.Log("force stopped");
-//			return;
-//		}
-//		
-//		if(list.Contains(node)){
-//			if(!ContainsRoom(list)){
-//				AddRoom(list);
-//				Debug.Log("Added new room");
-//			} else{
-//				Debug.Log("Duplicate room");
-//			}
-//			return;
-//		}
-//		
-//		list.Add(node);
-//		
-//		Node nextNode = null;
-//		float maxAngle = 0;
-//
-//		foreach(Edge edge in node.GetEdges()){
-//			Node tmpNode = edge.GetOtherNode(node);
-//			//			float tmpAngle = AngularDifference(edge.GetRotationFrom(node), prevAngle);
-//			if(tmpNode != prev){
-//				//				nextNode = tmpNode;
-//
-//				float tmpAngle = edge.GetRotationFrom(node, prev);
-//				
-//				if(tmpAngle >= maxAngle){
-//					nextNode = tmpNode;
-//					maxAngle = tmpAngle;
-//					if(node.GetEdges().Count > 2)
-//						Debug.Log("+new max " + tmpAngle + " -> " + nextNode.ToString());
-//				}
-//			}
-//		}
-//		
-//		if(nextNode != null){
-//			Debug.Log(", angle:" + maxAngle);
-//			SearchForRoom(nextNode, node, list);
-//		}
-//	}
-
-//	//
-//	public bool ContainsRoom(List<Node> nodes){
-//		foreach(Room room in _rooms){
-//			if(room.Equals(nodes)){
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//	//
-//	public bool PathContainsExistingRoom(List<Node> nodes){
-//		foreach(Room room in _rooms){
-//			if(PathContainsPath(nodes, room.GetNodes())){
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 
 	//
 	public bool PathContainsPath(List<Node> big, List<Node> small){
@@ -503,5 +215,14 @@ public class BuildManager : MonoBehaviour{
 	public void UpdateBound(GameObject go){
 		_nodeBounds.Remove(go);
 		_nodeBounds.Add(go, go.GetComponent<Collider>().bounds);
+	}
+
+	//
+	public List<string> GetThings(){
+		List<string> things = new List<string>();
+		foreach(GameObject go in objects){
+			things.Add(go.name);
+		}
+		return things;
 	}
 }
