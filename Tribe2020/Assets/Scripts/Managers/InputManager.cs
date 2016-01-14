@@ -20,7 +20,8 @@ public class InputManager : MonoBehaviour {
 	public GameObject ground;
 	public GameObject okOption, cancelOption;
 
-	private GameObject _marker, _marker2, _selectArea, _outline, _curMarked;
+	private GameObject _marker;
+//		, _marker2, _selectArea, _outline, _curMarked;
 	private Vector3 _prevPosition;
 
 	private BoundsOctree<GameObject> _collisions;
@@ -35,11 +36,10 @@ public class InputManager : MonoBehaviour {
 	private int _curLevel;
 	private GameObject _curNode = null;
 	private GameObject _curEdge = null;
+	private float _touchTimer = 0;
+	public const float TAP_TIMEOUT = 0.25f;
 
-	//Energy Visualiser
-	private EnergyVisualiser _eVis;
-	private bool _eVisToggle = true;
-
+	//States
 	public const string IDLE = "state_idle";
 	public const string START = "state_start";
 	public const string SPOT = "state_spot";
@@ -60,115 +60,81 @@ public class InputManager : MonoBehaviour {
 		Debug.Log(Screen.width + ", " + Screen.height);
 		_instance = this;
 
+		//Load UI objects from resources
 		_marker = Load("UI/Marker");
-		_marker2 = Load("UI/Marker2");
-		_selectArea = Load("UI/Selection");
-		_outline = Load("UI/Outline");
-		_prevPosition = Vector3.zero;
+//		_marker2 = Load("UI/Marker2");
+//		_selectArea = Load("UI/Selection");
+//		_outline = Load("UI/Outline");
 
-		Vector3 center = new Vector3(372.5f, 372.5f, 372.5f);
-		_collisions = new BoundsOctree<GameObject>(745, center, 1, 1.25f);
-		
+		//Init interaction properties
+		_prevPosition = Vector3.zero;
 		_curLevel = 0;
 
-		ground = GameObject.FindWithTag("ent_ground") as GameObject;
-		groundPlane = ground.GetComponent<Collider>();
+		//Init octree collisions
+		Vector3 center = new Vector3(372.5f, 372.5f, 372.5f);
+		_collisions = new BoundsOctree<GameObject>(745, center, 1, 1.25f);
 
-		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
+		//Get instance of managers
+//		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
 		_buildMgr = BuildManager.GetInstance();
 		_uiMgr = UIManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
+		//Ref to ground object
+		ground = GameObject.FindWithTag("ent_ground") as GameObject;
+		groundPlane = ground.GetComponent<Collider>();
+
+		//Ref to camera
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
 		_camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		
 		//Set inital game state
-		SetState (IDLE);
+//		SetState (IDLE);
 	}
 
 	//Update is called once per frame
 	void Update(){
+		//Mobile interaction
 		UpdatePan(_camera);
 		UpdatePinch(_camera);
 
-		if(_curNode != null) {
+		//Position marker according to grid
+		Vector3 cursorPoint = PointOnGround(Input.mousePosition, groundPlane);
+		cursorPoint.x = Mathf.Floor(cursorPoint.x / 5) * 5;
+		cursorPoint.y = _curLevel * 5 + 2.5f;
+		cursorPoint.z = Mathf.Floor(cursorPoint.z / 5) * 5;
+		_marker.transform.position = cursorPoint;
+
+		//Update position of current node if cursor moved
+		if((cursorPoint.x != _prevPosition.x || cursorPoint.z != _prevPosition.z)
+		   && _curNode != null){
 			_uiMgr.selectInfo.text = _curNode.GetComponent<Node>().ToString();
 			_curNode.transform.position = _marker.transform.position;
-		}
 
-		//Position marker according to grid
-		Vector3 pos = PointOnGround(Input.mousePosition, groundPlane);
-		pos.x = Mathf.Floor(pos.x / 5);
-		pos.y = _curLevel;
-		pos.z = Mathf.Floor(pos.z / 5);
-
-		Vector3 newPos = pos * 5;
-		newPos += new Vector3(0f, 2.5f, 0f);
-
-		_marker.transform.position = newPos;
-
-//		switch(_state){
-//		case IDLE:
-//			_marker.transform.position = newPos;
-//			break;
-//		case SPOT:
-//		case CONFIRM:
-//			_marker.transform.position = newPos;
-//			break;
-//		case START:
-//			_marker.transform.position = newPos;
-//			break;
-//		case AREA:
-//			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
-//				_marker2.transform.position = newPos;
-//				DrawSelectionArea(_marker.transform.position, _marker2.transform.position);
-//			}
-//			break;
-//		case LINE:
-//			if(Input.GetMouseButton(0) && Input.mousePosition.x < Screen.width - 100){
-//				Vector3 basePos = _marker.transform.position;
-//				if(Mathf.Abs(basePos.x - newPos.x) >
-//				   Mathf.Abs(basePos.z - newPos.z)){
-//					_marker2.transform.position = new Vector3(newPos.x, basePos.y, basePos.z);
-//				} else {
-//					_marker2.transform.position = new Vector3(basePos.x, basePos.y, newPos.z);
-//				}
-//				DrawSelectionArea(basePos, _marker2.transform.position);
-//			}
-//			break;
-//		case MARK:
-//			_marker.transform.position = newPos;
-//			break;
-//		default:
-//			break;
-//		}
-
-		//
-		if(Input.GetMouseButton(0)){
-			OnDrag();
-		}
-
-		//
-		if((newPos.x != _prevPosition.x || newPos.z != _prevPosition.z) && _curNode != null){
 			_curNode.GetComponent<Node>().Refresh();
-			_prevPosition = newPos;
+			_prevPosition = cursorPoint;
 		}
 
-		//If mouse click, add or delete block depending on if space vacant
+		//Touch start
 		if(Input.GetMouseButtonDown(0)){
 			OnTouchStart(_marker.transform.position);
 		}
 
-		//
+		//Touch ongoing
+		if(Input.GetMouseButton(0)){
+			OnTouch();
+		}
+
+		//Touch end
 		if(Input.GetMouseButtonUp(0)){
 			OnTouchEnded(_marker.transform.position);
 		}
 
-		//
-		if(Input.GetMouseButtonDown(1) && _curNode != null){
-			_buildMgr.UpdateCollision(_curNode);
-			_curNode = _buildMgr.AddNode(_curNode.transform.position, _curNode.GetComponent<Node>());
-		}
+		//TODO: old continously add new nodes, remove?
+//		if(Input.GetMouseButtonDown(1) && _curNode != null){
+//			_buildMgr.UpdateCollision(_curNode);
+//			_curNode = _buildMgr.AddNode(_curNode.transform.position, _curNode.GetComponent<Node>());
+//		}
 
 		//Debug info
 		_uiMgr.debug1.text = "x: " + Input.mousePosition.x;
@@ -179,6 +145,8 @@ public class InputManager : MonoBehaviour {
 
 	//
 	private void OnTouchStart(Vector3 touch){
+		_touchTimer = 0;
+
 		if(!PointerIsOutsideGUI()){
 			return;
 		}
@@ -202,21 +170,29 @@ public class InputManager : MonoBehaviour {
 			}
 		}
 
-		if(firstNode != null){
+		//Select first node, colliding with cursor
+		if(firstNode != null && _curNode == null){
 			_curNode = firstNode;
-			Debug.Log("got node");
-		} else if(firstEdge != null){
-			_curEdge = firstEdge;
-			Debug.Log("got edge");
 		}
-
-		if(_curNode == null && _curEdge == null){
-			_buildMgr.CreateRoom(_marker.transform.position, 3);
+		//No available node, try for edge
+		else if(firstEdge != null){
+			_curEdge = firstEdge;
 		}
 	}
 
 	//
+	private void OnTouch(){
+		_touchTimer += Time.deltaTime;
+	}
+
+	//
 	private void OnTouchEnded(Vector3 lastTouch){
+		//Touch ended before tap timeout, trigger OnTap
+		if(_touchTimer < TAP_TIMEOUT){
+			OnTap(lastTouch);
+		}
+
+		//Stop if inside GUI
 		if(!PointerIsOutsideGUI()){
 			return;
 		}
@@ -239,37 +215,16 @@ public class InputManager : MonoBehaviour {
 				}
 			}
 
+			//Released node on other room's node, connect
 			if(secondNode != null){
 				_buildMgr.ConnectNodes(
 					secondNode.GetComponent<Node>(), _curNode.GetComponent<Node>());
-			} else if(_curNode.GetComponent<Node>().IsNotConnected() && secondEdge != null){
+			} 
+			//Release thing node on edge, split edge around node thing
+			else if(_curNode.GetComponent<Node>().IsNotConnected() && secondEdge != null){
 				_buildMgr.SplitEdge(
 					secondEdge.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
 			}
-
-//			foreach(GameObject go in result){
-//				if(go.GetComponent<Node>() != null && go != _curNode){
-//					_buildMgr.ConnectNodes(go.GetComponent<Node>(), _curNode.GetComponent<Node>());
-//					_curEdge = null;
-//					_curNode = null;
-//					Debug.Log("Node put on other node");
-//					return;
-//
-//				}
-//				else if(go.GetComponent<Edge>() != null){
-////					_buildMgr.SplitEdge(go.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
-//					_buildMgr.SplitEdge(go.GetComponent<Edge>(), lastTouch);
-//					_curEdge = null;
-//					_curNode = null;
-//					Debug.Log("Node put on edge");
-//					return;
-//				}
-//			}
-//			_curNode = null;
-
-		//Split edge with new node
-		} else if(_curEdge != null){
-			_buildMgr.SplitEdge(_curEdge.GetComponent<Edge>(), lastTouch);
 		}
 		
 		_curEdge = null;
@@ -277,7 +232,29 @@ public class InputManager : MonoBehaviour {
 	}
 
 	//
-	private void OnTap(){
+	private void OnTap(Vector3 touchPos){
+		//Check that tap happend outside GUI
+		if(PointerIsOutsideGUI()){
+			//Tapping on ground, create new room
+			if(_curNode == null && _curEdge == null){
+				_buildMgr.CreateRoom(_marker.transform.position, 3);
+			}
+
+			//Tapped on edge, split edge with new node
+			if(_curNode == null && _curEdge != null){
+				_buildMgr.SplitEdge(_curEdge.GetComponent<Edge>(), touchPos);
+			}
+
+			//Release thing node on edge, split edge around node thing
+			if(_curNode != null && _curEdge != null &&
+			   _curNode.GetComponent<Node>().IsNotConnected()){
+				_buildMgr.SplitEdge(
+					_curEdge.GetComponent<Edge>(), touchPos, _curNode.GetComponent<Node>());
+			}
+			
+			_curEdge = null;
+			_curNode = null;
+		}
 	}
 
 	//
@@ -289,56 +266,49 @@ public class InputManager : MonoBehaviour {
 	}
 
 	//
-	private void OnDrag(){
-		if(_curNode != null) {
-			_curNode.transform.position = _marker.transform.position;
-		}
-	}
-
-	//
-	public void SetState(string newState){
-		_state = newState;
-
-		switch(_state){
-		case IDLE:
-			SetActive(okOption, false);
-			SetActive(cancelOption, false);
-
-			SetVisible(_marker2, false);
-			SetVisible(_selectArea, false);
-			SetVisible(_outline, false);
-			break;
-		case SPOT:
-			SetActive(okOption, false);
-			SetActive(cancelOption, true);
-			break;
-		case CONFIRM:
-			SetActive(okOption, true);
-			SetActive(cancelOption, true);
-
-			SetVisible(_marker2, true);
-			break;
-		case START:
-			SetActive(okOption, true);
-			SetActive(cancelOption, true);
-			break;
-		case AREA:
-			SetActive(okOption, true);
-			SetActive(cancelOption, true);
-
-			SetVisible(_marker2, true);
-			SetVisible(_selectArea, true);
-			break;
-		case MARK:
-			SetActive(okOption, true);
-			SetActive(cancelOption, true);
-
-			SetVisible(_outline, true);
-			break;
-		default:
-			break;
-		}
-	}
+//	public void SetState(string newState){
+//		_state = newState;
+//
+//		switch(_state){
+//		case IDLE:
+//			SetActive(okOption, false);
+//			SetActive(cancelOption, false);
+//
+//			SetVisible(_marker2, false);
+//			SetVisible(_selectArea, false);
+//			SetVisible(_outline, false);
+//			break;
+//		case SPOT:
+//			SetActive(okOption, false);
+//			SetActive(cancelOption, true);
+//			break;
+//		case CONFIRM:
+//			SetActive(okOption, true);
+//			SetActive(cancelOption, true);
+//
+//			SetVisible(_marker2, true);
+//			break;
+//		case START:
+//			SetActive(okOption, true);
+//			SetActive(cancelOption, true);
+//			break;
+//		case AREA:
+//			SetActive(okOption, true);
+//			SetActive(cancelOption, true);
+//
+//			SetVisible(_marker2, true);
+//			SetVisible(_selectArea, true);
+//			break;
+//		case MARK:
+//			SetActive(okOption, true);
+//			SetActive(cancelOption, true);
+//
+//			SetVisible(_outline, true);
+//			break;
+//		default:
+//			break;
+//		}
+//	}
 
 	//Help method for toggling interaction with buttons
 	private void SetActive(GameObject go, bool mode){
@@ -416,19 +386,19 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-	//OnPress events for the interface buttons
-	public void OnSquarePressed(){
-		SetState(START);
-	}
-
-	//
-	public void OnCirclePressed(){
-		SetState(START);
-	}
+//	//OnPress events for the interface buttons
+//	public void OnSquarePressed(){
+//		SetState(START);
+//	}
+//
+//	//
+//	public void OnCirclePressed(){
+//		SetState(START);
+//	}
 
 	//
 	public void OnItemPush(string tag){
-		GameObject newObj = _buildMgr.CreateItem(Vector3.zero, tag);
+		GameObject newObj = _buildMgr.AddThing(Vector3.zero, tag);
 		_curNode = newObj;
 	}
 
@@ -449,16 +419,16 @@ public class InputManager : MonoBehaviour {
 
 	//
 	public void OnCancelPressed(){
-		switch (_state) {
-		case AREA:
-			SetState(IDLE);
-			break;
-		case MARK:
-			SetState(IDLE);
-			break;
-		default:
-			break;
-		}
+//		switch (_state) {
+//		case AREA:
+//			SetState(IDLE);
+//			break;
+//		case MARK:
+//			SetState(IDLE);
+//			break;
+//		default:
+//			break;
+//		}
 	}
 
 	//
@@ -472,19 +442,15 @@ public class InputManager : MonoBehaviour {
 	}
 
 	//
-	public void OnCheckboxChanged(bool value){
-	}
-
-	//
-	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
-		Vector3 pos = basePos + (edgePos - basePos) / 2;
-		pos.y = _curLevel + 0.2f;
-		_selectArea.transform.position = pos;
-		Vector3 tmpScale = _selectArea.transform.localScale;
-		tmpScale.x = (edgePos.x - basePos.x) / 10 + 0.5f * Mathf.Sign(edgePos.x - basePos.x);
-		tmpScale.z = (edgePos.z - basePos.z) / 10 + 0.5f * Mathf.Sign(edgePos.z - basePos.z);
-		_selectArea.transform.localScale = tmpScale;
-	}
+//	private void DrawSelectionArea(Vector3 basePos, Vector3 edgePos){
+//		Vector3 pos = basePos + (edgePos - basePos) / 2;
+//		pos.y = _curLevel + 0.2f;
+//		_selectArea.transform.position = pos;
+//		Vector3 tmpScale = _selectArea.transform.localScale;
+//		tmpScale.x = (edgePos.x - basePos.x) / 10 + 0.5f * Mathf.Sign(edgePos.x - basePos.x);
+//		tmpScale.z = (edgePos.z - basePos.z) / 10 + 0.5f * Mathf.Sign(edgePos.z - basePos.z);
+//		_selectArea.transform.localScale = tmpScale;
+//	}
 	
 	//
 	private List<Vector3> StoreSelection(Vector3 startPos, Vector3 endPos){
@@ -515,7 +481,7 @@ public class InputManager : MonoBehaviour {
 		return new Vector3();
 	}
 
-	//
+	//Help method to check whether touch is happening outside overlay interface
 	private bool PointerIsOutsideGUI(){
 		bool leftOfRightBar = Input.mousePosition.x < Screen.width - Screen.width * 0.1f;
 		bool outsideSelectionBox = Input.mousePosition.x > Screen.width * 0.1f ||
@@ -524,7 +490,7 @@ public class InputManager : MonoBehaviour {
 		return leftOfRightBar && outsideSelectionBox;
 	}
 
-	//
+	//Help method for instantiating object from resources
 	public GameObject Load(string path){
 		GameObject prefab = Resources.Load(path) as GameObject;
 		GameObject go = Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject;

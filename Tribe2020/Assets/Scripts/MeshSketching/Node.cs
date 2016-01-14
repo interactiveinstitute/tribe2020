@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Node : MonoBehaviour{
 	private static BuildManager _buildMgr;
 
+	public string type;
+
 //	public static int count = 0;
 
 	public GameObject NODE, EDGE;
@@ -32,6 +34,10 @@ public class Node : MonoBehaviour{
 	// Use this for initialization
 	void Start(){
 		Init();
+
+		if(type == "") {
+			type = "Node";
+		}
 	}
 	
 	// Update is called once per frame
@@ -193,6 +199,8 @@ public class Node : MonoBehaviour{
 
 	//
 	public string Stringify(){
-		return "{'pos':" + transform.position + "}";
+		Vector3 pos = transform.position;
+		return "{\"type\":\"" + type +"\", \"pos\":[" + pos.x + "," + pos.y + "," + pos.z + "]}";
+//		return "{\"pos\":[" + pos.x + "," + pos.y + "," + pos.z + "]}";
 	}
 }

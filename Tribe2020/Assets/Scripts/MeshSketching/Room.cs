@@ -232,6 +232,6 @@ public class Room : MonoBehaviour {
 			nodes += n.Stringify() + ",";
 		}
 		nodes = nodes.Substring(0, nodes.Length - 2);
-		return "{'nodes':[" + nodes + "]}";
+		return "{\"type\":\"room\", \"nodes\":[" + nodes + "]}";
 	}
 }

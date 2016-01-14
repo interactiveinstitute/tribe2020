@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using SimpleJSON;
 using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour{
@@ -37,15 +38,6 @@ public class SaveManager : MonoBehaviour{
 
 		_graph = GameObject.FindGameObjectWithTag("graph") as GameObject;
 
-//		GameObject saveTextGO = GameObject.FindWithTag("save_text") as GameObject;
-//		_saveText = saveTextGO.GetComponentsInChildren<Text>()[1];
-
-
-//		_marker2 = GameObject.FindWithTag("ui_pointer2") as GameObject;
-//		_selectArea = GameObject.FindWithTag("ui_selection") as GameObject;
-
-//		_meshMgr = GameObject.FindWithTag("managers").GetComponent<MeshManager>();
-
 		_path = Application.persistentDataPath  + "/savedGames.gd";
 	}
 	
@@ -60,25 +52,45 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	public void Save(){
+		StreamWriter file = File.CreateText(_path);
+
 		foreach(Transform t in _graph.transform){
 			if(t.GetComponent<Room>() != null){
-				Debug.Log(t.GetComponent<Room>().Stringify());
+				string room = t.GetComponent<Room>().Stringify();
+				file.WriteLine(room);
 			}
 		}
 
-//		List<SerialObject> meshList = new List<SerialObject>();
-//		foreach(Transform transform in map.GetComponentsInChildren<Transform>()){
-//			meshList.Add(new SerialObject(transform.gameObject));
-//		}
-//		savedGames = meshList;
-//		BinaryFormatter bf = new BinaryFormatter();
-//		FileStream file = File.Create(_path);
-//		bf.Serialize(file, savedGames);
-//		file.Close();
-//		Debug.Log("saved: " + data);
+		foreach(Transform t in _graph.transform){
+			if(t.GetComponent<Thing>() != null){
+				string thing = t.GetComponent<Thing>().Stringify();
+				Debug.Log(thing);
+				file.WriteLine(thing);
+			}
+		}
+		file.Close();
 	}
 
 	public void Load(){
+		if(!File.Exists(_path)) {
+			return;
+		}
+
+		StreamReader sr = File.OpenText(_path);
+		string line = sr.ReadLine();
+		while(line != null){
+			var parse = JSON.Parse(line);
+			string type = parse["type"].Value;
+
+			if(type == "room"){
+				_buildMgr.CreateRoom(line);
+			} else{
+				_buildMgr.AddThing(line);
+			}
+
+			line = sr.ReadLine();
+		}
+
 //		if(File.Exists(_path)) {
 //			BinaryFormatter bf = new BinaryFormatter();
 //			FileStream file = File.Open(_path, FileMode.Open);
