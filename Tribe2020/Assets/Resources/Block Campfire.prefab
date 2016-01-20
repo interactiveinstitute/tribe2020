@@ -13,6 +13,7 @@ GameObject:
   - 23: {fileID: 2303960}
   - 208: {fileID: 20868900}
   - 114: {fileID: 11471040}
+  - 114: {fileID: 11468642}
   m_Layer: 0
   m_Name: Block Campfire
   m_TagString: ent_block
@@ -240,6 +241,18 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
+--- !u!114 &11468642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f646031c2989234b8aeae1b20494e0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: Block Campfire
 --- !u!114 &11471040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -251,8 +264,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddc786c04fb7094380c804d5714dc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
   NODE: {fileID: 186446, guid: 9cd46ac63131c424a9089a5ac152dbfd, type: 2}
   EDGE: {fileID: 168176, guid: 3d30c732678a4b24492fcd3783bddbbb, type: 2}
+  _connectionDistance: 0
 --- !u!198 &19851884
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -1379,6 +1394,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Size.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: type
+      value: Block Campfire
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

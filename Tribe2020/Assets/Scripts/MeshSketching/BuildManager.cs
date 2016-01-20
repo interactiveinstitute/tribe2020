@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class BuildManager : MonoBehaviour{
 	//Singleton features
@@ -18,7 +19,7 @@ public class BuildManager : MonoBehaviour{
 
 	public GameObject NODE, EDGE, ROOM;
 	public List<GameObject> objects;
-	private Dictionary<string, GameObject> _objDictionary;
+	private Dictionary<string, GameObject> _itemTable;
 
 	public GameObject TOILET, CAMPFIRE, COFFEE, DOOR, WINDOW;
 	public Transform graph;
@@ -36,9 +37,9 @@ public class BuildManager : MonoBehaviour{
 
 	//Use this for initialization
 	void Start(){
-		_objDictionary = new Dictionary<string, GameObject>();
+		_itemTable = new Dictionary<string, GameObject>();
 		foreach(GameObject go in objects){
-			_objDictionary.Add(go.name, go);
+			_itemTable.Add(go.name, go);
 		}
 	}
 	
@@ -48,8 +49,38 @@ public class BuildManager : MonoBehaviour{
 
 	//
 	public void CreateRoom(string stringifiedRoom){
-//		JavaScriptSerializer js = new JavaScriptSerializer();
-//		Person [] persons =  js.Deserialize<Person[]>(json);
+		var parse = JSON.Parse(stringifiedRoom);
+		var ns = parse["nodes"];
+		string type = parse["type"];
+
+		List<Node> nodes = new List<Node>();
+		GameObject firstNode = null;
+		GameObject prevNode = null;
+		
+		for(int i = 0; i < ns.Count; i++){
+			string nodeType = ns[i]["type"];
+			Vector3 pos = new Vector3(
+				ns[i]["pos"][0].AsFloat,
+				ns[i]["pos"][1].AsFloat,
+				ns[i]["pos"][2].AsFloat);
+
+			GameObject curNode = null;
+			if(nodeType == "Node"){
+				curNode = AddNode(pos);
+			} else{
+				curNode = AddThing(pos, nodeType);
+			}
+
+			if(i == 0){
+				firstNode = prevNode = curNode;
+			} else{
+				AddEdge(prevNode, curNode);
+				prevNode = curNode;
+			}
+			nodes.Add(curNode.GetComponent<Node>());
+		}
+		AddEdge(prevNode, firstNode);
+		AddRoom(nodes);
 	}
 
 
@@ -71,11 +102,6 @@ public class BuildManager : MonoBehaviour{
 		nodes.Add(sw.GetComponent<Node>());
 		nodes.Add(se.GetComponent<Node>());
 		AddRoom(nodes);
-	}
-
-	//
-	public GameObject CreateItem(Vector3 pos, string type){
-		return Instantiate(_objDictionary[type], pos, Quaternion.identity) as GameObject;
 	}
 
 	//For doors and windows
@@ -141,6 +167,30 @@ public class BuildManager : MonoBehaviour{
 
 		newRoomObj.transform.SetParent(graph);
 		return newRoomObj;
+	}
+
+	//Create new thing from string
+	public GameObject AddThing(string thingParse){
+		var parse = JSON.Parse(thingParse);
+		
+		string type = parse["type"];
+		Vector3 pos = new Vector3(
+			parse["pos"][0].AsFloat,
+			parse["pos"][1].AsFloat,
+			parse["pos"][2].AsFloat);
+		
+		return AddThing(pos, type);
+	}
+
+	//Create new thing for position and typ
+	public GameObject AddThing(Vector3 pos, string type){
+		GameObject thing = Instantiate(_itemTable[type], pos, Quaternion.identity) as GameObject;
+		Node node = thing.GetComponent<Node>();
+		node.Init();
+
+		thing.transform.SetParent(graph);
+		
+		return thing;
 	}
 
 	//
