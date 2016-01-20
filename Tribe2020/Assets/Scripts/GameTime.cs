@@ -7,13 +7,23 @@ using System;
 
 public class GameTime : MonoBehaviour {
 
+	private static GameTime _instance;
 	public double StartTime = 1452691843.939;
 	public double CurrentTime;
 	public string CurrentDate;
 
+	void Awake () {
+		_instance = this;
+	}
+
+	public static GameTime GetInstance () {
+		return _instance;
+	}
+
 	// Use this for initialization
 	void Start () {
 		CurrentTime = StartTime;
+
 	}
 	
 	// Update is called once per frame
