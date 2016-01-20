@@ -12,6 +12,9 @@ public class GameTime : MonoBehaviour {
 	public double CurrentTime;
 	public string CurrentDate;
 
+	[Range(0.0f, 10.0f)]
+	public float TimeScale = 1.0f;
+
 	void Awake () {
 		_instance = this;
 	}
@@ -30,6 +33,7 @@ public class GameTime : MonoBehaviour {
 	void Update () {
 		CurrentTime = StartTime + Time.time;
 		CurrentDate = TimestampToDateTime(CurrentTime).ToString("yyyy-MM-dd HH:mm:ss");
+		Time.timeScale = TimeScale;
 	}
 
 	private double DateTimeToTimestamp(DateTime value)
