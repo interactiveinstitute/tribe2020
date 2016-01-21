@@ -10,13 +10,6 @@ public class BuildManager : MonoBehaviour{
 		return _instance;
 	}
 
-//	public const string TOILET = "Toilet";
-//	public const string CAMPFIRE = "Campfire";
-//	public const string COFFEE = "Coffee";
-//	public const string DOOR = "Door";
-//	public const string WINDOW = "Window";
-//	public const string STAIRS = "Stairs";
-
 	public GameObject NODE, EDGE, ROOM;
 	public List<GameObject> objects;
 	private Dictionary<string, GameObject> _itemTable;
@@ -25,12 +18,13 @@ public class BuildManager : MonoBehaviour{
 	public Transform graph;
 	private int _recusionCount = 0;
 
+	private Vector3 _worldCenter;
 	private BoundsOctree<GameObject> _nodeBounds;
 	
 	//Sort use instead of constructor
 	void Awake(){
-		Vector3 worldCenter = new Vector3(372.5f, 372.5f, 372.5f);
-		_nodeBounds = new BoundsOctree<GameObject>(745, worldCenter, 1, 1.25f);
+		_worldCenter = new Vector3(372.5f, 372.5f, 372.5f);
+		_nodeBounds = new BoundsOctree<GameObject>(745, _worldCenter, 1, 1.25f);
 
 		_instance = this;
 	}
@@ -86,10 +80,10 @@ public class BuildManager : MonoBehaviour{
 
 	//
 	public void CreateRoom(Vector3 pos, int size){
-		GameObject ne = AddNode(pos + (Vector3.right + Vector3.forward) * 5 * size);
-		GameObject nw = AddNode(pos + (Vector3.left + Vector3.forward) * 5 * size);
-		GameObject se = AddNode(pos + (Vector3.right + Vector3.back) * 5 * size);
-		GameObject sw = AddNode(pos + (Vector3.left + Vector3.back) * 5 * size);
+		GameObject ne = AddNode(pos + (Vector3.right + Vector3.forward) * size);
+		GameObject nw = AddNode(pos + (Vector3.left + Vector3.forward) * size);
+		GameObject se = AddNode(pos + (Vector3.right + Vector3.back) * size);
+		GameObject sw = AddNode(pos + (Vector3.left + Vector3.back) * size);
 
 		AddEdge(ne, nw);
 		AddEdge(nw, sw);
@@ -224,6 +218,31 @@ public class BuildManager : MonoBehaviour{
 		node.AddRoom(room);
 		
 		edge.Remove();
+	}
+
+	//Clear current level
+	public void Clear(){
+		_nodeBounds =  new BoundsOctree<GameObject>(745, _worldCenter, 1, 1.25f);
+		foreach(Transform child in graph.transform){
+			GameObject.Destroy(child.gameObject);
+		}
+	}
+
+	//
+	public void UpdateViewLevel(int newLevel){
+		float actualY = newLevel + 0.5f;
+		foreach(Transform child in graph.transform){
+			if(child.GetComponent<Renderer>() != null){
+				Debug.Log(newLevel + " contra " + child.position);
+				if(child.position.y <= actualY){
+					child.GetComponent<Renderer>().enabled = true;
+					Debug.Log(child.position + " shown");
+				} else{
+					child.GetComponent<Renderer>().enabled = false;
+					Debug.Log(child.position + " hidden");
+				}
+			}
+		}
 	}
 
 	//

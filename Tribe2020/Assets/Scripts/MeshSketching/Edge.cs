@@ -41,7 +41,7 @@ public class Edge : MonoBehaviour{
 			float rotation = Mathf.Atan2(end.z - start.z, end.x - start.x) * Mathf.Rad2Deg;
 			
 			transform.position = center;
-			transform.localScale = new Vector3(distance, 1, 1);
+			transform.localScale = new Vector3(distance, 0.2f, 0.2f);
 			transform.eulerAngles = new Vector3(0, 360 - rotation, 0);
 			
 			if(_prevRot != rotation){

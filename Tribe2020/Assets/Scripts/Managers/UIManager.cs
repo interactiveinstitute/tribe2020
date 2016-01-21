@@ -73,4 +73,12 @@ public class UIManager : MonoBehaviour{
 		}
 		children.ForEach(child => Destroy(child));
 	}
+
+	//
+	public string GetFileName(){
+		GameObject fileGUI = GameObject.FindWithTag("save_text");
+		Text saveText = fileGUI.GetComponentsInChildren<Text>()[1];
+		Debug.Log("GetFileName: " + saveText.text);
+		return saveText.text;
+	}
 }

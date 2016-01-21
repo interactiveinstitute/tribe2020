@@ -62,7 +62,7 @@ public class Node : MonoBehaviour{
 			float rotation = Mathf.Atan2(end.z - start.z, end.x - start.x) * Mathf.Rad2Deg;
 			transform.eulerAngles = new Vector3(0, 360 - rotation, 0);
 		}
-		Refresh();
+//		Refresh();
 	}
 
 	//
@@ -194,7 +194,7 @@ public class Node : MonoBehaviour{
 
 	//
 	public string ToString(){
-		return "[" + transform.position.x / 5 + "," + transform.position.z / 5 + "]";
+		return "[" + transform.position.x + "," + transform.position.z + "]";
 	}
 
 	//

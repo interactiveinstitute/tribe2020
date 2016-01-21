@@ -100,9 +100,9 @@ public class InputManager : MonoBehaviour {
 
 		//Position marker according to grid
 		Vector3 cursorPoint = PointOnGround(Input.mousePosition, groundPlane);
-		cursorPoint.x = Mathf.Floor(cursorPoint.x / 5) * 5;
-		cursorPoint.y = _curLevel * 5 + 2.5f;
-		cursorPoint.z = Mathf.Floor(cursorPoint.z / 5) * 5;
+		cursorPoint.x = Mathf.Floor(cursorPoint.x / 1) * 1;
+		cursorPoint.y = _curLevel + 0.5f;
+		cursorPoint.z = Mathf.Floor(cursorPoint.z / 1) * 1;
 		_marker.transform.position = cursorPoint;
 
 		//Update position of current node if cursor moved
@@ -265,51 +265,6 @@ public class InputManager : MonoBehaviour {
 	private void OnDoubleTap(){
 	}
 
-	//
-//	public void SetState(string newState){
-//		_state = newState;
-//
-//		switch(_state){
-//		case IDLE:
-//			SetActive(okOption, false);
-//			SetActive(cancelOption, false);
-//
-//			SetVisible(_marker2, false);
-//			SetVisible(_selectArea, false);
-//			SetVisible(_outline, false);
-//			break;
-//		case SPOT:
-//			SetActive(okOption, false);
-//			SetActive(cancelOption, true);
-//			break;
-//		case CONFIRM:
-//			SetActive(okOption, true);
-//			SetActive(cancelOption, true);
-//
-//			SetVisible(_marker2, true);
-//			break;
-//		case START:
-//			SetActive(okOption, true);
-//			SetActive(cancelOption, true);
-//			break;
-//		case AREA:
-//			SetActive(okOption, true);
-//			SetActive(cancelOption, true);
-//
-//			SetVisible(_marker2, true);
-//			SetVisible(_selectArea, true);
-//			break;
-//		case MARK:
-//			SetActive(okOption, true);
-//			SetActive(cancelOption, true);
-//
-//			SetVisible(_outline, true);
-//			break;
-//		default:
-//			break;
-//		}
-//	}
-
 	//Help method for toggling interaction with buttons
 	private void SetActive(GameObject go, bool mode){
 		go.GetComponent<CanvasGroup>().interactable = mode;
@@ -328,7 +283,7 @@ public class InputManager : MonoBehaviour {
 		float tSpeed = 0.1F;
 		
 		Vector3 tmpPos = ground.transform.position;
-		tmpPos.y = _curLevel * 5;
+		tmpPos.y = _curLevel;
 		ground.transform.position = tmpPos;
 
 		#if UNITY_ANDROID
@@ -386,16 +341,6 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-//	//OnPress events for the interface buttons
-//	public void OnSquarePressed(){
-//		SetState(START);
-//	}
-//
-//	//
-//	public void OnCirclePressed(){
-//		SetState(START);
-//	}
-
 	//
 	public void OnItemPush(string tag){
 		GameObject newObj = _buildMgr.AddThing(Vector3.zero, tag);
@@ -404,41 +349,24 @@ public class InputManager : MonoBehaviour {
 
 	//
 	public void OnSavePush(){
-		_saveMgr.Save();
+		_saveMgr.Save(_uiMgr.GetFileName());
 	}
 
 	//
 	public void OnLoadPush(){
-		_saveMgr.Load();
-	}
-
-	//
-	public void OnOKPressed(){
-
-	}
-
-	//
-	public void OnCancelPressed(){
-//		switch (_state) {
-//		case AREA:
-//			SetState(IDLE);
-//			break;
-//		case MARK:
-//			SetState(IDLE);
-//			break;
-//		default:
-//			break;
-//		}
+		_saveMgr.Load(_uiMgr.GetFileName());
 	}
 
 	//
 	public void OnUpPressed(){
 		_curLevel++;
+		_buildMgr.UpdateViewLevel(_curLevel);
 	}
 
 	//
 	public void OnDownPressed(){
 		_curLevel--;
+		_buildMgr.UpdateViewLevel(_curLevel);
 	}
 
 	//

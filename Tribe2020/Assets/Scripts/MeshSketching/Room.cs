@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Room : MonoBehaviour {
+public class Room : MonoBehaviour{
 	private static BuildManager _buildMgr;
 
 	private Material _material;
@@ -18,7 +18,7 @@ public class Room : MonoBehaviour {
 
 	//
 	public void Init(List<Node> nodes){
-		if(!_isInit) {
+		if(!_isInit){
 			_buildMgr = BuildManager.GetInstance();
 
 			_nodes = nodes;
@@ -125,38 +125,48 @@ public class Room : MonoBehaviour {
 	public void UpdateMesh(){
 		float minX = Mathf.Infinity;
 		float minY = Mathf.Infinity;
+		float maxX = 0;
+		float maxY = 0;
 		
 		List<Vector2> vertices2D = new List<Vector2>();
 
-		float alt = -1 * _nodes[0].transform.position.y + 2.5f;
+		float alt = _nodes[0].transform.position.y - 0.25f;
+
+		//Create vertice from each node and detect smallest x and y coordinates
 		foreach(Node node in _nodes){
 			vertices2D.Add(new Vector2(node.transform.position.x, node.transform.position.z));
 			minX = Mathf.Min(minX, node.transform.position.x);
 			minY = Mathf.Min(minY, node.transform.position.z);
+			maxX = Mathf.Max(maxX, node.transform.position.x);
+			maxY = Mathf.Max(maxY, node.transform.position.z);
 		}
-		
+
+		//Position game object according to node center
+		transform.position = new Vector3(minX, alt, minY);
+
+		//Normalize all vertice coordinates to min coordinates
 		for(int i = 0; i < vertices2D.Count; i++){
-			vertices2D[i].Set(vertices2D[i].x - minX, vertices2D[i].y - minY);
+			vertices2D[i] = new Vector2(vertices2D[i].x - minX, vertices2D[i].y - minY);
 		}
 		
-		// Use the triangulator to get indices for creating triangles
+		//Use the triangulator to get indices for creating triangles
 		Triangulator tr = new Triangulator(vertices2D.ToArray());
 		int[] indices = tr.Triangulate();
 		
-		// Create the Vector3 vertices
+		//Create the Vector3 vertices
 		Vector3[] vertices = new Vector3[vertices2D.Count];
 		for(int i = 0; i < vertices.Length; i++){
-			vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, alt); 
+			vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, -1 * alt); 
 		}
 		
-		// Create the mesh
+		//Create the mesh
 		Mesh msh = new Mesh();
 		msh.vertices = vertices;
 		msh.triangles = indices;
 		msh.RecalculateNormals();
 		msh.RecalculateBounds();
 		
-		// Set up game object with mesh;
+		//Set up game object with mesh;
 		MeshFilter filter = gameObject.GetComponent<MeshFilter>();
 		filter.mesh = msh;
 

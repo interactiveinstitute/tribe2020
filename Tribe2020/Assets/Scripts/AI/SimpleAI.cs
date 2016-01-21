@@ -38,7 +38,7 @@ public class SimpleAI : MonoBehaviour {
 		_curBehavior.Update(this);
 
 		if(_curTarget &&
-		    Vector3.Distance(transform.position, _curTarget.transform.position) < 10) {
+		    Vector3.Distance(transform.position, _curTarget.transform.position) < 2) {
 			_curBehavior.OnHasReached(_curTarget.tag);
 		}
 

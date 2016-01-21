@@ -16,12 +16,8 @@ public class SaveManager : MonoBehaviour{
 	private BuildManager _buildMgr;
 	private GameObject _graph;
 
-	public GameObject WALL;
-//	private MeshManager _meshMgr;
-
 	private string _path;
 	public List<SerialObject> savedGames = new List<SerialObject>();
-//	public string dummyText = "dummy";
 
 	public Transform map;
 
@@ -43,16 +39,11 @@ public class SaveManager : MonoBehaviour{
 	
 	//Update is called once per frame
 	void Update(){
-	
 	}
 
-	public void DummySave(){
-//		Save(map.gameObject);
-//		Save(_saveText.text);
-	}
-
-	public void Save(){
-		StreamWriter file = File.CreateText(_path);
+	public void Save(string fileName){
+		string path = Application.persistentDataPath + "/" + fileName + ".gd"; 
+		StreamWriter file = File.CreateText(path);
 
 		foreach(Transform t in _graph.transform){
 			if(t.GetComponent<Room>() != null){
@@ -71,12 +62,15 @@ public class SaveManager : MonoBehaviour{
 		file.Close();
 	}
 
-	public void Load(){
-		if(!File.Exists(_path)) {
+	public void Load(string fileName){
+		_buildMgr.Clear();
+
+		string path = Application.persistentDataPath + "/" + fileName + ".gd"; 
+		if(!File.Exists(path)) {
 			return;
 		}
 
-		StreamReader sr = File.OpenText(_path);
+		StreamReader sr = File.OpenText(path);
 		string line = sr.ReadLine();
 		while(line != null){
 			var parse = JSON.Parse(line);
@@ -90,38 +84,5 @@ public class SaveManager : MonoBehaviour{
 
 			line = sr.ReadLine();
 		}
-
-//		if(File.Exists(_path)) {
-//			BinaryFormatter bf = new BinaryFormatter();
-//			FileStream file = File.Open(_path, FileMode.Open);
-//			savedGames = (List<SerialObject>)bf.Deserialize(file);
-//			file.Close();
-//
-////			_saveText.text = savedGames[0].ToString();
-////			return savedGames[0].data;
-//		}
-//		Debug.Log("loaded: " + savedGames.Count);
-//
-//		foreach(SerialObject so in savedGames) {
-//			InsantiateSerialObject(so);
-//		}
-//
-////		return "";
-	}
-
-	public void InsantiateSerialObject(SerialObject so){
-//		_meshMgr.AddMesh(so.ToGameObject());
-
-
-//		GameObject go =  Instantiate(WALL, Vector3.zero, Quaternion.identity) as GameObject;
-//		GameObject stencil = so.ToGameObject();
-
-//		go.transform.position = stencil.transform.position;
-//		go.transform.rotation = stencil.transform.rotation;
-//		go.transform.localScale = stencil.transform.localScale;
-//		go.tag = so.GetTag();
-//		go.transform.SetParent(map);
-//
-//		return go;
 	}
 }
