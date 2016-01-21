@@ -7,19 +7,33 @@ using System;
 
 public class GameTime : MonoBehaviour {
 
+	private static GameTime _instance;
 	public double StartTime = 1452691843.939;
 	public double CurrentTime;
 	public string CurrentDate;
 
+	[Range(0.0f, 10.0f)]
+	public float TimeScale = 1.0f;
+
+	void Awake () {
+		_instance = this;
+	}
+
+	public static GameTime GetInstance () {
+		return _instance;
+	}
+
 	// Use this for initialization
 	void Start () {
 		CurrentTime = StartTime;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		CurrentTime = StartTime + Time.time;
 		CurrentDate = TimestampToDateTime(CurrentTime).ToString("yyyy-MM-dd HH:mm:ss");
+		Time.timeScale = TimeScale;
 	}
 
 	private double DateTimeToTimestamp(DateTime value)
