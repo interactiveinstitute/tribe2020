@@ -28,6 +28,7 @@ GameObject:
   - 23: {fileID: 2303622}
   - 114: {fileID: 11469612}
   - 208: {fileID: 20876606}
+  - 114: {fileID: 11480448}
   m_Layer: 0
   m_Name: Window
   m_TagString: Untagged
@@ -179,6 +180,17 @@ MonoBehaviour:
   NODE: {fileID: 186446, guid: 9cd46ac63131c424a9089a5ac152dbfd, type: 2}
   EDGE: {fileID: 168176, guid: 3d30c732678a4b24492fcd3783bddbbb, type: 2}
   _connectionDistance: .5
+--- !u!114 &11480448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 153446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19048844498ba52479493af7d8e2ec94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!208 &20876606
 NavMeshObstacle:
   m_ObjectHideFlags: 1
@@ -232,6 +244,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: _connectionDistance
       value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

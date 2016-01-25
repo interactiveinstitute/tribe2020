@@ -75,6 +75,10 @@ public class BuildManager : MonoBehaviour{
 		}
 		AddEdge(prevNode, firstNode);
 		AddRoom(nodes);
+
+		foreach(Node n in nodes) {
+			n.Refresh();
+		}
 	}
 
 
@@ -187,6 +191,12 @@ public class BuildManager : MonoBehaviour{
 		return thing;
 	}
 
+	public GameObject CloneThing(Node curNode){
+		string type = curNode.type;
+		Vector3 pos = curNode.transform.position;
+		return AddThing(pos, type);
+	}
+
 	//
 	public void ConnectNodes(Node node1, Node node2){
 		Room room = node1.GetRoom();
@@ -218,6 +228,23 @@ public class BuildManager : MonoBehaviour{
 		node.AddRoom(room);
 		
 		edge.Remove();
+
+		node.Refresh();
+	}
+
+	public void SplitEdges(List<GameObject> gos, Vector3 pos, Node node){
+		Node lastNode = null;
+		foreach(GameObject go in gos){
+			Node newNode = CloneThing(node).GetComponent<Node>();
+			Edge e = go.GetComponent<Edge>();
+			SplitEdge(e, pos, newNode);
+
+			if(lastNode != null){
+				ConnectNodes(newNode, lastNode);
+			}
+			lastNode = newNode;
+		}
+		node.Remove();
 	}
 
 	//Clear current level

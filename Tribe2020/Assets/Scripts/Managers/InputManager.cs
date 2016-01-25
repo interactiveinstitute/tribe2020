@@ -36,6 +36,7 @@ public class InputManager : MonoBehaviour {
 	private int _curLevel;
 	private GameObject _curNode = null;
 	private GameObject _curEdge = null;
+	private List<GameObject> _curEdges = null;
 	private float _touchTimer = 0;
 	public const float TAP_TIMEOUT = 0.25f;
 
@@ -69,6 +70,7 @@ public class InputManager : MonoBehaviour {
 		//Init interaction properties
 		_prevPosition = Vector3.zero;
 		_curLevel = 0;
+		_curEdges = new List<GameObject>();
 
 		//Init octree collisions
 		Vector3 center = new Vector3(372.5f, 372.5f, 372.5f);
@@ -161,12 +163,13 @@ public class InputManager : MonoBehaviour {
 		GameObject firstEdge = null;
 
 		foreach(GameObject go in result){
-			if(go.GetComponent<Node>() != null){
+			if(go.GetComponent<Movable>() != null){
 				firstNode = go;
 			}
 
 			if(go.GetComponent<Edge>() != null){
 				firstEdge = go;
+				_curEdges.Add(go);
 			}
 		}
 
@@ -204,6 +207,7 @@ public class InputManager : MonoBehaviour {
 			GameObject[] result = _buildMgr.GetCollidingNode(curNodeBounds);
 			GameObject secondNode = null;
 			GameObject secondEdge = null;
+			_curEdges.Clear();
 
 			foreach(GameObject go in result){
 				if(go.GetComponent<Node>() != null && go != _curNode){
@@ -212,6 +216,7 @@ public class InputManager : MonoBehaviour {
 				
 				if(go.GetComponent<Edge>() != null){
 					secondEdge = go;
+					_curEdges.Add(go);
 				}
 			}
 
@@ -222,12 +227,18 @@ public class InputManager : MonoBehaviour {
 			} 
 			//Release thing node on edge, split edge around node thing
 			else if(_curNode.GetComponent<Node>().IsNotConnected() && secondEdge != null){
-				_buildMgr.SplitEdge(
-					secondEdge.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
+//				_buildMgr.SplitEdge(
+//					secondEdge.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
+
+				foreach(GameObject go in _curEdges){
+					_buildMgr.SplitEdge(
+						go.GetComponent<Edge>(), lastTouch, _curNode.GetComponent<Node>());
+				}
 			}
 		}
 		
 		_curEdge = null;
+		_curEdges.Clear();
 		_curNode = null;
 	}
 
@@ -248,8 +259,11 @@ public class InputManager : MonoBehaviour {
 			//Release thing node on edge, split edge around node thing
 			if(_curNode != null && _curEdge != null &&
 			   _curNode.GetComponent<Node>().IsNotConnected()){
-				_buildMgr.SplitEdge(
-					_curEdge.GetComponent<Edge>(), touchPos, _curNode.GetComponent<Node>());
+				_buildMgr.SplitEdges(_curEdges, touchPos, _curNode.GetComponent<Node>());
+//				foreach(GameObject go in _curEdges){
+//					_buildMgr.SplitEdge(
+//						go.GetComponent<Edge>(), touchPos, _curNode.GetComponent<Node>());
+//				}
 			}
 			
 			_curEdge = null;
@@ -299,13 +313,13 @@ public class InputManager : MonoBehaviour {
 		#endif
 		#if UNITY_EDITOR || UNITY_WEBPLAYER
 		if(Input.GetKey ("w")){
-			camPos.z += 100 * Time.deltaTime;
+			camPos.z += 50 * Time.deltaTime;
 		} else if(Input.GetKey ("s")){
-			camPos.z -= 100 * Time.deltaTime;
+			camPos.z -= 50 * Time.deltaTime;
 		} else if(Input.GetKey ("a")){
-			camPos.x -= 100 * Time.deltaTime;
+			camPos.x -= 50 * Time.deltaTime;
 		} else if(Input.GetKey ("d")){
-			camPos.x += 100 * Time.deltaTime;
+			camPos.x += 50 * Time.deltaTime;
 		}
 		
 		cameraHolder.transform.position = camPos;

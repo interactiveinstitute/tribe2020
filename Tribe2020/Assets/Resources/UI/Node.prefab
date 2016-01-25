@@ -12,6 +12,7 @@ GameObject:
   - 65: {fileID: 6559552}
   - 23: {fileID: 2308502}
   - 114: {fileID: 11448914}
+  - 114: {fileID: 11439304}
   m_Layer: 0
   m_Name: Node
   m_TagString: node
@@ -74,6 +75,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &11439304
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 186446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19048844498ba52479493af7d8e2ec94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11448914
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -85,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddc786c04fb7094380c804d5714dc9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 
+  type: Node
   NODE: {fileID: 186446}
   EDGE: {fileID: 168176, guid: 3d30c732678a4b24492fcd3783bddbbb, type: 2}
   _connectionDistance: 0
@@ -119,6 +131,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LocalScale.z
       value: .699999988
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: type
+      value: Node
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

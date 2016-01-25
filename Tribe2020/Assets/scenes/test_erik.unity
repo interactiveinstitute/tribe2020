@@ -393,7 +393,7 @@ RectTransform:
   - {fileID: 901593199}
   - {fileID: 1741477840}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -580,7 +580,7 @@ Transform:
   m_Children:
   - {fileID: 1652125468}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!114 &441103500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -593,6 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea476100d2b1c148a4c21a4bed830fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _simMgr: {fileID: 0}
 --- !u!1 &571736279
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,7 +733,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
 --- !u!1 &576501476
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,7 +769,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!23 &576501478
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -887,6 +888,7 @@ MonoBehaviour:
   - {fileID: 153446, guid: fa07396316e1a5645858ee6256189ba2, type: 2}
   - {fileID: 172370, guid: 31523dee168e9694296615b560f88c0b, type: 2}
   - {fileID: 162846, guid: 8d325440698ee4f4ea6c96578b6c85f0, type: 2}
+  - {fileID: 186446, guid: 9cd46ac63131c424a9089a5ac152dbfd, type: 2}
   TOILET: {fileID: 119326, guid: 11a76370178b4ac42b32a40704a75513, type: 2}
   CAMPFIRE: {fileID: 130120, guid: 3100fd78f31d5ba409abc213cfb8069b, type: 2}
   COFFEE: {fileID: 163736, guid: 3ebe612137025eb43b1d6addfe1e9aef, type: 2}
@@ -1138,7 +1140,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &772486498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,7 +1640,7 @@ Transform:
   - {fileID: 1443275726}
   - {fileID: 851105160}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1 &901593198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1777,7 +1779,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
 --- !u!1 &917207329
 GameObject:
   m_ObjectHideFlags: 0
@@ -1787,7 +1789,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 917207330}
   m_Layer: 0
-  m_Name: Pilot Office G
+  m_Name: Office Blueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1800,12 +1802,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 917207329}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.3900003, y: .289999992, z: 9.90999985}
-  m_LocalScale: {x: .0873959884, y: .430000007, z: .0862230211}
+  m_LocalPosition: {x: 9.69999981, y: .300000012, z: 9.89999962}
+  m_LocalScale: {x: .0879999995, y: .430000007, z: .0879999995}
   m_Children:
   - {fileID: 1074774761}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 1
 --- !u!1 &952209486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1832,7 +1834,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
 --- !u!224 &953749943 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22488488, guid: ed3c2a9e0d82e0745ab613defbccd3c3,
@@ -2284,7 +2286,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
 --- !u!1001 &1312028016
 Prefab:
   m_ObjectHideFlags: 0
@@ -3018,7 +3020,7 @@ Transform:
   m_Children:
   - {fileID: 1801967012}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &1633621437
 GameObject:
   m_ObjectHideFlags: 0
@@ -3256,6 +3258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b997c84b92dc1842b5a4163853aa390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _material: {fileID: 0}
+  _renderer: {fileID: 0}
 --- !u!23 &1652125465
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3425,7 +3429,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
 --- !u!1 &1707754956
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,7 +3671,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 806e28458130fae46822def81b656996, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 806e28458130fae46822def81b656996, type: 3}
       propertyPath: m_LocalRotation.z
@@ -3675,11 +3679,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 806e28458130fae46822def81b656996, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -1.62920685e-07
       objectReference: {fileID: 0}
     - target: {fileID: 400046, guid: 806e28458130fae46822def81b656996, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100046, guid: 806e28458130fae46822def81b656996, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100046, guid: 806e28458130fae46822def81b656996, type: 3}
+      propertyPath: m_Name
+      value: Office Mesh
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 806e28458130fae46822def81b656996, type: 3}
@@ -4085,7 +4097,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1792301169}
   m_HandleRect: {fileID: 1792301168}
   m_Direction: 3
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
