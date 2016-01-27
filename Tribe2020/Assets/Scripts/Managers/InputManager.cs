@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class InputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour{
 	//Singleton features
 	private static InputManager _instance;
 	public static InputManager GetInstance(){
