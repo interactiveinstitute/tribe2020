@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Interactable : MonoBehaviour{
+	public string type = "techie";
 
 	// Use this for initialization
 	void Start(){

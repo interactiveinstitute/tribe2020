@@ -8,16 +8,20 @@ public class InteractionManager : MonoBehaviour{
 		return _instance;
 	}
 
-	//Orientation interaction parameters
-	private GameObject cameraHolder;
-	private Camera _camera;
-	public float perspectiveZoomSpeed = 0.25f;
-	public float orthoZoomSpeed = 0.25f;
+	public GameObject TitleUI;
+	public GameObject InspectorUI;
+
+	private CameraManager _camMgr;
 
 	//Interaction parameters
+	private const string IDLE = "idle";
+	private const string TAP = "tap";
+	private string _touchState = IDLE;
 	private float _touchTimer = 0;
+	private float _doubleTimer = 0;
 	private Vector3 _startPos;
-	public const float TAP_TIMEOUT = 0.25f;
+	public const float TAP_TIMEOUT = 0.1f;
+	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
 
 	//Sort use instead of constructor
@@ -27,16 +31,14 @@ public class InteractionManager : MonoBehaviour{
 
 	// Use this for initialization
 	void Start(){
-		//Ref to camera
-		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-		_camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		_camMgr = CameraManager.GetInstance();
 	}
 	
 	// Update is called once per frame
 	void Update(){
 		//Mobile interaction
-		UpdatePan(_camera);
-		UpdatePinch(_camera);
+		UpdatePan(_camMgr.camera);
+		UpdatePinch(_camMgr.camera);
 		
 		//Touch start
 		if(Input.GetMouseButtonDown(0)){
@@ -52,12 +54,23 @@ public class InteractionManager : MonoBehaviour{
 		if(Input.GetMouseButtonUp(0)){
 			OnTouchEnded(Input.mousePosition);
 		}
+
+		if(_touchState == TAP) {
+			_doubleTimer += Time.deltaTime;
+			if(_doubleTimer > D_TAP_TIMEOUT){
+				OnTap(_startPos);
+				_doubleTimer = 0;
+				_touchState = IDLE;
+			}
+		}
 	}
 
 	//
 	private void OnTouchStart(Vector3 pos){
 		_touchTimer = 0;
-		_startPos = pos;
+		if(_touchState == IDLE) {
+			_startPos = pos;
+		}
 	}
 	
 	//
@@ -70,8 +83,16 @@ public class InteractionManager : MonoBehaviour{
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
-		if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH) {
-			OnTap(pos);
+		if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH){
+			_touchTimer = 0;
+			if(_touchState == IDLE){
+				_touchState = TAP;
+			} else if(_touchState == TAP){
+				_touchState = IDLE;
+				_doubleTimer = 0;
+				OnDoubleTap(pos);
+			}
+//			OnTap(pos);
 		} else if(dist >= SWIPE_THRESH) {
 			OnSwipe(_startPos, pos);
 		}
@@ -81,11 +102,22 @@ public class InteractionManager : MonoBehaviour{
 	private void OnTap(Vector3 pos){
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(pos);
+
+		Debug.Log("Tapped at " + pos);
 		
 		if(Physics.Raycast(ray, out hit)){  
 			Transform selected = hit.transform;
 			Debug.Log("hit: " + selected.tag);
+
+			if(selected.GetComponent<Interactable>()){
+				InspectorUI.SetActive(true);
+			}
 		}
+	}
+
+	//
+	private void OnDoubleTap(Vector3 pos){
+		Debug.Log("Double tapped at " + pos);
 	}
 
 	//
@@ -97,28 +129,33 @@ public class InteractionManager : MonoBehaviour{
 
 		float dirMod = (dir + 90) % 360;
 		if(dirMod > 45 && dirMod <= 135){
-			Debug.Log("swipe right, " + dir);
+			_camMgr.PrevViewpoint();
 		} else if(dir > 45 && dir <= 135){
 			Debug.Log("swipe up, " + dir);
 		} else if(dir > 135 && dir <= 225){
-			Debug.Log("swipe left, " + dir);
+			_camMgr.NextViewpoint();
 		} else if(dir > 225 && dir <= 315){
 			Debug.Log("swipe down, " + dir);
 		}
 	}
 	
 	//
-	private void OnButtonTap(string button){
-	}
-	
-	//
-	private void OnDoubleTap(){
+	public void OnButtonTap(string button){
+		switch(button){
+		case "close_inspector":
+			InspectorUI.SetActive(false);
+			break;
+		default:
+			break;
+		}
 	}
 
 	//
+
+	//
 	public void UpdatePan(Camera camera){
-		Vector3 camPos = _camera.transform.position;
-		Transform camTransform = _camera.transform;
+		Vector3 camPos = camera.transform.position;
+		Transform camTransform = camera.transform;
 		
 		float tSpeed = 0.1F;
 		
@@ -144,7 +181,7 @@ public class InteractionManager : MonoBehaviour{
 			camPos.x += 50 * Time.deltaTime;
 		}
 		
-		_camera.transform.position = camPos;
+		camera.transform.position = camPos;
 		#endif
 	}
 	
@@ -168,10 +205,10 @@ public class InteractionManager : MonoBehaviour{
 			
 			// Zoom differently depending on ortho or perspective
 			if (camera.orthographic){
-				camera.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+				camera.orthographicSize += deltaMagnitudeDiff * _camMgr.orthoZoomSpeed;
 				camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
 			} else {
-				camera.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+				camera.fieldOfView += deltaMagnitudeDiff * _camMgr.perspectiveZoomSpeed;
 				camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
 			}
 		}
