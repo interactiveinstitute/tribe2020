@@ -21,5 +21,15 @@ public class ElectricDeviceEditor : Editor
 		{
 			myScript.TurnOff();
 		}
+
+		if(GUILayout.Button("Update",GUILayout.Width(100) ))
+		{
+			myScript.update_energy();
+		}
+
+		if(GUILayout.Button("Reset meter",GUILayout.Width(100) ))
+		{
+			myScript.reset_energy();	
+		}
 	}
 }

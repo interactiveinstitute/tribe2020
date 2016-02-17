@@ -2699,7 +2699,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!1 &567465300
 GameObject:
   m_ObjectHideFlags: 0
@@ -3453,6 +3453,7 @@ GameObject:
   - 224: {fileID: 686216944}
   - 222: {fileID: 686216946}
   - 114: {fileID: 686216945}
+  - 114: {fileID: 686216947}
   m_Layer: 5
   m_Name: Electricity
   m_TagString: Untagged
@@ -3513,6 +3514,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 686216943}
+--- !u!114 &686216947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 686216943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4143773d1057a43158da09086fbab46f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &686291592 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 38c3015a6054a4bb5a120d0c419d02b1, type: 3}
@@ -4350,10 +4362,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 923581202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 30e2d99dcaabc4bac974b1affd68fa66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   On: 0
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
 --- !u!4 &923581204
 Transform:
   m_ObjectHideFlags: 0
@@ -5635,6 +5652,10 @@ Prefab:
       propertyPath: runlevelOn
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: PowerFrom
+      value: 
+      objectReference: {fileID: 923581202}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
   m_IsPrefabParent: 0
@@ -8402,6 +8423,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1483912568}
     m_Modifications:
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: runlevels.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 454954, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
       propertyPath: m_LocalPosition.x
       value: -15.1
@@ -8434,6 +8459,22 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: runlevels.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: runlevels.Array.data[2]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: runlevelOn
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460582, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
+      propertyPath: PowerFrom
+      value: 
+      objectReference: {fileID: 923581202}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6e30bc6962724eff9554eb68be9cd94, type: 2}
   m_IsPrefabParent: 0
