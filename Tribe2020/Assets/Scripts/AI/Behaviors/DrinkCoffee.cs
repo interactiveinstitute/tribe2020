@@ -10,7 +10,7 @@ public class DrinkCoffee : AgentBehavior {
 	
 	public override void Start(){
 		_curState = WALK_TO_COFFEE;
-		Debug.Log(WALK_TO_COFFEE);
+//		Debug.Log(WALK_TO_COFFEE);
 	}
 
 	public override void Update(SimpleAI ai){
@@ -31,7 +31,7 @@ public class DrinkCoffee : AgentBehavior {
 		if (_curState == WALK_TO_COFFEE && tag == "coffee") {
 			_curState = DRINK_COFFEE;
 			_delay = 3;
-			Debug.Log(DRINK_COFFEE);
+//			Debug.Log(DRINK_COFFEE);
 		}
 	}
 }

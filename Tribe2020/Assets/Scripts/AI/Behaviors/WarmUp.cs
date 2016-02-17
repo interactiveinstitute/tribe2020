@@ -9,7 +9,7 @@ public class WarmUp : AgentBehavior {
 	}
 	
 	public override void Start(){
-		Debug.Log("now warming up");
+//		Debug.Log("now warming up");
 	}
 
 	public override void Update(SimpleAI ai){

@@ -9,9 +9,12 @@ GameObject:
   m_Component:
   - 4: {fileID: 497222}
   - 33: {fileID: 3385550}
-  - 65: {fileID: 6572024}
+  - 64: {fileID: 6495334}
   - 23: {fileID: 2349982}
   - 208: {fileID: 20890332}
+  - 114: {fileID: 11409566}
+  - 114: {fileID: 11457104}
+  - 114: {fileID: 11414216}
   m_Layer: 0
   m_Name: Block Wall
   m_TagString: ent_block
@@ -62,8 +65,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 150470}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &6572024
-BoxCollider:
+--- !u!64 &6495334
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -72,8 +75,77 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: .5, y: .5, z: .5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Convex: 0
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &11409566
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe57e5fe791b234cb10f7efc8edc8f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _radius: 3
+--- !u!114 &11414216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f87326aff94825741acc331e27e90e1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateGemoetryEveryFrame: 0
+  flipNormals: 0
+  flipUVMapping: 0
+  shareMaterial: 0
+  generateMeshCollider: 0
+  fitColliderOnChange: 0
+  showSceneHandles: 1
+  generationMode: 0
+  normalsType: 0
+  pivotPosition: 0
+  radius0: 0
+  radius1: 0
+  height: 0
+  sides: 3
+  heightSegments: 1
+  slice: 0
+  radialMapping: 0
+--- !u!114 &11457104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 150470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a1c4943233d3e9439b345508b8b12a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generateGemoetryEveryFrame: 0
+  flipNormals: 0
+  flipUVMapping: 0
+  shareMaterial: 0
+  generateMeshCollider: 0
+  fitColliderOnChange: 0
+  showSceneHandles: 1
+  generationMode: 0
+  normalsType: 0
+  pivotPosition: 0
+  width: 0
+  height: 0
+  depth: 0
+  widthSegments: 0
+  heightSegments: 0
+  depthSegments: 0
+  cubeMap: 0
+  edgeOffsets: []
 --- !u!208 &20890332
 NavMeshObstacle:
   m_ObjectHideFlags: 1
@@ -103,6 +175,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Carve
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

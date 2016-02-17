@@ -10,13 +10,13 @@ public class Idle : AgentBehavior {
 	public override void Start(){
 		_delay = Random.Range(1, 3);
 
-		Debug.Log("now idle" + _delay);
+//		Debug.Log("now idle" + _delay);
 	}
 
 	public override void Update(SimpleAI ai){
 		base.Update(ai);
 
-		Debug.Log (_delay);
+//		Debug.Log (_delay);
 
 		if(_delay <= 0){
 			ai.OnBehaviorOver();
