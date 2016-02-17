@@ -45,7 +45,7 @@ public class ElectricMeter : MonoBehaviour {
 		float delta;
 
 		delta = now - lastupdate;
-		Energy = Energy + (Power * delta);
+		Energy = Energy + ((Power * delta)/3600);
 
 		lastupdate = now;
 

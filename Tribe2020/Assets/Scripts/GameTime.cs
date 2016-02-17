@@ -12,7 +12,7 @@ public class GameTime : MonoBehaviour {
 	public double CurrentTime;
 	public string CurrentDate;
 
-	[Range(0.0f, 10.0f)]
+	[Range(0.0f, 100.0f)]
 	public float TimeScale = 1.0f;
 
 	void Awake () {
@@ -54,6 +54,16 @@ public class GameTime : MonoBehaviour {
 
 		//return the total seconds (which is a UNIX timestamp)
 		return date;
+	}
+
+	public DateTime GetDateTime()
+	{
+		return TimestampToDateTime(CurrentTime);
+	}
+
+	public void Offset(float delta)
+	{
+		StartTime = StartTime + delta;
 	}
 }
 
