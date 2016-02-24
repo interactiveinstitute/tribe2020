@@ -931,7 +931,7 @@ Transform:
   m_PrefabParentObject: {fileID: 424694, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 46860370}
-  m_LocalRotation: {x: .532675147, y: .0703404471, z: .836132646, w: -.110415131}
+  m_LocalRotation: {x: .532675207, y: .0703404546, z: .836132765, w: -.110415146}
   m_LocalPosition: {x: 2.22714643e-05, y: -6.1504652e-05, z: .0260270257}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8787,7 +8787,6 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -18323,13 +18322,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   On: 0
-  ConnectedTo: {fileID: 0}
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
   runlevels: []
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
-  Power: 0
-  Energy: 0
 --- !u!65 &1113483727
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21663,13 +21664,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   On: 0
-  ConnectedTo: {fileID: 0}
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
   runlevels: []
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
-  Power: 0
-  Energy: 0
 --- !u!114 &1355173624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28887,13 +28890,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   On: 0
-  ConnectedTo: {fileID: 0}
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
   runlevels: []
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
-  Power: 0
-  Energy: 0
 --- !u!114 &1855581523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31539,7 +31544,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   On: 0
-  ConnectedTo: {fileID: 0}
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
   runlevels:
   - 0
   - 50
@@ -31547,8 +31556,6 @@ MonoBehaviour:
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
-  Power: 0
-  Energy: 0
 --- !u!1 &2020798983
 GameObject:
   m_ObjectHideFlags: 0
