@@ -25,6 +25,18 @@ public class ServerConnection : MonoBehaviour {
 	
 	string lastMessage = null;
 
+	//Singleton functionality 
+	private static ServerConnection _instance;
+
+	void Awake () {
+		_instance = this;
+	}
+
+	public static ServerConnection GetInstance () {
+		return _instance;
+	}
+
+
 	// Use this for initialization
 	void Start () {
 		if (brokerHostname != null && userName != null && password != null) {
@@ -73,5 +85,16 @@ public class ServerConnection : MonoBehaviour {
 		client.Publish(
 			_topic, Encoding.UTF8.GetBytes(msg),
 			MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, false);
+	}
+
+	public void Request(TimeSeries ts,string Name,double StartTime,bool Absolute,int BufferSize)
+	{
+		//Add to query list. 
+
+		//Test
+		ts.Values = new double[4] {1.0,2.0,3.0,4.0};
+		ts.TimeStamps = new double[4] {1452691843.0,1452691849.0,1452691858.0,1452691890.0};
+		ts.BufferValid = true;
+		ts.BufferSize = BufferSize;
 	}
 }

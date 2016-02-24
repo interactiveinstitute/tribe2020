@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class OutdoorTemperature : MonoBehaviour {
+public class OutdoorTemperature : TimeSeries {
 
-	// Use this for initialization
-	void Start () {
-	
+	//Singleton functionality 
+	private static OutdoorTemperature _instance;
+
+	void Awake () {
+		_instance = this;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public static OutdoorTemperature GetInstance () {
+		return _instance;
 	}
+
 }

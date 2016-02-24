@@ -24,6 +24,7 @@ public class SunMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		AutoUpdate = true;
 		_timeOfDay = 0;
 		_degreeRotation = DEGREES_PER_SECOND * DAY / (dayCycleInMinutes * MINUTE);
 		longitude = 41.647453;
