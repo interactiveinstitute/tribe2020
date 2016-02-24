@@ -40,11 +40,15 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 426044}
-  - 33: {fileID: 3326638}
   - 65: {fileID: 6544096}
-  - 23: {fileID: 2325656}
   - 114: {fileID: 11422982}
-  - 114: {fileID: 11405098}
+  - 114: {fileID: 11415000}
+  - 114: {fileID: 11453260}
+  - 114: {fileID: 11465690}
+  - 114: {fileID: 11447338}
+  - 114: {fileID: 11468962}
+  - 114: {fileID: 11491428}
+  - 114: {fileID: 11429340}
   m_Layer: 0
   m_Name: Espresso Machine
   m_TagString: coffee
@@ -58,9 +62,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 163736}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106709}
+  m_LocalPosition: {x: 24.4000015, y: 25.1000004, z: -51.7000008}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 479252}
   m_Father: {fileID: 0}
@@ -90,30 +94,6 @@ Transform:
   - {fileID: 460510}
   m_Father: {fileID: 426044}
   m_RootOrder: 0
---- !u!23 &2325656
-MeshRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 163736}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
 --- !u!23 &2375938
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -138,13 +118,6 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3326638
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 163736}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!33 &3338104
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -164,7 +137,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11405098
+--- !u!114 &11415000
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -172,9 +145,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 163736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19048844498ba52479493af7d8e2ec94, type: 3}
+  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  On: 0
+  ConnectedTo: {fileID: 0}
+  runlevels: []
+  runlevel: 0
+  runlevelOn: 0
+  runlevelOff: 0
+  Power: 0
+  Energy: 0
 --- !u!114 &11422982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -187,6 +168,108 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: Block Coffee Machine
+--- !u!114 &11429340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Upgrade to Star Label
+  cashCost: 200
+  comfortCost: 0
+  cashProduction: 2
+  comfortPorduction: 1
+  isPerformed: 0
+  isPassive: 1
+--- !u!114 &11447338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Decalcify
+  cashCost: 50
+  comfortCost: 0
+  cashProduction: 0
+  comfortPorduction: 10
+  isPerformed: 0
+  isPassive: 0
+--- !u!114 &11453260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c232c744becc931449fedab7ebfce8e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: techie
+--- !u!114 &11465690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Turn Off
+  cashCost: 50
+  comfortCost: 0
+  cashProduction: 0
+  comfortPorduction: 10
+  isPerformed: 0
+  isPassive: 0
+--- !u!114 &11468962
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Install Thermal Jug
+  cashCost: 200
+  comfortCost: 25
+  cashProduction: 2
+  comfortPorduction: 1
+  isPerformed: 0
+  isPassive: 1
+--- !u!114 &11491428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Upgrade to A+++
+  cashCost: 200
+  comfortCost: 0
+  cashProduction: 2
+  comfortPorduction: 1
+  isPerformed: 0
+  isPassive: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

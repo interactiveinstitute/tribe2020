@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class InteractionManager : MonoBehaviour{
 	//Singleton features
@@ -10,16 +12,23 @@ public class InteractionManager : MonoBehaviour{
 
 	public GameObject TitleUI;
 	public GameObject InspectorUI;
+	public GameObject MailUI;
 
 	private CameraManager _camMgr;
+	private UIManager _uiMgr;
+	private AudioManager _audioMgr;
+	private ResourceManager _resourceMgr;
 
-	//Interaction parameters
-	private const string IDLE = "idle";
-	private const string TAP = "tap";
+	//Interaction props
 	private string _touchState = IDLE;
 	private float _touchTimer = 0;
 	private float _doubleTimer = 0;
 	private Vector3 _startPos;
+	private bool _isPinching = false;
+
+	//Interaction consts
+	private const string IDLE = "idle";
+	private const string TAP = "tap";
 	public const float TAP_TIMEOUT = 0.1f;
 	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
@@ -32,35 +41,41 @@ public class InteractionManager : MonoBehaviour{
 	// Use this for initialization
 	void Start(){
 		_camMgr = CameraManager.GetInstance();
+		_uiMgr = UIManager.GetInstance();
+		_audioMgr = AudioManager.GetInstance();
+		_resourceMgr = ResourceManager.GetInstance();
 	}
 	
 	// Update is called once per frame
 	void Update(){
 		//Mobile interaction
-		UpdatePan(_camMgr.camera);
-		UpdatePinch(_camMgr.camera);
-		
-		//Touch start
-		if(Input.GetMouseButtonDown(0)){
-			OnTouchStart(Input.mousePosition);
-		}
-		
-		//Touch ongoing
-		if(Input.GetMouseButton(0)){
-			OnTouch(Input.mousePosition);
-		}
-		
-		//Touch end
-		if(Input.GetMouseButtonUp(0)){
-			OnTouchEnded(Input.mousePosition);
-		}
+//		UpdatePan(_camMgr.camera);
+		UpdatePinch();
 
-		if(_touchState == TAP) {
-			_doubleTimer += Time.deltaTime;
-			if(_doubleTimer > D_TAP_TIMEOUT){
-				OnTap(_startPos);
-				_doubleTimer = 0;
-				_touchState = IDLE;
+//		if(!InspectorUI.activeSelf){
+		if(IsOutsideUI(Input.mousePosition)){
+			//Touch start
+			if(Input.GetMouseButtonDown(0)){
+				OnTouchStart(Input.mousePosition);
+			}
+		
+			//Touch ongoing
+			if(Input.GetMouseButton(0)){
+				OnTouch(Input.mousePosition);
+			}
+		
+			//Touch end
+			if(Input.GetMouseButtonUp(0)){
+				OnTouchEnded(Input.mousePosition);
+			}
+
+			if(_touchState == TAP){
+				_doubleTimer += Time.deltaTime;
+				if(_doubleTimer > D_TAP_TIMEOUT){
+					OnTap(_startPos);
+					_doubleTimer = 0;
+					_touchState = IDLE;
+				}
 			}
 		}
 	}
@@ -75,11 +90,17 @@ public class InteractionManager : MonoBehaviour{
 	
 	//
 	private void OnTouch(Vector3 pos){
+		_camMgr.cameraState = CameraManager.PANNED;
 		_touchTimer += Time.deltaTime;
+
+		if(Application.platform == RuntimePlatform.Android){
+			_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
+		}
 	}
 	
 	//
 	private void OnTouchEnded(Vector3 pos){
+		_camMgr.cameraState = CameraManager.IDLE;
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
@@ -93,24 +114,24 @@ public class InteractionManager : MonoBehaviour{
 				OnDoubleTap(pos);
 			}
 //			OnTap(pos);
-		} else if(dist >= SWIPE_THRESH) {
+		} else if(dist >= SWIPE_THRESH){
 			OnSwipe(_startPos, pos);
 		}
 	}
 	
 	//
 	private void OnTap(Vector3 pos){
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay(pos);
-
-		Debug.Log("Tapped at " + pos);
 		
-		if(Physics.Raycast(ray, out hit)){  
+		if(Physics.Raycast(ray, out hit, 10)){
 			Transform selected = hit.transform;
-			Debug.Log("hit: " + selected.tag);
 
 			if(selected.GetComponent<Interactable>()){
 				InspectorUI.SetActive(true);
+				InspectorUI.GetComponentInChildren<Text>().text = selected.name;
+				_uiMgr.SetActions(selected.GetComponent<Interactable>().GetActions());
+				_audioMgr.PlaySound("button");
 			}
 		}
 	}
@@ -122,21 +143,27 @@ public class InteractionManager : MonoBehaviour{
 
 	//
 	private void OnSwipe(Vector3 start, Vector3 end){
-//		float dir = Vector3.Angle(start, end);
 		float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
 		dir = (dir * Mathf.Rad2Deg + 360) % 360;
 		float dist = Vector3.Distance(start, end);
 
 		float dirMod = (dir + 90) % 360;
 		if(dirMod > 45 && dirMod <= 135){
-			_camMgr.PrevViewpoint();
+			_camMgr.GotoLeftView();
 		} else if(dir > 45 && dir <= 135){
-			Debug.Log("swipe up, " + dir);
+			_camMgr.GotoLowerView();
 		} else if(dir > 135 && dir <= 225){
-			_camMgr.NextViewpoint();
+			_camMgr.GotoRightView();
 		} else if(dir > 225 && dir <= 315){
-			Debug.Log("swipe down, " + dir);
+			_camMgr.GotoUpperView();
 		}
+	}
+
+	//
+	public void ResetTouch(){
+		_touchTimer = 0;
+		_doubleTimer = 0;
+		_startPos = Input.mousePosition;
 	}
 	
 	//
@@ -145,49 +172,55 @@ public class InteractionManager : MonoBehaviour{
 		case "close_inspector":
 			InspectorUI.SetActive(false);
 			break;
+		case "open_mail":
+			MailUI.SetActive(true);
+			break;
+		case "close_mail":
+			MailUI.SetActive(false);
+			break;
 		default:
 			break;
 		}
+
+		ResetTouch();
+		Debug.Log(button);
 	}
 
 	//
+	public void OnPinchIn(){
+		_camMgr.GotoUpperView();
+	}
 
 	//
-	public void UpdatePan(Camera camera){
-		Vector3 camPos = camera.transform.position;
-		Transform camTransform = camera.transform;
-		
-		float tSpeed = 0.1F;
-		
-		#if UNITY_ANDROID
-		if ((Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
-		    || (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Moved)) {
-			// Get movement of the finger since last frame
-			Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-			// Move object across XY plane
-			camTransform.Translate(-touchDeltaPosition.x * tSpeed, -touchDeltaPosition.y * tSpeed, 0);
-		} else if(Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended){
-			
+	public void OnPinchOut(){
+		_camMgr.GotoLowerView();
+	}
+
+	//
+	public void OnPinching(float magnitude){
+	}
+
+	//
+	public void OnAction(Action action, GameObject actionObj){
+		if(_resourceMgr.cash >= action.cashCost &&
+		   _resourceMgr.comfort >= action.comfortCost &&
+		   !action.performed){
+			_resourceMgr.cash -= action.cashCost;
+			_resourceMgr.comfort -= action.comfortCost;
+			action.performed = true;
+	
+			_uiMgr.CreateFeedback(action.gameObject.transform.position, "-" + action.cashCost);
+			_resourceMgr.RefreshProduction();
+
+			actionObj.SetActive(false);
 		}
-		#endif
-		#if UNITY_EDITOR || UNITY_WEBPLAYER
-		if(Input.GetKey ("w")){
-			camPos.z += 50 * Time.deltaTime;
-		} else if(Input.GetKey ("s")){
-			camPos.z -= 50 * Time.deltaTime;
-		} else if(Input.GetKey ("a")){
-			camPos.x -= 50 * Time.deltaTime;
-		} else if(Input.GetKey ("d")){
-			camPos.x += 50 * Time.deltaTime;
-		}
-		
-		camera.transform.position = camPos;
-		#endif
 	}
 	
 	//
-	public void UpdatePinch(Camera camera){
+	public void UpdatePinch(){
 		if(Input.touchCount == 2){
+			_isPinching = true;
+
 			// Store both touches.
 			Touch touchZero = Input.GetTouch(0);
 			Touch touchOne = Input.GetTouch(1);
@@ -202,15 +235,51 @@ public class InteractionManager : MonoBehaviour{
 			
 			// Find the difference in the distances between each frame.
 			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+			OnPinching(deltaMagnitudeDiff);
+		} else if(_isPinching){
+			_isPinching = false;
+
+			// Store both touches.
+			Touch touchZero = Input.GetTouch(0);
+			Touch touchOne = Input.GetTouch(1);
+
+			// Find the position in the previous frame of each touch.
+			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 			
-			// Zoom differently depending on ortho or perspective
-			if (camera.orthographic){
-				camera.orthographicSize += deltaMagnitudeDiff * _camMgr.orthoZoomSpeed;
-				camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
+			// Find the magnitude of the distance between the touches in each frame.
+			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+			
+			// Find the difference in the distances between each frame.
+			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+			if(deltaMagnitudeDiff > 0){
+				OnPinchOut();
 			} else {
-				camera.fieldOfView += deltaMagnitudeDiff * _camMgr.perspectiveZoomSpeed;
-				camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
+				OnPinchIn();
 			}
 		}
+	}
+
+	//
+	public bool IsOutsideUI(Vector3 pos){
+		bool outsideInspector = true;
+		bool outsideMailButton = true;
+		if(InspectorUI.activeSelf) {
+			outsideInspector =
+				pos.x > Screen.width * 0.2f ||
+				pos.x < Screen.width - Screen.width * 0.2f ||
+				pos.y > Screen.height * 0.12f ||
+				pos.y < Screen.height - Screen.height * 0.12f;
+		}
+		outsideInspector = !InspectorUI.activeSelf;
+		outsideMailButton =
+			pos.x < Screen.width - Screen.width * 0.2f ||
+			pos.y < Screen.height - Screen.height * 0.12f;
+
+		Debug.Log("pointer:" + pos);
+
+		return outsideInspector && outsideMailButton && !MailUI.activeSelf;
 	}
 }

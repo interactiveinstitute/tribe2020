@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour{
 	//Useful managers
 	private ESManager _simMgr;
 	private BuildManager _buildMgr;
-	private UIManager _uiMgr;
+	private UIManager1 _uiMgr;
 	private SaveManager _saveMgr;
 
 	public Collider groundPlane;
@@ -79,7 +79,7 @@ public class InputManager : MonoBehaviour{
 		//Get instance of managers
 //		_simMgr = GameObject.FindWithTag("managers").GetComponent<ESManager>();
 		_buildMgr = BuildManager.GetInstance();
-		_uiMgr = UIManager.GetInstance();
+		_uiMgr = UIManager1.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
 		//Ref to ground object

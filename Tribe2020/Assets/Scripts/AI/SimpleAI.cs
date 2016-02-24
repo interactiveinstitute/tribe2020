@@ -14,7 +14,7 @@ public class SimpleAI : MonoBehaviour {
 
 	private Transform _toilet, _coffee;
 
-	private const string COFFEE = "coffee";
+	private const string COFFEE = "Appliance";
 	private const string TOILET = "toilet";
 
 	// Use this for initialization
