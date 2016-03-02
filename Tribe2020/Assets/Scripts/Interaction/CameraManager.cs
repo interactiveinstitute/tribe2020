@@ -63,7 +63,7 @@ public class CameraManager : MonoBehaviour {
 		PopulateViewpoints(GameObject.FindGameObjectsWithTag("ViewPoint"));
 
 		SetViewpoint(0, 0);
-		UpdateVisibility();
+		//UpdateVisibility();
 	}
 	
 	// Update is called once per frame
@@ -83,30 +83,50 @@ public class CameraManager : MonoBehaviour {
 	public void UpdateVisibility(){
 		Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
 
-		if(vp.showFloor){
-			foreach(Transform floor in pilotTransform){
-				if(floor.name == "Floor " + vp.floor){
-					ShowFloor(floor);
-				} else{
-					HideFloor(floor);
-				}
-			}
-		} else if(vp.showPilot){
-			foreach(Transform floor in pilotTransform){
-				ShowFloor(floor);
-			}
-		}
+        foreach(GameObject go in vp.hideObjects){
+            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+        }
 
-		if(vp.hideNorth){
-			HideWall("North Wall");
-		} else if(vp.hideEast){
-			HideWall("East Wall");
-		} else if(vp.hideSouth){
-			HideWall("South Wall");
-		} else if(vp.hideWest){
-			HideWall("West Wall");
-		}
+		//if(vp.showFloor){
+		//	foreach(Transform floor in pilotTransform){
+		//		if(floor.name == "Floor " + vp.floor){
+		//			ShowFloor(floor);
+		//		} else{
+		//			HideFloor(floor);
+		//		}
+		//	}
+		//} else if(vp.showPilot){
+		//	foreach(Transform floor in pilotTransform){
+		//		ShowFloor(floor);
+		//	}
+		//}
+
+		//if(vp.hideNorth){
+		//	HideWall("North Wall");
+		//} else if(vp.hideEast){
+		//	HideWall("East Wall");
+		//} else if(vp.hideSouth){
+		//	HideWall("South Wall");
+		//} else if(vp.hideWest){
+		//	HideWall("West Wall");
+		//}
 	}
+
+    public void HideObstacles(Transform viewpointTrans){
+        Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
+
+        foreach(GameObject go in vp.hideObjects){
+            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+        }
+    }
+
+    public void UnhideObstacles(Transform viewpointTrans){
+        Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
+
+        foreach(GameObject go in vp.hideObjects){
+            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        }
+    }
 
 	public void HideWall(string wall){
 		foreach(Transform floor in pilotTransform){
@@ -186,16 +206,21 @@ public class CameraManager : MonoBehaviour {
 			_viewpoints[curY][curX] = vo.transform;
 		}
 
-		Debug.Log("Populated " + _viewpoints.Length + " floors with " + viewObjects.Length + " views");
+		//Debug.Log("Populated " + _viewpoints.Length + " floors with " + viewObjects.Length + " views");
 	}
 
 	//
 	public void SetViewpoint(int x, int y){
 		if(x < _viewpoints[y].Length){
 			_curView = new Vector2(x, y);
+
+            if (_curViewpoint != null){
+                UnhideObstacles(_curViewpoint);
+            }
 			_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
-			
-			_lastPos = camera.transform.position;
+            HideObstacles(_curViewpoint);
+
+            _lastPos = camera.transform.position;
 			_targetPos = _curViewpoint.position;
 			
 			_lastRot = camera.transform.eulerAngles;
@@ -204,10 +229,9 @@ public class CameraManager : MonoBehaviour {
 			startTime = Time.time;
 			journeyLength = Vector3.Distance(_lastPos, _targetPos);
 			
-			_uiMgr.title.GetComponent<Text>().text =
-				_curViewpoint.GetComponent<Viewpoint>().title;
+			_uiMgr.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
 
-			UpdateVisibility();
+			//UpdateVisibility();
 		}
 	}
 
