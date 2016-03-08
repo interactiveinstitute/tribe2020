@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BehaviourAI : MonoBehaviour{
 	public float heating_behaviour;
@@ -7,6 +8,8 @@ public class BehaviourAI : MonoBehaviour{
 	public float lighting_behaviour;
 	public float appliance_behaviour;
 	public float attitude;
+
+    public List<string> schedule;
 
 	// Use this for initialization
 	void Start(){

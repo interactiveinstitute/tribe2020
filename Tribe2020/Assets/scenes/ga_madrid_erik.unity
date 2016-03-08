@@ -6384,6 +6384,7 @@ GameObject:
   - 65: {fileID: 1226095941}
   - 114: {fileID: 1226095942}
   - 114: {fileID: 1226095944}
+  - 114: {fileID: 1226095946}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Avatar
@@ -6481,6 +6482,56 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &1226095946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1226095939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b4dd0f9b1f2d04992c232b1863e3ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heating_behaviour: 0
+  cooling_behaviour: 0
+  lighting_behaviour: 0
+  appliance_behaviour: 0
+  attitude: 0
+  schedule:
+  - 8:30,Enter Building
+  - 8:32,Open Window
+  - 8:32,Turn on Computer
+  - 8:40,Close Window
+  - 8:40,Increase Temp 2deg
+  - 8:41,Get Coffee
+  - 8:45,Get Milk for Coffee from Fridge
+  - 8:47,Use Bathroom
+  - 9:03,Start Working
+  - 10:00,Decrease Temp 1deg
+  - 10:10,Telephone Call
+  - 10:32,Prepare Meeting room
+  - 10:45,Wait for participants
+  - 10:46,Start presenting
+  - 11:45,End presenting
+  - 11:49,Reset Meeting room
+  - 11:55,Go back to Office
+  - 11:55,Pick up Colleague for Lunch
+  - 12:00,Prepare Lunch in Lunch room
+  - 12:11,Eat Lunch
+  - 12:30,Clean up after Lunch
+  - 12:45,Go back to Office and start Working
+  - 14:30,Increase Temp 2deg
+  - 15:30,Take Break from Work
+  - 15:30,Turn on Lamp
+  - 15:30,Coffee Break
+  - 16:00,Socialize
+  - 16:00,Use Bathroom
+  - 16:17,Work in Office
+  - 16:45,Exchange Knowledge with Colleague
+  - 17:10,Phone Call
+  - 17:30,Reset Office
+  - 17:34,Leave Building
 --- !u!1 &1228548648
 GameObject:
   m_ObjectHideFlags: 0
