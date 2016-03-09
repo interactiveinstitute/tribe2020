@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AgentBehavior{
+public class AgentBehavior {
 	protected float _weight = 0f;
 	protected string _curState = "";
 	protected float _delay = 0f;

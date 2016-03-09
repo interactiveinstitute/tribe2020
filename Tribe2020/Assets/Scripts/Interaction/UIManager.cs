@@ -41,12 +41,14 @@ public class UIManager : MonoBehaviour{
 	}
 
 	//
-	public void SetActions(List<Action> actions){
+	public void SetActions(List<BaseAction> actions){
 		RemoveChildren(inspectorAction);
 		
-		foreach(Action a in actions){
+		foreach(BaseAction a in actions){
+			Debug.Log("action: " + a.name);
+
 			if(!a.performed){
-				Action curAction = a;
+				BaseAction curAction = a;
 				GameObject actionObj;
 				actionObj =
 					Instantiate(actionButton, Vector3.zero, Quaternion.identity) as GameObject;

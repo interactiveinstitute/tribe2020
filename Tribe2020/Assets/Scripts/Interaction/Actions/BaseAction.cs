@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
-public class Action : MonoBehaviour{
+[CreateAssetMenu(fileName = "Actions", menuName = "Actions/Base Action", order = 1)]
+public class BaseAction : ScriptableObject {
 	public string name;
 
 	public int cashCost;
@@ -16,10 +16,12 @@ public class Action : MonoBehaviour{
 	public bool hidden;
 
 	// Use this for initialization
-	void Start(){
+	void Start () {
+	
 	}
 	
 	// Update is called once per frame
-	void Update(){
+	void Update () {
+	
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//[System.Serializable]
 public class UseBathroom : AgentBehavior {
     private const string START = "start_bathroom";
 	private const string WALK_TO_TOILET = "walk_to_toilet";

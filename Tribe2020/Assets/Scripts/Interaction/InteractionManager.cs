@@ -130,7 +130,7 @@ public class InteractionManager : MonoBehaviour{
 			if(selected.GetComponent<Interactable>()){
 				InspectorUI.SetActive(true);
 				InspectorUI.GetComponentInChildren<Text>().text = selected.name;
-				_uiMgr.SetActions(selected.GetComponent<Interactable>().GetActions());
+				_uiMgr.SetActions(selected.GetComponent<Interactable>().actions);
 				_audioMgr.PlaySound("button");
 			}
 		}
@@ -201,7 +201,7 @@ public class InteractionManager : MonoBehaviour{
 	}
 
 	//
-	public void OnAction(Action action, GameObject actionObj){
+	public void OnAction(BaseAction action, GameObject actionObj){
 		if(_resourceMgr.cash >= action.cashCost &&
 		   _resourceMgr.comfort >= action.comfortCost &&
 		   !action.performed){
@@ -209,7 +209,7 @@ public class InteractionManager : MonoBehaviour{
 			_resourceMgr.comfort -= action.comfortCost;
 			action.performed = true;
 	
-			_uiMgr.CreateFeedback(action.gameObject.transform.position, "-" + action.cashCost);
+			//_uiMgr.CreateFeedback(action.gameObject.transform.position, "-" + action.cashCost);
 			_resourceMgr.RefreshProduction();
 
 			actionObj.SetActive(false);

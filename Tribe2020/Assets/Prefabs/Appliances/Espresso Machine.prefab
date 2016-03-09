@@ -185,7 +185,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c232c744becc931449fedab7ebfce8e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: techie
+  avatarActions: []
+  playerActions:
+  - {fileID: 11466012, guid: d5a02d57f502f6a449886f8ccf4175f8, type: 2}
+  actionObjects: []
 --- !u!114 &11407206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -304,7 +307,16 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: playerActions2.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: playerActions2.Array.data[0]
+      value: 
+      objectReference: {fileID: 11466012, guid: d5a02d57f502f6a449886f8ccf4175f8,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 155868}

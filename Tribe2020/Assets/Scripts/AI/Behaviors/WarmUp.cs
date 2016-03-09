@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class WarmUp : AgentBehavior {
 	private const string WALK_TO_WARMER_PLACE = "walk_to_warmer_place";
 	private const string WARMING_UP = "warming_up";
