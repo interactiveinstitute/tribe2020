@@ -11,6 +11,7 @@ public class SimpleAI : MonoBehaviour {
 
 	private List<AgentBehavior> _behaviors = new List<AgentBehavior>();
 	private AgentBehavior _curBehavior;
+    private GameObject[] _appliances;
 
 	private Transform _toilet, _coffee;
 
@@ -31,7 +32,10 @@ public class SimpleAI : MonoBehaviour {
 
 		_curBehavior = _behaviors[0];
 		_curBehavior.Start();
-	}
+
+        _appliances = GameObject.FindGameObjectsWithTag("Appliance");
+
+    }
 	
 	// Update is called once per frame
 	void Update(){
@@ -75,6 +79,7 @@ public class SimpleAI : MonoBehaviour {
 	}
 
 	public void GoTo(string tag){
+        Debug.Log("Going for a place to " + tag);
 		_curTarget = FindNearestObject(tag);
 
 		if(_curTarget == null) {
@@ -85,21 +90,38 @@ public class SimpleAI : MonoBehaviour {
 	}
 
 	public GameObject FindNearestObject(string tag){
-		if(GameObject.FindGameObjectsWithTag(tag).Length == 0){
-			return null;
-		}
+        GameObject target = null;
+        float minDist = float.MaxValue;
 
-		GameObject[] gos = GameObject.FindGameObjectsWithTag(tag);
-		GameObject target = gos[0];
-		float minDist = 9999;
+        foreach(GameObject app in _appliances){
+            List<string> affordances = app.GetComponent<Affordance>().affordances;
 
-		foreach(GameObject go in gos){
-			float dist = Vector3.Distance(transform.position, go.transform.position);
-			if(dist < minDist){
-				minDist = dist;
-				target = go;
-			}
-		}
+            //Debug.Log("Affordances: " + affordances[0]);
+
+            if (affordances.Contains(tag)){
+                float dist = Vector3.Distance(transform.position, app.transform.position);
+                if(dist < minDist){
+                    minDist = dist;
+                    target = app;
+                }
+            }
+        }
+
+		//if(GameObject.FindGameObjectsWithTag("Appliance").Length == 0){
+		//	return null;
+		//}
+
+		//GameObject[] gos = GameObject.FindGameObjectsWithTag(tag);
+		//GameObject target = gos[0];
+		//float minDist = float.MaxValue;
+
+		//foreach(GameObject go in gos){
+		//	float dist = Vector3.Distance(transform.position, go.transform.position);
+		//	if(dist < minDist){
+		//		minDist = dist;
+		//		target = go;
+		//	}
+		//}
 
 		return target;
 	}

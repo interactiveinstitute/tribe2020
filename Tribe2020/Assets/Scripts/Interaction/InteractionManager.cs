@@ -278,7 +278,7 @@ public class InteractionManager : MonoBehaviour{
 			pos.x < Screen.width - Screen.width * 0.2f ||
 			pos.y < Screen.height - Screen.height * 0.12f;
 
-		Debug.Log("pointer:" + pos);
+		//Debug.Log("pointer:" + pos);
 
 		return outsideInspector && outsideMailButton && !MailUI.activeSelf;
 	}
