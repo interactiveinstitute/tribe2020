@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Attitude", menuName = "Avatar/Attitude", order = 1)]
 public class AvatarAttitude : ScriptableObject {
-	public string name;
+	public string attitudeName;
 	public List<string> listeners;
 }

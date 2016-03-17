@@ -187,7 +187,6 @@ public class InteractionManager : MonoBehaviour{
 		}
 
 		ResetTouch();
-		Debug.Log(button);
 	}
 
 	//

@@ -1,77 +1,76 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &123774
+--- !u!1 &132550
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 467642}
-  - 33: {fileID: 3346228}
-  - 23: {fileID: 2388912}
+  - 4: {fileID: 465738}
+  - 65: {fileID: 6560244}
+  - 114: {fileID: 11489792}
   m_Layer: 0
-  m_Name: Handdryer__Body
+  m_Name: PublicMonitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &190636
+--- !u!1 &149968
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 426034}
-  - 65: {fileID: 6516222}
-  - 114: {fileID: 11479856}
+  - 4: {fileID: 432436}
+  - 33: {fileID: 3395704}
+  - 23: {fileID: 2380302}
   m_Layer: 0
-  m_Name: HandDryer
+  m_Name: MonitorPublicDisplay_65__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &426034
+--- !u!4 &432436
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 190636}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -6.349, y: 1.041, z: 4.111}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 467642}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
---- !u!4 &467642
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 123774}
+  m_GameObject: {fileID: 149968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 426034}
+  m_Father: {fileID: 465738}
   m_RootOrder: 0
---- !u!23 &2388912
+--- !u!4 &465738
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 132550}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.9535975, y: 1.6979666, z: -2.1200001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 432436}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!23 &2380302
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 123774}
+  m_GameObject: {fileID: 149968}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
-  - {fileID: 2100000, guid: 69a03f97026b34646af53a6d1cd3af1b, type: 2}
-  - {fileID: 2100000, guid: 344b279e1f3f67a408975874c941b5e3, type: 2}
+  - {fileID: 2100000, guid: aedde9a1727d7614bbcfe8aa4b7bf21f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -87,39 +86,38 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3346228
+--- !u!33 &3395704
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 123774}
-  m_Mesh: {fileID: 4300000, guid: 0163aebba59e08145ad9e9b7eacdbe4e, type: 3}
---- !u!65 &6516222
+  m_GameObject: {fileID: 149968}
+  m_Mesh: {fileID: 4300002, guid: d8c240e47c28b864ca587ccefa6369d1, type: 3}
+--- !u!65 &6560244
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 190636}
+  m_GameObject: {fileID: 132550}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2412706, y: 0.25994754, z: 0.15213294}
-  m_Center: {x: -0.0053329417, y: 0.1486113, z: 0.040257927}
---- !u!114 &11479856
+  m_Size: {x: 1.4784853, y: 0.8360287, z: 0.36564448}
+  m_Center: {x: 0.0068058968, y: 0.46001482, z: 0.14058661}
+--- !u!114 &11489792
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 190636}
+  m_GameObject: {fileID: 132550}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Hand Dryer
-  description: Handy device for obfuscating disturbing sounds of colleagues standing
-    next to you.
+  title: Monitor
+  description: 
   playerAffordances: []
   avatarAffordances: []
   performedActions: []
@@ -131,13 +129,8 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: description
-      value: Handy device for obfuscating disturbing sounds of colleagues standing
-        next to you.
-      objectReference: {fileID: 0}
+    m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 190636}
+  m_RootGameObject: {fileID: 132550}
   m_IsPrefabParent: 1
