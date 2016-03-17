@@ -1,25 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
-public class Idle : AgentBehavior {
+[CreateAssetMenu(fileName = "Idle", menuName = "Behaviours/Idle", order = 1)]
+public class Idle : BaseBehaviour {
 	private const string WAITING = "waiting";
-
-	public Idle(float weight): base(weight){
-	}
 	
-	public override void Start(){
-		_delay = Random.Range(1, 3);
-
-//		Debug.Log("now idle" + _delay);
+	public override void Init(BehaviourAI ai) {
+		ai.curState = WAITING;
+		ai.delay = Random.Range(1, 3);
 	}
 
-	public override void Update(SimpleAI ai){
-		base.Update(ai);
+	public override void Step(BehaviourAI ai){
+		base.Step(ai);
 
-//		Debug.Log (_delay);
-
-		if(_delay <= 0){
+		if(ai.delay <= 0){
 			ai.OnBehaviorOver();
 		}
 	}

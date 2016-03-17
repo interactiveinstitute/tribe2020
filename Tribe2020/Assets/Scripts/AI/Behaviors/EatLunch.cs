@@ -1,40 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
-public class EatLunch : AgentBehavior {
-    private const string START = "start_coffee";
-	private const string WALK_TO_COFFEE = "walk_to_coffee";
-	private const string DRINK_COFFEE = "drink_coffee";
-
-	public EatLunch(float weight): base(weight){
-	}
+[CreateAssetMenu(fileName = "EatLunch", menuName = "Behaviours/Eat Lunch", order = 1)]
+public class EatLunch : BaseBehaviour {
+    private const string START = "start_lunch";
+	private const string WALK_TO_LUNCH = "walk_to_lunch";
+	private const string EAT_LUNCH = "eat_lunch";
+	private const string FRIDE = "appliance_fridge";
 	
-	public override void Start(){
-		_curState = START;
-//		Debug.Log(WALK_TO_COFFEE);
+	//
+	public override void Init(BehaviourAI ai) {
+		ai.curState = START;
 	}
 
-	public override void Update(SimpleAI ai){
-		base.Update(ai);
+	//
+	public override void Step(BehaviourAI ai){
+		base.Step(ai);
 
-		if (_curState == START) {
-            _curState = WALK_TO_COFFEE;
-			ai.GoTo ("drink_coffee");
+		if (ai.curState == START) {
+            ai.curState = WALK_TO_LUNCH;
+			ai.GoTo (FRIDE);
 		}
 
 		//Finished drinking the coffee
-		if (_curState == DRINK_COFFEE && _delay <= 0) {
-            Debug.Log("DrinkCoffee is over");
+		if (ai.curState == EAT_LUNCH && ai.delay <= 0) {
+            Debug.Log("Done " + EAT_LUNCH);
             ai.OnBehaviorOver ();
 		}
 	}
 
-	public override void OnHasReached(string tag){
+	//
+	public override void OnHasReached(BehaviourAI ai, string tag){
 		//Reached the coffee machine
-		if (_curState == WALK_TO_COFFEE/* && tag == "drink_coffee"*/) {
-			_curState = DRINK_COFFEE;
-			_delay = 3;
+		if (ai.curState == WALK_TO_LUNCH/* && tag == "drink_coffee"*/) {
+			ai.curState = EAT_LUNCH;
+			ai.delay = 3;
 //			Debug.Log(DRINK_COFFEE);
 		}
 	}

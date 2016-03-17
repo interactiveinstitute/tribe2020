@@ -44,6 +44,8 @@ public class InteractionManager : MonoBehaviour{
 		_uiMgr = UIManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+
+		InspectorUI.SetActive(true);
 	}
 	
 	// Update is called once per frame
@@ -127,10 +129,12 @@ public class InteractionManager : MonoBehaviour{
 		if(Physics.Raycast(ray, out hit, 10)){
 			Transform selected = hit.transform;
 
-			if(selected.GetComponent<Interactable>()){
+			if(selected.GetComponent<Appliance>()){
+				Appliance selectedAppliance = selected.GetComponent<Appliance>();
 				InspectorUI.SetActive(true);
-				InspectorUI.GetComponentInChildren<Text>().text = selected.name;
-				_uiMgr.SetActions(selected.GetComponent<Interactable>().actions);
+				InspectorUI.GetComponentsInChildren<Text>()[0].text = selectedAppliance.title;
+				InspectorUI.GetComponentsInChildren<Text>()[2].text = selectedAppliance.description;
+				_uiMgr.SetActions(selectedAppliance, selectedAppliance.GetPlayerActions());
 				_audioMgr.PlaySound("button");
 			}
 		}
@@ -201,13 +205,14 @@ public class InteractionManager : MonoBehaviour{
 	}
 
 	//
-	public void OnAction(BaseAction action, GameObject actionObj){
-		if(_resourceMgr.cash >= action.cashCost &&
-		   _resourceMgr.comfort >= action.comfortCost &&
-		   !action.performed){
+	public void OnAction(Appliance appliance, BaseAction action, GameObject actionObj){
+		Debug.Log(appliance.name + ": " + action.cashCost + ", " + action.comfortCost);
+
+		if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
 			_resourceMgr.cash -= action.cashCost;
 			_resourceMgr.comfort -= action.comfortCost;
-			action.performed = true;
+			appliance.PerformAction(action);
+			//action.performed = true;
 	
 			//_uiMgr.CreateFeedback(action.gameObject.transform.position, "-" + action.cashCost);
 			_resourceMgr.RefreshProduction();

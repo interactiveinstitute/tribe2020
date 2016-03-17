@@ -24,15 +24,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 468340}
   - 65: {fileID: 6557808}
-  - 114: {fileID: 11400058}
   - 114: {fileID: 11415298}
-  - 114: {fileID: 11406586}
-  - 114: {fileID: 11407206}
-  - 114: {fileID: 11403726}
-  - 114: {fileID: 11439410}
-  - 114: {fileID: 11444678}
-  - 114: {fileID: 11434598}
-  - 114: {fileID: 11424618}
+  - 114: {fileID: 11414528}
   m_Layer: 0
   m_Name: Espresso Machine
   m_TagString: Appliance
@@ -77,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 155868}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 9, y: 0.25, z: -5}
+  m_LocalPosition: {x: 6.19, y: 0.378, z: -2.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 453364}
@@ -143,7 +136,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11400058
+--- !u!114 &11414528
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -151,63 +144,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 155868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f646031c2989234b8aeae1b20494e0f, type: 3}
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: Block Coffee Machine
---- !u!114 &11403726
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Decalcify
-  cashCost: 50
-  comfortCost: 0
+  title: Espresso Machine
+  description: A compact version of the mythical spring of youth.
+  playerAffordances:
+  - {fileID: 11400000, guid: 646bfa867e75d614d9b0d988b50fc1b7, type: 2}
+  - {fileID: 11400000, guid: 755cf7174add8634586d96dfda2b5d89, type: 2}
+  - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
+  - {fileID: 11400000, guid: 5c83ceb5bb2ec9b498bc97f77a5b16c6, type: 2}
+  avatarAffordances:
+  - appliance_coffee
+  - hang_out
+  - take_a_break
+  performedActions: []
   cashProduction: 0
-  comfortPorduction: 10
-  performed: 0
-  passive: 0
-  hidden: 0
---- !u!114 &11406586
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c232c744becc931449fedab7ebfce8e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  avatarActions: []
-  playerActions:
-  - {fileID: 11466012, guid: d5a02d57f502f6a449886f8ccf4175f8, type: 2}
-  actionObjects: []
---- !u!114 &11407206
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Turn Off
-  cashCost: 50
-  comfortCost: 0
-  cashProduction: 0
-  comfortPorduction: 10
-  performed: 0
-  passive: 0
-  hidden: 0
+  comfortPorduction: 0
 --- !u!114 &11415298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -229,78 +182,6 @@ MonoBehaviour:
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
---- !u!114 &11424618
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6beb9b2e078e09a4485f5a20f82d61f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affordances:
-  - drink_coffee
-  - hang_out
-  - take_a_break
---- !u!114 &11434598
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Upgrade to Star Label
-  cashCost: 200
-  comfortCost: 0
-  cashProduction: 2
-  comfortPorduction: 1
-  performed: 0
-  passive: 0
-  hidden: 0
---- !u!114 &11439410
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Install Thermal Jug
-  cashCost: 200
-  comfortCost: 25
-  cashProduction: 2
-  comfortPorduction: 1
-  performed: 0
-  passive: 0
-  hidden: 0
---- !u!114 &11444678
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Upgrade to A+++
-  cashCost: 200
-  comfortCost: 0
-  cashProduction: 2
-  comfortPorduction: 1
-  performed: 0
-  passive: 0
-  hidden: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

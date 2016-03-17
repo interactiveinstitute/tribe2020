@@ -3,7 +3,7 @@ using System.Collections;
 
 [CreateAssetMenu(fileName = "Actions", menuName = "Actions/Base Action", order = 1)]
 public class BaseAction : ScriptableObject {
-	public string name;
+	public string actionName;
 
 	public int cashCost;
 	public int comfortCost;

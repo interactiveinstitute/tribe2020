@@ -33,7 +33,7 @@ public class CameraManager : MonoBehaviour {
 
 	//Orientation interaction parameters
 	public GameObject cameraHolder;
-	public Camera camera;
+	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
 	private int _curFloor =  0;
@@ -55,9 +55,9 @@ public class CameraManager : MonoBehaviour {
 
 		//Ref to camera
 		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-		camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-		_lastPos = _targetPos = camera.transform.position;
-		_lastRot = _targetRot = camera.transform.eulerAngles;
+		gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		_lastPos = _targetPos = gameCamera.transform.position;
+		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
 		//Populate collection of viewpoints
 		PopulateViewpoints(GameObject.FindGameObjectsWithTag("ViewPoint"));
@@ -73,8 +73,8 @@ public class CameraManager : MonoBehaviour {
 			float fracJourney = distCovered / journeyLength;
 
 			if(cameraState == IDLE) {
-				camera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
-				camera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
+				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
+				gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
 			}
 		}
 	}
@@ -220,10 +220,10 @@ public class CameraManager : MonoBehaviour {
 			_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
             HideObstacles(_curViewpoint);
 
-            _lastPos = camera.transform.position;
+            _lastPos = gameCamera.transform.position;
 			_targetPos = _curViewpoint.position;
 			
-			_lastRot = camera.transform.eulerAngles;
+			_lastRot = gameCamera.transform.eulerAngles;
 			_targetRot = _curViewpoint.eulerAngles;
 			
 			startTime = Time.time;
@@ -261,19 +261,19 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void UpdatePan(Vector2 deltaPan){
-		camera.transform.Translate(-deltaPan.x * _panSpeed, -deltaPan.y * _panSpeed, 0);
+		gameCamera.transform.Translate(-deltaPan.x * _panSpeed, -deltaPan.y * _panSpeed, 0);
 
 	}
 
 	//
 	public void UpdatePinchZoom(float deltaMagnitude){
 		// Zoom differently depending on ortho or perspective
-		if (camera.orthographic){
-			camera.orthographicSize += deltaMagnitude * _orthoZoomSpeed;
-			camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
+		if (gameCamera.orthographic){
+			gameCamera.orthographicSize += deltaMagnitude * _orthoZoomSpeed;
+			gameCamera.orthographicSize = Mathf.Max(gameCamera.orthographicSize, 0.1f);
 		} else {
-			camera.fieldOfView += deltaMagnitude * _perspectiveZoomSpeed;
-			camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
+			gameCamera.fieldOfView += deltaMagnitude * _perspectiveZoomSpeed;
+			gameCamera.fieldOfView = Mathf.Clamp(gameCamera.fieldOfView, 0.1f, 179.9f);
 		}
 	}
 }

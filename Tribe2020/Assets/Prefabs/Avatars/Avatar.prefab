@@ -55,10 +55,12 @@ GameObject:
   - 4: {fileID: 430866}
   - 95: {fileID: 9549474}
   - 195: {fileID: 19581572}
-  - 114: {fileID: 11479748}
+  - 65: {fileID: 6587084}
+  - 114: {fileID: 11482754}
+  - 114: {fileID: 11496632}
   m_Layer: 0
   m_Name: Avatar
-  m_TagString: Untagged
+  m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1493,7 +1495,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172966}
-  m_LocalRotation: {x: 0.53267515, y: 0.07034045, z: 0.83613265, w: -0.11041513}
+  m_LocalRotation: {x: 0.5326752, y: 0.070340455, z: 0.83613276, w: -0.110415146}
   m_LocalPosition: {x: 0.000022271464, y: -0.00006150465, z: 0.026027026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1582,7 +1584,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.11, y: 0, z: 0.98}
+  m_LocalPosition: {x: -8.492, y: 0.29, z: -5.346}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children:
   - {fileID: 456342}
@@ -2356,6 +2358,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 433520}
   m_RootOrder: 0
+--- !u!65 &6587084
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108742}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &9549474
 Animator:
   serializedVersion: 3
@@ -2365,7 +2379,7 @@ Animator:
   m_GameObject: {fileID: 108742}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  m_Controller: {fileID: 9100000, guid: 10920b0737b49254cbcefb0438e6c5ac, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2373,7 +2387,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11479748
+--- !u!114 &11482754
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2381,9 +2395,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 108742}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88c97ea978e117f43a59fc1b867434f3, type: 3}
+  m_Script: {fileID: 11500000, guid: b2b4dd0f9b1f2d04992c232b1863e3ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  schedule:
+  - time: 8:30
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 8:30
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 8:40
+    behaviour: {fileID: 11400000, guid: 26a7e8ac6b104754dbaa56b76a75d567, type: 2}
+  - time: 8:47
+    behaviour: {fileID: 11400000, guid: 187771c479aa6b14ca525e27bca79883, type: 2}
+  - time: 9:03
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 10:00
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 10:10
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 10:32
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 11:55
+    behaviour: {fileID: 11400000, guid: cf59fff51dc863045bdd83d800e6d32c, type: 2}
+  - time: 12:45
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 14:30
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 14:30
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 15:30
+    behaviour: {fileID: 11400000, guid: 26a7e8ac6b104754dbaa56b76a75d567, type: 2}
+  - time: 16:00
+    behaviour: {fileID: 11400000, guid: 187771c479aa6b14ca525e27bca79883, type: 2}
+  - time: 16:17
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 16:45
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 17:30
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  - time: 17:35
+    behaviour: {fileID: 11400000, guid: 5931a54311ebc9d46a1859102dafcda4, type: 2}
+  curState: base_idle
+  delay: 0
+--- !u!114 &11496632
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Miss Master Mess
+  description: She is the unintentional reincarnation of anti-environmental Statan.
+  playerAffordances:
+  - {fileID: 11400000, guid: 755cf7174add8634586d96dfda2b5d89, type: 2}
+  avatarAffordances: []
+  performedActions: []
+  cashProduction: 0
+  comfortPorduction: 0
 --- !u!137 &13714354
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -2548,7 +2620,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 108742}
   m_Enabled: 1
   m_Radius: 0.3
-  m_Speed: 1
+  m_Speed: 2.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

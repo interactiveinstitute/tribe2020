@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+[CreateAssetMenu(fileName = "Behaviour", menuName = "Avatar/Behaviour", order = 1)]
 public class BaseBehaviour : ScriptableObject {
-	public string name;
+	//public string name;
+
+	public List<string> behaviourSteps;
+	private int _curStep;
 
 	protected float _weight = 0f;
 	protected string _curState = "";
