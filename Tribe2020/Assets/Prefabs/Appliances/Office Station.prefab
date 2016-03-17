@@ -106,9 +106,7 @@ GameObject:
   - 4: {fileID: 454044}
   - 65: {fileID: 6595094}
   - 114: {fileID: 11450214}
-  - 114: {fileID: 11471668}
-  - 114: {fileID: 11488996}
-  - 114: {fileID: 11467832}
+  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: Office Station
   m_TagString: Appliance
@@ -160,7 +158,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 181940}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.1, y: 0.25, z: 4.6}
+  m_LocalPosition: {x: 2.12, y: 0.25, z: 4.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 495752}
@@ -320,6 +318,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.7914119, y: 1.2478768, z: 1.1903825}
   m_Center: {x: -0.29792312, y: 0.63856333, z: -0.09519654}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Office Workstation
+  description: The modern form of workshop. Except less is crafted and more is modern.
+  playerAffordances:
+  - {fileID: 11400000, guid: 2205cd726035c884680716f761292f2f, type: 2}
+  avatarAffordances:
+  - appliance_office
+  performedActions: []
+  cashProduction: 0
+  comfortPorduction: 0
 --- !u!114 &11450214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -341,50 +359,6 @@ MonoBehaviour:
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
---- !u!114 &11467832
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 181940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6beb9b2e078e09a4485f5a20f82d61f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affordances:
-  - work
---- !u!114 &11471668
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 181940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c232c744becc931449fedab7ebfce8e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: techie
---- !u!114 &11488996
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 181940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af9134bfcb555c4887a75c7627fc306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Upgrade to TFT
-  cashCost: 200
-  comfortCost: 0
-  cashProduction: 10
-  comfortPorduction: 10
-  performed: 0
-  passive: 0
-  hidden: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

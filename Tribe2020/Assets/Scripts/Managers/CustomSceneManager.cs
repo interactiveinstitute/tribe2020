@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
-public class SceneManager : MonoBehaviour{
+public class CustomSceneManager : MonoBehaviour{
     //Singleton features
-    private static SceneManager _instance;
-    public static SceneManager GetInstance(){
+    private static CustomSceneManager _instance;
+    public static CustomSceneManager GetInstance(){
         return _instance;
     }
 
@@ -34,7 +35,8 @@ public class SceneManager : MonoBehaviour{
             loadingBar.localScale = progress * Vector2.right + loadingBar.localScale.y * Vector2.up;
 
             if(progress == 1){
-                Application.LoadLevelAsync(nextScene);
+				
+                SceneManager.LoadSceneAsync(nextScene);
                 autoLoad = false;
             }
         }
@@ -42,6 +44,6 @@ public class SceneManager : MonoBehaviour{
 
     public void LoadScene(string scene){
         nextScene = scene;
-        Application.LoadLevel("LoadingScene");
+		SceneManager.LoadScene("LoadingScene");
     }
 }

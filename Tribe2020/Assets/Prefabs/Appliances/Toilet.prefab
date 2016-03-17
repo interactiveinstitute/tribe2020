@@ -24,9 +24,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 491098}
   - 65: {fileID: 6554098}
-  - 114: {fileID: 11440566}
-  - 114: {fileID: 11443948}
-  - 114: {fileID: 11440962}
+  - 114: {fileID: 11433052}
   m_Layer: 0
   m_Name: Toilet
   m_TagString: Appliance
@@ -83,7 +81,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 139216}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -4.1, y: 0.25, z: 5}
+  m_LocalPosition: {x: -6.57, y: 0.25, z: 5.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 415908}
@@ -134,7 +132,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.49898127, y: 0.79631734, z: 0.7430299}
   m_Center: {x: 0.035701282, y: 0.40312445, z: -0.09840916}
---- !u!114 &11440566
+--- !u!114 &11433052
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -142,35 +140,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 139216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f646031c2989234b8aeae1b20494e0f, type: 3}
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: Block Coffee Machine
---- !u!114 &11440962
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6beb9b2e078e09a4485f5a20f82d61f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affordances:
-  - go_to_bathroom
---- !u!114 &11443948
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c232c744becc931449fedab7ebfce8e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: techie
+  title: Toilet
+  description: This where people go to unsupply the surplus of life. A waterhole in
+    reverse so to say.
+  playerAffordances: []
+  avatarAffordances:
+  - appliance_toilet
+  performedActions: []
+  cashProduction: 0
+  comfortPorduction: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

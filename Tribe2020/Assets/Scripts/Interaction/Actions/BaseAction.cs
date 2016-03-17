@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Action : MonoBehaviour{
-	public string name;
+[CreateAssetMenu(fileName = "Actions", menuName = "Actions/Base Action", order = 1)]
+public class BaseAction : ScriptableObject {
+	public string actionName;
 
 	public int cashCost;
 	public int comfortCost;
@@ -15,10 +16,12 @@ public class Action : MonoBehaviour{
 	public bool hidden;
 
 	// Use this for initialization
-	void Start(){
+	void Start () {
+	
 	}
 	
 	// Update is called once per frame
-	void Update(){
+	void Update () {
+	
 	}
 }

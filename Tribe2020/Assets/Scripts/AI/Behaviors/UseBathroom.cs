@@ -1,40 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UseBathroom : AgentBehavior {
+[CreateAssetMenu(fileName = "Behaviours", menuName = "Behaviours/Use Bathroom", order = 1)]
+public class UseBathroom : BaseBehaviour {
     private const string START = "start_bathroom";
 	private const string WALK_TO_TOILET = "walk_to_toilet";
 	private const string USE_TOILET = "use_toilet";
+	private const string TOILET = "appliance_toilet";
 
-	public UseBathroom(float weight): base(weight){
-	}
-	
-	public override void Start(){
-		_curState = START;
-//		Debug.Log(WALK_TO_TOILET);
+	//
+	public override void Init(BehaviourAI ai) {
+		ai.curState = START;
 	}
 
-	public override void Update(SimpleAI ai){
-		base.Update(ai);
+	//
+	public override void Step(BehaviourAI ai) {
+		base.Step(ai);
 
-		if (_curState == START) {
-            _curState = WALK_TO_TOILET;
-			ai.GoTo ("go_to_bathroom");
+		if(ai.curState == START) {
+			ai.curState = WALK_TO_TOILET;
+			ai.GoTo(TOILET);
+		}
+
+		//Update delay while drinking coffee
+		if(ai.curState == USE_TOILET) {
+			ai.delay -= Time.deltaTime;
 		}
 
 		//Finished using the toilet
-		if (_curState == USE_TOILET && _delay <= 0) {
-            Debug.Log("UseBathroom is over");
-			ai.OnBehaviorOver ();
+		if(ai.curState == USE_TOILET && ai.delay <= 0) {
+			Debug.Log("Done " + USE_TOILET);
+			ai.OnBehaviorOver();
 		}
 	}
 
-	public override void OnHasReached(string tag){
+	//
+	public override void OnHasReached(BehaviourAI ai, string tag){
 		//Reached the toilet
-		if (_curState == WALK_TO_TOILET/* && tag == "go_to_bathroom"*/) {
-			_curState = USE_TOILET;
-			_delay = 5;
-//			Debug.Log(USE_TOILET);
+		if (ai.curState == WALK_TO_TOILET/* && tag == "go_to_bathroom"*/) {
+			ai.curState = USE_TOILET;
+			ai.delay = 60;
 		}
 	}
 }

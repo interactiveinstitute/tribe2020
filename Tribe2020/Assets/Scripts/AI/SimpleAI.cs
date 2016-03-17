@@ -25,10 +25,10 @@ public class SimpleAI : MonoBehaviour {
 		_need = 0;
 		_temperature = 25;
 
-		_behaviors.Add(new Idle(0.25f));
-		_behaviors.Add(new DrinkCoffee(0.25f));
-		_behaviors.Add(new UseBathroom(0.25f));
-		_behaviors.Add(new WarmUp(0.25f));
+		//_behaviors.Add(new Idle(0.25f));
+		//_behaviors.Add(new DrinkCoffee(0.25f));
+		//_behaviors.Add(new UseBathroom(0.25f));
+		//_behaviors.Add(new WarmUp(0.25f));
 
 		_curBehavior = _behaviors[0];
 		_curBehavior.Start();

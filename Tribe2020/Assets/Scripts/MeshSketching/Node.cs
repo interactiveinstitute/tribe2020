@@ -193,7 +193,7 @@ public class Node : MonoBehaviour{
 	}
 
 	//
-	public string ToString(){
+	public override string ToString(){
 		return "[" + transform.position.x + "," + transform.position.z + "]";
 	}
 

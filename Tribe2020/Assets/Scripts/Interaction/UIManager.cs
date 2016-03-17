@@ -41,39 +41,38 @@ public class UIManager : MonoBehaviour{
 	}
 
 	//
-	public void SetActions(List<Action> actions){
+	public void SetActions(Appliance appliance, List<BaseAction> actions){
 		RemoveChildren(inspectorAction);
 		
-		foreach(Action a in actions){
-			if(!a.performed){
-				Action curAction = a;
-				GameObject actionObj;
-				actionObj =
-					Instantiate(actionButton, Vector3.zero, Quaternion.identity) as GameObject;
-				actionObj.GetComponent<Button>().
-					onClick.AddListener(()=> _ixnMgr.OnAction(curAction, actionObj));
+		foreach(BaseAction a in actions){
+			BaseAction curAction = a;
+			//Debug.Log(a.name);
+			GameObject actionObj;
+			actionObj =
+				Instantiate(actionButton, Vector3.zero, Quaternion.identity) as GameObject;
+			actionObj.GetComponent<Button>().
+				onClick.AddListener(()=> _ixnMgr.OnAction(appliance, curAction, actionObj));
 
-				Text[] texts = actionObj.GetComponentsInChildren<Text>();
-				texts[0].text = a.name;
-				texts[1].text = "€" + a.cashCost;
-				texts[2].transform.parent.gameObject.SetActive(false);
+			Text[] texts = actionObj.GetComponentsInChildren<Text>();
+			texts[0].text = a.actionName;
+			texts[1].text = "€" + a.cashCost;
+			texts[2].transform.parent.gameObject.SetActive(false);
 
-				if(a.cashProduction != 0){
-					texts[3].text = a.cashProduction + "/s";
-				} else {
-					texts[3].transform.parent.gameObject.SetActive(false);
-				}
-
-				if(a.comfortPorduction != 0){
-					texts[4].text = a.comfortPorduction + "/s";
-				} else {
-					texts[4].transform.parent.gameObject.SetActive(false);
-				}
-
-				texts[5].transform.parent.gameObject.SetActive(false);
-
-				actionObj.transform.SetParent(inspectorAction, false);
+			if(a.cashProduction != 0){
+				texts[3].text = a.cashProduction + "/s";
+			} else {
+				texts[3].transform.parent.gameObject.SetActive(false);
 			}
+
+			if(a.comfortPorduction != 0){
+				texts[4].text = a.comfortPorduction + "/s";
+			} else {
+				texts[4].transform.parent.gameObject.SetActive(false);
+			}
+
+			texts[5].transform.parent.gameObject.SetActive(false);
+
+			actionObj.transform.SetParent(inspectorAction, false);
 		}
 	}
 
