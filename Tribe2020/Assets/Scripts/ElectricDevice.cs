@@ -34,14 +34,14 @@ public class ElectricDevice : ElectricMeter {
 		}
 	}
 
-	public void TurnOn () {
-		On = true;
+	public void On () {
+		IsOn = true;
 
 		SetRunlevel (runlevelOn);
 	}
 
-	public void TurnOff () {
-		On = false;
+	public void Off () {
+		IsOn = false;
 		SetRunlevel (runlevelOff);
 	}
 

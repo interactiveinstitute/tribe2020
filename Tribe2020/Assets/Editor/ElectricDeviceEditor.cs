@@ -14,12 +14,12 @@ public class ElectricDeviceEditor : Editor
 
 		if(GUILayout.Button("Turn on",GUILayout.Width(100) ))
 		{
-			myScript.TurnOn();
+			myScript.On();
 		}
 
 		if(GUILayout.Button("Turn off",GUILayout.Width(100) ))
 		{
-			myScript.TurnOff();
+			myScript.Off();
 		}
 
 		if(GUILayout.Button("Update",GUILayout.Width(100) ))

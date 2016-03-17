@@ -3,10 +3,10 @@ using System.Collections;
 
 public class ElectricMeter : MonoBehaviour {
 
-	public bool On = false;
+	public bool IsOn = false;
 
-	public GameObject PowerFrom;
-	public GameObject[] Powering;
+	public ElectricMeter PowerFrom;
+	public ElectricMeter[] Powering;
 
 
 	public float Power = 0;
