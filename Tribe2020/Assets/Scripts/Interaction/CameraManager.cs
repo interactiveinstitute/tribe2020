@@ -20,18 +20,17 @@ public class CameraManager : MonoBehaviour {
 
 	public Transform pilotTransform;
 	
-//	private int _viewPointIndex = 0;
+	//Viewpoint variables
 	private Vector2 _curView = Vector2.zero;
 	private Transform _curViewpoint;
-//	private Transform[] _viewpoints;
 	private Transform[][] _viewpoints;
 
+	//Camera movement variables
 	private Vector3 _lastPos = Vector3.zero;
 	private Vector3 _targetPos = Vector3.zero;
-
 	private Vector3 _lastRot, _targetRot;
 
-	//Orientation interaction parameters
+	//Orientation interaction variables
 	public GameObject cameraHolder;
 	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
@@ -128,6 +127,7 @@ public class CameraManager : MonoBehaviour {
         }
     }
 
+	//
 	public void HideWall(string wall){
 		foreach(Transform floor in pilotTransform){
 			foreach(Transform room in floor){
@@ -211,28 +211,32 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void SetViewpoint(int x, int y){
-		if(x < _viewpoints[y].Length){
-			_curView = new Vector2(x, y);
-
-            if (_curViewpoint != null){
-                UnhideObstacles(_curViewpoint);
-            }
-			_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
-            HideObstacles(_curViewpoint);
-
-            _lastPos = gameCamera.transform.position;
-			_targetPos = _curViewpoint.position;
-			
-			_lastRot = gameCamera.transform.eulerAngles;
-			_targetRot = _curViewpoint.eulerAngles;
-			
-			startTime = Time.time;
-			journeyLength = Vector3.Distance(_lastPos, _targetPos);
-			
-			_uiMgr.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
-
-			//UpdateVisibility();
+		if(x >= _viewpoints[y].Length){
+			x = 0;
 		}
+
+		_curView = new Vector2(x, y);
+
+		if(_curViewpoint != null) {
+			UnhideObstacles(_curViewpoint);
+		}
+		_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
+		HideObstacles(_curViewpoint);
+
+		_lastPos = gameCamera.transform.position;
+		_targetPos = _curViewpoint.position;
+
+		_lastRot = gameCamera.transform.eulerAngles;
+		_targetRot = _curViewpoint.eulerAngles;
+
+		startTime = Time.time;
+		journeyLength = Vector3.Distance(_lastPos, _targetPos);
+
+		_uiMgr.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
+
+		//UpdateVisibility();
+
+		_uiMgr.UpdateViewpointGuide(_viewpoints[y].Length, x);
 	}
 
 	//

@@ -18,6 +18,7 @@ public class InteractionManager : MonoBehaviour{
 	private UIManager _uiMgr;
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
+	private TutorialManager _tutMgr;
 
 	//Interaction props
 	private string _touchState = IDLE;
@@ -25,6 +26,7 @@ public class InteractionManager : MonoBehaviour{
 	private float _doubleTimer = 0;
 	private Vector3 _startPos;
 	private bool _isPinching = false;
+	private bool _touchReset = false;
 
 	//Interaction consts
 	private const string IDLE = "idle";
@@ -44,8 +46,9 @@ public class InteractionManager : MonoBehaviour{
 		_uiMgr = UIManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+		_tutMgr = TutorialManager.GetInstance();
 
-		InspectorUI.SetActive(true);
+		//InspectorUI.SetActive(true);
 	}
 	
 	// Update is called once per frame
@@ -54,31 +57,33 @@ public class InteractionManager : MonoBehaviour{
 //		UpdatePan(_camMgr.camera);
 		UpdatePinch();
 
-//		if(!InspectorUI.activeSelf){
-		if(IsOutsideUI(Input.mousePosition)){
+		//		if(!InspectorUI.activeSelf){
+		if(IsOutsideUI(Input.mousePosition) && !_touchReset) {
 			//Touch start
-			if(Input.GetMouseButtonDown(0)){
+			if(Input.GetMouseButtonDown(0)) {
 				OnTouchStart(Input.mousePosition);
 			}
-		
+
 			//Touch ongoing
-			if(Input.GetMouseButton(0)){
+			if(Input.GetMouseButton(0)) {
 				OnTouch(Input.mousePosition);
 			}
-		
+
 			//Touch end
-			if(Input.GetMouseButtonUp(0)){
+			if(Input.GetMouseButtonUp(0)) {
 				OnTouchEnded(Input.mousePosition);
 			}
 
-			if(_touchState == TAP){
+			if(_touchState == TAP) {
 				_doubleTimer += Time.deltaTime;
-				if(_doubleTimer > D_TAP_TIMEOUT){
+				if(_doubleTimer > D_TAP_TIMEOUT) {
 					OnTap(_startPos);
 					_doubleTimer = 0;
 					_touchState = IDLE;
 				}
 			}
+		} else {
+			_touchReset = false;
 		}
 	}
 
@@ -168,6 +173,8 @@ public class InteractionManager : MonoBehaviour{
 		_touchTimer = 0;
 		_doubleTimer = 0;
 		_startPos = Input.mousePosition;
+		_touchState = IDLE;
+		_touchReset = true;
 	}
 	
 	//
@@ -182,9 +189,22 @@ public class InteractionManager : MonoBehaviour{
 		case "close_mail":
 			MailUI.SetActive(false);
 			break;
+		case "message_ok":
+			_uiMgr.messageUI.SetActive(false);
+			_tutMgr.NextStep();
+			break;
 		default:
 			break;
 		}
+
+		ResetTouch();
+	}
+
+	//
+	public void OnHarvestTap(GameObject go) {
+		_resourceMgr.cash += 10;
+		_uiMgr.CreateFeedback(go.transform.position, "+" + 10 + "€");
+		go.SetActive(false);
 
 		ResetTouch();
 	}

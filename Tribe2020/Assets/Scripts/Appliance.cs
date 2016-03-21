@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Appliance : MonoBehaviour {
+	private InteractionManager _ixnMgr;
+
 	public string title;
 	public string description;
 	public List<BaseAction> playerAffordances;
@@ -12,9 +15,20 @@ public class Appliance : MonoBehaviour {
 	public float cashProduction;
 	public float comfortPorduction;
 
+	public GameObject harvestButtonRef;
+
 	// Use this for initialization
 	void Start () {
-	
+		_ixnMgr = InteractionManager.GetInstance();
+
+		GameObject harvestButton = Instantiate(harvestButtonRef) as GameObject;
+		harvestButton.transform.position = transform.position + Vector3.up * 0.5f;
+		harvestButton.transform.SetParent(transform);
+		
+		harvestButton.GetComponentInChildren<Button>().
+				onClick.AddListener(() => _ixnMgr.OnHarvestTap(harvestButton));
+
+		harvestButtonRef.SetActive(true);
 	}
 	
 	// Update is called once per frame

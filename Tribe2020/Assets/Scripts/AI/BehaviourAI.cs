@@ -68,9 +68,12 @@ public class BehaviourAI : MonoBehaviour {
 	//
 	public void SyncSchedule() {
 		float curTime = _timeMgr.GetDateTime().Hour * 60 + _timeMgr.GetDateTime().Minute;
+		//Debug.Log("time " + curTime);
+		_curBehavior = schedule[0].behaviour;
 
 		//Skip old schedule items until synced with current time
 		while(curTime > ScheduleItemToMinutes(schedule[_curActivityIndex]) && _curActivityIndex < schedule.Length - 1) {
+			//Debug.Log("skipped " + ScheduleItemToMinutes(schedule[_curActivityIndex]) + " forward");
 			OnBehaviorOver();
 			_curActivityIndex++;
 			_curBehavior = schedule[_curActivityIndex].behaviour;
@@ -78,6 +81,7 @@ public class BehaviourAI : MonoBehaviour {
 
 		//Skip old schedule items until synced with current time
 		while(curTime < ScheduleItemToMinutes(schedule[_curActivityIndex]) && _curActivityIndex > 0) {
+			//Debug.Log("skipped " + ScheduleItemToMinutes(schedule[_curActivityIndex]) + " backwards");
 			OnBehaviorOver();
 			_curActivityIndex--;
 			_curBehavior = schedule[_curActivityIndex].behaviour;

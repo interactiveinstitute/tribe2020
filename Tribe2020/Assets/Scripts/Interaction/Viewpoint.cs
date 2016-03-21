@@ -7,9 +7,6 @@ public class Viewpoint : MonoBehaviour {
 	public int yIndex;
 	public string title;
 
-	public bool showFloor, showPilot;
-	public int floor;
-	public bool hideNorth, hideEast, hideSouth, hideWest;
     public List<GameObject> hideObjects;
 
 	// Use this for initialization

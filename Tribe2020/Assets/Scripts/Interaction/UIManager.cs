@@ -24,6 +24,14 @@ public class UIManager : MonoBehaviour{
 	public Transform inspectorAction;
 	public GameObject actionButton;
 
+	public GameObject inspectorUI;
+	public GameObject mailUI;
+	public GameObject messageUI;
+	public GameObject tutorialUI;
+
+	public Transform viewpointGuide;
+	public GameObject viewpointIcon;
+
 	public GameObject FeedbackNumber;
 
 	//Sort use instead of constructor
@@ -46,10 +54,8 @@ public class UIManager : MonoBehaviour{
 		
 		foreach(BaseAction a in actions){
 			BaseAction curAction = a;
-			//Debug.Log(a.name);
 			GameObject actionObj;
-			actionObj =
-				Instantiate(actionButton, Vector3.zero, Quaternion.identity) as GameObject;
+			actionObj = Instantiate(actionButton, Vector3.zero, Quaternion.identity) as GameObject;
 			actionObj.GetComponent<Button>().
 				onClick.AddListener(()=> _ixnMgr.OnAction(appliance, curAction, actionObj));
 
@@ -90,5 +96,35 @@ public class UIManager : MonoBehaviour{
 		GameObject fb = Instantiate(FeedbackNumber, pos, Quaternion.identity) as GameObject;
 		fb.GetComponent<TextMesh>().text = feedback;
 		return fb;
+	}
+
+	//
+	public void UpdateViewpointGuide(int viewCount, int viewIndex) {
+		if(viewCount != viewpointGuide.childCount) {
+			RemoveChildren(viewpointGuide);
+			for(int i = 0; i < viewCount; i++) {
+				GameObject iconObj = Instantiate(viewpointIcon) as GameObject;
+				iconObj.transform.SetParent(viewpointGuide, false);
+
+				if(i == viewIndex) {
+					iconObj.GetComponent<Image>().color = Color.blue;
+				}
+			}
+		} else {
+			for(int i = 0; i < viewCount; i++) {
+				Transform curIcon = viewpointGuide.GetChild(i);
+				if(i == viewIndex) {
+					curIcon.GetComponent<Image>().color = Color.blue;
+				} else {
+					curIcon.GetComponent<Image>().color = Color.white;
+				}
+			}
+		}
+	}
+
+	//
+	public void ShowMessage(string message) {
+		messageUI.SetActive(true);
+		messageUI.GetComponentInChildren<Text>().text = message;
 	}
 }

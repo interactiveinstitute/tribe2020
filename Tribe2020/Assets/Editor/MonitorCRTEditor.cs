@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-using UnityEngine;
-using System.Collections;
 using UnityEditor;
 
 [CustomEditor(typeof(MonitorCRT))]
-public class ElectricDeviceEditor : Editor
+public class MonitorCRTEditor : Editor
 {
 	public override void OnInspectorGUI()
 	{
