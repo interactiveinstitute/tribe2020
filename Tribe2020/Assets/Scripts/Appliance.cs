@@ -1,39 +1,45 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class Appliance : MonoBehaviour {
-	private InteractionManager _ixnMgr;
+public class Appliance : MonoBehaviour, IPointerClickHandler {
+	private ControlManager _ctrlMgr;
 
 	public string title;
 	public string description;
 	public List<BaseAction> playerAffordances;
 	public List<string> avatarAffordances;
+	public List<string> owners;
 
 	public List<BaseAction> performedActions;
 	public float cashProduction;
 	public float comfortPorduction;
 
 	public GameObject harvestButtonRef;
+	private GameObject _harvestButton;
 
 	// Use this for initialization
 	void Start () {
-		_ixnMgr = InteractionManager.GetInstance();
+		_ctrlMgr = ControlManager.GetInstance();
 
-		GameObject harvestButton = Instantiate(harvestButtonRef) as GameObject;
-		harvestButton.transform.position = transform.position + Vector3.up * 0.5f;
-		harvestButton.transform.SetParent(transform);
-		
-		harvestButton.GetComponentInChildren<Button>().
-				onClick.AddListener(() => _ixnMgr.OnHarvestTap(harvestButton));
+		_harvestButton = Instantiate(harvestButtonRef) as GameObject;
+		_harvestButton.transform.position = transform.position + Vector3.up * 0.5f;
+		_harvestButton.transform.SetParent(transform);
 
-		harvestButtonRef.SetActive(true);
+		_harvestButton.GetComponentInChildren<Button>().
+				onClick.AddListener(() => _ctrlMgr.OnHarvestTap(_harvestButton));
+
+		harvestButtonRef.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+	}
+
+	//
+	public void OnPointerClick(PointerEventData eventData) {
+		_ctrlMgr.OnApplianceSelected(this);
 	}
 
 	//
@@ -59,5 +65,11 @@ public class Appliance : MonoBehaviour {
 			}
 		}
 		return availableActions;
+	}
+
+	//
+	public void AddHarvest() {
+		Debug.Log("added harvest to: " + title);
+		_harvestButton.SetActive(true);
 	}
 }

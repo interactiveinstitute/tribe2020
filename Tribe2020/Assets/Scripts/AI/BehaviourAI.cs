@@ -1,33 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 //TODO: sync time if GameTime is stepped
 public class BehaviourAI : MonoBehaviour {
 	private const string IDLE = "avatar_idle";
 	private const string WALKING = "avatar_walking";
 	private const string WAITING = "avatar_waiting";
+	private const string OUTSIDE = "avatar_outside_schedule";
+	[SerializeField]
+	private string _curState = IDLE;
+
+	public float delay = 0;
 
 	private GameTime _timeMgr;
 
 	private NavMeshAgent _agent;
 	private GameObject _curTarget;
 
-	private BaseBehaviour _curBehavior;
+	private AvatarActivity _curActivity;
 	private GameObject[] _appliances;
 
-	//Definition of a scheduled behaviour
+	private float _startTime, _endTime;
+
+	//Definition of a schedule item
 	[System.Serializable]
 	public struct ShceduleItem {
 		public string time;
-		public BaseBehaviour behaviour;
+		public AvatarActivity activity;
 	}
 	public ShceduleItem[] schedule;
-	private int _curActivityIndex = 0;
-
-	//public List<BaseBehaviour> behaviours;
-	public string curState = IDLE;
-	public float delay = 0;
+	private int _scheduleIndex = 0;
 
 	// Use this for initialization
 	void Start() {
@@ -42,50 +46,70 @@ public class BehaviourAI : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
+		//if(curState == OUTSIDE) {
+		//	SyncSchedule();
+		//}
+
 		//If not started, init behaviour
-		if(curState == IDLE) {
-			_curBehavior.Init(this);
+		if(_curState == IDLE) {
+			SyncSchedule();
+			_curActivity.Init(this);
+		} else {
+			//Update current behaviour
+			_curActivity.Step(this);
 		}
 
-		//Update current behaviour
-		_curBehavior.Step(this);
-
 		//Check if reached target if looking for target
-		if(curState == "walking" && Vector3.Distance(transform.position, _curTarget.transform.position) < 2) {
-			_curBehavior.NextStep(this);
+		if(_curState == WALKING && Vector3.Distance(transform.position, _curTarget.transform.position) < 2) {
+			_curTarget.GetComponent<Appliance>().AddHarvest();
+
+			_curActivity.NextStep(this);
 		}
 
 		//Step delay and check if waiting is over
-		if(curState == "waiting") {
+		if(_curState == WAITING) {
 			delay -= Time.deltaTime;
 
 			if(delay < 0) {
-				_curBehavior.NextStep(this);
+				_curActivity.NextStep(this);
 			}
 		}
+
+		//SyncSchedule();
 	}
 
 	//
 	public void SyncSchedule() {
-		float curTime = _timeMgr.GetDateTime().Hour * 60 + _timeMgr.GetDateTime().Minute;
-		//Debug.Log("time " + curTime);
-		_curBehavior = schedule[0].behaviour;
+		DateTime time = _timeMgr.GetDateTime();
+		float curTime = time.Hour * 60 + time.Minute;
+		_startTime = ScheduleItemToMinutes(schedule[0]);
+		_endTime = ScheduleItemToMinutes(schedule[schedule.Length - 1]);
 
-		//Skip old schedule items until synced with current time
-		while(curTime > ScheduleItemToMinutes(schedule[_curActivityIndex]) && _curActivityIndex < schedule.Length - 1) {
-			//Debug.Log("skipped " + ScheduleItemToMinutes(schedule[_curActivityIndex]) + " forward");
-			OnBehaviorOver();
-			_curActivityIndex++;
-			_curBehavior = schedule[_curActivityIndex].behaviour;
+		//Debug.Log("time is: " + time.Hour + ":" + time.Minute);
+
+		//Outside schedule, send avatar home
+		if(curTime < _startTime || curTime > _endTime) {
+			//Debug.Log("outside schedule");
+			return;
 		}
 
 		//Skip old schedule items until synced with current time
-		while(curTime < ScheduleItemToMinutes(schedule[_curActivityIndex]) && _curActivityIndex > 0) {
-			//Debug.Log("skipped " + ScheduleItemToMinutes(schedule[_curActivityIndex]) + " backwards");
-			OnBehaviorOver();
-			_curActivityIndex--;
-			_curBehavior = schedule[_curActivityIndex].behaviour;
+		while(curTime > ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex < schedule.Length - 1) {
+			//Debug.Log("skipped " + schedule[_scheduleIndex].time + " - " + schedule[_scheduleIndex].activity + " forward");
+			OnActivityOver();
+			_scheduleIndex++;
+			_curActivity = schedule[_scheduleIndex].activity;
 		}
+
+		//Skip old schedule items until synced with current time
+		while(curTime < ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex > 0) {
+			//Debug.Log("skipped " + schedule[_scheduleIndex].time + " - " + schedule[_scheduleIndex].activity + " backwards");
+			OnActivityOver();
+			_scheduleIndex--;
+			_curActivity = schedule[_scheduleIndex].activity;
+		}
+
+		//Debug.Log("now going to " + schedule[_scheduleIndex].activity);
 	}
 
 	//
@@ -95,7 +119,7 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void GoTo(string tag) {
+	public void WalkTo(string tag) {
 		_curTarget = FindNearestObject(tag);
 
 		if(_curTarget == null) {
@@ -103,18 +127,13 @@ public class BehaviourAI : MonoBehaviour {
 		}
 
 		_agent.SetDestination(_curTarget.transform.position);
-	}
 
-	//
-	public void WalkTo(string tag) {
-
-		curState = WALKING;
-		GoTo(tag);
+		_curState = WALKING;
 	}
 
 	//
 	public void Delay(float seconds) {
-		curState = WAITING;
+		_curState = WAITING;
 		delay = seconds;
 	}
 
@@ -139,13 +158,8 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void OnBehaviorOver() {
-		curState = IDLE;
+	public void OnActivityOver() {
+		_curState = IDLE;
 		delay = 0;
 	}
-}
-
-public struct ScheduleItem {
-	public int time;
-	public string activity;
 }

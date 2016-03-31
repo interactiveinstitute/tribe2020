@@ -10,7 +10,7 @@ public class ResourceManager : MonoBehaviour {
 		return _instance;
 	}
 
-	private UIManager _uiMgr;
+	private ViewManager _uiMgr;
 	private GameTime _timeMgr;
 	private List<Transform> _avatars;
 	private List<Appliance> _appliances;
@@ -31,7 +31,7 @@ public class ResourceManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		_uiMgr = UIManager.GetInstance();
+		_uiMgr = ViewManager.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 
 		_avatars = new List<Transform>();
@@ -42,8 +42,8 @@ public class ResourceManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update(){
-		cash += cashProduction * Time.deltaTime;
-		comfort += comfortProduction * Time.deltaTime;
+		//cash += cashProduction * Time.deltaTime;
+		//comfort += comfortProduction * Time.deltaTime;
 
 		_uiMgr.cash.GetComponent<Text>().text = "" + (int)cash;
 		_uiMgr.comfort.GetComponent<Text>().text = "" + (int)comfort;

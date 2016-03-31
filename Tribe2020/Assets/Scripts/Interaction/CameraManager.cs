@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour {
 		return _instance;
 	}
 
-	private UIManager _uiMgr;
+	private ViewManager _uiMgr;
 
 	public string cameraState = IDLE;
 	public const string IDLE = "camera_idle";
@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour {
 	public const string ROOM = "camera_room";
 	public const string PANNED = "camera_panned";
 
-	public Transform pilotTransform;
+	//public Transform pilotTransform;
 	
 	//Viewpoint variables
 	private Vector2 _curView = Vector2.zero;
@@ -31,7 +31,7 @@ public class CameraManager : MonoBehaviour {
 	private Vector3 _lastRot, _targetRot;
 
 	//Orientation interaction variables
-	public GameObject cameraHolder;
+	//public GameObject cameraHolder;
 	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
@@ -50,11 +50,11 @@ public class CameraManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		_uiMgr = UIManager.GetInstance();
+		_uiMgr = ViewManager.GetInstance();
 
 		//Ref to camera
-		cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-		gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		//cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
+		//gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		_lastPos = _targetPos = gameCamera.transform.position;
 		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
@@ -128,25 +128,25 @@ public class CameraManager : MonoBehaviour {
     }
 
 	//
-	public void HideWall(string wall){
-		foreach(Transform floor in pilotTransform){
-			foreach(Transform room in floor){
-				if(room.name == "Exterior"){
-					foreach(Transform group in room){
-						if(group.name == wall){
-							foreach(Transform mesh in group){
-								mesh.GetComponent<MeshRenderer>().shadowCastingMode =
-									UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-								if(mesh.GetComponent<MeshCollider>()){
-									mesh.GetComponent<MeshCollider>().enabled = false;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	//public void HideWall(string wall){
+	//	foreach(Transform floor in pilotTransform){
+	//		foreach(Transform room in floor){
+	//			if(room.name == "Exterior"){
+	//				foreach(Transform group in room){
+	//					if(group.name == wall){
+	//						foreach(Transform mesh in group){
+	//							mesh.GetComponent<MeshRenderer>().shadowCastingMode =
+	//								UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+	//							if(mesh.GetComponent<MeshCollider>()){
+	//								mesh.GetComponent<MeshCollider>().enabled = false;
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//
 	public void HideFloor(Transform floor){

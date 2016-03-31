@@ -8,8 +8,8 @@ public class TutorialManager : MonoBehaviour {
 		return _instance;
 
 	}
-	private InteractionManager _ixnMgr;
-	private UIManager _uiMgr;
+	private ControlManager _ixnMgr;
+	private ViewManager _uiMgr;
 
 	public Transform handUI;
 	public Transform tutorialAnimation;
@@ -23,21 +23,25 @@ public class TutorialManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_ixnMgr = InteractionManager.GetInstance();
-		_uiMgr = UIManager.GetInstance();
+		_ixnMgr = ControlManager.GetInstance();
+		_uiMgr = ViewManager.GetInstance();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		switch(_state) {
 			case "tut_init":
-				_state = "swiping";
+				_state = "welcome";
 				_uiMgr.tutorialUI.SetActive(true);
+				break;
+			case "welcome":
+				_uiMgr.ShowMessage("Welcome to TRIBE PlayIt! The world is in dire need for help, and you are the arbitrator!");
+				tutorialAnimation.GetComponent<Animation>().Play("Enter");
+				_state = "welcome_pending";
 				break;
 			case "swiping":
 				_uiMgr.ShowMessage("Swipe to change view");
 				tutorialAnimation.GetComponent<Animation>().Play("Swipe");
-				//handUI.Translate(Vector2.up * 10 * Time.deltaTime);
 				_state = "swiping_pending";
 				break;
 			case "tapping":
@@ -51,6 +55,9 @@ public class TutorialManager : MonoBehaviour {
 	//
 	public void NextStep() {
 		switch(_state) {
+			case "welcome_pending":
+				_state = "swiping";
+				break;
 			case "swiping_pending":
 				_state = "tapping";
 				break;
