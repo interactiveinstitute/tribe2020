@@ -29,7 +29,7 @@ GameObject:
   - 114: {fileID: 11492818}
   m_Layer: 0
   m_Name: WaterDispencer
-  m_TagString: Untagged
+  m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,8 @@ MonoBehaviour:
     mugs magically disappear.
   playerAffordances: []
   avatarAffordances:
-  - '"drink_water"'
+  - get_water
+  owners: []
   performedActions: []
   cashProduction: 0
   comfortPorduction: 0
@@ -148,7 +149,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: avatarAffordances.Array.data[0]
-      value: '"drink_water"'
+      value: get_water
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: harvestButton
@@ -159,6 +160,10 @@ Prefab:
       propertyPath: harvestButtonRef
       value: 
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Appliance
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 185322}

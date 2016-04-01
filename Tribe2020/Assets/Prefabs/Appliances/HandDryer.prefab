@@ -29,7 +29,7 @@ GameObject:
   - 114: {fileID: 11479856}
   m_Layer: 0
   m_Name: HandDryer
-  m_TagString: Untagged
+  m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,7 +121,9 @@ MonoBehaviour:
   description: Handy device for obfuscating disturbing sounds of colleagues standing
     next to you.
   playerAffordances: []
-  avatarAffordances: []
+  avatarAffordances:
+  - appliance_handdryer
+  owners: []
   performedActions: []
   cashProduction: 0
   comfortPorduction: 0
@@ -133,6 +135,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: description
       value: Handy device for obfuscating disturbing sounds of colleagues standing
@@ -147,6 +153,14 @@ Prefab:
       propertyPath: harvestButtonRef
       value: 
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: appliance_handdryer
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Appliance
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190636}

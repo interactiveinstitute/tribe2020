@@ -16,6 +16,7 @@ public class BehaviourAI : MonoBehaviour {
 
 	private GameTime _timeMgr;
 
+	private AvatarStats _stats;
 	private NavMeshAgent _agent;
 	private GameObject _curTarget;
 
@@ -23,6 +24,7 @@ public class BehaviourAI : MonoBehaviour {
 	private GameObject[] _appliances;
 
 	private float _startTime, _endTime;
+	private bool _isSync = false;
 
 	//Definition of a schedule item
 	[System.Serializable]
@@ -37,15 +39,17 @@ public class BehaviourAI : MonoBehaviour {
 	void Start() {
 		_timeMgr = GameTime.GetInstance();
 
+		_stats = GetComponent<AvatarStats>();
 		_agent = GetComponent<NavMeshAgent>();
 
 		_appliances = GameObject.FindGameObjectsWithTag("Appliance");
-
-		SyncSchedule();
 	}
 
 	// Update is called once per frame
 	void Update() {
+		if(!_isSync) {
+			SyncSchedule();
+		}
 		//if(curState == OUTSIDE) {
 		//	SyncSchedule();
 		//}
@@ -85,6 +89,8 @@ public class BehaviourAI : MonoBehaviour {
 		_startTime = ScheduleItemToMinutes(schedule[0]);
 		_endTime = ScheduleItemToMinutes(schedule[schedule.Length - 1]);
 
+		_curActivity = schedule[_scheduleIndex].activity;
+
 		//Debug.Log("time is: " + time.Hour + ":" + time.Minute);
 
 		//Outside schedule, send avatar home
@@ -96,6 +102,8 @@ public class BehaviourAI : MonoBehaviour {
 		//Skip old schedule items until synced with current time
 		while(curTime > ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex < schedule.Length - 1) {
 			//Debug.Log("skipped " + schedule[_scheduleIndex].time + " - " + schedule[_scheduleIndex].activity + " forward");
+			_curActivity.SimulateExecution(this);
+
 			OnActivityOver();
 			_scheduleIndex++;
 			_curActivity = schedule[_scheduleIndex].activity;
@@ -110,6 +118,7 @@ public class BehaviourAI : MonoBehaviour {
 		}
 
 		//Debug.Log("now going to " + schedule[_scheduleIndex].activity);
+		_isSync = true;
 	}
 
 	//
@@ -119,10 +128,15 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void WalkTo(string tag) {
-		_curTarget = FindNearestObject(tag);
+	public void WalkTo(string[] args) {
+		if(args.Length == 1) {
+			_curTarget = FindNearestObject(args[0], false);
+		} else if(args[1] == "own") {
+			_curTarget = FindNearestObject(args[0], true);
+		}
 
-		if(_curTarget == null) {
+
+			if(_curTarget == null) {
 			return;
 		}
 
@@ -132,28 +146,48 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
+	public void TeleportTo(string[] args) {
+		_curTarget = null;
+
+		if(args.Length == 1) {
+			_curTarget = FindNearestObject(args[0], false);
+		} else if(args[1] == "own") {
+			_curTarget = FindNearestObject(args[0], true);
+		}
+
+		if(_curTarget == null) {
+			return;
+		}
+
+		_curTarget.GetComponent<Appliance>().AddHarvest();
+		transform.position = _curTarget.transform.position;
+	}
+
+	//
 	public void Delay(float seconds) {
 		_curState = WAITING;
 		delay = seconds;
 	}
 
 	//
-	public GameObject FindNearestObject(string tag) {
+	public GameObject FindNearestObject(string tag, bool hasOwner) {
 		GameObject target = null;
 		float minDist = float.MaxValue;
 
-		foreach(GameObject app in _appliances) {
-			List<string> affordances = app.GetComponent<Appliance>().avatarAffordances;
+		foreach(GameObject appObj in _appliances) {
+			Appliance app = appObj.GetComponent<Appliance>();
 
-			if(affordances.Contains(tag)) {
+			List<string> affordances = app.avatarAffordances;
+			if(affordances.Contains(tag) && (!hasOwner || app.owners.Contains(_stats.avatarName))) {
 				float dist = Vector3.Distance(transform.position, app.transform.position);
 				if(dist < minDist) {
 					minDist = dist;
-					target = app;
+					target = appObj;
+
+					//Debug.Log(_stats.avatarName + " FOUND affordance " + tag + " in " + app.title);
 				}
 			}
 		}
-
 		return target;
 	}
 

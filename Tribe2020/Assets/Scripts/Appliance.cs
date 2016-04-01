@@ -24,7 +24,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_ctrlMgr = ControlManager.GetInstance();
 
 		_harvestButton = Instantiate(harvestButtonRef) as GameObject;
-		_harvestButton.transform.position = transform.position + Vector3.up * 0.5f;
+		_harvestButton.transform.position = transform.position + Vector3.up * 1.5f;
 		_harvestButton.transform.SetParent(transform);
 
 		_harvestButton.GetComponentInChildren<Button>().
@@ -69,7 +69,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void AddHarvest() {
-		Debug.Log("added harvest to: " + title);
 		_harvestButton.SetActive(true);
 	}
 }
