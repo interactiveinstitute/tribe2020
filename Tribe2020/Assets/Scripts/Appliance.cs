@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler {
-	private ControlManager _ctrlMgr;
+	private PilotController _ctrlMgr;
 
 	public string title;
 	public string description;
@@ -21,7 +21,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	// Use this for initialization
 	void Start () {
-		_ctrlMgr = ControlManager.GetInstance();
+		_ctrlMgr = PilotController.GetInstance();
 
 		_harvestButton = Instantiate(harvestButtonRef) as GameObject;
 		_harvestButton.transform.position = transform.position + Vector3.up * 1.5f;

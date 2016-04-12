@@ -3,22 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-//TODO: sync time if GameTime is stepped
 public class BehaviourAI : MonoBehaviour {
-	private const string IDLE = "avatar_idle";
-	private const string WALKING = "avatar_walking";
-	private const string WAITING = "avatar_waiting";
-	private const string OUTSIDE = "avatar_outside_schedule";
+	public enum ActivityState { Idle, Walking, Waiting, Unscheduled, OverrideIdle, OverrideWalking };
 	[SerializeField]
-	private string _curState = IDLE;
+	private ActivityState _curActivityState = ActivityState.Idle;
+	[SerializeField]
+	private float _delay = 0;
 
-	public float delay = 0;
-
+	private PilotController _controller;
 	private GameTime _timeMgr;
 
 	private AvatarStats _stats;
 	private NavMeshAgent _agent;
-	private GameObject _curTarget;
+	private Vector3 _curTargetPos;
+	private GameObject _curTargetObj;
 
 	private AvatarActivity _curActivity;
 	private GameObject[] _appliances;
@@ -37,6 +35,7 @@ public class BehaviourAI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
+		_controller = PilotController.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 
 		_stats = GetComponent<AvatarStats>();
@@ -50,33 +49,38 @@ public class BehaviourAI : MonoBehaviour {
 		if(!_isSync) {
 			SyncSchedule();
 		}
-		//if(curState == OUTSIDE) {
-		//	SyncSchedule();
-		//}
 
-		//If not started, init behaviour
-		if(_curState == IDLE) {
-			SyncSchedule();
-			_curActivity.Init(this);
-		} else {
-			//Update current behaviour
-			_curActivity.Step(this);
-		}
-
-		//Check if reached target if looking for target
-		if(_curState == WALKING && Vector3.Distance(transform.position, _curTarget.transform.position) < 2) {
-			_curTarget.GetComponent<Appliance>().AddHarvest();
-
-			_curActivity.NextStep(this);
-		}
-
-		//Step delay and check if waiting is over
-		if(_curState == WAITING) {
-			delay -= Time.deltaTime;
-
-			if(delay < 0) {
-				_curActivity.NextStep(this);
-			}
+		switch(_curActivityState) {
+			// Not doing anything, continously sync in order to poll for an activity
+			case ActivityState.Idle:
+				SyncSchedule();
+				_curActivity.Init(this);
+				break;
+			// Walking towards an object, check if arrived to proceed
+			case ActivityState.Walking:
+				_curActivity.Step(this);
+				if(Vector3.Distance(transform.position, _curTargetObj.transform.position) < 2) {
+					_curTargetObj.GetComponent<Appliance>().AddHarvest();
+					_controller.OnAvatarSessionComplete(_curActivityState.ToString());
+					_curActivity.NextStep(this);
+				}
+				break;
+			// Waiting for a duration, check if wait is over to proceed
+			case ActivityState.Waiting:
+				_curActivity.Step(this);
+				_delay -= Time.deltaTime;
+				if(_delay < 0) {
+					_controller.OnAvatarSessionComplete(_curActivity.name);
+					_curActivity.NextStep(this);
+				}
+				break;
+			// Override activity for instance from a quest narration controller, callback if arrived
+			case ActivityState.OverrideWalking:
+				if(Vector3.Distance(transform.position, _curTargetPos) < 2) {
+					_curActivityState = ActivityState.OverrideIdle;
+					_controller.OnAvatarReachedPosition(this, _curTargetPos);
+				}
+				break;
 		}
 
 		//SyncSchedule();
@@ -128,45 +132,65 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
+	public void WalkTo(Vector3 target) {
+		_curTargetPos = target;
+		_agent.SetDestination(_curTargetPos);
+
+		_curActivityState = ActivityState.OverrideWalking;
+	}
+
+	//
+	public void StartActivity(AvatarActivity activity) {
+		_curActivity = activity;
+		_curActivity.Init(this);
+
+	}
+
+	//
+	public void EndOverride() {
+		_curActivityState = ActivityState.Idle;
+	}
+
+	//
 	public void WalkTo(string[] args) {
 		if(args.Length == 1) {
-			_curTarget = FindNearestObject(args[0], false);
+			_curTargetObj = FindNearestObject(args[0], false);
 		} else if(args[1] == "own") {
-			_curTarget = FindNearestObject(args[0], true);
+			_curTargetObj = FindNearestObject(args[0], true);
 		}
 
 
-			if(_curTarget == null) {
+		if(_curTargetObj == null) {
 			return;
 		}
 
-		_agent.SetDestination(_curTarget.transform.position);
+		_agent.SetDestination(_curTargetObj.transform.position);
 
-		_curState = WALKING;
+		_curActivityState = ActivityState.Walking;
 	}
 
 	//
 	public void TeleportTo(string[] args) {
-		_curTarget = null;
+		_curTargetObj = null;
 
 		if(args.Length == 1) {
-			_curTarget = FindNearestObject(args[0], false);
+			_curTargetObj = FindNearestObject(args[0], false);
 		} else if(args[1] == "own") {
-			_curTarget = FindNearestObject(args[0], true);
+			_curTargetObj = FindNearestObject(args[0], true);
 		}
 
-		if(_curTarget == null) {
+		if(_curTargetObj == null) {
 			return;
 		}
 
-		_curTarget.GetComponent<Appliance>().AddHarvest();
-		transform.position = _curTarget.transform.position;
+		_curTargetObj.GetComponent<Appliance>().AddHarvest();
+		transform.position = _curTargetObj.transform.position;
 	}
 
 	//
 	public void Delay(float seconds) {
-		_curState = WAITING;
-		delay = seconds;
+		_curActivityState = ActivityState.Waiting;
+		_delay = seconds;
 	}
 
 	//
@@ -193,7 +217,8 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void OnActivityOver() {
-		_curState = IDLE;
-		delay = 0;
+		_controller.OnAvatarActivityComplete(_curActivity.name);
+		_curActivityState = ActivityState.Idle;
+		_delay = 0;
 	}
 }

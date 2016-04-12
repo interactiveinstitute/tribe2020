@@ -3,24 +3,29 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ControlManager : MonoBehaviour{
+public class PilotController : MonoBehaviour{
 	//Singleton features
-	private static ControlManager _instance;
-	public static ControlManager GetInstance(){
-		return _instance;
+	private static PilotController _instance;
+	public static PilotController GetInstance(){
+		if(_instance != null) {
+			return _instance;
+		}
+		return null;
 	}
 
-	public GameObject TitleUI;
-	public GameObject InspectorUI;
-	public GameObject MailUI;
+	//Interaction limitation states
+	public enum InputState {
+		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
+		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST
+	};
+	private InputState _curState = InputState.ALL;
 
+	//Access all singleton systems
+	private PilotView _view;
 	private CameraManager _camMgr;
-	private ViewManager _viewMgr;
-
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
-	private TutorialManager _tutMgr;
-	private QuestManager _questMgr;
+	private QuestController _questController;
 
 	//Interaction props
 	private string _touchState = IDLE;
@@ -44,14 +49,11 @@ public class ControlManager : MonoBehaviour{
 
 	// Use this for initialization
 	void Start(){
+		_view = PilotView.GetInstance();
 		_camMgr = CameraManager.GetInstance();
-		_viewMgr = ViewManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
-		_tutMgr = TutorialManager.GetInstance();
-		_questMgr = QuestManager.GetInstance();
-
-		//InspectorUI.SetActive(true);
+		_questController = QuestController.GetInstance();
 	}
 	
 	// Update is called once per frame
@@ -89,7 +91,7 @@ public class ControlManager : MonoBehaviour{
 			_touchReset = false;
 		}
 
-		_viewMgr.UpdateQuestCount(_questMgr.GetQuests().Count);
+		_view.UpdateQuestCount(_questController.GetQuests().Count);
 	}
 
 	//
@@ -125,7 +127,6 @@ public class ControlManager : MonoBehaviour{
 				_doubleTimer = 0;
 				OnDoubleTap(pos);
 			}
-//			OnTap(pos);
 		} else if(dist >= SWIPE_THRESH){
 			OnSwipe(_startPos, pos);
 		}
@@ -133,8 +134,10 @@ public class ControlManager : MonoBehaviour{
 	
 	//
 	private void OnTap(Vector3 pos){
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+		}
 	}
 
 	//
@@ -144,19 +147,24 @@ public class ControlManager : MonoBehaviour{
 
 	//
 	private void OnSwipe(Vector3 start, Vector3 end){
-		float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
-		dir = (dir * Mathf.Rad2Deg + 360) % 360;
-		float dist = Vector3.Distance(start, end);
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
+			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
+			dir = (dir * Mathf.Rad2Deg + 360) % 360;
+			float dist = Vector3.Distance(start, end);
 
-		float dirMod = (dir + 90) % 360;
-		if(dirMod > 45 && dirMod <= 135){
-			_camMgr.GotoLeftView();
-		} else if(dir > 45 && dir <= 135){
-			_camMgr.GotoLowerView();
-		} else if(dir > 135 && dir <= 225){
-			_camMgr.GotoRightView();
-		} else if(dir > 225 && dir <= 315){
-			_camMgr.GotoUpperView();
+			float dirMod = (dir + 90) % 360;
+			if(dirMod > 45 && dirMod <= 135) {
+				_camMgr.GotoLeftView();
+			} else if(dir > 45 && dir <= 135) {
+				_camMgr.GotoLowerView();
+			} else if(dir > 135 && dir <= 225) {
+				_camMgr.GotoRightView();
+			} else if(dir > 225 && dir <= 315) {
+				_camMgr.GotoUpperView();
+			}
+
+			_questController.OnQuestEvent(Quest.QuestEvent.Swiped);
+			_questController.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetViewPoint().title);
 		}
 	}
 
@@ -171,64 +179,94 @@ public class ControlManager : MonoBehaviour{
 
 	//
 	public void OnOkPressed() {
-		_viewMgr.messageUI.SetActive(false);
-		_tutMgr.NextStep();
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_PROMPT) {
+			_view.messageUI.SetActive(false);
+
+			_questController.OnQuestEvent(Quest.QuestEvent.OKPressed);
+		}
 	}
 
 	//
 	public void OnApplianceSelected(Appliance appliance) {
-		_viewMgr.ShowAppliance(appliance);
-		_audioMgr.PlaySound("button");
-		ResetTouch();
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_SELECT) {
+			_view.ShowAppliance(appliance);
+			_audioMgr.PlaySound("button");
+			ResetTouch();
+
+			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
+			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
+		}
 	}
 
 	//
 	public void OnApplianceClosed() {
-		_viewMgr.HideAppliance();
-		ResetTouch();
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_DESELECT) {
+			_view.HideAppliance();
+			ResetTouch();
+
+			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
+		}
 	}
 
 	//
 	public void OnQuestListOpenend() {
-		_viewMgr.ShowQuestList(_questMgr.GetQuests());
-		ResetTouch();
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST_LIST) {
+			_view.ShowQuestList(_questController.GetQuests());
+			ResetTouch();
+
+			_questController.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
+		}
 	}
 
 	//
 	public void OnQuestListClosed() {
-		_viewMgr.HideQuestList();
-		ResetTouch();
+		if(_curState == InputState.ALL) {
+			_view.HideQuestList();
+			ResetTouch();
+
+			_questController.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
+		}
 	}
 
 	//
 	public void OnQuestPressed(Quest quest) {
-		_viewMgr.ShowQuest(quest);
-		ResetTouch();
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
+			_view.ShowQuest(quest);
+			ResetTouch();
+
+			_questController.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+		}
 	}
 	
 	//
 	public void OnQuestClosed() {
-		_viewMgr.HideQuest();
+		_view.HideQuest();
 		ResetTouch();
 	}
 
 	//
 	public void OnHarvestTap(GameObject go) {
-		_resourceMgr.cash += 10;
-		_viewMgr.CreateFeedback(go.transform.position, "+" + 10 + "€");
-		go.SetActive(false);
+		if(_curState == InputState.ALL) {
+			_resourceMgr.cash += 10;
+			_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
+			go.SetActive(false);
 
-		ResetTouch();
+			ResetTouch();
+		}
 	}
 
 	//
 	public void OnPinchIn(){
-		_camMgr.GotoUpperView();
+		if(_curState == InputState.ALL) {
+			_camMgr.GotoUpperView();
+		}
 	}
 
 	//
 	public void OnPinchOut(){
-		_camMgr.GotoLowerView();
+		if(_curState == InputState.ALL) {
+			_camMgr.GotoLowerView();
+		}
 	}
 
 	//
@@ -237,21 +275,36 @@ public class ControlManager : MonoBehaviour{
 
 	//
 	public void OnAction(Appliance appliance, BaseAction action, GameObject actionObj){
-		Debug.Log(appliance.name + ": " + action.cashCost + ", " + action.comfortCost);
+		if(_curState == InputState.ALL) {
+			if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
+				_resourceMgr.cash -= action.cashCost;
+				_resourceMgr.comfort -= action.comfortCost;
+				appliance.PerformAction(action);
 
-		if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
-			_resourceMgr.cash -= action.cashCost;
-			_resourceMgr.comfort -= action.comfortCost;
-			appliance.PerformAction(action);
-			//action.performed = true;
-	
-			//_uiMgr.CreateFeedback(action.gameObject.transform.position, "-" + action.cashCost);
-			_resourceMgr.RefreshProduction();
+				_resourceMgr.RefreshProduction();
 
-			actionObj.SetActive(false);
+				actionObj.SetActive(false);
+
+				_questController.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, action.actionName);
+			}
 		}
 	}
-	
+
+	//
+	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
+		_questController.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+	}
+
+	//
+	public void OnAvatarSessionComplete(string activityState) {
+		_questController.OnQuestEvent(Quest.QuestEvent.AvatarSessionOver, activityState);
+	}
+
+	//
+	public void OnAvatarActivityComplete(string activity) {
+		_questController.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+	}
+
 	//
 	public void UpdatePinch(){
 		if(Input.touchCount == 2){
@@ -302,20 +355,23 @@ public class ControlManager : MonoBehaviour{
 	public bool IsOutsideUI(Vector3 pos){
 		bool outsideInspector = true;
 		bool outsideMailButton = true;
-		if(InspectorUI.activeSelf) {
+		if(_view.inspectorUI.activeSelf) {
 			outsideInspector =
 				pos.x > Screen.width * 0.2f ||
 				pos.x < Screen.width - Screen.width * 0.2f ||
 				pos.y > Screen.height * 0.12f ||
 				pos.y < Screen.height - Screen.height * 0.12f;
 		}
-		outsideInspector = !InspectorUI.activeSelf;
+		outsideInspector = !_view.inspectorUI.activeSelf;
 		outsideMailButton =
 			pos.x < Screen.width - Screen.width * 0.2f ||
 			pos.y < Screen.height - Screen.height * 0.12f;
 
-		//Debug.Log("pointer:" + pos);
+		return outsideInspector && outsideMailButton && !_view.mailUI.activeSelf;
+	}
 
-		return outsideInspector && outsideMailButton && !MailUI.activeSelf;
+	//
+	public void SetControlState(InputState state) {
+		_curState = state;
 	}
 }

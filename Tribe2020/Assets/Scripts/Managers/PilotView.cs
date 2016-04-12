@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class ViewManager : MonoBehaviour{
+public class PilotView : MonoBehaviour{
 	//Singleton features
-	private static ViewManager _instance;
-	public static ViewManager GetInstance(){
+	private static PilotView _instance;
+	public static PilotView GetInstance(){
 		return _instance;
 	}
 
-	private ControlManager _ctrlMgr;
+	private PilotController _ctrlMgr;
 
 	public Transform title;
 	public Transform date;
@@ -45,7 +45,7 @@ public class ViewManager : MonoBehaviour{
 
 	//Use this for initialization
 	void Start(){
-		_ctrlMgr = ControlManager.GetInstance();
+		_ctrlMgr = PilotController.GetInstance();
 	}
 	
 	//Update is called once per frame
@@ -145,9 +145,11 @@ public class ViewManager : MonoBehaviour{
 	}
 
 	//
-	public void ShowMessage(string message) {
+	public void ShowMessage(string message, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
+
+		messageUI.transform.GetChild(1).gameObject.SetActive(showOkButton);
 	}
 
 	//
@@ -155,12 +157,12 @@ public class ViewManager : MonoBehaviour{
 		//
 		RemoveChildren(questList);
 
-		foreach(Quest q in quests) {
-			Quest curQuest = q;
+		foreach(Quest quest in quests) {
+			Quest curQuest = quest;
 			GameObject questObj = Instantiate(mailButtonPrefab) as GameObject;
 			questObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
 			Text[] texts = questObj.GetComponentsInChildren<Text>();
-			texts[0].text = curQuest.sender;
+			texts[0].text = "";
 			texts[1].text = curQuest.title;
 			texts[2].text = "some date";
 			questObj.transform.SetParent(questList, false);
@@ -177,7 +179,7 @@ public class ViewManager : MonoBehaviour{
 	public void ShowQuest(Quest quest) {
 		Text[] texts = mailReadUI.GetComponentsInChildren<Text>();
 		texts[0].text = quest.title;
-		texts[2].text = quest.message;
+		//texts[2].text = quest.message;
 		texts[3].text = "Objective: Install a Thermal Jug in a coffee machine";
 
 		mailUI.SetActive(false);

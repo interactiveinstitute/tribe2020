@@ -5,11 +5,14 @@ public class TutorialManager : MonoBehaviour {
 	//Singleton features
 	private static TutorialManager _instance;
 	public static TutorialManager GetInstance() {
-		return _instance;
-
+		if(_instance != null) {
+			return _instance;
+		}
+		return null;
 	}
-	private ControlManager _ixnMgr;
-	private ViewManager _uiMgr;
+
+	private PilotController _ixnMgr;
+	private PilotView _uiMgr;
 
 	public Transform handUI;
 	public Transform tutorialAnimation;
@@ -23,8 +26,8 @@ public class TutorialManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_ixnMgr = ControlManager.GetInstance();
-		_uiMgr = ViewManager.GetInstance();
+		_ixnMgr = PilotController.GetInstance();
+		_uiMgr = PilotView.GetInstance();
 	}
 	
 	// Update is called once per frame

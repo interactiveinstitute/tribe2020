@@ -10,7 +10,7 @@ public class ResourceManager : MonoBehaviour {
 		return _instance;
 	}
 
-	private ViewManager _uiMgr;
+	private PilotView _uiMgr;
 	private GameTime _timeMgr;
 	private List<Transform> _avatars;
 	private List<Appliance> _appliances;
@@ -31,7 +31,7 @@ public class ResourceManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start(){
-		_uiMgr = ViewManager.GetInstance();
+		_uiMgr = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 
 		_avatars = new List<Transform>();

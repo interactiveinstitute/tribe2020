@@ -6,11 +6,11 @@ using System.Collections.Generic;
 public class CameraManager : MonoBehaviour {
 	//Singleton features
 	private static CameraManager _instance;
-	public static CameraManager GetInstance(){
+	public static CameraManager GetInstance() {
 		return _instance;
 	}
 
-	private ViewManager _uiMgr;
+	private PilotView _view;
 
 	public string cameraState = IDLE;
 	public const string IDLE = "camera_idle";
@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour {
 	public const string PANNED = "camera_panned";
 
 	//public Transform pilotTransform;
-	
+
 	//Viewpoint variables
 	private Vector2 _curView = Vector2.zero;
 	private Transform _curViewpoint;
@@ -35,7 +35,7 @@ public class CameraManager : MonoBehaviour {
 	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
-	private int _curFloor =  0;
+	private int _curFloor = 0;
 
 	private float speed = 0.1f;
 	private float startTime;
@@ -44,13 +44,13 @@ public class CameraManager : MonoBehaviour {
 	private float _panSpeed = 0.01f;
 
 	//Sort use instead of constructor
-	void Awake(){
+	void Awake() {
 		_instance = this;
 	}
 
 	// Use this for initialization
-	void Start(){
-		_uiMgr = ViewManager.GetInstance();
+	void Start() {
+		_view = PilotView.GetInstance();
 
 		//Ref to camera
 		//cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
@@ -64,9 +64,9 @@ public class CameraManager : MonoBehaviour {
 		SetViewpoint(0, 0);
 		//UpdateVisibility();
 	}
-	
+
 	// Update is called once per frame
-	void Update(){
+	void Update() {
 		if(journeyLength > 0) {
 			float distCovered = (Time.time - startTime) * 10;
 			float fracJourney = distCovered / journeyLength;
@@ -79,12 +79,12 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	public void UpdateVisibility(){
+	public void UpdateVisibility() {
 		Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
 
-        foreach(GameObject go in vp.hideObjects){
-            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-        }
+		foreach(GameObject go in vp.hideObjects) {
+			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+		}
 
 		//if(vp.showFloor){
 		//	foreach(Transform floor in pilotTransform){
@@ -111,21 +111,21 @@ public class CameraManager : MonoBehaviour {
 		//}
 	}
 
-    public void HideObstacles(Transform viewpointTrans){
-        Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
+	public void HideObstacles(Transform viewpointTrans) {
+		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
-        foreach(GameObject go in vp.hideObjects){
-            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-        }
-    }
+		foreach(GameObject go in vp.hideObjects) {
+			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+		}
+	}
 
-    public void UnhideObstacles(Transform viewpointTrans){
-        Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
+	public void UnhideObstacles(Transform viewpointTrans) {
+		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
-        foreach(GameObject go in vp.hideObjects){
-            go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-        }
-    }
+		foreach(GameObject go in vp.hideObjects) {
+			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+		}
+	}
 
 	//
 	//public void HideWall(string wall){
@@ -149,11 +149,11 @@ public class CameraManager : MonoBehaviour {
 	//}
 
 	//
-	public void HideFloor(Transform floor){
-		foreach(Transform room in floor){
-			foreach(Transform group in room){
-				foreach(Transform mesh in group){
-					if(mesh.GetComponent<MeshRenderer>() != null){
+	public void HideFloor(Transform floor) {
+		foreach(Transform room in floor) {
+			foreach(Transform group in room) {
+				foreach(Transform mesh in group) {
+					if(mesh.GetComponent<MeshRenderer>() != null) {
 						mesh.GetComponent<MeshRenderer>().shadowCastingMode =
 						UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 					}
@@ -163,11 +163,11 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	public void ShowFloor(Transform floor){
-		foreach(Transform room in floor){
-			foreach(Transform group in room){
-				foreach(Transform mesh in group){
-					if(mesh.GetComponent<MeshRenderer>() != null){
+	public void ShowFloor(Transform floor) {
+		foreach(Transform room in floor) {
+			foreach(Transform group in room) {
+				foreach(Transform mesh in group) {
+					if(mesh.GetComponent<MeshRenderer>() != null) {
 						mesh.GetComponent<MeshRenderer>().shadowCastingMode =
 						UnityEngine.Rendering.ShadowCastingMode.On;
 					}
@@ -177,32 +177,32 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	private void PopulateViewpoints(GameObject[] viewObjects){
+	private void PopulateViewpoints(GameObject[] viewObjects) {
 		int maxY = 0;
 
-		foreach(GameObject vo in viewObjects){
+		foreach(GameObject vo in viewObjects) {
 			int curY = vo.GetComponent<Viewpoint>().yIndex;
-			if(maxY <= curY){ maxY = curY + 1; }
+			if(maxY <= curY) { maxY = curY + 1; }
 		}
 		_viewpoints = new Transform[maxY][];
 
-		for(int y = 0; y < maxY; y++){
+		for(int y = 0; y < maxY; y++) {
 			int maxX = 0;
 
-			foreach(GameObject vo in viewObjects){
-				if(vo.GetComponent<Viewpoint>().yIndex == y){
+			foreach(GameObject vo in viewObjects) {
+				if(vo.GetComponent<Viewpoint>().yIndex == y) {
 					int curX = vo.GetComponent<Viewpoint>().xIndex;
-					if(maxX <= curX){ maxX = curX + 1; }
+					if(maxX <= curX) { maxX = curX + 1; }
 				}
 			}
 
 			_viewpoints[y] = new Transform[maxX];
 		}
 
-		foreach(GameObject vo in viewObjects){
+		foreach(GameObject vo in viewObjects) {
 			int curX = vo.GetComponent<Viewpoint>().xIndex;
 			int curY = vo.GetComponent<Viewpoint>().yIndex;
-			
+
 			_viewpoints[curY][curX] = vo.transform;
 		}
 
@@ -210,8 +210,8 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	public void SetViewpoint(int x, int y){
-		if(x >= _viewpoints[y].Length){
+	public void SetViewpoint(int x, int y) {
+		if(x >= _viewpoints[y].Length) {
 			x = 0;
 		}
 
@@ -232,11 +232,16 @@ public class CameraManager : MonoBehaviour {
 		startTime = Time.time;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
-		_uiMgr.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
+		_view.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
 
 		//UpdateVisibility();
 
-		_uiMgr.UpdateViewpointGuide(_viewpoints[y].Length, x);
+		_view.UpdateViewpointGuide(_viewpoints[y].Length, x);
+	}
+
+	//
+	public Viewpoint GetViewPoint() {
+		return _curViewpoint.GetComponent<Viewpoint>();
 	}
 
 	//

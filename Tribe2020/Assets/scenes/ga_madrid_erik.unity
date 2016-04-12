@@ -658,7 +658,7 @@ RectTransform:
   - {fileID: 1442505988}
   - {fileID: 892378501}
   m_Father: {fileID: 1228548652}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.000015258789}
@@ -1107,7 +1107,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: m_Name
-      value: Avatar (1)
+      value: Anton Gustafsson
       objectReference: {fileID: 0}
     - target: {fileID: 11493526, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: avatarName
@@ -1404,8 +1404,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250.00003, y: -95}
-  m_SizeDelta: {x: 440.00006, y: 50}
+  m_AnchoredPosition: {x: 250, y: -95}
+  m_SizeDelta: {x: 440, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &156637416
 MonoBehaviour:
@@ -3060,7 +3060,7 @@ RectTransform:
   - {fileID: 1816079412}
   - {fileID: 156637415}
   m_Father: {fileID: 1228548652}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.0000044898, y: -132.29001}
@@ -3775,6 +3775,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11496632, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: playerAffordances.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0.1
@@ -4027,6 +4031,15 @@ Prefab:
       propertyPath: description
       value: He is the unintentional reincarnation of anti-environmental Statan.
       objectReference: {fileID: 0}
+    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: m_Name
+      value: Erik Einebrant
+      objectReference: {fileID: 0}
+    - target: {fileID: 11496632, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: playerAffordances.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 755cf7174add8634586d96dfda2b5d89,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
   m_IsPrefabParent: 0
@@ -5252,7 +5265,7 @@ RectTransform:
   - {fileID: 631421819}
   - {fileID: 2085533012}
   m_Father: {fileID: 1228548652}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -6687,6 +6700,45 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 219de06e16fcf5d4aa14ad3e1c6655fc, type: 3}
   m_PrefabInternal: {fileID: 1096816972}
+--- !u!1 &1124907878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1124907879}
+  - 114: {fileID: 1124907880}
+  m_Layer: 0
+  m_Name: Avatar Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1124907879
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1124907878}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1373978269}
+  m_RootOrder: 6
+--- !u!114 &1124907880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1124907878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96afabebfdbb11343af18b26e4dd4a28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1126489806
 Prefab:
   m_ObjectHideFlags: 0
@@ -7310,10 +7362,10 @@ RectTransform:
   - {fileID: 480817948}
   - {fileID: 856959118}
   - {fileID: 1072706419}
-  - {fileID: 485831299}
   - {fileID: 1411096613}
   - {fileID: 766360901}
   - {fileID: 102185008}
+  - {fileID: 485831299}
   - {fileID: 1133723152}
   - {fileID: 1310099244}
   - {fileID: 724033413}
@@ -7842,8 +7894,6 @@ GameObject:
   - 114: {fileID: 1373978270}
   - 114: {fileID: 1373978271}
   - 114: {fileID: 1373978272}
-  - 114: {fileID: 1373978276}
-  - 114: {fileID: 1373978277}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -7866,6 +7916,8 @@ Transform:
   - {fileID: 1997092154}
   - {fileID: 2068131773}
   - {fileID: 1191191334}
+  - {fileID: 1928876741}
+  - {fileID: 1124907879}
   m_Father: {fileID: 0}
   m_RootOrder: 1
 --- !u!114 &1373978270
@@ -7879,9 +7931,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae9ae6f888207f64e8dd723bc0d8020e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TitleUI: {fileID: 1180447416}
-  InspectorUI: {fileID: 1411096612}
-  MailUI: {fileID: 766360900}
 --- !u!114 &1373978271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7926,37 +7975,6 @@ MonoBehaviour:
   viewpointIconPrefab: {fileID: 116102, guid: c7a72ab6e32b78741a00240101091fe5, type: 2}
   mailButtonPrefab: {fileID: 175994, guid: 459384aa2c48e8249bc882ca3db6caf9, type: 2}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
---- !u!114 &1373978276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1373978268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8133955c0738eb4ebda8a03ddfe87de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cash: 500
-  comfort: 33
-  temperature: 0
-  power: 0
-  co2: 0
-  cashProduction: 0
-  comfortProduction: 0
---- !u!114 &1373978277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1373978268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1bcdd2b16f10554ebccb3285f76965d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handUI: {fileID: 1674155898}
-  tutorialAnimation: {fileID: 724033413}
 --- !u!1001 &1376106652
 Prefab:
   m_ObjectHideFlags: 0
@@ -8105,7 +8123,7 @@ RectTransform:
   - {fileID: 2021462708}
   - {fileID: 678562555}
   m_Father: {fileID: 1228548652}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -10356,8 +10374,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250.00003, y: -35}
-  m_SizeDelta: {x: 440.00006, y: 50}
+  m_AnchoredPosition: {x: 250, y: -35}
+  m_SizeDelta: {x: 440, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1816079413
 MonoBehaviour:
@@ -10765,6 +10783,52 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 493740, guid: cf046ab757fac924ca23c5e6225245fa, type: 2}
   m_PrefabInternal: {fileID: 1925425669}
+--- !u!1 &1928876740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1928876741}
+  - 114: {fileID: 1928876742}
+  m_Layer: 0
+  m_Name: Resource Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1928876741
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1928876740}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1373978269}
+  m_RootOrder: 5
+--- !u!114 &1928876742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1928876740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8133955c0738eb4ebda8a03ddfe87de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cash: 500
+  comfort: 33
+  temperature: 0
+  power: 0
+  co2: 0
+  cashProduction: 0
+  comfortProduction: 0
 --- !u!1 &1951677257
 GameObject:
   m_ObjectHideFlags: 0
@@ -11140,7 +11204,7 @@ GameObject:
   - 4: {fileID: 1997092154}
   - 114: {fileID: 1997092155}
   m_Layer: 0
-  m_Name: QuestManager
+  m_Name: Quest Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11169,6 +11233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialAnimation: {fileID: 724033413}
   quests:
   - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
 --- !u!1 &2021462707
@@ -11335,7 +11400,7 @@ GameObject:
   - 82: {fileID: 2068131775}
   - 82: {fileID: 2068131774}
   m_Layer: 0
-  m_Name: AudioManager
+  m_Name: Audio Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11359,7 +11424,7 @@ AudioSource:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2068131772}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: aa7fbc78e29b1d54d9b9a179585a3b56, type: 3}
