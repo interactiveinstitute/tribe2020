@@ -64,16 +64,16 @@ public class QuestController : MonoBehaviour {
 
 		switch(quest.GetCurrentStepType()) {
 			case Quest.QuestStepType.PopUpMessage:
-				_view.ShowMessage(quest.GetArguments().text, false);
+				_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom, false);
 				break;
 			case Quest.QuestStepType.PromptMessage:
-				_view.ShowMessage(quest.GetArguments().text);
+				_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
 				break;
 			case Quest.QuestStepType.SendMail:
-				_view.ShowMessage(quest.GetArguments().text);
+				_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
 				break;
 			case Quest.QuestStepType.PlaySound:
-				_view.ShowMessage(quest.GetArguments().text);
+				_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
 				break;
 			case Quest.QuestStepType.ControlAvatar:
 				_avatarMgr.MakeAvatarWalkTo(quest.GetArguments().position);
@@ -98,30 +98,22 @@ public class QuestController : MonoBehaviour {
 
 	//
 	public void OnQuestEvent(Quest.QuestEvent questEvent, string argument) {
-		//Debug.Log("OnQuestEvent: " + questEvent + ", " + argument);
-		List <Quest> removeQuests = new List<Quest>();
-		//
-		foreach(Quest quest in _curQuests) {
-			quest.AttemptCompletion(questEvent, argument);
-			if(quest.IsCurrentStepComplete()) {
-				quest.NextStep();
-				if(quest.IsComplete()) {
-					removeQuests.Add(quest);
+		for(int i = _curQuests.Count - 1; i >= 0; i--) {
+			_curQuests[i].AttemptCompletion(questEvent, argument);
+			if(_curQuests[i].IsCurrentStepComplete()) {
+				_curQuests[i].NextStep();
+				if(_curQuests[i].IsComplete()) {
+					if(_curQuests[i].nextQuest != null) {
+						Quest nextQuest = Object.Instantiate(_curQuests[i].nextQuest) as Quest;
+						_curQuests.Add(nextQuest);
+						StartQuestStep(nextQuest);
+					}
+
+					_curQuests.Remove(_curQuests[i]);
 				} else {
-					StartQuestStep(quest);
+					StartQuestStep(_curQuests[i]);
 				}
 			}
-		}
-		//
-		foreach(Quest quest in removeQuests) {
-			Debug.Log("is it here?");
-			if(quest.nextQuest != null) {
-				Quest nextQuest = Object.Instantiate(quest.nextQuest) as Quest;
-				_curQuests.Add(nextQuest);
-				StartQuestStep(nextQuest);
-			}
-			Debug.Log("Well, was it?");
-			_curQuests.Remove(quest);
 		}
 	}
 

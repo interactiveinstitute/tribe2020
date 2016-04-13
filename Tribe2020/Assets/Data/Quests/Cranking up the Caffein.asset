@@ -15,10 +15,8 @@ MonoBehaviour:
   nextQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   questSteps:
   - title: Saving the World
-    message: Saving the world is no easy task. However, you have one secret weapon,
-      the mail inbox.
     questType: 0
-    animation: 
+    inputState: 1
     arguments:
       text: Saving the world is no easy task. However, you have one secret weapon,
         the mail inbox.
@@ -26,30 +24,26 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 1
+      showAtBottom: 0
     conditions:
     - stepCondition: 1
       argument: 
   - title: Tap the Mail Icon
-    message: Tap the mail icon on the bottom right to see if you got someting.
     questType: 1
-    animation: Enter
+    inputState: 6
     arguments:
       text: Tap the mail icon on the bottom right to see if you got someting.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: Enter
-    inputState: 6
+      showAtBottom: 0
     conditions:
     - stepCondition: 6
       argument: 
   - title: Send Mail
-    message: How in the living f* are we supposed to reach any form of environmental
-      change, if we can't keep that coffee warm without pumping brown coal straight
-      out the wall plug?
     questType: 2
-    animation: 
+    inputState: 0
     arguments:
       text: How in the living f* are we supposed to reach any form of environmental
         change, if we can't keep that coffee warm without pumping brown coal straight
@@ -58,13 +52,11 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions: []
   - title: Open the Mail
-    message: Excellent! And you got mail as well! Tap the mail from Anton in order
-      to read it.
     questType: 1
-    animation: Enter
+    inputState: 7
     arguments:
       text: Excellent! And you got mail as well! Tap the mail from Anton in order
         to read it.
@@ -72,15 +64,13 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: Enter
-    inputState: 7
+      showAtBottom: 1
     conditions:
     - stepCondition: 8
       argument: 
   - title: Reaction to Mail
-    message: Whoa! That's... That's an absolutely adequate reaction. Who would make
-      such coffee!? Close the mail box and let's take action!
     questType: 1
-    animation: 
+    inputState: 0
     arguments:
       text: Whoa! That's... That's an absolutely adequate reaction. Who would make
         such coffee!? Close the mail box and let's take action!
@@ -88,15 +78,13 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 1
     conditions:
     - stepCondition: 7
       argument: 
   - title: Find Pentry
-    message: So we need to fix that coffee. First step is to find the room where it's
-      located. Swipe until you find the lobby.
-    questType: 0
-    animation: 
+    questType: 1
+    inputState: 0
     arguments:
       text: So we need to fix that coffee. First step is to find the room where it's
         located. Swipe until you find the lobby.
@@ -104,29 +92,26 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 10
       argument: Pentry
   - title: Intro to Pentry
-    message: Ah, here we are. The oasis of the office, Mecca of the Metropol.
     questType: 0
-    animation: 
+    inputState: 0
     arguments:
       text: Ah, here we are. The oasis of the office, Mecca of the Metropol.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 1
       argument: 
   - title: Select Coffee Machine
-    message: The Pentry is a native biome for many appliances, but perhaps it is most
-      known for its rich fauna of coffee makers. Let's see if you can spot one.
     questType: 0
-    animation: 
+    inputState: 0
     arguments:
       text: The Pentry is a native biome for many appliances, but perhaps it is most
         known for its rich fauna of coffee makers. Let's see if you can spot one.
@@ -134,15 +119,13 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 4
       argument: Espresso Machine
   - title: Install Thermal Jug
-    message: Once again, the appliance inspector. Note the list of measures that you
-      can perform shown in the bottom of the window.
     questType: 1
-    animation: 
+    inputState: 0
     arguments:
       text: Once again, the appliance inspector. Note the list of measures that you
         can perform shown in the bottom of the window.
@@ -150,57 +133,52 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 1
     conditions:
     - stepCondition: 9
       argument: Install Thermal Jug
   - title: Intro to Calling Avatar
-    message: Splendid, let's see if we can lure any Avatars with this upgraded Moccaminator...
     questType: 0
-    animation: 
+    inputState: 0
     arguments:
       text: Splendid, let's see if we can lure any Avatars with this upgraded Moccaminator...
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 1
     conditions:
-    - stepCondition: 1
+    - stepCondition: 5
       argument: 
   - title: Call Avatar to Coffee
-    message: 7,1,-3
     questType: 5
-    animation: 
+    inputState: 1
     arguments:
       text: 
       value: 0
       position: {x: 7, y: 1, z: -3}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 11
       argument: 
   - title: Avatar Drinking Coffee
-    message: And here they are, and a magnificent sample at that.
     questType: 0
-    animation: 
+    inputState: 0
     arguments:
       text: And here they are, and a magnificent sample at that.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 1
       argument: 
   - title: Explaining Avatar Activities
-    message: Avatars perform Activities on a schedule. Each activity presents a set
-      of sessions to fullfill the goal of such and activity.
     questType: 0
-    animation: 
+    inputState: 0
     arguments:
       text: Avatars perform Activities on a schedule. Each activity presents a set
         of sessions to fullfill the goal of such and activity.
@@ -208,71 +186,110 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 1
       argument: 
   - title: Start Drink Coffee Activity
-    message: 
     questType: 6
-    animation: 
+    inputState: 1
     arguments:
       text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions: []
   - title: Speed up Time
-    message: 
     questType: 7
-    animation: 
+    inputState: 1
     arguments:
       text: 
       value: 20
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 13
       argument: 
   - title: Restore time scale
-    message: 
     questType: 7
-    animation: 
+    inputState: 1
     arguments:
       text: 
       value: 1
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions: []
   - title: Done drinking Coffee
-    message: There you go, the avatar refreshed and refurbished!
     questType: 0
-    animation: 
+    inputState: 1
     arguments:
       text: There you go, the avatar refreshed and refurbished!
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-    inputState: 0
+      showAtBottom: 0
     conditions:
     - stepCondition: 1
       argument: 
-  - title: TODO
-    message: TODO
+  - title: Notice the Harvest
     questType: 0
-    animation: 
+    inputState: 1
     arguments:
-      text: 
+      text: Notice the coin symbols that appeared above the appliances that the Avatar
+        needed to use in order to complete their session.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 1
+      argument: 
+  - title: Notice Harvest 2
+    questType: 0
+    inputState: 1
+    arguments:
+      text: These represent the cash savings and satisfaction points that were generated
+        during the Avatar's interaction with the appliance.
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 1
+      argument: 
+  - title: Try out the harvest
+    questType: 1
     inputState: 0
-    conditions: []
+    arguments:
+      text: In order to harvest these points you simply have to tap the these icons.
+        Try this now.
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 14
+      argument: 
+  - title: Congratulations
+    questType: 0
+    inputState: 0
+    arguments:
+      text: Congratulations, this is how you save up for your next investments!
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 1
+      argument: 

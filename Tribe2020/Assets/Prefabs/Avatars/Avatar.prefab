@@ -845,7 +845,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Erik Einebrant
   description: He is the unintentional reincarnation of anti-environmental Statan.
-  playerAffordances: []
+  playerAffordances:
+  - {fileID: 11400000, guid: dc02b731afc6747488f8f1e589578827, type: 2}
   avatarAffordances: []
   owners: []
   performedActions: []
@@ -880,6 +881,10 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: playerAffordances.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 10920b0737b49254cbcefb0438e6c5ac, type: 2}
@@ -891,6 +896,11 @@ Prefab:
       propertyPath: avatarName
       value: Noname
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: playerAffordances.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: dc02b731afc6747488f8f1e589578827,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 108742}

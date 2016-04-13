@@ -30,30 +30,30 @@ public class TutorialManager : MonoBehaviour {
 		_uiMgr = PilotView.GetInstance();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		switch(_state) {
-			case "tut_init":
-				_state = "welcome";
-				_uiMgr.tutorialUI.SetActive(true);
-				break;
-			case "welcome":
-				_uiMgr.ShowMessage("Welcome to TRIBE PlayIt! The world is in dire need for help, and you are the arbitrator!");
-				tutorialAnimation.GetComponent<Animation>().Play("Enter");
-				_state = "welcome_pending";
-				break;
-			case "swiping":
-				_uiMgr.ShowMessage("Swipe to change view");
-				tutorialAnimation.GetComponent<Animation>().Play("Swipe");
-				_state = "swiping_pending";
-				break;
-			case "tapping":
-				_uiMgr.ShowMessage("Tap on an object to interact with it");
-				tutorialAnimation.GetComponent<Animation>().Play("Tap");
-				_state = "tap_pending";
-				break;
-		}
-	}
+	//// Update is called once per frame
+	//void Update () {
+	//	switch(_state) {
+	//		case "tut_init":
+	//			_state = "welcome";
+	//			_uiMgr.tutorialUI.SetActive(true);
+	//			break;
+	//		case "welcome":
+	//			_uiMgr.ShowMessage("Welcome to TRIBE PlayIt! The world is in dire need for help, and you are the arbitrator!");
+	//			tutorialAnimation.GetComponent<Animation>().Play("Enter");
+	//			_state = "welcome_pending";
+	//			break;
+	//		case "swiping":
+	//			_uiMgr.ShowMessage("Swipe to change view");
+	//			tutorialAnimation.GetComponent<Animation>().Play("Swipe");
+	//			_state = "swiping_pending";
+	//			break;
+	//		case "tapping":
+	//			_uiMgr.ShowMessage("Tap on an object to interact with it");
+	//			tutorialAnimation.GetComponent<Animation>().Play("Tap");
+	//			_state = "tap_pending";
+	//			break;
+	//	}
+	//}
 
 	//
 	public void NextStep() {

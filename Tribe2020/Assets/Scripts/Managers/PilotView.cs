@@ -145,11 +145,22 @@ public class PilotView : MonoBehaviour{
 	}
 
 	//
-	public void ShowMessage(string message, bool showOkButton = true) {
+	public void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
 
 		messageUI.transform.GetChild(1).gameObject.SetActive(showOkButton);
+
+		RectTransform messageTrans = messageUI.transform as RectTransform;
+		if(showAtBottom) {
+			messageTrans.pivot = Vector2.zero;
+			messageTrans.anchoredPosition = Vector3.zero;
+			messageTrans.anchorMax = Vector2.zero;
+		} else {
+			messageTrans.pivot = Vector2.up;
+			messageTrans.anchoredPosition = Vector3.zero;
+			messageTrans.anchorMax = Vector2.up;
+		}
 	}
 
 	//

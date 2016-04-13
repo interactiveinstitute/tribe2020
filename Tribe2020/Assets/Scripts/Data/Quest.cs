@@ -10,7 +10,8 @@ public class Quest : ScriptableObject {
 
 	//Quest events
 	public enum QuestEvent { EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
-		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver
+		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
+		ResourceHarvested
 	};
 
 	public string title;
@@ -42,6 +43,7 @@ public class Quest : ScriptableObject {
 		public Vector3 position;
 		public AvatarActivity activity;
 		public string animation;
+		public bool showAtBottom;
 	}
 
 	//

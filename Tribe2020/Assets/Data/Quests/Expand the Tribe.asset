@@ -12,12 +12,45 @@ MonoBehaviour:
   m_Name: Expand the Tribe
   m_EditorClassIdentifier: 
   title: Expand the Tribe
-  sender: TRIBE Totem
   nextQuest: {fileID: 0}
   questSteps:
-  - message: 
-    objectives:
-    - Find the Avatar Anton Gustafsson
-  - message: 
-    objectives:
-    - Initiate Anton into the Tribe
+  - title: Leading a Tribe
+    questType: 0
+    inputState: 0
+    arguments:
+      text: Leading a small Tribe is fine, but if we really want to make a difference
+        with must also nurture it and make it grow.
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 1
+      argument: 
+  - title: Find an Avatar
+    questType: 1
+    inputState: 0
+    arguments:
+      text: Let's start with finding an Avatar and selecting it.
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions:
+    - stepCondition: 4
+      argument: Anton Gustafsson
+  - title: You did it!
+    questType: 0
+    inputState: 0
+    arguments:
+      text: An excellent pick!
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 1
+    conditions:
+    - stepCondition: 1
+      argument: 

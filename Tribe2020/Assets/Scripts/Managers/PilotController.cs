@@ -134,10 +134,10 @@ public class PilotController : MonoBehaviour{
 	
 	//
 	private void OnTap(Vector3 pos){
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-		}
+		//if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
+		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		//	RaycastHit hit;
+		//}
 	}
 
 	//
@@ -252,6 +252,7 @@ public class PilotController : MonoBehaviour{
 			go.SetActive(false);
 
 			ResetTouch();
+			_questController.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
 		}
 	}
 
