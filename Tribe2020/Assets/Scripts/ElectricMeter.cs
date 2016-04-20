@@ -10,22 +10,27 @@ public class ElectricMeter : MonoBehaviour {
 	public ElectricMeter PowerSource;
 	[Tooltip("Indicates if the device is connected to power or not. Can also be set manually so that a meter point becomes a power source if the Power From parameter is empty.")]
 	[SerializeField]
-	private bool HasPower = false;
+	protected bool HasPower = false;
 	[Tooltip("Makes the meterpoint conduct power to the conneced devices or not")]
 	public bool GivesPower = true;
+	protected GameTime Time;
 
 
 	public List<ElectricMeter> Powering = new List<ElectricMeter>();
 
 	public float Power = 0;
 	public double Energy = 0;
-	protected float lastupdate;
+	protected double lastupdate;
 
 	public bool continous_updates = false;
 
 
 	// Use this for initialization
-	public void Start () {
+	public virtual void Start () {
+
+		Time = GameTime.GetInstance();
+
+
 		lastupdate = Time.time;
 
 		//Check if source has electricity?
@@ -56,6 +61,8 @@ public class ElectricMeter : MonoBehaviour {
 		if (!PowerSource.Powering.Contains(this))
 			PowerSource.Powering.Add (this);
 
+
+
 		//Check if source has electricity?
 		if (AlwaysPowered)
 			powered (true);
@@ -84,9 +91,9 @@ public class ElectricMeter : MonoBehaviour {
 	}
 
 
-	public float update_energy() {
+	public double update_energy() {
 		//Calculate energy for the period
-		float now;
+		double now;
 		now = Time.time;
 
 		update_energy (now);
@@ -95,9 +102,9 @@ public class ElectricMeter : MonoBehaviour {
 
 	}
 
-	public void update_energy(float now) {
+	public void update_energy(double now) {
 		//Calculate energy for the period
-		float delta;
+		double delta;
 
 		delta = now - lastupdate;
 		Energy = Energy + ((Power * delta)/3600);
@@ -108,30 +115,25 @@ public class ElectricMeter : MonoBehaviour {
 
 	public void update_power(float new_power)
 	{
-		float now;
+		double now;
 		now = Time.time;
 
 		update_power (now, new_power);
 	}
 
-	public void update_power(float ts,float new_power)
+	public void update_power(double ts,float new_power)
 	{
-		float change;
-
-		update_energy (ts);
-	
+		float change;	
 		change = new_power - Power; 
-		Power = new_power;
-
-		if (PowerSource) {
-			ElectricMeter em = PowerSource.GetComponent<ElectricMeter>();
-			em.add_to_power (ts, change);
-		}
+		add_to_power (ts, change);
 	}
 
-	public void add_to_power(float ts,float change){
+	public void add_to_power(double ts,float change){
 		update_energy (ts);
 		Power = Power + change;
+
+		if (PowerSource)
+			PowerSource.add_to_power (ts, change);
 	}
 
 	public void reset_energy() {
@@ -140,7 +142,7 @@ public class ElectricMeter : MonoBehaviour {
 	}
 
 	//Set the meter node to powered or unpowered state. Returns true of a new stated was initiated by the call. 
-	public bool powered(bool powered) {
+	public virtual bool powered(bool powered) {
 		if (HasPower == powered)
 			return false;
 
@@ -158,6 +160,8 @@ public class ElectricMeter : MonoBehaviour {
 	}
 
 	public bool powering(bool powering) {
+
+
 		if (GivesPower == powering)
 			return false;
 

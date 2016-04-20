@@ -27,39 +27,29 @@ public class MonitorCRT : ElectricDevice {
 	
 //	}
 
-	public void TurnOn(){
-		gameObject.GetComponent<ElectricDevice> ().On ();
-
-
-		//gameObject.GetComponent<Renderer>().sharedMaterials[2] = materials[0];
-		//print(gameObject.GetComponent<Renderer>().materials[1]);
-
+	public void TurnOnScreen() {
 		int i = (int) UnityEngine.Random.Range (0.0F, screen_shots.Length);
-
-		//print(on_materials.Length);
-		//print (screen_shots.Length);
-		//print (i);
-
 		on_materials[1] = screen_shots[i];
-
 		gameObject.GetComponent<Renderer>().sharedMaterials= on_materials ;
-
-
-
-		//Renderer rend = GetComponent<Renderer>();
-		//rend.material.shader = Shader.Find("Specular");
-		//rend.material.SetColor("_SpecColor", Color.red);
-
 	}
 
-	public void TurnOff(){
-		gameObject.GetComponent<ElectricDevice> ().Off ();
-
+	public void TurnOffScreen() {
 		gameObject.GetComponent<Renderer> ().sharedMaterials=off_materials;
+	}
+
+	public override void SetRunlevel(int level) {
+		base.SetRunlevel(level);
+
+		if (runlevel >= runlevelOn)
+			TurnOnScreen();
+		else
+			TurnOffScreen();
 	}
 
 	public void SetPowerSave(bool setting){
 
 		PowerSaving = setting;
 	}
+
+
 }

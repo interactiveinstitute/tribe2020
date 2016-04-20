@@ -25,6 +25,7 @@ public class ElectricDevice : ElectricMeter {
 	public bool RetainsRunlevel = false;
 	[Tooltip("This is the runlevel that the device assumes after power failure if retain is set to false.")]
 	public int DefaultRunlevel=0;
+	private int RetainedRunlevel;
 
 
 	//var time_event = new Tuple<long, float>(0,0.0f);
@@ -32,11 +33,9 @@ public class ElectricDevice : ElectricMeter {
 	//public List<Tuple<long, float>> Pattern;
 
 	// Use this for initialization
-	public void Start () {
-
-		print ("start!!!!");
-		lastupdate = Time.time;
+	public override void Start () {
 		base.Start ();
+		lastupdate = Time.time;
 	}
 	
 	// Update is called once per frame
@@ -56,7 +55,18 @@ public class ElectricDevice : ElectricMeter {
 		SetRunlevel (runlevelOff);
 	}
 
-	public void SetRunlevel(int level) {
+	public virtual void SetRunlevel(int level) {
+
+		print ("!!");
+		
+		if (!HasPower) {
+			print ("!!!!");
+			if (runlevel < 0)
+				return;
+			else
+				level = -1;
+		}
+
 		if (level > (runlevels.Length -1 ))
 		{
 			return;
@@ -65,10 +75,15 @@ public class ElectricDevice : ElectricMeter {
 		//New runlevel
 		runlevel = level;
 
-		update_power(runlevels[level]);
+		//Runlevels below 0 means power failure. 
+		if (runlevel > 0)
+			update_power (runlevels [level]);
+		else
+			update_power (0);	
+		
 	}
 		
-	public bool powered(bool powered) {
+	public override bool powered(bool powered) {
 
 		//If no change return. 
 		if (!base.powered (powered))
@@ -77,11 +92,12 @@ public class ElectricDevice : ElectricMeter {
 		if (powered) {
 			//Reapply the current runlevel or a defaul one. 
 			if (RetainsRunlevel)
-				SetRunlevel (runlevel);
+				SetRunlevel (RetainedRunlevel);
 			else
 				SetRunlevel (DefaultRunlevel);
 		} else {
-			update_power (0);
+			RetainedRunlevel = runlevel;
+			SetRunlevel (-1);
 		}
 
 		return true;

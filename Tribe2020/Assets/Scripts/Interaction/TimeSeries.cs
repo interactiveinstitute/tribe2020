@@ -36,7 +36,7 @@ public class TimeSeries : MonoBehaviour {
 	void Update () {
 		if (Debug == true) {
 			CurrentValue = GetCurrentValue ();
-			CurrentIndex = GetCurrentIndex (TTime.CurrentTime);
+			CurrentIndex = GetCurrentIndex (TTime.time);
 		}
 	}
 
@@ -67,7 +67,7 @@ public class TimeSeries : MonoBehaviour {
 		
 	//Get the current value form the timeseries based on the current gametime. 
 	public double GetCurrentValue () {
-		double now = TTime.CurrentTime;
+		double now = TTime.time;
 
 		int i = GetCurrentIndex (now);
 
@@ -80,7 +80,7 @@ public class TimeSeries : MonoBehaviour {
 
 	//TODO 
 	public double InterpolateCurrentValue() {
-		double now = (double)TTime.CurrentTime;
+		double now = (double)TTime.time;
 
 		return Values[GetCurrentIndex(now)];
 	}

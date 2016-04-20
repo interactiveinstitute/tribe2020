@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-
+using System.Collections.Generic;
 
 
 
@@ -9,14 +9,16 @@ public class GameTime : MonoBehaviour {
 
 	private static GameTime _instance;
 	public double StartTime = 1452691843.939;
-	public double CurrentTime;
+	public double time;
 	public string CurrentDate;
+	public List<double> Keypoints = new List<double>();
 
 	[Range(0.0f, 100.0f)]
 	public float TimeScale = 1.0f;
 
 	void Awake () {
 		_instance = this;
+		time = StartTime;
 	}
 
 	public static GameTime GetInstance () {
@@ -25,14 +27,30 @@ public class GameTime : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		CurrentTime = StartTime;
+		time = StartTime;
 
+	}
+
+	public bool AddKeypoint(double keypoint)
+	{
+		if (Keypoints.Contains(keypoint))
+			return false;
+		
+		Keypoints.Add (keypoint);
+		Keypoints.Sort ();
+
+		return true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		CurrentTime = StartTime + Time.time;
-		CurrentDate = TimestampToDateTime(CurrentTime).ToString("yyyy-MM-dd HH:mm:ss");
+
+		//Delete expired keypoints.
+
+		//Calculate deltatime. 
+
+		time = StartTime + Time.time;
+		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 		Time.timeScale = TimeScale;
 	}
 
@@ -58,7 +76,7 @@ public class GameTime : MonoBehaviour {
 
 	public DateTime GetDateTime()
 	{
-		return TimestampToDateTime(CurrentTime);
+		return TimestampToDateTime(time);
 	}
 
 	public void Offset(float delta)
