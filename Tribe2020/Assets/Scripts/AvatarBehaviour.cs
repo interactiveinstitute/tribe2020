@@ -5,6 +5,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class AvatarBehaviour : MonoBehaviour {
 	public string Name;
+	public Sprite Icon;
+	public string[] TriggerEvents;
 	public string[] Requirements;
 	public float[] Level;
 	public string[] Yields;

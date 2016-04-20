@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &189106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 480458}
+  - 33: {fileID: 3348714}
+  - 23: {fileID: 2351434}
+  - 114: {fileID: 11435886}
+  - 114: {fileID: 11457100}
+  m_Layer: 0
+  m_Name: MonitorCRT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &480458
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 74.07393, y: 5.769458e-15, z: -109.33}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!23 &2351434
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189106}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: c995acb9e6abb234daff8173657245b0, type: 2}
+  - {fileID: 2100000, guid: aedde9a1727d7614bbcfe8aa4b7bf21f, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &3348714
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189106}
+  m_Mesh: {fileID: 4300006, guid: 399281762852ed740ad20e0a1982c821, type: 3}
+--- !u!114 &11435886
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e16360bd1c646d0897e3fd3ae59404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HasPower: 0
+  PowerFrom: {fileID: 0}
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 0
+  Unplugged: 0
+  runlevels:
+  - 0
+  - 1
+  - 10
+  - 98
+  runlevel: 1
+  runlevelOn: 3
+  runlevelOff: 1
+  RetainsRunlevel: 0
+  DefaultRunlevel: 1
+  PowerSaving: 1
+  screen_shots:
+  - {fileID: 2100000, guid: 924524b1ac47140a2b09176906ba04b4, type: 2}
+--- !u!114 &11457100
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25cdef32e4b7345a3a7ea3bebcc7619c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Turn on
+  Icon: {fileID: 0}
+  TriggerEvents:
+  - Work
+  Requirements:
+  - Computer skill
+  - Proximity
+  Level:
+  - 1
+  - 1
+  Yields:
+  - Work
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 189106}
+  m_IsPrefabParent: 1
