@@ -34,9 +34,11 @@ public class QuestController : MonoBehaviour {
 		_timeMgr = GameTime.GetInstance();
 
 		_curQuests = new List<Quest>();
-		_curQuests.Add(Object.Instantiate(quests[0]) as Quest);
+		if(quests.Count > 0) {
+			_curQuests.Add(Object.Instantiate(quests[0]) as Quest);
 
-		StartQuestStep(_curQuests[0]);
+			StartQuestStep(_curQuests[0]);
+		}
 	}
 	
 	// Update is called once per frame
@@ -84,6 +86,9 @@ public class QuestController : MonoBehaviour {
 			case Quest.QuestStepType.ChangeTimeScale:
 				_timeMgr.TimeScale = quest.GetArguments().value;
 				break;
+			case Quest.QuestStepType.QuestComplete:
+				_view.ShowCongratualations(quest.GetArguments().text);
+				break;
 		}
 		//If there are no conditions, just step to the next quest step
 		if(quest.IsCurrentStepComplete()) {
@@ -101,6 +106,8 @@ public class QuestController : MonoBehaviour {
 		for(int i = _curQuests.Count - 1; i >= 0; i--) {
 			_curQuests[i].AttemptCompletion(questEvent, argument);
 			if(_curQuests[i].IsCurrentStepComplete()) {
+				_view.messageUI.SetActive(false);
+				_view.congratsPanel.SetActive(false);
 				_curQuests[i].NextStep();
 				if(_curQuests[i].IsComplete()) {
 					if(_curQuests[i].nextQuest != null) {

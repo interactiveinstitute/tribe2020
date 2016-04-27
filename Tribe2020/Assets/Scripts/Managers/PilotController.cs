@@ -130,6 +130,8 @@ public class PilotController : MonoBehaviour{
 		} else if(dist >= SWIPE_THRESH){
 			OnSwipe(_startPos, pos);
 		}
+
+		_questController.OnQuestEvent(Quest.QuestEvent.Tapped);
 	}
 	
 	//
@@ -138,6 +140,7 @@ public class PilotController : MonoBehaviour{
 		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		//	RaycastHit hit;
 		//}
+		
 	}
 
 	//

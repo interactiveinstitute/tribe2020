@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Quest : ScriptableObject {
 	//Quest step types
 	public enum QuestStepType {
-		PromptMessage, PopUpMessage, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity, ChangeTimeScale
+		PromptMessage, PopUpMessage, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity, ChangeTimeScale,
+		QuestComplete
 	};
 
 	//Quest events

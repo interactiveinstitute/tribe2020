@@ -30,6 +30,9 @@ public class PilotView : MonoBehaviour{
 	public GameObject messageUI;
 	public GameObject tutorialUI;
 
+	public GameObject congratsPanel;
+	public Text congratsText;
+
 	public Text questCountText;
 
 	public Transform viewpointGuide;
@@ -37,6 +40,7 @@ public class PilotView : MonoBehaviour{
 	public GameObject mailButtonPrefab;
 
 	public GameObject FeedbackNumber;
+	public ParticleSystem fireworks;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -195,6 +199,18 @@ public class PilotView : MonoBehaviour{
 
 		mailUI.SetActive(false);
 		mailReadUI.SetActive(true);
+	}
+
+	//
+	public void ShowCongratualations(string text) {
+		ShowFireworks();
+		congratsPanel.SetActive(true);
+		congratsText.text = text;
+	}
+
+	//
+	public void ShowFireworks() {
+		fireworks.Play();
 	}
 
 	//
