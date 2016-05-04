@@ -84,8 +84,12 @@ public class GameTime : MonoBehaviour {
 		StartTime = StartTime + delta;
 	}
 
-	public void SetStartTime(double StartTime) {
-		StartTime = StartTime;
+	public void SetStartTime(double NewTime) {
+		StartTime = NewTime;
+	}
+
+	public void SetTime(double NewTime) {
+		StartTime = NewTime - Time.time;
 	}
 }
 
