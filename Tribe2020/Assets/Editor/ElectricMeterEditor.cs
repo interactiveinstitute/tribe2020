@@ -25,6 +25,11 @@ public class ElectricMeterEditor : Editor
 			myScript.Off();
 		}
 
+		if(GUILayout.Button("Toggle",GUILayout.Width(100) ))
+		{
+			myScript.Toggle();
+		}
+
 		if(GUILayout.Button("Connect",GUILayout.Width(100) ))
 		{
 			myScript.Connect(myScript.PowerSource);

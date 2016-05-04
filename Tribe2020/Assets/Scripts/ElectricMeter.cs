@@ -186,4 +186,8 @@ public class ElectricMeter : MonoBehaviour {
 		powering (false);
 	}
 
+	public void Toggle () {
+		powering (!GivesPower);
+	}
+
 }
