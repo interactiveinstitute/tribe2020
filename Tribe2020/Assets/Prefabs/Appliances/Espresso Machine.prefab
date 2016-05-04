@@ -26,6 +26,7 @@ GameObject:
   - 65: {fileID: 6557808}
   - 114: {fileID: 11415298}
   - 114: {fileID: 11414528}
+  - 114: {fileID: 11472674}
   m_Layer: 0
   m_Name: Espresso Machine
   m_TagString: Appliance
@@ -174,16 +175,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsOn: 0
-  PowerFrom: {fileID: 0}
+  AlwaysPowered: 0
+  PowerSource: {fileID: 0}
+  HasPower: 0
+  GivesPower: 1
   Powering: []
   Power: 0
   Energy: 0
   continous_updates: 0
+  Unplugged: 0
   runlevels: []
   runlevel: 0
   runlevelOn: 0
   runlevelOff: 0
+  RetainsRunlevel: 0
+  DefaultRunlevel: 0
+--- !u!114 &11472674
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: cc4c0157-2e98-4153-b7e7-7658b40a822c
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -209,6 +227,10 @@ Prefab:
       propertyPath: harvestButtonRef
       value: 
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: uniqueId
+      value: cc4c0157-2e98-4153-b7e7-7658b40a822c
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 155868}
