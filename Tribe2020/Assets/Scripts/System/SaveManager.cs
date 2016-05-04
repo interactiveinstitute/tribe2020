@@ -15,11 +15,6 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	private string _filePath;
-	public List<SerialObject> savedGames = new List<SerialObject>();
-
-	public Transform map;
-
-	private Text _saveText;
 	private JSONNode _dataClone;
 
 	//Sort use instead of constructor
