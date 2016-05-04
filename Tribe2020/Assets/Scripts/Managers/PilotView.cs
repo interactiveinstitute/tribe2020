@@ -64,8 +64,13 @@ public class PilotView : MonoBehaviour{
 			BaseAction curAction = a;
 			GameObject actionObj;
 			actionObj = Instantiate(actionButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-			actionObj.GetComponent<Button>().
-				onClick.AddListener(()=> _ctrlMgr.OnAction(appliance, curAction, actionObj));
+			if(a.callback == "") {
+				actionObj.GetComponent<Button>().
+					onClick.AddListener(() => _ctrlMgr.OnAction(appliance, curAction, actionObj));
+			} else {
+				actionObj.GetComponent<Button>().
+					onClick.AddListener(() => _ctrlMgr.SendMessage(a.callback, a.callbackArgument));
+			}
 
 			Text[] texts = actionObj.GetComponentsInChildren<Text>();
 			texts[0].text = a.actionName;

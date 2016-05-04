@@ -14,71 +14,30 @@ MonoBehaviour:
   title: Cranking up the Caffein
   nextQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   questSteps:
-  - title: Saving the World
-    questType: 0
-    inputState: 1
+  - title: Saving the World, read mail
+    questType: 1
+    inputState: 6
     arguments:
-      text: Saving the world is no easy task. However, you have one secret weapon,
-        the mail inbox.
+      text: Saving the world can be tough! If you forget what you are doing you can
+        always check your mail. Try it out now!
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Tap the Mail Icon
-    questType: 1
-    inputState: 6
-    arguments:
-      text: Tap the mail icon on the bottom right to see if you got someting.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: Enter
       showAtBottom: 0
     conditions:
     - stepCondition: 6
       argument: 
-  - title: Send Mail
-    questType: 2
+  - title: Reading mail
+    questType: 3
     inputState: 0
     arguments:
-      text: How in the living f* are we supposed to reach any form of environmental
-        change, if we can't keep that coffee warm without pumping brown coal straight
-        out the wall plug?
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions: []
-  - title: Open the Mail
-    questType: 1
-    inputState: 7
-    arguments:
-      text: Excellent! And you got mail as well! Tap the mail from Anton in order
-        to read it.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: Enter
-      showAtBottom: 1
-    conditions:
-    - stepCondition: 8
-      argument: 
-  - title: Reaction to Mail
-    questType: 1
-    inputState: 0
-    arguments:
-      text: Whoa! That's... That's an absolutely adequate reaction. Who would make
-        such coffee!? Close the mail box and let's take action!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 1
     conditions:
     - stepCondition: 7
       argument: 
@@ -97,24 +56,11 @@ MonoBehaviour:
     - stepCondition: 10
       argument: Pentry
   - title: Intro to Pentry
-    questType: 0
+    questType: 1
     inputState: 0
     arguments:
-      text: Ah, here we are. The oasis of the office, Mecca of the Metropol.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Select Coffee Machine
-    questType: 0
-    inputState: 0
-    arguments:
-      text: The Pentry is a native biome for many appliances, but perhaps it is most
-        known for its rich fauna of coffee makers. Let's see if you can spot one.
+      text: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
+        tap that pesky perculator.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
@@ -127,8 +73,7 @@ MonoBehaviour:
     questType: 1
     inputState: 0
     arguments:
-      text: Once again, the appliance inspector. Note the list of measures that you
-        can perform shown in the bottom of the window.
+      text: Now install the Thermal Jug in the list of available measures.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
@@ -281,8 +226,8 @@ MonoBehaviour:
     - stepCondition: 14
       argument: 
   - title: Congratulations
-    questType: 0
-    inputState: 0
+    questType: 8
+    inputState: 3
     arguments:
       text: Congratulations, this is how you save up for your next investments!
       value: 0
@@ -291,5 +236,5 @@ MonoBehaviour:
       animation: 
       showAtBottom: 0
     conditions:
-    - stepCondition: 1
+    - stepCondition: 3
       argument: 

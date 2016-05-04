@@ -26,13 +26,9 @@ public class Quest : ScriptableObject {
 	[System.Serializable]
 	public class QuestStep {
 		public string title;
-		//public string message;
 		public QuestStepType questType;
-		//public string animation;
 		public PilotController.InputState inputState;
 		public Argument arguments;
-		//public PilotController.InputState inputState;
-		//public QuestCondition condition;
 		public List<QuestCondition> conditions;
 	}
 

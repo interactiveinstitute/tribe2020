@@ -26,6 +26,8 @@ public class PilotController : MonoBehaviour{
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
 	private QuestController _questController;
+	private CustomSceneManager _sceneMgr;
+	private SaveManager _saveMgr;
 
 	//Interaction props
 	private string _touchState = IDLE;
@@ -54,6 +56,15 @@ public class PilotController : MonoBehaviour{
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
 		_questController = QuestController.GetInstance();
+		_sceneMgr = CustomSceneManager.GetInstance();
+		_saveMgr = SaveManager.GetInstance();
+
+		//_saveMgr.SetData("lastTime", "lapars");
+
+		//_saveMgr.Save();
+
+		//string data = _saveMgr.GetData("lastTime");
+		//Debug.Log("received data: " + data);
 	}
 	
 	// Update is called once per frame
@@ -377,5 +388,11 @@ public class PilotController : MonoBehaviour{
 	//
 	public void SetControlState(InputState state) {
 		_curState = state;
+	}
+
+	//
+	public void LoadScene(string scene) {
+		Debug.Log("LoadScene " + scene);
+		_sceneMgr.LoadScene(scene);
 	}
 }

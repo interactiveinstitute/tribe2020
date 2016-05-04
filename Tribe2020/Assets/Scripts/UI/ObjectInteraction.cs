@@ -6,6 +6,8 @@ public class ObjectInteraction : MonoBehaviour {
 	public Transform panelPrefab;
 	private Transform _interactionPanel;
 
+	private ElectricMeter _meter;
+
 	private Button _powerButton;
 	private Button _moneyButton;
 	private Button _satisfactionButton;
@@ -25,6 +27,11 @@ public class ObjectInteraction : MonoBehaviour {
 		_moneyButton = _interactionPanel.GetChild(1).GetComponent<Button>();
 		_satisfactionButton = _interactionPanel.GetChild(2).GetComponent<Button>();
 		_measureButton = _interactionPanel.GetChild(3).GetComponent<Button>();
+
+		if(GetComponent<ElectricMeter>()) {
+			_meter = GetComponent<ElectricMeter>();
+			_powerButton.onClick.AddListener(() => _meter.Off());
+		}
 	}
 	
 	// Update is called once per frame

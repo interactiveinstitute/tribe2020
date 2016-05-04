@@ -5,6 +5,9 @@ using System.Collections;
 public class BaseAction : ScriptableObject {
 	public string actionName;
 
+	public string callback;
+	public string callbackArgument;
+
 	public int cashCost;
 	public int comfortCost;
 

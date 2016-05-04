@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Text.RegularExpressions;
 using SimpleJSON;
 using UnityEngine.UI;
 
@@ -13,76 +14,67 @@ public class SaveManager : MonoBehaviour{
 		return _instance;
 	}
 
-	private BuildManager _buildMgr;
-	private GameObject _graph;
-
-	private string _path;
+	private string _filePath;
 	public List<SerialObject> savedGames = new List<SerialObject>();
 
 	public Transform map;
 
 	private Text _saveText;
+	private JSONNode _dataClone;
 
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
+
+		_filePath = Application.persistentDataPath + "/tribeSave.gd";
+		_dataClone = Load();
 	}
 
 	//Use this for initialization
 	void Start(){
-		_buildMgr = BuildManager.GetInstance();
-
-		_graph = GameObject.FindGameObjectWithTag("graph") as GameObject;
-
-		_path = Application.persistentDataPath  + "/savedGames.gd";
 	}
 	
 	//Update is called once per frame
 	void Update(){
 	}
 
-	public void Save(string fileName){
-		string path = Application.persistentDataPath + "/" + fileName + ".gd"; 
-		StreamWriter file = File.CreateText(path);
-
-		foreach(Transform t in _graph.transform){
-			if(t.GetComponent<Room>() != null){
-				string room = t.GetComponent<Room>().Stringify();
-				file.WriteLine(room);
-			}
-		}
-
-		foreach(Transform t in _graph.transform){
-			if(t.GetComponent<Thing>() != null){
-				string thing = t.GetComponent<Thing>().Stringify();
-				Debug.Log(thing);
-				file.WriteLine(thing);
-			}
-		}
-		file.Close();
+	//
+	public string GetData(string field) {
+		string fieldData = "" + _dataClone["instances"][0][field].Value;
+		return fieldData;
 	}
 
-	public void Load(string fileName){
-		_buildMgr.Clear();
+	//
+	public void SetData(string field, string value) {
+		_dataClone["instances"][0][field].Value = value;
+	}
 
-		string path = Application.persistentDataPath + "/" + fileName + ".gd"; 
-		if(!File.Exists(path)) {
-			return;
+	//
+	public void Save(){
+		//Regex pattern = new Regex("s/[{,\t,\r]/g");
+		//string formattedData = _dataClone.ToString().Replace(",", ",\n").
+		//	Replace("{", "{\n").Replace("}","\n}\n").Replace("[", "[\n").Replace("]", "\n]\n");
+
+		File.WriteAllText(_filePath, _dataClone.ToString());
+	}
+
+	//
+	public JSONNode Load() {
+		if(!File.Exists(_filePath)) {
+			Save();
 		}
 
-		StreamReader sr = File.OpenText(path);
-		string line = sr.ReadLine();
-		while(line != null){
-			var parse = JSON.Parse(line);
-			string type = parse["type"].Value;
+		string fileClone = "";
 
-			if(type == "room"){
-				_buildMgr.CreateRoom(line);
-			} else{
-				_buildMgr.AddThing(line);
-			}
+		StreamReader sr = File.OpenText(_filePath);
+		string line = sr.ReadLine();
+		while(line != null) {
+			fileClone += line;
 
 			line = sr.ReadLine();
 		}
+
+		JSONNode json = JSON.Parse(fileClone);
+		return json;
 	}
 }

@@ -363,12 +363,12 @@ public class InputManager : MonoBehaviour{
 
 	//
 	public void OnSavePush(){
-		_saveMgr.Save(_uiMgr.GetFileName());
+		//_saveMgr.Save(_uiMgr.GetFileName());
 	}
 
 	//
 	public void OnLoadPush(){
-		_saveMgr.Load(_uiMgr.GetFileName());
+		//_saveMgr.Load(_uiMgr.GetFileName());
 	}
 
 	//
