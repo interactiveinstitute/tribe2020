@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class GameTime : MonoBehaviour {
 
 	private static GameTime _instance;
-	public double StartTime = 1452691843.939;
+	public double StartTime;
 	public double time;
 	public string CurrentDate;
 	public List<double> Keypoints = new List<double>();
@@ -82,6 +82,14 @@ public class GameTime : MonoBehaviour {
 	public void Offset(float delta)
 	{
 		StartTime = StartTime + delta;
+	}
+
+	public void SetStartTime(double NewTime) {
+		StartTime = NewTime;
+	}
+
+	public void SetTime(double NewTime) {
+		StartTime = NewTime - Time.time;
 	}
 }
 

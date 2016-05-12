@@ -1,16 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using System.Collections.Generic;
 
 public class PilotController : MonoBehaviour{
 	//Singleton features
 	private static PilotController _instance;
 	public static PilotController GetInstance(){
-		if(_instance != null) {
-			return _instance;
-		}
-		return null;
+		return _instance;
 	}
 
 	//Interaction limitation states
@@ -44,6 +38,8 @@ public class PilotController : MonoBehaviour{
 	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
 
+	public GameObject testObj;
+
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
@@ -59,12 +55,7 @@ public class PilotController : MonoBehaviour{
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
-		//_saveMgr.SetData("lastTime", "lapars");
-
-		//_saveMgr.Save();
-
-		//string data = _saveMgr.GetData("lastTime");
-		//Debug.Log("received data: " + data);
+		_saveMgr.Load();
 	}
 	
 	// Update is called once per frame
@@ -103,6 +94,11 @@ public class PilotController : MonoBehaviour{
 		}
 
 		_view.UpdateQuestCount(_questController.GetQuests().Count);
+	}
+
+	//
+	void OnDestroy() {
+		_saveMgr.Save();
 	}
 
 	//

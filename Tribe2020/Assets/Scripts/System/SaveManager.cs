@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using SimpleJSON;
-using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour{
 	//Singleton features
@@ -14,19 +11,22 @@ public class SaveManager : MonoBehaviour{
 		return _instance;
 	}
 
+	private GameTime _timeMgr;
+	private ResourceManager _resourceMgr;
+
 	private string _filePath;
 	private JSONNode _dataClone;
 
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
-
 		_filePath = Application.persistentDataPath + "/tribeSave.gd";
-		_dataClone = Load();
 	}
 
 	//Use this for initialization
 	void Start(){
+		_timeMgr = GameTime.GetInstance();
+		_resourceMgr = ResourceManager.GetInstance();
 	}
 	
 	//Update is called once per frame
@@ -50,11 +50,24 @@ public class SaveManager : MonoBehaviour{
 		//string formattedData = _dataClone.ToString().Replace(",", ",\n").
 		//	Replace("{", "{\n").Replace("}","\n}\n").Replace("[", "[\n").Replace("]", "\n]\n");
 
+		SetData("lastTime", "" + _timeMgr.time);
+		SetData("money", "" + _resourceMgr.cash);
+		SetData("comfort", "" + _resourceMgr.comfort);
+
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
-	public JSONNode Load() {
+	public void Load() {
+		_dataClone = ReadFileAsJSON();
+
+		_timeMgr.SetTime(double.Parse(GetData("lastTime")));
+		_resourceMgr.cash = int.Parse(GetData("money"));
+		_resourceMgr.comfort = int.Parse(GetData("comfort"));
+	}
+
+	//
+	public JSONNode ReadFileAsJSON() {
 		if(!File.Exists(_filePath)) {
 			Save();
 		}
@@ -68,6 +81,7 @@ public class SaveManager : MonoBehaviour{
 
 			line = sr.ReadLine();
 		}
+		sr.Close();
 
 		JSONNode json = JSON.Parse(fileClone);
 		return json;

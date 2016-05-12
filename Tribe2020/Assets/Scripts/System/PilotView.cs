@@ -64,7 +64,7 @@ public class PilotView : MonoBehaviour{
 			BaseAction curAction = a;
 			GameObject actionObj;
 			actionObj = Instantiate(actionButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-			if(a.callback == "") {
+			if(curAction.callback == null || curAction.callback.Equals(string.Empty)) {
 				actionObj.GetComponent<Button>().
 					onClick.AddListener(() => _ctrlMgr.OnAction(appliance, curAction, actionObj));
 			} else {
