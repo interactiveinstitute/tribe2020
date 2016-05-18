@@ -36,6 +36,9 @@ public class ElectricDevice : ElectricMeter {
 	public override void Start () {
 		base.Start ();
 		lastupdate = Time.time;
+
+		//Set initial runlevel.
+		SetRunlevel(runlevel);
 	}
 	
 	// Update is called once per frame
@@ -43,6 +46,7 @@ public class ElectricDevice : ElectricMeter {
 		if (continous_updates) {
 			update_energy ();
 		}
+			
 	}
 
 	public override void On () {
@@ -57,10 +61,10 @@ public class ElectricDevice : ElectricMeter {
 
 	public virtual void SetRunlevel(int level) {
 
-		print ("!!");
+
 		
 		if (!HasPower) {
-			print ("!!!!");
+			
 			if (runlevel < 0)
 				return;
 			else
