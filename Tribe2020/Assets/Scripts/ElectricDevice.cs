@@ -45,12 +45,12 @@ public class ElectricDevice : ElectricMeter {
 		}
 	}
 
-	public void On () {
+	public override void On () {
 
 		SetRunlevel (runlevelOn);
 	}
 
-	public void Off () {
+	public override void Off () {
 		
 		SetRunlevel (runlevelOff);
 	}

@@ -10,7 +10,7 @@ public class MonitorCRT : ElectricDevice {
 	private Material[] on_materials;
 
 	// Use this for initialization
-	public void Start () {
+	public override void Start () {
 		//rend = GetComponent<Renderer>();
 		off_materials = gameObject.GetComponent<Renderer> ().sharedMaterials;
 

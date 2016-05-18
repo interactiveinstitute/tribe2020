@@ -178,11 +178,11 @@ public class ElectricMeter : MonoBehaviour {
 		
 	}
 
-	public void On () {
+	public virtual void On () {
 		powering (true);
 	}
 
-	public void Off () {
+	public virtual void Off () {
 		powering (false);
 	}
 
