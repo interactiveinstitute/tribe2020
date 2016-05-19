@@ -13,46 +13,65 @@ public class SaveManager : MonoBehaviour{
 
 	private GameTime _timeMgr;
 	private ResourceManager _resourceMgr;
+	private QuestManager _questMgr;
 
+	public string fileName;
 	private string _filePath;
-	private JSONNode _dataClone;
+	private JSONNode _dataClone = new JSONNode();
 
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
-		_filePath = Application.persistentDataPath + "/tribeSave.gd";
+		_filePath = Application.persistentDataPath + "/" + fileName + ".gd";
 	}
 
 	//Use this for initialization
 	void Start(){
 		_timeMgr = GameTime.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+		_questMgr = QuestManager.GetInstance();
 	}
 	
 	//Update is called once per frame
 	void Update(){
+
 	}
 
 	//
-	public string GetData(string field) {
-		string fieldData = "" + _dataClone["instances"][0][field].Value;
-		return fieldData;
+	public JSONNode GetData(int instance, string field) {
+		if(_dataClone["instances"][instance][field] != null) {
+			return _dataClone["instances"][0][field];
+		} else {
+			return null;
+		}
 	}
 
 	//
-	public void SetData(string field, string value) {
-		_dataClone["instances"][0][field].Value = value;
+	public JSONClass GetClass(int instance, string field) {
+		if(_dataClone["instances"][instance][field] != null) {
+			return _dataClone["instances"][0][field].AsObject;
+		} else {
+			return null;
+		}
 	}
 
 	//
-	public void Save(){
-		//Regex pattern = new Regex("s/[{,\t,\r]/g");
-		//string formattedData = _dataClone.ToString().Replace(",", ",\n").
-		//	Replace("{", "{\n").Replace("}","\n}\n").Replace("[", "[\n").Replace("]", "\n]\n");
+	public void SetData(int instance, string field, string value) {
+		_dataClone["instances"][instance].Add(field, value);
+	}
 
-		SetData("lastTime", "" + _timeMgr.time);
-		SetData("money", "" + _resourceMgr.cash);
-		SetData("comfort", "" + _resourceMgr.comfort);
+	//
+	public void SetData(int instance, string field, JSONClass value) {
+		_dataClone["instances"][instance].Add(field, value);
+	}
+
+	//
+	public void Save() {
+		SetData(0, "lastTime", _timeMgr.time.ToString());
+		SetData(0, "money", _resourceMgr.cash.ToString());
+		SetData(0, "comfort", _resourceMgr.comfort.ToString());
+
+		SetData(0, "questState", _questMgr.Encode());
 
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
@@ -61,28 +80,24 @@ public class SaveManager : MonoBehaviour{
 	public void Load() {
 		_dataClone = ReadFileAsJSON();
 
-		_timeMgr.SetTime(double.Parse(GetData("lastTime")));
-		_resourceMgr.cash = int.Parse(GetData("money"));
-		_resourceMgr.comfort = int.Parse(GetData("comfort"));
+		if(GetData(0, "lastTime") != null) {
+			_timeMgr.SetTime(GetData(0, "lastTime").AsDouble);
+			_resourceMgr.cash = GetData(0, "money").AsInt;
+			_resourceMgr.comfort = GetData(0, "comfort").AsInt;
+
+			_questMgr.Decode(GetClass(0, "questState"));
+		} else {
+			_questMgr.SetStartState();
+		}
 	}
 
 	//
 	public JSONNode ReadFileAsJSON() {
 		if(!File.Exists(_filePath)) {
-			Save();
+			File.WriteAllText(_filePath, "{\"instances\":[]}");
 		}
 
-		string fileClone = "";
-
-		StreamReader sr = File.OpenText(_filePath);
-		string line = sr.ReadLine();
-		while(line != null) {
-			fileClone += line;
-
-			line = sr.ReadLine();
-		}
-		sr.Close();
-
+		string fileClone = File.ReadAllText(_filePath);
 		JSONNode json = JSON.Parse(fileClone);
 		return json;
 	}

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class BattleView : MonoBehaviour {
 	//Singleton features
@@ -21,6 +22,15 @@ public class BattleView : MonoBehaviour {
 	public Image allyCPBar;
 	public Image allyEPBar;
 
+	public Text question;
+	public Text[] answers;
+
+	public GameObject congratsPanel;
+	public Text congratsText;
+
+	public GameObject FeedbackNumber;
+	public ParticleSystem fireworks;
+
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
@@ -41,5 +51,17 @@ public class BattleView : MonoBehaviour {
 		GameObject fb = Instantiate(RisingNumberPrefab, pos, Quaternion.identity) as GameObject;
 		fb.GetComponent<TextMesh>().text = feedback;
 		return fb;
+	}
+
+	//
+	public void ShowCongratualations(string text) {
+		ShowFireworks();
+		congratsPanel.SetActive(true);
+		congratsText.text = text;
+	}
+
+	//
+	public void ShowFireworks() {
+		fireworks.Play();
 	}
 }

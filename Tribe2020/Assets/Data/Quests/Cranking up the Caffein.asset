@@ -19,7 +19,7 @@ MonoBehaviour:
     inputState: 6
     arguments:
       text: Saving the world can be tough! If you forget what you are doing you can
-        always check your mail. Try it out now!
+        always check your mail.Try it out now!
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
@@ -82,26 +82,35 @@ MonoBehaviour:
     conditions:
     - stepCondition: 9
       argument: Install Thermal Jug
-  - title: Intro to Calling Avatar
-    questType: 0
+  - title: Close Device Inspector
+    questType: 9
     inputState: 0
     arguments:
-      text: Splendid, let's see if we can lure any Avatars with this upgraded Moccaminator...
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
-      showAtBottom: 1
-    conditions:
-    - stepCondition: 5
-      argument: 
+      showAtBottom: 0
+    conditions: []
   - title: Call Avatar to Coffee
     questType: 5
-    inputState: 1
+    inputState: 0
     arguments:
       text: 
       value: 0
       position: {x: 7, y: 1, z: -3}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: Wait for Avatar Text
+    questType: 1
+    inputState: 1
+    arguments:
+      text: Splendid, let's see if we can lure any Avatars with this upgraded Moccaminator...
+      value: 0
+      position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
@@ -113,20 +122,6 @@ MonoBehaviour:
     inputState: 0
     arguments:
       text: And here they are, and a magnificent sample at that.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Explaining Avatar Activities
-    questType: 0
-    inputState: 0
-    arguments:
-      text: Avatars perform Activities on a schedule. Each activity presents a set
-        of sessions to fullfill the goal of such and activity.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
@@ -156,6 +151,18 @@ MonoBehaviour:
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
+    conditions: []
+  - title: Avatar Drinking Coffee Text
+    questType: 1
+    inputState: 1
+    arguments:
+      text: Drinking coffee is an activity. It involves using a coffee machine, fridge,
+        table and finally dishwasher.
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
     conditions:
     - stepCondition: 13
       argument: 
@@ -174,35 +181,8 @@ MonoBehaviour:
     questType: 0
     inputState: 1
     arguments:
-      text: There you go, the avatar refreshed and refurbished!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Notice the Harvest
-    questType: 0
-    inputState: 1
-    arguments:
-      text: Notice the coin symbols that appeared above the appliances that the Avatar
-        needed to use in order to complete their session.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Notice Harvest 2
-    questType: 0
-    inputState: 1
-    arguments:
-      text: These represent the cash savings and satisfaction points that were generated
-        during the Avatar's interaction with the appliance.
+      text: Delicious! The avatars efficient usage of each device yielded some money
+        savings for us.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
@@ -215,8 +195,7 @@ MonoBehaviour:
     questType: 1
     inputState: 0
     arguments:
-      text: In order to harvest these points you simply have to tap the these icons.
-        Try this now.
+      text: Tap a money bag to collect its savings.
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PilotController : MonoBehaviour{
 	//Singleton features
@@ -19,7 +20,7 @@ public class PilotController : MonoBehaviour{
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
-	private QuestController _questController;
+	private QuestManager _questController;
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
 
@@ -40,9 +41,16 @@ public class PilotController : MonoBehaviour{
 
 	public GameObject testObj;
 
+	private bool _isLoaded = false;
+
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
+	}
+
+	//
+	public void SetToInstance(PilotController oldInstance) {
+
 	}
 
 	// Use this for initialization
@@ -51,17 +59,23 @@ public class PilotController : MonoBehaviour{
 		_camMgr = CameraManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
-		_questController = QuestController.GetInstance();
+		_questController = QuestManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
-		_saveMgr.Load();
+		//TODO returned from battle
+
 	}
 	
 	// Update is called once per frame
 	void Update(){
+		if(!_isLoaded) {
+			_isLoaded = true;
+			_saveMgr.Load();
+		}
+
 		//Mobile interaction
-//		UpdatePan(_camMgr.camera);
+		//		UpdatePan(_camMgr.camera);
 		UpdatePinch();
 
 		//		if(!InspectorUI.activeSelf){
@@ -93,6 +107,8 @@ public class PilotController : MonoBehaviour{
 			_touchReset = false;
 		}
 
+		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
+		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
 		_view.UpdateQuestCount(_questController.GetQuests().Count);
 	}
 
@@ -197,7 +213,7 @@ public class PilotController : MonoBehaviour{
 	}
 
 	//
-	public void OnApplianceSelected(Appliance appliance) {
+	public void OnDeviceSelected(Appliance appliance) {
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_SELECT) {
 			_view.ShowAppliance(appliance);
 			_audioMgr.PlaySound("button");
@@ -209,7 +225,7 @@ public class PilotController : MonoBehaviour{
 	}
 
 	//
-	public void OnApplianceClosed() {
+	public void OnDeviceClosed() {
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_DESELECT) {
 			_view.HideAppliance();
 			ResetTouch();

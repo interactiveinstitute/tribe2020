@@ -776,7 +776,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &90893309
 Transform:
@@ -801,6 +801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bfb1c9fbaa262419180bc7292666b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fileName: tribeSave
 --- !u!1 &102185007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,7 +1011,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &113853522
 Transform:
@@ -1464,8 +1465,8 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11496632, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: description
-      value: Through intricate expertise and suerpior nerdmenship, he was the first
-        man to get to the root by noon.
+      value: Anton is passion for energy issues is only matched by his love for tinkering
+        in his "man cave".
       objectReference: {fileID: 0}
     - target: {fileID: 9549474, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: m_WarningMessage
@@ -1795,7 +1796,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1373978270}
+      - m_Target: {fileID: 1373978271}
         m_MethodName: OnOkPressed
         m_Mode: 1
         m_Arguments:
@@ -2357,7 +2358,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &240371651
 Transform:
@@ -5723,7 +5724,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1373978270}
+      - m_Target: {fileID: 1373978271}
         m_MethodName: OnQuestClosed
         m_Mode: 1
         m_Arguments:
@@ -5946,7 +5947,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -5968,8 +5969,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1373978270}
-        m_MethodName: OnApplianceClosed
+      - m_Target: {fileID: 1373978271}
+        m_MethodName: OnDeviceClosed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6681,7 +6682,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1373978270}
+      - m_Target: {fileID: 1373978271}
         m_MethodName: OnQuestListClosed
         m_Mode: 1
         m_Arguments:
@@ -6863,6 +6864,47 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!1 &667558820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 667558821}
+  - 114: {fileID: 667558822}
+  m_Layer: 0
+  m_Name: Camera Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &667558821
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 667558820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1373978269}
+  m_RootOrder: 9
+--- !u!114 &667558822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 667558820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd61d816d1c78a44b4461097705926d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraState: camera_idle
+  gameCamera: {fileID: 567465304}
 --- !u!1 &678562554
 GameObject:
   m_ObjectHideFlags: 0
@@ -8358,7 +8400,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 440842, guid: 077e6db36907b4ee8b4745665c8100b1, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 167324, guid: 077e6db36907b4ee8b4745665c8100b1, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 077e6db36907b4ee8b4745665c8100b1, type: 2}
@@ -9082,7 +9128,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1124907879
 Transform:
@@ -9229,7 +9275,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1373978270}
+      - m_Target: {fileID: 1373978271}
         m_MethodName: OnQuestListOpenend
         m_Mode: 1
         m_Arguments:
@@ -9692,7 +9738,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &1191191332
 MonoBehaviour:
@@ -11956,15 +12002,14 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1373978269}
-  - 114: {fileID: 1373978270}
   - 114: {fileID: 1373978271}
-  - 114: {fileID: 1373978272}
+  - 114: {fileID: 1373978270}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1373978269
 Transform:
@@ -11977,42 +12022,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 240371651}
-  - {fileID: 2058485204}
   - {fileID: 1997092154}
+  - {fileID: 2058485204}
   - {fileID: 2068131773}
   - {fileID: 1191191334}
   - {fileID: 1928876741}
   - {fileID: 1124907879}
   - {fileID: 113853522}
   - {fileID: 90893309}
+  - {fileID: 667558821}
   m_Father: {fileID: 0}
   m_RootOrder: 1
 --- !u!114 &1373978270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1373978268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae9ae6f888207f64e8dd723bc0d8020e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testObj: {fileID: 713745038}
---- !u!114 &1373978271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1373978268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fd61d816d1c78a44b4461097705926d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraState: camera_idle
-  gameCamera: {fileID: 567465304}
---- !u!114 &1373978272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -12046,6 +12067,18 @@ MonoBehaviour:
   mailButtonPrefab: {fileID: 175994, guid: 459384aa2c48e8249bc882ca3db6caf9, type: 2}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
   fireworks: {fileID: 1221073221}
+--- !u!114 &1373978271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1373978268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae9ae6f888207f64e8dd723bc0d8020e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testObj: {fileID: 713745038}
 --- !u!1001 &1376106652
 Prefab:
   m_ObjectHideFlags: 0
@@ -12682,6 +12715,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11493526, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: attitudes.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
       propertyPath: m_LocalPosition.x
       value: -0.1
@@ -12722,6 +12759,16 @@ Prefab:
       propertyPath: m_WarningMessage
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 11496632, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: description
+      value: He cares about the environment, he just doesn't want that care to affect
+        his everyday life...
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
+      propertyPath: schedule.Array.data[1].activity
+      value: 
+      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
   m_IsPrefabParent: 0
@@ -13437,7 +13484,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11454368, guid: 00d0b349319c29c4d8699d9fd95bdcbb, type: 2}
       propertyPath: xIndex
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 460832, guid: 00d0b349319c29c4d8699d9fd95bdcbb, type: 2}
       propertyPath: m_LocalScale.x
@@ -15307,7 +15354,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1928876741
 Transform:
@@ -15851,7 +15898,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1997092154
 Transform:
@@ -15864,7 +15911,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1373978269}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!114 &1997092155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15877,8 +15924,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialAnimation: {fileID: 724033413}
+  startQuest: {fileID: 11400000, guid: c3114a175ad5ff947a1b93117e25726b, type: 2}
   quests:
+  - {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
   - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
+  - {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
+  - {fileID: 11400000, guid: c3114a175ad5ff947a1b93117e25726b, type: 2}
 --- !u!1 &2021462707
 GameObject:
   m_ObjectHideFlags: 0
@@ -16047,7 +16098,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2068131773
 Transform:

@@ -10,6 +10,7 @@ public class PilotView : MonoBehaviour{
 	}
 
 	private PilotController _ctrlMgr;
+	private ResourceManager _resourceMgr;
 
 	public Transform title;
 	public Transform date;
@@ -50,6 +51,7 @@ public class PilotView : MonoBehaviour{
 	//Use this for initialization
 	void Start(){
 		_ctrlMgr = PilotController.GetInstance();
+		_resourceMgr = ResourceManager.GetInstance();
 	}
 	
 	//Update is called once per frame

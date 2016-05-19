@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MenuAnimator : MonoBehaviour {
+public class MenuView : MonoBehaviour {
+	public Animator animator;
 
 	// Use this for initialization
 	void Start () {
@@ -10,7 +11,6 @@ public class MenuAnimator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Animator anim = GetComponent<Animator>();
-        anim.SetFloat("Speed", 100);
+		animator.SetFloat("Speed", 100);
 	}
 }

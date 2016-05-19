@@ -30,7 +30,7 @@ public class ObjectInteraction : MonoBehaviour {
 
 		if(GetComponent<ElectricMeter>()) {
 			_meter = GetComponent<ElectricMeter>();
-			_powerButton.onClick.AddListener(() => _meter.Off());
+			_powerButton.onClick.AddListener(() => _meter.Toggle());
 		}
 	}
 	

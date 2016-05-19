@@ -39,7 +39,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void OnPointerClick(PointerEventData eventData) {
-		_ctrlMgr.OnApplianceSelected(this);
+		_ctrlMgr.OnDeviceSelected(this);
 	}
 
 	//

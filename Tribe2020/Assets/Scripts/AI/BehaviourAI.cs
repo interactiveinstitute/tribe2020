@@ -141,6 +141,8 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void StartActivity(AvatarActivity activity) {
+		Debug.Log("StartActivity: " + activity.name);
+
 		_curActivity = activity;
 		_curActivity.Init(this);
 

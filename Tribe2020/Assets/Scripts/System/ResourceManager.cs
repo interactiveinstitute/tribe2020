@@ -42,11 +42,6 @@ public class ResourceManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update(){
-		//cash += cashProduction * Time.deltaTime;
-		//comfort += comfortProduction * Time.deltaTime;
-
-		_uiMgr.cash.GetComponent<Text>().text = "" + (int)cash;
-		_uiMgr.comfort.GetComponent<Text>().text = "" + (int)comfort;
 	}
 
 	//

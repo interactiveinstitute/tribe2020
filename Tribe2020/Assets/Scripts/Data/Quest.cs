@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using SimpleJSON;
 
 [CreateAssetMenu(fileName = "Quest", menuName = "Gameplay/Quest", order = 1)]
 public class Quest : ScriptableObject {
 	//Quest step types
 	public enum QuestStepType {
 		PromptMessage, PopUpMessage, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity, ChangeTimeScale,
-		QuestComplete
+		QuestComplete, ControlInterface
 	};
 
 	//Quest events
-	public enum QuestEvent { EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
+	public enum QuestEvent {
+		EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
 		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
-		ResourceHarvested
+		ResourceHarvested, BattleOver
 	};
 
 	public string title;
@@ -62,6 +64,11 @@ public class Quest : ScriptableObject {
 	//
 	public Argument GetArguments() {
 		return questSteps[_curStep].arguments;
+	}
+
+	//
+	public void SetCurrentStep(int step) {
+		_curStep = step;
 	}
 
 	//
@@ -126,5 +133,20 @@ public class Quest : ScriptableObject {
 	//
 	public bool IsComplete() {
 		return (_curStep >= questSteps.Count);
+	}
+
+	//
+	public JSONClass Encode() {
+		JSONClass questStepJSON = new JSONClass();
+
+		questStepJSON.Add("step", _curStep.ToString());
+
+		return questStepJSON;
+	}
+
+	//
+	public void Decode(JSONClass questStepJSON) {
+		//Debug.Log("DecodeQuestStep: " + questStepJSON.ToString());
+		_curStep = questStepJSON[_curStep].AsInt;
 	}
 }
