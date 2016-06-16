@@ -12,8 +12,7 @@ public class ForcedReset : MonoBehaviour
         if (CrossPlatformInputManager.GetButtonDown("ResetObject"))
         {
             //... reload the scene
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
-			//Application.LoadLevel(Application.loadedLevelName);
+            SceneManager.LoadScene(SceneManager.GetSceneAt(0).path);
         }
     }
 }

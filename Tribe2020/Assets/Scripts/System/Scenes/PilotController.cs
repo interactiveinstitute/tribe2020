@@ -1,18 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class PilotController : MonoBehaviour{
+public class PilotController : Controller{
 	//Singleton features
-	private static PilotController _instance;
 	public static PilotController GetInstance(){
-		return _instance;
+		return _instance as PilotController;
 	}
-
-	//Interaction limitation states
-	public enum InputState {
-		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
-		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST
-	};
 	private InputState _curState = InputState.ALL;
 
 	//Access all singleton systems
@@ -20,7 +14,7 @@ public class PilotController : MonoBehaviour{
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
-	private QuestManager _questController;
+	private NarrationManager _narrationMgr;
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
 
@@ -39,7 +33,8 @@ public class PilotController : MonoBehaviour{
 	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
 
-	public GameObject testObj;
+	private List<BehaviourAI> _avatars;
+	//public GameObject testObj;
 
 	private bool _isLoaded = false;
 
@@ -59,12 +54,16 @@ public class PilotController : MonoBehaviour{
 		_camMgr = CameraManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
-		_questController = QuestManager.GetInstance();
+		_narrationMgr = NarrationManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
-		//TODO returned from battle
+		_avatars = new List<BehaviourAI>();
 
+		GameObject[] avatarObjs = GameObject.FindGameObjectsWithTag("Avatar");
+		foreach(GameObject avatarObj in avatarObjs) {
+			_avatars.Add(avatarObj.GetComponent<BehaviourAI>());
+		}
 	}
 	
 	// Update is called once per frame
@@ -109,12 +108,12 @@ public class PilotController : MonoBehaviour{
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
-		_view.UpdateQuestCount(_questController.GetQuests().Count);
+		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
 	}
 
 	//
 	void OnDestroy() {
-		_saveMgr.Save();
+		//_saveMgr.Save();
 	}
 
 	//
@@ -141,20 +140,22 @@ public class PilotController : MonoBehaviour{
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
-		if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH){
-			_touchTimer = 0;
-			if(_touchState == IDLE){
-				_touchState = TAP;
-			} else if(_touchState == TAP){
-				_touchState = IDLE;
-				_doubleTimer = 0;
-				OnDoubleTap(pos);
+		if(!_touchReset) {
+			if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH) {
+				_touchTimer = 0;
+				if(_touchState == IDLE) {
+					_touchState = TAP;
+				} else if(_touchState == TAP) {
+					_touchState = IDLE;
+					_doubleTimer = 0;
+					OnDoubleTap(pos);
+				}
+			} else if(dist >= SWIPE_THRESH) {
+				OnSwipe(_startPos, pos);
 			}
-		} else if(dist >= SWIPE_THRESH){
-			OnSwipe(_startPos, pos);
 		}
 
-		_questController.OnQuestEvent(Quest.QuestEvent.Tapped);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
 	}
 	
 	//
@@ -168,11 +169,13 @@ public class PilotController : MonoBehaviour{
 
 	//
 	private void OnDoubleTap(Vector3 pos){
-		Debug.Log("Double tapped at " + pos);
+		//Debug.Log("Double tapped at " + pos);
 	}
 
 	//
 	private void OnSwipe(Vector3 start, Vector3 end){
+		//Debug.Log("cotroller.OnSwipe " + start + " , " + end);
+
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
 			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
 			dir = (dir * Mathf.Rad2Deg + 360) % 360;
@@ -189,8 +192,8 @@ public class PilotController : MonoBehaviour{
 				_camMgr.GotoUpperView();
 			}
 
-			_questController.OnQuestEvent(Quest.QuestEvent.Swiped);
-			_questController.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetViewPoint().title);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetViewPoint().title);
 		}
 	}
 
@@ -201,14 +204,37 @@ public class PilotController : MonoBehaviour{
 		_startPos = Input.mousePosition;
 		_touchState = IDLE;
 		_touchReset = true;
+		//Debug.Log("cotroller.resetSwipe " + _startPos);
+	}
+
+	//
+	public override void ControlAvatar(string id, string action, Vector3 pos) {
+		_avatars[0].WalkTo(pos);
+	}
+
+	//
+	public override void ControlAvatar(string id, Object action) {
+		_avatars[0].StartActivity(action as AvatarActivity);
+	}
+
+	//
+	public void MakeAvatarWalkTo(Vector3 target) {
+		_avatars[0].WalkTo(target);
+	}
+
+	//
+	public void MakeAvatarPerformActivity(AvatarActivity activity) {
+		_avatars[0].StartActivity(activity);
 	}
 
 	//
 	public void OnOkPressed() {
+		ResetTouch();
+
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_PROMPT) {
 			_view.messageUI.SetActive(false);
 
-			_questController.OnQuestEvent(Quest.QuestEvent.OKPressed);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 		}
 	}
 
@@ -219,8 +245,8 @@ public class PilotController : MonoBehaviour{
 			_audioMgr.PlaySound("button");
 			ResetTouch();
 
-			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
-			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
 		}
 	}
 
@@ -230,17 +256,17 @@ public class PilotController : MonoBehaviour{
 			_view.HideAppliance();
 			ResetTouch();
 
-			_questController.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
 		}
 	}
 
 	//
 	public void OnQuestListOpenend() {
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST_LIST) {
-			_view.ShowQuestList(_questController.GetQuests());
+			_view.ShowQuestList(_narrationMgr.GetQuests());
 			ResetTouch();
 
-			_questController.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
 		}
 	}
 
@@ -250,7 +276,7 @@ public class PilotController : MonoBehaviour{
 			_view.HideQuestList();
 			ResetTouch();
 
-			_questController.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
 		}
 	}
 
@@ -260,7 +286,7 @@ public class PilotController : MonoBehaviour{
 			_view.ShowQuest(quest);
 			ResetTouch();
 
-			_questController.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
 		}
 	}
 	
@@ -278,7 +304,7 @@ public class PilotController : MonoBehaviour{
 			go.SetActive(false);
 
 			ResetTouch();
-			_questController.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
 		}
 	}
 
@@ -302,6 +328,7 @@ public class PilotController : MonoBehaviour{
 
 	//
 	public void OnAction(Appliance appliance, BaseAction action, GameObject actionObj){
+		ResetTouch();
 		if(_curState == InputState.ALL) {
 			if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
 				_resourceMgr.cash -= action.cashCost;
@@ -312,24 +339,25 @@ public class PilotController : MonoBehaviour{
 
 				actionObj.SetActive(false);
 
-				_questController.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, action.actionName);
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, action.actionName);
 			}
 		}
 	}
 
 	//
 	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
-		_questController.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+		Debug.Log("OnAvatarReachedPosition");
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
 	}
 
 	//
 	public void OnAvatarSessionComplete(string activityState) {
-		_questController.OnQuestEvent(Quest.QuestEvent.AvatarSessionOver, activityState);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSessionOver, activityState);
 	}
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
-		_questController.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
 	}
 
 	//
@@ -398,8 +426,13 @@ public class PilotController : MonoBehaviour{
 	}
 
 	//
-	public void SetControlState(InputState state) {
+	public override void SetControlState(InputState state) {
 		_curState = state;
+	}
+
+	//
+	public override void SaveGameState() {
+		_saveMgr.Save();
 	}
 
 	//

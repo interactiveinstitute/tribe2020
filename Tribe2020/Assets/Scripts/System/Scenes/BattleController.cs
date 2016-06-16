@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BattleController : MonoBehaviour {
+public class BattleController : Controller {
 	//Singleton features
 	private static BattleController _instance;
 	public static BattleController GetInstance() {
@@ -9,7 +9,7 @@ public class BattleController : MonoBehaviour {
 
 	private BattleView _view;
 	private CustomSceneManager _sceneMgr;
-	private QuestManager _questController;
+	private NarrationManager _narrationMgr;
 	private SaveManager _saveMgr;
 
 	private bool _isTouching = false;
@@ -38,7 +38,7 @@ public class BattleController : MonoBehaviour {
 	void Start () {
 		_view = BattleView.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
-		_questController = QuestManager.GetInstance();
+		_narrationMgr = NarrationManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
 		LoadQuiz(quizzes[_curQuiz]);
@@ -121,7 +121,7 @@ public class BattleController : MonoBehaviour {
 		_isTouching = false;
 		_hasWon = true;
 
-		_questController.OnQuestEvent(Quest.QuestEvent.BattleOver);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
 		//_sceneMgr.LoadScene("ga_madrid_erik");
 	}
 }

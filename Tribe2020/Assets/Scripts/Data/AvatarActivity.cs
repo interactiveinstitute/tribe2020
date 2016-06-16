@@ -64,20 +64,20 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextStep(BehaviourAI ai) {
-		//Debug.Log("NextStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
-
+		//Debug.Log(ai.name + ".CurrentStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
 		_curStep++;
 
 		if(_curStep == sessions.Count) {
-			OnBehaviourDone(ai);
+			OnActivityDone(ai);
 		} else {
+			//Debug.Log(ai.name + ".NextStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
 			//Debug.Log("NextStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
 			ExecuteCommand(ai, sessions[_curStep]);
 		}
 	}
 
 	//
-	public void OnBehaviourDone(BehaviourAI ai) {
+	public void OnActivityDone(BehaviourAI ai) {
 		//Debug.Log("OnBehaviourDone");
 		ai.OnActivityOver();
 	}

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class PilotView : MonoBehaviour{
+public class PilotView : View{
 	//Singleton features
-	private static PilotView _instance;
 	public static PilotView GetInstance(){
-		return _instance;
+		return _instance as PilotView;
 	}
 
 	private PilotController _ctrlMgr;
@@ -42,6 +41,7 @@ public class PilotView : MonoBehaviour{
 
 	public GameObject FeedbackNumber;
 	public ParticleSystem fireworks;
+	public Transform tutorialAnimation;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -143,6 +143,21 @@ public class PilotView : MonoBehaviour{
 	}
 
 	//
+	public override void ControlInterface(string id, string action) {
+		bool visibility = action == "show";
+		switch(id) {
+			case "inspector":
+				inspectorUI.SetActive(visibility);
+				break;
+			case "animation":
+				tutorialAnimation.gameObject.SetActive(visibility);
+				break;
+		}
+
+		Debug.Log("ControlInterface: " + id + ", " + visibility);
+	}
+
+	//
 	public void ShowAppliance(Appliance appliance) {
 		inspectorUI.SetActive(true);
 		inspectorUI.GetComponentsInChildren<Text>()[0].text = appliance.title;
@@ -156,7 +171,7 @@ public class PilotView : MonoBehaviour{
 	}
 
 	//
-	public void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
+	public override void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
 
@@ -209,7 +224,7 @@ public class PilotView : MonoBehaviour{
 	}
 
 	//
-	public void ShowCongratualations(string text) {
+	public override void ShowCongratualations(string text) {
 		ShowFireworks();
 		congratsPanel.SetActive(true);
 		congratsText.text = text;
@@ -218,6 +233,12 @@ public class PilotView : MonoBehaviour{
 	//
 	public void ShowFireworks() {
 		fireworks.Play();
+	}
+
+	//
+	public override void ClearView() {
+		messageUI.SetActive(false);
+		congratsPanel.SetActive(false);
 	}
 
 	//

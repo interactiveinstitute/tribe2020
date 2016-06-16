@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class BattleView : MonoBehaviour {
+public class BattleView : View {
 	//Singleton features
 	private static BattleView _instance;
 	public static BattleView GetInstance() {
