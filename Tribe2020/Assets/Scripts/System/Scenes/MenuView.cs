@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MenuView : MonoBehaviour {
+public class MenuView : View {
 	public Animator animator;
 
 	// Use this for initialization

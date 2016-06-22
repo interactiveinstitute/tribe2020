@@ -13,7 +13,7 @@ public class SaveManager : MonoBehaviour{
 
 	private GameTime _timeMgr;
 	private ResourceManager _resourceMgr;
-	private QuestManager _questMgr;
+	private NarrationManager _narrationMgr;
 
 	public string fileName;
 	private string _filePath;
@@ -29,7 +29,7 @@ public class SaveManager : MonoBehaviour{
 	void Start(){
 		_timeMgr = GameTime.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
-		_questMgr = QuestManager.GetInstance();
+		_narrationMgr = NarrationManager.GetInstance();
 	}
 	
 	//Update is called once per frame
@@ -71,7 +71,7 @@ public class SaveManager : MonoBehaviour{
 		SetData(0, "money", _resourceMgr.cash.ToString());
 		SetData(0, "comfort", _resourceMgr.comfort.ToString());
 
-		SetData(0, "questState", _questMgr.Encode());
+		SetData(0, "questState", _narrationMgr.Encode());
 
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
@@ -85,9 +85,9 @@ public class SaveManager : MonoBehaviour{
 			_resourceMgr.cash = GetData(0, "money").AsInt;
 			_resourceMgr.comfort = GetData(0, "comfort").AsInt;
 
-			_questMgr.Decode(GetClass(0, "questState"));
+			_narrationMgr.Decode(GetClass(0, "questState"));
 		} else {
-			_questMgr.SetStartState();
+			_narrationMgr.SetStartState();
 		}
 	}
 

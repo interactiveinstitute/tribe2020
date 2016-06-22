@@ -14,57 +14,69 @@ MonoBehaviour:
   title: Expand the Tribe
   nextQuest: {fileID: 0}
   questSteps:
-  - title: Leading a Tribe
-    questType: 0
+  - title: 'Prompt: Leading a TRIBE'
+    type: 0
     inputState: 0
+    valueField: Leading a small Tribe is fine, but if we really want to make a difference
+      with must also nurture it and make it grow.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
     arguments:
-      text: Leading a small Tribe is fine, but if we really want to make a difference
-        with must also nurture it and make it grow.
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Find an Avatar
-    questType: 1
+    conditions: []
+  - title: 'Popup: Find Avatar'
+    type: 1
     inputState: 0
+    valueField: Let's start with finding an Avatar and selecting it.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 4
+    conditionField: Erik Einebrant
     arguments:
-      text: Let's start with finding an Avatar and selecting it.
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions:
-    - stepCondition: 4
-      argument: Anton Gustafsson
-  - title: Time for a Challenge
-    questType: 1
-    inputState: 1
-    arguments:
-      text: This avatar is a lost soul, walking aimlessly without a TRIBE. You should
-        convince them to join! Hit the conviction button.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 1
-    conditions:
-    - stepCondition: 15
-      argument: 
-  - title: Battle Over
-    questType: 8
+    conditions: []
+  - title: 'Popup: Start Battle'
+    type: 1
     inputState: 0
+    valueField: This avatar is a lost soul, walking aimlessly without a TRIBE. You
+      should convince them to join! Hit the conviction button.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 15
+    conditionField: 
     arguments:
-      text: You, have, WON, the battle
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions:
-    - stepCondition: 3
-      argument: 
+    conditions: []
+  - title: Quest Complete
+    type: 8
+    inputState: 0
+    valueField: The batter, the better!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 3
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []

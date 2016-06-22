@@ -14,51 +14,15 @@ MonoBehaviour:
   title: Baby Steps
   nextQuest: {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
   questSteps:
-  - title: Welcome
-    questType: 0
+  - title: 'Prompt: Welcome!'
+    type: 0
     inputState: 1
-    arguments:
-      text: Welcome to TRIBE PlayIt! The world is in dire need for help, and you are
-        the arbitrator!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Learn to Swipe
-    questType: 1
-    inputState: 2
-    arguments:
-      text: Let's start with the basics. Swipe the screen in order to move between
-        rooms. Swipe to continue!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: Swipe
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 2
-      argument: 
-  - title: Learn to Tap
-    questType: 1
-    inputState: 4
-    arguments:
-      text: Let's try something else. Tap on an object in order to interact with it.
-        Tap to continue!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: Tap
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 4
-      argument: 
-  - title: Learn to Tap2
-    questType: 3
-    inputState: 5
+    valueField: Welcome to TRIBE PlayIt! The world is in dire need for help, and you
+      are the arbitrator!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
     arguments:
       text: 
       value: 0
@@ -66,19 +30,118 @@ MonoBehaviour:
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions:
-    - stepCondition: 5
-      argument: 
-  - title: Congratulations
-    questType: 8
-    inputState: 3
+    conditions: []
+  - title: 'Play Animation: Swipe'
+    type: 3
+    inputState: 0
+    valueField: Swipe
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
     arguments:
-      text: Good job! You fingers are getting greener by the minute!
+      text: 
       value: 0
       position: {x: 0, y: 0, z: 0}
       activity: {fileID: 0}
       animation: 
       showAtBottom: 0
-    conditions:
-    - stepCondition: 3
-      argument: 
+    conditions: []
+  - title: 'Popup: Swipe'
+    type: 1
+    inputState: 2
+    valueField: Let's start with the basics. Swipe the screen in order to move between
+      rooms. Swipe to continue!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 2
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: 'Play Animation: Tap'
+    type: 3
+    inputState: 0
+    valueField: Tap
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: 'Popup: Tap'
+    type: 1
+    inputState: 4
+    valueField: Let's try something else. Tap on an object in order to interact with
+      it. Tap to continue!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 4
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: 'Control Interface: Hide Animation'
+    type: 9
+    inputState: 0
+    valueField: '{id:animation, action:hide}'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: 'Control Interface: Hide Inspector'
+    type: 9
+    inputState: 0
+    valueField: '{id:inspector, action:hide}'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []
+  - title: Quest Complete
+    type: 8
+    inputState: 3
+    valueField: You have learned the basic way of interaction!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 3
+    conditionField: 
+    arguments:
+      text: 
+      value: 0
+      position: {x: 0, y: 0, z: 0}
+      activity: {fileID: 0}
+      animation: 
+      showAtBottom: 0
+    conditions: []

@@ -18,7 +18,9 @@ public class CustomSceneManager : MonoBehaviour{
     //Sort use instead of constructor
     void Awake(){
         _instance = this;
-    }
+
+		Screen.sleepTimeout = (int)SleepTimeout.NeverSleep;
+	}
 
     // Use this for initialization
     void Start(){

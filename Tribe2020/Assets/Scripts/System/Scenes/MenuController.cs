@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MenuController : MonoBehaviour {
+public class MenuController : Controller {
 	public GameObject animatedCharacter;
 
 	private CustomSceneManager _sceneMgr;

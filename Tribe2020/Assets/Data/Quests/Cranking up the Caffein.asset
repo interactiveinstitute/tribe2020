@@ -14,206 +14,120 @@ MonoBehaviour:
   title: Cranking up the Caffein
   nextQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   questSteps:
-  - title: Saving the World, read mail
-    questType: 1
-    inputState: 6
-    arguments:
-      text: Saving the world can be tough! If you forget what you are doing you can
-        always check your mail.Try it out now!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 6
-      argument: 
-  - title: Reading mail
-    questType: 3
+  - title: 'Popup: Open Inbox'
+    type: 1
     inputState: 0
-    arguments:
-      text: 
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 7
-      argument: 
-  - title: Find Pentry
-    questType: 1
+    valueField: Saving the world can be tough! If you forget what you are doing you
+      can always check your mail.Try it out now!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 7
+    conditionField: 
+  - title: 'Popup: Find Pentry'
+    type: 1
     inputState: 0
-    arguments:
-      text: So we need to fix that coffee. First step is to find the room where it's
-        located. Swipe until you find the lobby.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 10
-      argument: Pentry
-  - title: Intro to Pentry
-    questType: 1
+    valueField: So we need to fix that coffee. First step is to find the room where
+      it's located. Swipe until you find the lobby.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 10
+    conditionField: Pentry
+  - title: 'Popup: Select Coffee'
+    type: 1
     inputState: 0
-    arguments:
-      text: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
-        tap that pesky perculator.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 4
-      argument: Espresso Machine
-  - title: Install Thermal Jug
-    questType: 1
+    valueField: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
+      tap that pesky perculator.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 4
+    conditionField: Espresso Machine
+  - title: 'Popup: Install Thermal Jug'
+    type: 1
     inputState: 0
-    arguments:
-      text: Now install the Thermal Jug in the list of available measures.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 1
-    conditions:
-    - stepCondition: 9
-      argument: Install Thermal Jug
-  - title: Close Device Inspector
-    questType: 9
+    valueField: Now install the Thermal Jug in the list of available measures.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 9
+    conditionField: Install Thermal Jug
+  - title: 'Control UI: Deselect Device'
+    type: 9
     inputState: 0
-    arguments:
-      text: 
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions: []
-  - title: Call Avatar to Coffee
-    questType: 5
+    valueField: '{id:inspector, action:hide}'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: 'Control Avatar: Walk to (7,1,-3)'
+    type: 5
     inputState: 0
-    arguments:
-      text: 
-      value: 0
-      position: {x: 7, y: 1, z: -3}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions: []
-  - title: Wait for Avatar Text
-    questType: 1
-    inputState: 1
-    arguments:
-      text: Splendid, let's see if we can lure any Avatars with this upgraded Moccaminator...
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 11
-      argument: 
-  - title: Avatar Drinking Coffee
-    questType: 0
+    valueField: '{id:Erik Einebrant, action:WalkTo, pos:[7.65,0.25,-3.5]}'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 11
+    conditionField: 
+  - title: 'Prompt: Present Avatar'
+    type: 0
     inputState: 0
-    arguments:
-      text: And here they are, and a magnificent sample at that.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Start Drink Coffee Activity
-    questType: 6
-    inputState: 1
-    arguments:
-      text: 
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
-      animation: 
-      showAtBottom: 0
-    conditions: []
-  - title: Speed up Time
-    questType: 7
-    inputState: 1
-    arguments:
-      text: 
-      value: 20
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions: []
-  - title: Avatar Drinking Coffee Text
-    questType: 1
-    inputState: 1
-    arguments:
-      text: Drinking coffee is an activity. It involves using a coffee machine, fridge,
-        table and finally dishwasher.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 13
-      argument: 
-  - title: Restore time scale
-    questType: 7
-    inputState: 1
-    arguments:
-      text: 
-      value: 1
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions: []
-  - title: Done drinking Coffee
-    questType: 0
-    inputState: 1
-    arguments:
-      text: Delicious! The avatars efficient usage of each device yielded some money
-        savings for us.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 1
-      argument: 
-  - title: Try out the harvest
-    questType: 1
+    valueField: And here they are, and a magnificent sample at that.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: 'Control Avatar: Drink Coffee'
+    type: 5
     inputState: 0
-    arguments:
-      text: Tap a money bag to collect its savings.
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 14
-      argument: 
-  - title: Congratulations
-    questType: 8
+    valueField: '{id:Erik Einebrant, action:DrinkCoffee}'
+    objectField: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: 'Change Time Scale: 20'
+    type: 7
+    inputState: 0
+    valueField: 20
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: 'Popup: Present Activity'
+    type: 1
+    inputState: 0
+    valueField: Drinking coffee is an activity. It involves using a coffee machine,
+      fridge, table and finally dishwasher.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 13
+    conditionField: DrinkCoffee
+  - title: 'Change Time Scale: 1'
+    type: 7
+    inputState: 0
+    valueField: 1
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: 'Prompt: Present Activity Over'
+    type: 0
+    inputState: 0
+    valueField: Delicious! The avatars efficient usage of each device yielded some
+      money savings for us.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: 'Popup: Present Harvesting'
+    type: 1
+    inputState: 0
+    valueField: Tap a money bag to collect its savings.
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 14
+    conditionField: 
+  - title: Quest Complete
+    type: 8
     inputState: 3
-    arguments:
-      text: Congratulations, this is how you save up for your next investments!
-      value: 0
-      position: {x: 0, y: 0, z: 0}
-      activity: {fileID: 0}
-      animation: 
-      showAtBottom: 0
-    conditions:
-    - stepCondition: 3
-      argument: 
+    valueField: Measures and Money, all at your disposal!
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 3
+    conditionField: 

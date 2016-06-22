@@ -6,8 +6,8 @@ using SimpleJSON;
 public class Quest : ScriptableObject {
 	//Quest step types
 	public enum QuestStepType {
-		PromptMessage, PopUpMessage, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity, ChangeTimeScale,
-		QuestComplete, ControlInterface
+		Prompt, Popup, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity,
+		ChangeTimeScale, QuestComplete, ControlInterface
 	};
 
 	//Quest events
@@ -20,7 +20,7 @@ public class Quest : ScriptableObject {
 	public string title;
 	public Quest nextQuest;
 
-	public List<QuestStep> questSteps;
+	public List<Quest.QuestStep> questSteps;
 
 	private int _curStep = 0;
 
@@ -28,10 +28,18 @@ public class Quest : ScriptableObject {
 	[System.Serializable]
 	public class QuestStep {
 		public string title;
-		public QuestStepType questType;
-		public PilotController.InputState inputState;
-		public Argument arguments;
-		public List<QuestCondition> conditions;
+		public QuestStepType type;
+		public Controller.InputState inputState;
+
+		public string valueField;
+		public Object objectField;
+		public bool showAtBottom;
+
+		public QuestEvent condition;
+		public string conditionField;
+
+		//public Argument arguments;
+		//public List<QuestCondition> conditions;
 	}
 
 	//
@@ -62,9 +70,9 @@ public class Quest : ScriptableObject {
 	}
 
 	//
-	public Argument GetArguments() {
-		return questSteps[_curStep].arguments;
-	}
+	//public Argument GetArguments() {
+	//	return questSteps[_curStep].arguments;
+	//}
 
 	//
 	public void SetCurrentStep(int step) {
@@ -78,7 +86,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public QuestStepType GetCurrentStepType() {
-		return questSteps[_curStep].questType;
+		return questSteps[_curStep].type;
 	}
 
 	////
@@ -92,47 +100,76 @@ public class Quest : ScriptableObject {
 	//}
 
 	//
-	public PilotController.InputState GetCurrentInteractionLimits() {
+	public Controller.InputState GetCurrentInteractionLimits() {
 		return questSteps[_curStep].inputState;
 	}
 
 	//
 	public void AttemptCompletion(QuestEvent questEvent, string argument) {
-		List<QuestCondition> conditions = questSteps[_curStep].conditions;
+		//List<QuestCondition> conditions = questSteps[_curStep].conditions;
 
 		//Debug.Log("AttemptCompletion: " + questEvent + ", " + argument);
-		foreach(QuestCondition condition in conditions) {
-			if(condition.stepCondition == questEvent && (argument == condition.argument || condition.argument == "")) {
-				condition.SetComplete(true);
-			}
-		}
+		//foreach(QuestCondition condition in conditions) {
+		//	if(condition.stepCondition == questEvent && (argument == condition.argument || condition.argument == "")) {
+		//		condition.SetComplete(true);
+		//	}
+		//}
 	}
 
 	//
 	public bool IsCurrentStepComplete() {
-		if(_curStep >= questSteps.Count) {
-			return true;
-		}
+		//if(_curStep >= questSteps.Count) {
+		//	return true;
+		//}
 
-		bool result = true;
+		return _curStep >= questSteps.Count;
 
-		List<QuestCondition> conditions = questSteps[_curStep].conditions;
-		foreach(QuestCondition condition in conditions) {
-			if(!condition.GetComplete()) {
-				result = false;
-			}
-		}
-		return result;
+		//bool result = true;
+
+		//List<QuestCondition> conditions = questSteps[_curStep].conditions;
+		//foreach(QuestCondition condition in conditions) {
+		//	if(!condition.GetComplete()) {
+		//		result = false;
+		//	}
+		//}
+		//return result;
 	}
 
 	//
 	public void NextStep() {
-		_curStep++;
+		if(_curStep < questSteps.Count) {
+			_curStep++;
+		}
 	}
 
 	//
 	public bool IsComplete() {
 		return (_curStep >= questSteps.Count);
+	}
+
+	//
+	public int ParseAsInt(string key) {
+		return JSON.Parse(GetCurrentStep().valueField)[key].AsInt;
+		//return 0;
+	}
+
+	//
+	public string ParseAsString(string key) {
+		return JSON.Parse(GetCurrentStep().valueField)[key].Value;
+		//return "";
+	}
+
+	//
+	public Vector3 ParseAsVector3(string key) {
+		if(JSON.Parse(GetCurrentStep().valueField)[key] != null) {
+			float x = JSON.Parse(GetCurrentStep().valueField)[key][0].AsFloat;
+			float y = JSON.Parse(GetCurrentStep().valueField)[key][1].AsFloat;
+			float z = JSON.Parse(GetCurrentStep().valueField)[key][2].AsFloat;
+			return new Vector3(x, y, z);
+		}
+
+		return Vector3.back;
+		//return Vector3.zero;
 	}
 
 	//

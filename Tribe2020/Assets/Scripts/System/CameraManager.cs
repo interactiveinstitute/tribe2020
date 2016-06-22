@@ -198,6 +198,7 @@ public class CameraManager : MonoBehaviour {
 
 			_viewpoints[y] = new Transform[maxX];
 		}
+		
 
 		foreach(GameObject vo in viewObjects) {
 			int curX = vo.GetComponent<Viewpoint>().xIndex;
