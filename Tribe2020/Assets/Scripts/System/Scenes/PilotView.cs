@@ -231,6 +231,16 @@ public class PilotView : View{
 	}
 
 	//
+	public void ShowAnimation(bool visibility) {
+		tutorialAnimation.gameObject.SetActive(visibility);
+	}
+
+	//
+	public void PlayAnimation(string animationName) {
+		tutorialAnimation.GetComponent<Animation>().Play(animationName);
+	}
+
+	//
 	public void ShowFireworks() {
 		fireworks.Play();
 	}
