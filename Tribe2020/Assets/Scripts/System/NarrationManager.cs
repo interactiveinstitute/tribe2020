@@ -18,7 +18,8 @@ public class NarrationManager : MonoBehaviour {
 	private AudioManager _audioMgr;
 	private GameTime _timeMgr;
 
-	public Transform tutorialAnimation;
+	//public Transform tutorialAnimation;
+	public bool autoStart;
 
 	public Quest startQuest;
 	public List<Quest> quests;
@@ -56,7 +57,10 @@ public class NarrationManager : MonoBehaviour {
 		Quest questInstance = Object.Instantiate(quests[questIndex]) as Quest;
 		questInstance.SetCurrentStep(questStep);
 		_curQuests.Add(questInstance);
-		StartQuestStep(questInstance);
+
+		if(autoStart) {
+			StartQuestStep(questInstance);
+		}
 	}
 
 	// Initializes a step of a quest depending on its type
@@ -80,8 +84,10 @@ public class NarrationManager : MonoBehaviour {
 					//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
 					break;
 				case Quest.QuestStepType.PlayAnimation:
-					tutorialAnimation.gameObject.SetActive(true);
-					tutorialAnimation.GetComponent<Animation>().Play(step.valueField);
+					_view.ControlInterface("animation", "show");
+					_view.ControlInterface("playAnimation", step.valueField);
+					//tutorialAnimation.gameObject.SetActive(true);
+					//tutorialAnimation.GetComponent<Animation>().Play(step.valueField);
 					break;
 				case Quest.QuestStepType.PlaySound:
 					_audioMgr.PlaySound(step.valueField);

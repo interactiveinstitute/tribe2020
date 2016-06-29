@@ -20,28 +20,28 @@ public class PilotView : View{
 	public Transform power;
 	public Transform co2;
 
-	public Transform inspectorAction;
-	public GameObject actionButtonPrefab;
-
 	public GameObject inspectorUI;
+	public Transform inspectorActionList;
+
 	public GameObject mailUI;
-	public Transform questList;
+	public Transform mailList;
 	public GameObject mailReadUI;
+	public Text mailCountText;
+
+	public Transform viewpointGuideUI;
+
 	public GameObject messageUI;
-	public GameObject tutorialUI;
+	public GameObject victoryUI;
+	public Text victoryText;
 
-	public GameObject congratsPanel;
-	public Text congratsText;
+	public Transform animationUI;
+	public ParticleSystem fireworks;
 
-	public Text questCountText;
-
-	public Transform viewpointGuide;
+	public GameObject actionButtonPrefab;
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
 
 	public GameObject FeedbackNumber;
-	public ParticleSystem fireworks;
-	public Transform tutorialAnimation;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -60,7 +60,7 @@ public class PilotView : View{
 
 	//
 	public void SetActions(Appliance appliance, List<BaseAction> actions){
-		RemoveChildren(inspectorAction);
+		RemoveChildren(inspectorActionList);
 		
 		foreach(BaseAction a in actions){
 			BaseAction curAction = a;
@@ -93,7 +93,7 @@ public class PilotView : View{
 
 			texts[5].transform.parent.gameObject.SetActive(false);
 
-			actionObj.transform.SetParent(inspectorAction, false);
+			actionObj.transform.SetParent(inspectorActionList, false);
 		}
 	}
 
@@ -115,11 +115,11 @@ public class PilotView : View{
 
 	//
 	public void UpdateViewpointGuide(int viewCount, int viewIndex) {
-		if(viewCount != viewpointGuide.childCount) {
-			RemoveChildren(viewpointGuide);
+		if(viewCount != viewpointGuideUI.childCount) {
+			RemoveChildren(viewpointGuideUI);
 			for(int i = 0; i < viewCount; i++) {
 				GameObject iconObj = Instantiate(viewpointIconPrefab) as GameObject;
-				iconObj.transform.SetParent(viewpointGuide, false);
+				iconObj.transform.SetParent(viewpointGuideUI, false);
 
 				if(i == viewIndex) {
 					iconObj.GetComponent<Image>().color = Color.blue;
@@ -127,7 +127,7 @@ public class PilotView : View{
 			}
 		} else {
 			for(int i = 0; i < viewCount; i++) {
-				Transform curIcon = viewpointGuide.GetChild(i);
+				Transform curIcon = viewpointGuideUI.GetChild(i);
 				if(i == viewIndex) {
 					curIcon.GetComponent<Image>().color = Color.blue;
 				} else {
@@ -139,7 +139,7 @@ public class PilotView : View{
 
 	//
 	public void UpdateQuestCount(int questCount) {
-		questCountText.text = "" + questCount;
+		mailCountText.text = "" + questCount;
 	}
 
 	//
@@ -150,7 +150,10 @@ public class PilotView : View{
 				inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
-				tutorialAnimation.gameObject.SetActive(visibility);
+				animationUI.gameObject.SetActive(visibility);
+				break;
+			case "playAnimation":
+				animationUI.GetComponent<Animation>().Play(action);
 				break;
 		}
 
@@ -192,7 +195,7 @@ public class PilotView : View{
 	//
 	public void ShowQuestList(List<Quest> quests) {
 		//
-		RemoveChildren(questList);
+		RemoveChildren(mailList);
 
 		foreach(Quest quest in quests) {
 			Quest curQuest = quest;
@@ -202,7 +205,7 @@ public class PilotView : View{
 			texts[0].text = "";
 			texts[1].text = curQuest.title;
 			texts[2].text = "some date";
-			questObj.transform.SetParent(questList, false);
+			questObj.transform.SetParent(mailList, false);
 		}
 
 		mailUI.SetActive(true);
@@ -226,8 +229,8 @@ public class PilotView : View{
 	//
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
-		congratsPanel.SetActive(true);
-		congratsText.text = text;
+		victoryUI.SetActive(true);
+		victoryText.text = text;
 	}
 
 	//
@@ -238,7 +241,7 @@ public class PilotView : View{
 	//
 	public override void ClearView() {
 		messageUI.SetActive(false);
-		congratsPanel.SetActive(false);
+		victoryUI.SetActive(false);
 	}
 
 	//

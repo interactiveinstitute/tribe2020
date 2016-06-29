@@ -8,6 +8,8 @@ public class AudioManager : MonoBehaviour{
 		return _instance;
 	}
 
+	public bool mute;
+
 	public AudioSource musicLoop;
 	public AudioSource button;
 
@@ -27,6 +29,8 @@ public class AudioManager : MonoBehaviour{
 	}
 
 	public void PlaySound(string sound){
+		if(mute) { return; }
+
 		switch(sound){
 		case "music":
 			musicLoop.Play(); break;
