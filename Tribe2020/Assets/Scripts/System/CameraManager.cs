@@ -61,6 +61,8 @@ public class CameraManager : MonoBehaviour {
 		//Populate collection of viewpoints
 		PopulateViewpoints(GameObject.FindGameObjectsWithTag("ViewPoint"));
 
+		//PopulateViewpoints(Object.FindObjectsOfType<Viewpoint>());
+
 		SetViewpoint(0, 0);
 		//UpdateVisibility();
 	}
@@ -68,7 +70,7 @@ public class CameraManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		if(journeyLength > 0) {
-			float distCovered = (Time.time - startTime) * 10;
+			float distCovered = (Time.unscaledTime - startTime) * 10;
 			float fracJourney = distCovered / journeyLength;
 
 			if(cameraState == IDLE) {
@@ -230,7 +232,7 @@ public class CameraManager : MonoBehaviour {
 		_lastRot = gameCamera.transform.eulerAngles;
 		_targetRot = _curViewpoint.eulerAngles;
 
-		startTime = Time.time;
+		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
 		_view.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;

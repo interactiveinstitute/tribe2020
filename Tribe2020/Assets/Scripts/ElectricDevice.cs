@@ -35,7 +35,7 @@ public class ElectricDevice : ElectricMeter {
 	// Use this for initialization
 	public override void Start () {
 		base.Start ();
-		lastupdate = Time.time;
+		lastupdate = _timeMgr.time;
 
 		//Set initial runlevel.
 		SetRunlevel(runlevel);

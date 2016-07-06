@@ -9,6 +9,8 @@ public class PilotView : View{
 	}
 
 	private PilotController _ctrlMgr;
+	private GameTime _timeMgr;
+	private MainMeter _energyMgr;
 	private ResourceManager _resourceMgr;
 
 	public Transform title;
@@ -18,6 +20,7 @@ public class PilotView : View{
 	public Transform comfort;
 	public Transform temperature;
 	public Transform power;
+	public Text energyCounter;
 	public Transform co2;
 
 	public GameObject inspectorUI;
@@ -51,11 +54,23 @@ public class PilotView : View{
 	//Use this for initialization
 	void Start(){
 		_ctrlMgr = PilotController.GetInstance();
+		_timeMgr = GameTime.GetInstance();
+		_energyMgr = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
 	}
 	
 	//Update is called once per frame
 	void Update(){
+		date.GetComponent<Text>().text = _timeMgr.CurrentDate;
+
+		power.GetComponent<Text>().text = _energyMgr.Power + " W";
+
+		float energy = (float)_energyMgr.Energy;
+		if(energy < 1) {
+			energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
+		} else {
+			energyCounter.text = Mathf.Floor(energy) + " kWh";
+		}
 	}
 
 	//

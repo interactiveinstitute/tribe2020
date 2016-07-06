@@ -3,6 +3,8 @@ using System.Collections;
 using System;
 
 public class SunMovement : MonoBehaviour {
+	private GameTime _timeMgr;
+
 //	public Transform sun;
 	public float dayCycleInMinutes = 1;
 
@@ -24,6 +26,8 @@ public class SunMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		_timeMgr = GameTime.GetInstance();
+
 		AutoUpdate = true;
 		_timeOfDay = 0;
 		_degreeRotation = DEGREES_PER_SECOND * DAY / (dayCycleInMinutes * MINUTE);
@@ -37,7 +41,7 @@ public class SunMovement : MonoBehaviour {
 		//_timeOfDay += Time.deltaTime;
 
 		if (AutoUpdate) {
-			CalculateSunPosition (GameTime.GetInstance ().GetDateTime (), latitude, longitude);
+			CalculateSunPosition (_timeMgr.GetDateTime (), latitude, longitude);
 		}
 
 		//transform.localRotation = Quaternion.Euler ((float)Altitude, 0, 0) * Quaternion.Euler (0,(float) Azimuth, 0);

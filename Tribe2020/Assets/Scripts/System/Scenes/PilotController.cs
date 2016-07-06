@@ -58,12 +58,13 @@ public class PilotController : Controller{
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
-		_avatars = new List<BehaviourAI>();
+		//_avatars = new List<BehaviourAI>();
 
-		GameObject[] avatarObjs = GameObject.FindGameObjectsWithTag("Avatar");
-		foreach(GameObject avatarObj in avatarObjs) {
-			_avatars.Add(avatarObj.GetComponent<BehaviourAI>());
-		}
+		//GameObject[] avatarObjs = GameObject.FindGameObjectsWithTag("Avatar");
+		//foreach(GameObject avatarObj in avatarObjs) {
+		//	_avatars.Add(avatarObj.GetComponent<BehaviourAI>());
+		//}
+		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
 	}
 	
 	// Update is called once per frame
@@ -95,7 +96,7 @@ public class PilotController : Controller{
 			}
 
 			if(_touchState == TAP) {
-				_doubleTimer += Time.deltaTime;
+				_doubleTimer += Time.unscaledDeltaTime;
 				if(_doubleTimer > D_TAP_TIMEOUT) {
 					OnTap(_startPos);
 					_doubleTimer = 0;
@@ -127,7 +128,7 @@ public class PilotController : Controller{
 	//
 	private void OnTouch(Vector3 pos){
 		_camMgr.cameraState = CameraManager.PANNED;
-		_touchTimer += Time.deltaTime;
+		_touchTimer += Time.unscaledDeltaTime;
 
 		if(Application.platform == RuntimePlatform.Android){
 			_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
@@ -358,6 +359,14 @@ public class PilotController : Controller{
 	//
 	public void OnAvatarActivityComplete(string activity) {
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+	}
+
+	//
+	public void OnNextDay() {
+		Debug.Log("OnNextDay()");
+		foreach(BehaviourAI avatar in _avatars) {
+			avatar.OnNextDay();
+		}
 	}
 
 	//

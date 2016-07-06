@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class ElectricMeter : MonoBehaviour {
@@ -13,7 +12,7 @@ public class ElectricMeter : MonoBehaviour {
 	protected bool HasPower = false;
 	[Tooltip("Makes the meterpoint conduct power to the conneced devices or not")]
 	public bool GivesPower = true;
-	protected GameTime Time;
+	protected GameTime _timeMgr;
 
 
 	public List<ElectricMeter> Powering = new List<ElectricMeter>();
@@ -28,10 +27,10 @@ public class ElectricMeter : MonoBehaviour {
 	// Use this for initialization
 	public virtual void Start () {
 
-		Time = GameTime.GetInstance();
+		_timeMgr = GameTime.GetInstance();
 
 
-		lastupdate = Time.time;
+		lastupdate = _timeMgr.time;
 
 		//Check if source has electricity?
 		if (AlwaysPowered)
@@ -94,7 +93,7 @@ public class ElectricMeter : MonoBehaviour {
 	public double update_energy() {
 		//Calculate energy for the period
 		double now;
-		now = Time.time;
+		now = _timeMgr.time;
 
 		update_energy (now);
 
@@ -108,6 +107,7 @@ public class ElectricMeter : MonoBehaviour {
 
 		delta = now - lastupdate;
 		Energy = Energy + ((Power * delta)/3600);
+		//Energy += Power * Time.deltaTime;
 
 		lastupdate = now;
 
@@ -116,7 +116,7 @@ public class ElectricMeter : MonoBehaviour {
 	public void update_power(float new_power)
 	{
 		double now;
-		now = Time.time;
+		now = _timeMgr.time;
 
 		update_power (now, new_power);
 	}
@@ -138,7 +138,7 @@ public class ElectricMeter : MonoBehaviour {
 
 	public void reset_energy() {
 		Energy = 0;
-		lastupdate = Time.time;
+		lastupdate = _timeMgr.time;
 	}
 
 	//Set the meter node to powered or unpowered state. Returns true of a new stated was initiated by the call. 
@@ -180,14 +180,26 @@ public class ElectricMeter : MonoBehaviour {
 
 	public virtual void On () {
 		powering (true);
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
+		}
 	}
 
 	public virtual void Off () {
 		powering (false);
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
+		}
 	}
 
 	public void Toggle () {
 		powering (!GivesPower);
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
+		}
 	}
 
 }

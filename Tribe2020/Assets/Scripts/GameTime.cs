@@ -6,8 +6,13 @@ using System.Collections.Generic;
 
 
 public class GameTime : MonoBehaviour {
-
 	private static GameTime _instance;
+	public static GameTime GetInstance() {
+		return _instance;
+	}
+
+	private PilotController _controller;
+
 	public double StartTime;
 	public double time;
 	public string CurrentDate;
@@ -17,18 +22,15 @@ public class GameTime : MonoBehaviour {
 	public float TimeScale = 1.0f;
 
 	void Awake () {
-		_instance = this;
 		time = StartTime;
-	}
-
-	public static GameTime GetInstance () {
-		return _instance;
+		_instance = this;
 	}
 
 	// Use this for initialization
 	void Start () {
-		time = StartTime;
+		_controller = PilotController.GetInstance();
 
+		time = StartTime;
 	}
 
 	public bool AddKeypoint(double keypoint)
@@ -47,7 +49,10 @@ public class GameTime : MonoBehaviour {
 
 		//Delete expired keypoints.
 
-		//Calculate deltatime. 
+		//Calculate deltatime.
+		if(TimestampToDateTime(time).Day != TimestampToDateTime(StartTime + Time.time).Day) {
+			_controller.OnNextDay();
+		}
 
 		time = StartTime + Time.time;
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");

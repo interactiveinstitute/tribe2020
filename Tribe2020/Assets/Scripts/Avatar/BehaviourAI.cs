@@ -4,7 +4,7 @@ using System;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 public class BehaviourAI : MonoBehaviour {
-	public enum ActivityState { Idle, Walking, Waiting, Unscheduled, OverrideIdle, OverrideWalking };
+	public enum ActivityState { Idle, Walking, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
 	[SerializeField]
 	private ActivityState _curActivityState = ActivityState.Idle;
 	[SerializeField]
@@ -16,16 +16,18 @@ public class BehaviourAI : MonoBehaviour {
 	private AvatarStats _stats;
 	private NavMeshAgent _agent;
 	private ThirdPersonCharacter _charController;
-	private Vector3 _curTargetPos;
-	private GameObject _curTargetObj;
-	private Transform _destination;
 
+	//private Vector3 _curTargetPos;
+	private GameObject _curTargetObj;
 	private AvatarActivity _curActivity;
+
 	//private GameObject[] _appliances;
 	private Appliance[] _devices;
+	private Room _curRoom;
 
 	private float _startTime, _endTime;
 	private bool _isSync = false;
+	private bool _isScheduleOver = false;
 
 	//Definition of a schedule item
 	[System.Serializable]
@@ -51,9 +53,27 @@ public class BehaviourAI : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
+		DateTime time = _timeMgr.GetDateTime();
+		float curTime = time.Hour * 60 + time.Minute;
+		_startTime = ScheduleItemToMinutes(schedule[0]);
+		_endTime = ScheduleItemToMinutes(schedule[schedule.Length - 1]);
+
+		if(curTime < _startTime) {
+			if(_isScheduleOver) {
+				_scheduleIndex = 0;
+				_isSync = false;
+			}
+			return;
+		} else if(curTime > _endTime) {
+			_isScheduleOver = true;
+			return;
+		}
+
 		if(!_isSync) {
 			SyncSchedule();
 		}
+
+		CheckLighting();
 
 		//Debug.Log(name + "Update: " + _curActivityState);
 		switch(_curActivityState) {
@@ -61,17 +81,14 @@ public class BehaviourAI : MonoBehaviour {
 			case ActivityState.Idle:
 				SyncSchedule();
 				_curActivity.Init(this);
+				Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
 				break;
 			// Walking towards an object, check if arrived to proceed
 			case ActivityState.OverrideWalking:
 			case ActivityState.Walking:
-				//Debug.Log("remain:" + _agent.remainingDistance + ", stop:" + _agent.stoppingDistance);
 				if(_agent.remainingDistance > _agent.stoppingDistance) {
 					_charController.Move(_agent.desiredVelocity, false, false);
-				} else if(!_agent.pathPending &&
-					_agent.remainingDistance <= _agent.stoppingDistance /*&&
-					(!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)*/) {
-					//Debug.Log(name + " doing " + _curActivityState + ", REACHED agent destination");
+				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
 					_charController.Move(Vector3.zero, false, false);
 
 					if(_curActivityState == ActivityState.Walking) {
@@ -83,12 +100,6 @@ public class BehaviourAI : MonoBehaviour {
 						_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
 					}
 				}
-
-				//_curActivity.Step(this);
-				//if(Vector3.Distance(transform.position, _curTargetObj.transform.position) < 0.5f) {
-				//	Debug.Log(name + " also reached target destination");
-					
-				//}
 				break;
 			// Waiting for a duration, check if wait is over to proceed
 			case ActivityState.Waiting:
@@ -103,34 +114,33 @@ public class BehaviourAI : MonoBehaviour {
 			case ActivityState.OverrideIdle:
 				_charController.Move(Vector3.zero, false, false);
 				break;
-				// Override activity for instance from a quest narration controller, callback if arrived
-				//case ActivityState.OverrideWalking:
-				//	if(Vector3.Distance(transform.position, _curTargetPos) < 2) {
-				//		_curActivityState = ActivityState.OverrideIdle;
-				//		_controller.OnAvatarReachedPosition(this, _curTargetPos);
-				//	}
-				//	break;
+			case ActivityState.TurningOnLight:
+				if(_agent.remainingDistance > _agent.stoppingDistance) {
+					_charController.Move(_agent.desiredVelocity, false, false);
+				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
+					_charController.Move(Vector3.zero, false, false);
+					_curTargetObj.GetComponent<ElectricMeter>().On();
+					_curTargetObj.GetComponentInParent<Room>().UpdateLighting();
+					_curActivity.ResumeSession(this);
+				}
+				break;
 		}
-
-		//SyncSchedule();
 	}
 
 	//
 	public void SyncSchedule() {
 		DateTime time = _timeMgr.GetDateTime();
 		float curTime = time.Hour * 60 + time.Minute;
-		_startTime = ScheduleItemToMinutes(schedule[0]);
-		_endTime = ScheduleItemToMinutes(schedule[schedule.Length - 1]);
 
-		_curActivity = schedule[_scheduleIndex].activity;
+		_curActivity = UnityEngine.Object.Instantiate(schedule[_scheduleIndex].activity) as AvatarActivity;
+		//_curActivity = schedule[_scheduleIndex].activity;
+
+		//Quest questInstance = Object.Instantiate(quests[questIndex]) as Quest;
 
 		//Debug.Log("time is: " + time.Hour + ":" + time.Minute);
 
 		//Outside schedule, send avatar home
-		if(curTime < _startTime || curTime > _endTime) {
-			//Debug.Log("outside schedule");
-			return;
-		}
+
 
 		//Skip old schedule items until synced with current time
 		while(curTime > ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex < schedule.Length - 1) {
@@ -161,18 +171,17 @@ public class BehaviourAI : MonoBehaviour {
 	public void StartActivity(AvatarActivity activity) {
 		_curActivity = activity;
 		_curActivity.Init(this);
-
 	}
 
 	//
 	public void EndOverride() {
-		_curActivityState = ActivityState.Idle;
+		_curActivity.ResumeSession(this);
+		//_curActivityState = ActivityState.Idle;
 	}
 
 	//
 	public void WalkTo(Vector3 target) {
-		Debug.Log("Commanded to walk towards " + target);
-		_curTargetPos = target;
+		//_curTargetPos = target;
 		
 		_agent.SetDestination(target);
 		_agent.updatePosition = true;
@@ -181,8 +190,7 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void WalkTo(string[] args) {
-		_curTargetObj = FindNearestObject(args[0], args.Length > 1 && args[1] == "own");
-		Debug.Log("Walking towards " + _curTargetObj.GetComponent<Appliance>().interactionPos + " as part of session");
+		_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
 		if(_curTargetObj == null) { return; }
 
 		_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
@@ -190,8 +198,15 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
+	public void TurnOnLight(Appliance lightSwitch) {
+		_agent.SetDestination(lightSwitch.interactionPos);
+		_curTargetObj = lightSwitch.gameObject;
+		_curActivityState = ActivityState.TurningOnLight;
+	}
+
+	//
 	public void TeleportTo(string[] args) {
-		_curTargetObj = FindNearestObject(args[0], args.Length > 1 && args[1] == "own");
+		_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
 		if(_curTargetObj == null) { return; }
 
 		_curTargetObj.GetComponent<Appliance>().AddHarvest();
@@ -202,34 +217,19 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void Delay(float seconds) {
-		Debug.Log(name + ".Delay(" + seconds + ")");
+		//Debug.Log(name + ".Delay(" + seconds + ")");
 		_curActivityState = ActivityState.Waiting;
 		_delay = seconds;
 	}
 
-	// Looks through available devices and picks the one closest to the
-	// avatar through raycasting
-	public GameObject FindNearestObject(string tag, bool hasOwner) {
+	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
+	public GameObject FindNearestDevice(string affordance, bool isOwned) {
 		GameObject target = null;
 		float minDist = float.MaxValue;
 
-		//foreach(GameObject appObj in _appliances) {
-		//	Appliance app = appObj.GetComponent<Appliance>();
-
-		//	List<string> affordances = app.avatarAffordances;
-		//	if(affordances.Contains(tag) && (!hasOwner || app.owners.Contains(_stats.avatarName))) {
-		//		float dist = Vector3.Distance(transform.position, app.transform.position);
-		//		if(dist < minDist) {
-		//			minDist = dist;
-		//			target = appObj;
-		//		}
-		//	}
-		//}
 		foreach(Appliance device in _devices) {
-			//Appliance app = appObj.GetComponent<Appliance>();
-
 			List<string> affordances = device.avatarAffordances;
-			if(affordances.Contains(tag) && (!hasOwner || device.owners.Contains(_stats.avatarName))) {
+			if(affordances.Contains(affordance) && (!isOwned || device.owners.Contains(_stats.avatarName))) {
 				float dist = Vector3.Distance(transform.position, device.transform.position);
 				if(dist < minDist) {
 					minDist = dist;
@@ -237,6 +237,7 @@ public class BehaviourAI : MonoBehaviour {
 				}
 			}
 		}
+
 		return target;
 	}
 
@@ -249,6 +250,32 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	void OnTriggerEnter(Collider other) {
-		Debug.Log("Avatar.OnTriggerEnter: " + other.name);
+		if(other.GetComponent<Room>()) {
+			Room room = other.GetComponent<Room>();
+			_curRoom = room;
+			CheckLighting();
+		}
+
+		//Debug.Log("Avatar.OnTriggerEnter: " + other.name);
+	}
+
+	//
+	public void OnNextDay() {
+		_scheduleIndex = 0;
+		_isSync = false;
+	}
+
+	//
+	public void CheckLighting() {
+		if(_curRoom) {
+			if(_curRoom.lux < 1) {
+				Debug.Log(transform.parent.name + " thinks it's to dark in the " + _curRoom.name);
+				Appliance lightSwitch = _curRoom.GetLightSwitch();
+				if(lightSwitch) {
+					//Debug.Log(transform.parent.name +  " found a light switch");
+					TurnOnLight(lightSwitch);
+				}
+			}
+		}
 	}
 }

@@ -7,12 +7,32 @@ public class AvatarActivity : ScriptableObject {
 	//public string name;
 
 	public List<string> sessions;
+	public List<Session> sessions2;
 	public string onSkipCommand;
 	private int _curStep;
 
 	protected float _weight = 0f;
 	protected string _curState = "";
 	public float _delay = 0f;
+
+	//Activity session types
+	public enum SessionType { WalkTo, WaitForDuration, WaitUntilEnd };
+	//Energy efficieny check types
+	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
+	//Energy efficieny check types
+	public enum CheckType { LessThan, GreaterThan };
+
+	//Definition of a quest step
+	[System.Serializable]
+	public class Session {
+		public string title;
+		public SessionType type;
+		public string parameter;
+		public bool avatarOwnsTarget;
+		public EfficiencyType relatedEfficieny;
+		public CheckType checkType;
+		public float efficienyLevel;
+	}
 
 	public virtual void Init(BehaviourAI ai) {
 		_curStep = 0;
@@ -60,6 +80,11 @@ public class AvatarActivity : ScriptableObject {
 		//Debug.Log("SimulateExecution:" + onSkipCommand);
 
 		ExecuteCommand(ai, onSkipCommand);
+	}
+
+	//
+	public void ResumeSession(BehaviourAI ai) {
+		ExecuteCommand(ai, sessions[_curStep]);
 	}
 
 	//

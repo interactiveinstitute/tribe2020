@@ -7,6 +7,7 @@ public class Room : MonoBehaviour {
 
 	public float temperature;
 	public float airQuality;
+	public float lux;
 	public int personCount;
 
 	// Use this for initialization
@@ -22,6 +23,23 @@ public class Room : MonoBehaviour {
 	}
 
 	//
+	public bool IsLit() {
+
+		return false;
+	}
+
+	//
+	public Appliance GetLightSwitch() {
+		foreach(Appliance device in _devices) {
+			if(device.avatarAffordances.Contains("light_switch")) {
+				return device;
+			}
+		}
+
+		return null;
+	}
+
+	//
 	void OnTriggerEnter(Collider other) {
 		if(other.GetComponent<BehaviourAI>()) {
 			personCount++;
@@ -33,5 +51,19 @@ public class Room : MonoBehaviour {
 		if(other.GetComponent<BehaviourAI>()) {
 			personCount--;
 		}
+	}
+
+	//
+	public void UpdateLighting() {
+		Debug.Log("light was changed");
+		foreach(Appliance device in _devices) {
+			if(device.avatarAffordances.Contains("light")) {
+				if(device.GetComponent<ElectricDevice>().GivesPower) {
+					lux = 1;
+					return;
+				}
+			}
+		}
+		lux = 0;
 	}
 }

@@ -12,6 +12,7 @@ GameObject:
   - 65: {fileID: 6537314}
   - 23: {fileID: 2363778}
   - 114: {fileID: 11483822}
+  - 114: {fileID: 11468768}
   m_Layer: 0
   m_Name: Lamp
   m_TagString: Untagged
@@ -54,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 127156}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 3.4, z: 1.5}
+  m_LocalPosition: {x: 1.5, y: 3.4, z: 4.5}
   m_LocalScale: {x: 0.2, y: 0.1, z: 1}
   m_Children:
   - {fileID: 402226}
@@ -138,6 +139,28 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 10, y: 10}
+--- !u!114 &11468768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 127156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 
+  description: 
+  playerAffordances: []
+  avatarAffordances:
+  - light
+  owners: []
+  performedActions: []
+  interactionPos: {x: 0, y: 0, z: 0}
+  cashProduction: 0
+  comfortPorduction: 0
+  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &11483822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -156,16 +179,16 @@ MonoBehaviour:
   Powering: []
   Power: 0
   Energy: 0
-  continous_updates: 0
+  continous_updates: 1
   Unplugged: 0
   runlevels:
   - 0
   - 40
-  runlevel: 1
+  runlevel: 0
   runlevelOn: 1
   runlevelOff: 0
   RetainsRunlevel: 0
-  DefaultRunlevel: 0
+  DefaultRunlevel: 1
   lights: []
   AutoFindLights: 1
 --- !u!1001 &100100000
@@ -174,7 +197,31 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: runlevels.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: harvestButtonRef
+      value: 
+      objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: continous_updates
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: runlevels.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: DefaultRunlevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: runlevelOn
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 127156}

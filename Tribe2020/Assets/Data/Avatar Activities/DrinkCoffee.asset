@@ -15,10 +15,14 @@ MonoBehaviour:
   - WalkTo,appliance_coffee
   - Delay,60
   - WalkTo,appliance_fridge
-  - Delay,60
+  - Open,appliance_fridge
+  - Delay,60,device=2
+  - Delay,45,device=3
+  - Close,fridge,device=4
   - WalkTo,socialize
   - Delay,120
   - WalkTo,appliance_dishwasher
   - Delay,15
+  - Close,fridge
   onSkipCommand: TeleportTo,appliance_dishwasher
   _delay: 0
