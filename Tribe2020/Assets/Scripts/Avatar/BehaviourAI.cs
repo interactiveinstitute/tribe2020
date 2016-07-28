@@ -20,9 +20,10 @@ public class BehaviourAI : MonoBehaviour {
 	//private Vector3 _curTargetPos;
 	private GameObject _curTargetObj;
 	private AvatarActivity _curActivity;
+	private AvatarActivity _nextActivity;
 
 	//private GameObject[] _appliances;
-	private Appliance[] _devices;
+	private static Appliance[] _devices;
 	private Room _curRoom;
 
 	private float _startTime, _endTime;
@@ -31,11 +32,11 @@ public class BehaviourAI : MonoBehaviour {
 
 	//Definition of a schedule item
 	[System.Serializable]
-	public struct ShceduleItem {
+	public struct ScheduleItem {
 		public string time;
 		public AvatarActivity activity;
 	}
-	public ShceduleItem[] schedule;
+	public ScheduleItem[] schedule;
 	private int _scheduleIndex = 0;
 
 	// Use this for initialization
@@ -47,41 +48,36 @@ public class BehaviourAI : MonoBehaviour {
 		_agent = GetComponent<NavMeshAgent>();
 		_charController = GetComponent<ThirdPersonCharacter>();
 
-		//_appliances = GameObject.FindGameObjectsWithTag("Appliance");
-		_devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
+		//Prepare collection of devices in pilot
+		//if(_devices.Length == 0) {
+			_devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
+		//}
+
+		//Synchronise schedule to get current activity for time
+		SyncSchedule();
 	}
 
 	// Update is called once per frame
 	void Update() {
-		DateTime time = _timeMgr.GetDateTime();
-		float curTime = time.Hour * 60 + time.Minute;
-		_startTime = ScheduleItemToMinutes(schedule[0]);
-		_endTime = ScheduleItemToMinutes(schedule[schedule.Length - 1]);
+		double curTime = _timeMgr.GetTotalSeconds();
 
-		if(curTime < _startTime) {
-			if(_isScheduleOver) {
-				_scheduleIndex = 0;
-				_isSync = false;
-			}
-			return;
-		} else if(curTime > _endTime) {
-			_isScheduleOver = true;
-			return;
+		if(curTime > _curActivity.endTime) {
+			NextActivity();
+			_curActivity.Run();
 		}
 
-		if(!_isSync) {
-			SyncSchedule();
+		if(curTime < _curActivity.startTime) {
+			PreviousActivity();
+			_curActivity.Run();
 		}
 
-		CheckLighting();
+		//CheckLighting();
 
-		//Debug.Log(name + "Update: " + _curActivityState);
 		switch(_curActivityState) {
-			// Not doing anything, continously sync in order to poll for an activity
+			//Not doing anything, do something feasible in the pilot
 			case ActivityState.Idle:
-				SyncSchedule();
-				_curActivity.Init(this);
-				Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+				//	_curActivity.Init(this);
+				//	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
 				break;
 			// Walking towards an object, check if arrived to proceed
 			case ActivityState.OverrideWalking:
@@ -90,15 +86,16 @@ public class BehaviourAI : MonoBehaviour {
 					_charController.Move(_agent.desiredVelocity, false, false);
 				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
 					_charController.Move(Vector3.zero, false, false);
+					_curActivity.OnDestinationReached();
 
-					if(_curActivityState == ActivityState.Walking) {
-						_curTargetObj.GetComponent<Appliance>().AddHarvest();
-						_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-						_curActivity.NextStep(this);
-					} else if(_curActivityState == ActivityState.OverrideWalking) {
-						_curActivityState = ActivityState.OverrideIdle;
-						_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
-					}
+					//if(_curActivityState == ActivityState.Walking) {
+					//	_curTargetObj.GetComponent<Appliance>().AddHarvest();
+					//	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
+					//	_curActivity.NextStep(this);
+					//} else if(_curActivityState == ActivityState.OverrideWalking) {
+					//	_curActivityState = ActivityState.OverrideIdle;
+					//	_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
+					//}
 				}
 				break;
 			// Waiting for a duration, check if wait is over to proceed
@@ -106,10 +103,10 @@ public class BehaviourAI : MonoBehaviour {
 				_charController.Move(Vector3.zero, false, false);
 				_curActivity.Step(this);
 				_delay -= Time.deltaTime;
-				if(_delay < 0) {
-					_controller.OnAvatarSessionComplete(_curActivity.name);
-					_curActivity.NextStep(this);
-				}
+				//if(_delay < 0) {
+				//	_controller.OnAvatarSessionComplete(_curActivity.name);
+				//	_curActivity.NextStep(this);
+				//}
 				break;
 			case ActivityState.OverrideIdle:
 				_charController.Move(Vector3.zero, false, false);
@@ -129,48 +126,87 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void SyncSchedule() {
-		DateTime time = _timeMgr.GetDateTime();
-		float curTime = time.Hour * 60 + time.Minute;
+		double curTime = _timeMgr.GetTotalSeconds();
 
-		_curActivity = UnityEngine.Object.Instantiate(schedule[_scheduleIndex].activity) as AvatarActivity;
-		//_curActivity = schedule[_scheduleIndex].activity;
+		//Get next schedule index with potential offset in days
+		int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
+		int endTimeDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
 
-		//Quest questInstance = Object.Instantiate(quests[questIndex]) as Quest;
+		//Setup next schedule item and the one after that
+		ScheduleItem curItem = schedule[_scheduleIndex];
+		ScheduleItem nxtItem = schedule[nxtIndex];
 
-		//Debug.Log("time is: " + time.Hour + ":" + time.Minute);
+		//Determine end time for next item from current time and start time of item after that
+		double startTime = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
+		double endTime = _timeMgr.ScheduleToTS(curTime, endTimeDayOffset, nxtItem.time);
 
-		//Outside schedule, send avatar home
+		SetActivity(curItem.activity, startTime, endTime);
 
-
-		//Skip old schedule items until synced with current time
-		while(curTime > ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex < schedule.Length - 1) {
-			_curActivity.SimulateExecution(this);
-
-			OnActivityOver();
-			_scheduleIndex++;
-			_curActivity = schedule[_scheduleIndex].activity;
+		//Step forward and then backward until time is right
+		while(curTime > _curActivity.endTime) {
+			NextActivity();
 		}
 
-		//Skip old schedule items until synced with current time
-		while(curTime < ScheduleItemToMinutes(schedule[_scheduleIndex]) && _scheduleIndex > 0) {
-			OnActivityOver();
-			_scheduleIndex--;
-			_curActivity = schedule[_scheduleIndex].activity;
+		while(curTime < _curActivity.startTime) {
+			PreviousActivity();
 		}
 
-		_isSync = true;
+		_curActivity.Run();
 	}
 
 	//
-	public int ScheduleItemToMinutes(ShceduleItem item) {
-		string[] timeParse = item.time.Split(':');
-		return int.Parse(timeParse[0]) * 60 + int.Parse(timeParse[1]);
+	public void SetActivity(AvatarActivity activity, double startTime, double endTime) {
+		_curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
+		_curActivity.Init(this, startTime, endTime);
 	}
 
 	//
 	public void StartActivity(AvatarActivity activity) {
 		_curActivity = activity;
 		_curActivity.Init(this);
+	}
+
+	//
+	public void NextActivity() {
+		//Iterate schedule index
+		_scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
+
+		//Get next schedule index with potential offset in days
+		int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
+		int endTimeDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
+
+		//Setup next schedule item and the one after that
+		ScheduleItem curItem = schedule[_scheduleIndex];
+		ScheduleItem nxtItem = schedule[nxtIndex];
+
+		//Determine end time for next item from current time and start time of item after that
+		double endTime = _timeMgr.ScheduleToTS(_curActivity.endTime, endTimeDayOffset, nxtItem.time);
+
+		SetActivity(curItem.activity, _curActivity.endTime, endTime);
+	}
+
+	//
+	public void PreviousActivity() {
+		int prevIndex = 0;
+		if(schedule.Length > 0) {
+			//Iterate schedule index
+			_scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
+
+			//Get next schedule index with potential offset in days
+			prevIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
+		}
+		int startTimeDayOffset = 0;
+		if(prevIndex > _scheduleIndex) { startTimeDayOffset = -1; }
+
+		//Setup next schedule item and the one after that
+		ScheduleItem curItem = schedule[_scheduleIndex];
+		ScheduleItem prevItem = schedule[prevIndex];
+
+		//Determine end time for next item from current time and start time of item after that
+		double startTime = _timeMgr.ScheduleToTS(_curActivity.startTime, startTimeDayOffset, prevItem.time);
+
+		SetActivity(prevItem.activity, startTime, _curActivity.startTime);
+		_curActivity.Run();
 	}
 
 	//
@@ -198,6 +234,15 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
+	public void WalkTo(string targetTag, bool isOwned) {
+		_curTargetObj = FindNearestDevice(targetTag, isOwned);
+		if(_curTargetObj == null) { return; }
+
+		_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
+		_curActivityState = ActivityState.Walking;
+	}
+
+	//
 	public void TurnOnLight(Appliance lightSwitch) {
 		_agent.SetDestination(lightSwitch.interactionPos);
 		_curTargetObj = lightSwitch.gameObject;
@@ -213,6 +258,11 @@ public class BehaviourAI : MonoBehaviour {
 		_agent.Warp(_curTargetObj.GetComponent<Appliance>().interactionPos);
 		//_agent.SetDestination(transform.position);
 		//_curActivityState = ActivityState.OverrideWalking;
+	}
+
+	//
+	public void WarpToDestination() {
+		_agent.Warp(_agent.destination);
 	}
 
 	//
@@ -260,22 +310,16 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void OnNextDay() {
-		_scheduleIndex = 0;
-		_isSync = false;
-	}
-
-	//
 	public void CheckLighting() {
 		if(_curRoom) {
-			if(_curRoom.lux < 1) {
-				Debug.Log(transform.parent.name + " thinks it's to dark in the " + _curRoom.name);
-				Appliance lightSwitch = _curRoom.GetLightSwitch();
-				if(lightSwitch) {
-					//Debug.Log(transform.parent.name +  " found a light switch");
-					TurnOnLight(lightSwitch);
-				}
-			}
+			//if(_curRoom.lux < 1) {
+			//	Debug.Log(transform.parent.name + " thinks it's to dark in the " + _curRoom.name);
+			//	Appliance lightSwitch = _curRoom.GetLightSwitch();
+			//	if(lightSwitch) {
+			//		//Debug.Log(transform.parent.name +  " found a light switch");
+			//		TurnOnLight(lightSwitch);
+			//	}
+			//}
 		}
 	}
 }

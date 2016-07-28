@@ -51,6 +51,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &192476
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 484400}
+  - 114: {fileID: 11427426}
+  m_Layer: 0
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &453364
 Transform:
   m_ObjectHideFlags: 1
@@ -71,12 +87,25 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 155868}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 7.406, y: 1.048, z: -2.915}
+  m_LocalPosition: {x: 7.4, y: 1, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 453364}
+  - {fileID: 484400}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &484400
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 192476}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: -0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 468340}
+  m_RootOrder: 1
 --- !u!4 &492192
 Transform:
   m_ObjectHideFlags: 1
@@ -156,11 +185,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
   - {fileID: 11400000, guid: 5c83ceb5bb2ec9b498bc97f77a5b16c6, type: 2}
   avatarAffordances:
-  - appliance_coffee
+  - get_coffee
   - hang_out
   - take_a_break
   owners: []
   performedActions: []
+  interactionPos: {x: 0, y: 0, z: -0.5}
   cashProduction: 0
   comfortPorduction: 0
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
@@ -190,6 +220,17 @@ MonoBehaviour:
   runlevelOff: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 0
+--- !u!114 &11427426
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 192476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11472674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -214,6 +255,10 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: playerActions2.Array.data[0]
       value: 
       objectReference: {fileID: 11466012, guid: d5a02d57f502f6a449886f8ccf4175f8,
@@ -230,6 +275,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: uniqueId
       value: cc4c0157-2e98-4153-b7e7-7658b40a822c
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[3]
+      value: get_coffee
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: get_coffee
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

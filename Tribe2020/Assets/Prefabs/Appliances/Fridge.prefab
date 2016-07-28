@@ -137,9 +137,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5c83ceb5bb2ec9b498bc97f77a5b16c6, type: 2}
   - {fileID: 11400000, guid: 11583c97573c0344b9e29495e9f32f8b, type: 2}
   avatarAffordances:
-  - appliance_fridge
+  - get_lunch
+  - get_milk
   owners: []
   performedActions: []
+  interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
@@ -151,6 +153,10 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
       propertyPath: harvestButton
       value: 
       objectReference: {fileID: 22460674, guid: 5d16f8f0f7e294048b78788b64ed7ffa,
@@ -159,6 +165,14 @@ Prefab:
       propertyPath: harvestButtonRef
       value: 
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: get_lunch
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[1]
+      value: get_milk
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 167936}

@@ -49,11 +49,12 @@ public class GameTime : MonoBehaviour {
 
 		//Delete expired keypoints.
 
-		//Calculate deltatime.
-		if(TimestampToDateTime(time).Day != TimestampToDateTime(StartTime + Time.time).Day) {
-			_controller.OnNextDay();
-		}
+		//See if day shift happened
+		//if(TimestampToDateTime(time).Day != TimestampToDateTime(StartTime + Time.time).Day) {
+		//	_controller.OnNextDay();
+		//}
 
+		//Calculate deltatime.
 		time = StartTime + Time.time;
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 		Time.timeScale = TimeScale;
@@ -69,7 +70,46 @@ public class GameTime : MonoBehaviour {
 		return (double)span.TotalSeconds;
 	}
 
-	private DateTime TimestampToDateTime(double value)
+	//
+	public double ScheduleToTimestamp(string hourMinute) {
+		DateTime curTime = TimestampToDateTime(time);
+		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day, hourMinute);
+	}
+
+	//
+	public double ScheduleToTimestamp(int dOff, string hourMinute) {
+		DateTime curTime = TimestampToDateTime(time);
+		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dOff, hourMinute);
+	}
+
+	//
+	public double ScheduleToTimestamp(int mOff, int dOff, string hourMinute) {
+		DateTime curTime = TimestampToDateTime(time);
+		return ScheduleToTS(curTime.Year, curTime.Month + mOff, curTime.Day + dOff, hourMinute);
+	}
+
+	//
+	public double ScheduleToTS(int year, int month, int day, string hourMinute) {
+		string[] timeParse = hourMinute.Split(':');
+		int hour = int.Parse(timeParse[0]);
+		int minute = int.Parse(timeParse[1]);
+
+		//create Timespan by subtracting the value provided from
+		//the Unix Epoch
+		DateTime value = new DateTime(year, month, day, hour, minute, 0).ToLocalTime();
+		TimeSpan span = (value - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+
+		//return the total seconds (which is a UNIX timestamp)
+		return (double)span.TotalSeconds;
+	}
+
+	//
+	public double ScheduleToTS(double timeOffset, int dayOffset, string hourMinute) {
+		DateTime curTime = TimestampToDateTime(timeOffset);
+		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dayOffset, hourMinute);
+	}
+
+	public DateTime TimestampToDateTime(double value)
 	{
 		//create Timespan by subtracting the value provided from
 		//the Unix Epoch
@@ -84,6 +124,23 @@ public class GameTime : MonoBehaviour {
 		return TimestampToDateTime(time);
 	}
 
+	//
+	public double GetTotalSeconds() {
+		time = StartTime + Time.time;
+		return (double)time;
+	}
+
+	//
+	public string GetViewTime() {
+		time = StartTime + Time.time;
+		return TimestampToDateTime(time).ToString("HH:mm");
+	}
+
+	//
+	public float GetMinutes() {
+		return TimestampToDateTime(time).Minute + TimestampToDateTime(time).Hour * 60;
+	}
+
 	public void Offset(float delta)
 	{
 		StartTime = StartTime + delta;
@@ -95,6 +152,21 @@ public class GameTime : MonoBehaviour {
 
 	public void SetTime(double NewTime) {
 		StartTime = NewTime - Time.time;
+	}
+
+	//
+	public int GetYear() {
+		return GetDateTime().Year;
+	}
+
+	//
+	public int GetMonth() {
+		return GetDateTime().Month;
+	}
+
+	//
+	public int GetDay() {
+		return GetDateTime().Day;
 	}
 }
 

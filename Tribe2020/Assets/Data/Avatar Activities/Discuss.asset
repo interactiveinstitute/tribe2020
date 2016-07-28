@@ -12,20 +12,30 @@ MonoBehaviour:
   m_Name: Discuss
   m_EditorClassIdentifier: 
   sessions:
-  - WalkTo,socialize
-  - Delay,1800
-  sessions2:
-  - title: Find Social Spot
+  - title: Walking to social spot
     type: 0
-    parameter: socialize
+    parameter: hang_out
+    avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  - title: Socialize
+  - title: Having a chat
     type: 1
-    parameter: 1800
+    parameter: 180
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  SkipSession:
+    title: 
+    type: 0
+    parameter: 
+    avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   onSkipCommand: TeleportTo,socialize
   _delay: 0
+  _duration: 0
+  startTime: 0
+  endTime: 0

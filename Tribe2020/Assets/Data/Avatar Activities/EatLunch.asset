@@ -12,13 +12,58 @@ MonoBehaviour:
   m_Name: EatLunch
   m_EditorClassIdentifier: 
   sessions:
-  - WalkTo,appliance_fridge
-  - Delay,30
-  - WalkTo,appliance_micro
-  - Delay,120
-  - WalkTo,eat_lunch
-  - Delay,1800
-  - WalkTo,appliance_dishwasher
-  - Delay,15
+  - title: Walking to fridge
+    type: 0
+    parameter: get_lunch
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Getting lunch from fridge
+    type: 4
+    parameter: get_lunch,1,30,0
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Walking to micro
+    type: 0
+    parameter: heat_lunch
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Heating lunch
+    type: 4
+    parameter: heat_lunch,1,180,0
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Walking to nice lunch spot
+    type: 0
+    parameter: eat_lunch
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Eating lunch
+    type: 4
+    parameter: eat_lunch,1600
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  SkipSession:
+    title: 
+    type: 0
+    parameter: 
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
   onSkipCommand: TeleportTo,appliance_dishwasher
   _delay: 0
+  _duration: 0
+  startTime: 0
+  endTime: 0

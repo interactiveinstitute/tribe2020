@@ -250,9 +250,11 @@ MonoBehaviour:
     Because it's gaseous.
   playerAffordances: []
   avatarAffordances:
-  - appliance_sink
+  - wash_hands
+  - get_water
   owners: []
   performedActions: []
+  interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
@@ -265,7 +267,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: avatarAffordances.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: title
@@ -287,11 +289,15 @@ Prefab:
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
     - target: {fileID: 0}
       propertyPath: avatarAffordances.Array.data[0]
-      value: appliance_sink
+      value: wash_hands
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_TagString
       value: Appliance
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[1]
+      value: get_water
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

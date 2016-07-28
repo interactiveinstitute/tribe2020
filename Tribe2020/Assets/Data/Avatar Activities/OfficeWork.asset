@@ -12,18 +12,16 @@ MonoBehaviour:
   m_Name: OfficeWork
   m_EditorClassIdentifier: 
   sessions:
-  - WalkTo,appliance_office,own
-  - Delay,1800
-  sessions2:
-  - title: Find office desk
+  - title: 
     type: 0
-    parameter: office_work
-    avatarOwnsTarget: 1
+    parameter: 
+    avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  - title: Keep working until next activity
-    type: 2
+  SkipSession:
+    title: 
+    type: 0
     parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
@@ -31,3 +29,6 @@ MonoBehaviour:
     efficienyLevel: 0
   onSkipCommand: TeleportTo,appliance_office,own
   _delay: 0
+  _duration: 0
+  startTime: 0
+  endTime: 0

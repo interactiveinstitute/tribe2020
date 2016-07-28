@@ -362,12 +362,12 @@ public class PilotController : Controller{
 	}
 
 	//
-	public void OnNextDay() {
-		Debug.Log("OnNextDay()");
-		foreach(BehaviourAI avatar in _avatars) {
-			avatar.OnNextDay();
-		}
-	}
+	//public void OnNextDay() {
+	//	Debug.Log("OnNextDay()");
+	//	foreach(BehaviourAI avatar in _avatars) {
+	//		avatar.OnNextDay();
+	//	}
+	//}
 
 	//
 	public void UpdatePinch(){

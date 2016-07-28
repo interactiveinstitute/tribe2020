@@ -12,17 +12,72 @@ MonoBehaviour:
   m_Name: DrinkCoffee
   m_EditorClassIdentifier: 
   sessions:
-  - WalkTo,appliance_coffee
-  - Delay,60
-  - WalkTo,appliance_fridge
-  - Open,appliance_fridge
-  - Delay,60,device=2
-  - Delay,45,device=3
-  - Close,fridge,device=4
-  - WalkTo,socialize
-  - Delay,120
-  - WalkTo,appliance_dishwasher
-  - Delay,15
-  - Close,fridge
+  - title: Walking to coffee machine
+    type: 0
+    parameter: get_coffee
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Getting coffee
+    type: 4
+    parameter: get_coffee,1,30,0
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Walking to fridge
+    type: 0
+    parameter: get_milk
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Getting milk
+    type: 4
+    parameter: get_milk,1,30,0
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Walking to nice coffee spot
+    type: 0
+    parameter: hang_out
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Drinking coffee
+    type: 4
+    parameter: hang_out,180
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Walking to dishwasher
+    type: 0
+    parameter: wash_dishes
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Putting cup in dishwasher
+    type: 4
+    parameter: wash_dishes
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  SkipSession:
+    title: 
+    type: 0
+    parameter: 
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
   onSkipCommand: TeleportTo,appliance_dishwasher
   _delay: 0
+  _duration: 0
+  startTime: 0
+  endTime: 0

@@ -303,9 +303,10 @@ MonoBehaviour:
   description: 
   playerAffordances: []
   avatarAffordances:
-  - appliance_present
+  - present
   owners: []
   performedActions: []
+  interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
@@ -328,6 +329,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_TagString
       value: Appliance
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: present
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
