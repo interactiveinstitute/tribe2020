@@ -66,16 +66,16 @@ void Start () {
 
 
 
-	void OnTriggerEnter(Collider Player)
+	void OnTriggerEnter(Collider other)
 	{
-		if (Player.transform.tag == Tag) 
+		if (other.transform.tag == Tag) 
 		{
 			callForElevator = true;
 		}
 	}
-	void OnTriggerExit(Collider Player)
+	void OnTriggerExit(Collider other)
 	{
-		if (Player.transform.tag == Tag) 
+		if (other.transform.tag == Tag) 
 		{
 			doorclose = true;
 		}
@@ -111,7 +111,7 @@ void Start () {
 		callForElevator = false;
 
 		Vector3 level = GetClosestEelevatorPosition(ElevatorPositions);
-		while (Vector3.Distance (elevator.transform.position, level) > 0.005f) {
+		while (Vector3.Distance (elevator.transform.position, level) > 0.0005f) {
 			
 			elevator.transform.position = Vector3.MoveTowards (elevator.transform.position, level, elevatorspeed * Time.deltaTime);
 			yield return null;
@@ -128,7 +128,7 @@ void Start () {
 
 		// idle position at top of building
 		Vector3 idlePosition = new Vector3 (2.43410f, 10f, 3.024317f);
-		while (Vector3.Distance (elevator.transform.position, idlePosition) > 0.005f) {
+		while (Vector3.Distance (elevator.transform.position, idlePosition) > 0.0005f) {
 
 			elevator.transform.position = Vector3.MoveTowards (elevator.transform.position, idlePosition, elevatorspeed * Time.deltaTime);
 			yield return null;
@@ -141,7 +141,7 @@ void Start () {
 		dooropen = false;
 
 	
-		while (Vector3.Distance (rightdoor.transform.position, rightopenpos) > 0.005f) {
+		while (Vector3.Distance (rightdoor.transform.position, rightopenpos) > 0.0005f) {
 
 			rightdoor.transform.position = Vector3.MoveTowards (rightdoor.transform.position, rightopenpos, doorspeed * Time.deltaTime);
 			leftdoor.transform.position = Vector3.MoveTowards (leftdoor.transform.position, leftopenpos, doorspeed * Time.deltaTime);
@@ -157,7 +157,7 @@ void Start () {
 	IEnumerator close_elevator_doors() {
 		
 		doorclose = false;
-		while (Vector3.Distance (rightdoor.transform.position, rightclosedpos) > 0.005f) {
+		while (Vector3.Distance (rightdoor.transform.position, rightclosedpos) > 0.0005f) {
 
 			rightdoor.transform.position = Vector3.MoveTowards (rightdoor.transform.position, rightclosedpos, doorspeed * Time.deltaTime);
 			leftdoor.transform.position = Vector3.MoveTowards (leftdoor.transform.position, leftclosedpos, doorspeed * Time.deltaTime);
