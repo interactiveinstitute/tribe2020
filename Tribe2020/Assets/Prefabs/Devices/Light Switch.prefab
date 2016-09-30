@@ -18,6 +18,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &157356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 477582}
+  - 114: {fileID: 11464532}
+  m_Layer: 0
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &184702
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,12 +59,25 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 138904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 1.5, z: -2.4}
+  m_LocalPosition: {x: 0.9, y: 1.5, z: 2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 483472}
+  - {fileID: 477582}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &477582
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 157356}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.25, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 422808}
+  m_RootOrder: 1
 --- !u!4 &483472
 Transform:
   m_ObjectHideFlags: 1
@@ -136,11 +165,22 @@ MonoBehaviour:
   AlwaysPowered: 0
   PowerSource: {fileID: 0}
   HasPower: 0
-  GivesPower: 1
+  GivesPower: 0
   Powering: []
   Power: 0
   Energy: 0
   continous_updates: 1
+--- !u!114 &11464532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 157356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11498028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,8 +195,7 @@ MonoBehaviour:
   title: 
   description: 
   playerAffordances: []
-  avatarAffordances:
-  - light_switch
+  avatarAffordances: 0b000000
   owners: []
   performedActions: []
   interactionPos: {x: 0, y: 0, z: -0.5}
@@ -173,6 +212,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: continous_updates
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

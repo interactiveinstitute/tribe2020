@@ -41,11 +41,19 @@ public class Lamp : ElectricDevice {
 		foreach (Light l in lights) {
 			l.enabled = true;
 		}
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
+		}
 	}
 
 	private void TurnOffLights() {
 		foreach (Light l in lights) {
 			l.enabled = false;
+		}
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
 		}
 	}
 }

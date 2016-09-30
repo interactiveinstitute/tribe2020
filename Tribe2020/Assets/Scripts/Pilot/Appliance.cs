@@ -9,7 +9,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public List<BaseAction> playerAffordances;
-	public List<string> avatarAffordances;
+	public List<AvatarActivity.Target> avatarAffordances;
 	public List<string> owners;
 
 	public List<BaseAction> performedActions;

@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &121034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 458032}
+  - 114: {fileID: 11441240}
+  m_Layer: 0
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &123774
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,12 +57,25 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 190636}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -6.349, y: 1.041, z: 4.111}
+  m_LocalPosition: {x: -6.35, y: 1, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 467642}
+  - {fileID: 458032}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &458032
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121034}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.75, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 426034}
+  m_RootOrder: 1
 --- !u!4 &467642
 Transform:
   m_ObjectHideFlags: 1
@@ -106,6 +135,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.2412706, y: 0.25994754, z: 0.15213294}
   m_Center: {x: -0.0053329417, y: 0.1486113, z: 0.040257927}
+--- !u!114 &11441240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11479856
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,8 +161,7 @@ MonoBehaviour:
   description: Handy device for obfuscating disturbing sounds of colleagues standing
     next to you.
   playerAffordances: []
-  avatarAffordances:
-  - dry_hands
+  avatarAffordances: 09000000
   owners: []
   performedActions: []
   interactionPos: {x: 0, y: 0, z: 0}
@@ -156,7 +195,7 @@ Prefab:
       objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
     - target: {fileID: 0}
       propertyPath: avatarAffordances.Array.data[0]
-      value: dry_hands
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_TagString

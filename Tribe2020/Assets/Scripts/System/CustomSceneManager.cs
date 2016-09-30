@@ -15,6 +15,8 @@ public class CustomSceneManager : MonoBehaviour{
     public string defaultNextScene;
     public bool autoLoad;
 
+	private float _progress = 0;
+
     //Sort use instead of constructor
     void Awake(){
         _instance = this;
@@ -32,17 +34,22 @@ public class CustomSceneManager : MonoBehaviour{
     // Update is called once per frame
     void Update(){
         if(autoLoad){
-            float progress = Application.GetStreamProgressForLevel(nextScene);
+			SceneManager.LoadSceneAsync(nextScene);
+			autoLoad = false;
 
-            loadingBar.localScale = progress * Vector2.right + loadingBar.localScale.y * Vector2.up;
+			//float progress = Application.GetStreamProgressForLevel(nextScene);
 
-            if(progress == 1){
-				
-                SceneManager.LoadSceneAsync(nextScene);
-                autoLoad = false;
-            }
-        }
-    }
+			
+
+			//if(_progress >= 1) {
+
+			//	SceneManager.LoadSceneAsync(nextScene);
+			//	autoLoad = false;
+			//}
+		}
+		//_progress += Mathf.Min(1, Time.deltaTime * 0.5f);
+		//loadingBar.localScale = new Vector3(_progress, 1, 1);
+	}
 
     public void LoadScene(string scene){
         nextScene = scene;

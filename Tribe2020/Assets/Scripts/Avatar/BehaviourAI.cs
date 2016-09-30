@@ -62,11 +62,13 @@ public class BehaviourAI : MonoBehaviour {
 		double curTime = _timeMgr.GetTotalSeconds();
 
 		if(curTime > _curActivity.endTime) {
+			_curActivity.QuickRun();
 			NextActivity();
 			_curActivity.Run();
 		}
 
 		if(curTime < _curActivity.startTime) {
+			_curActivity.Revert();
 			PreviousActivity();
 			_curActivity.Run();
 		}
@@ -216,6 +218,15 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
+	public void Interact() {
+	}
+
+	//
+	public void Stop() {
+		_charController.Move(Vector3.zero, false, false);
+	}
+
+	//
 	public void WalkTo(Vector3 target) {
 		//_curTargetPos = target;
 		
@@ -225,8 +236,17 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void WalkTo(string[] args) {
-		_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
+	//public void WalkTo(string[] args) {
+	//	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
+	//	if(_curTargetObj == null) { return; }
+
+	//	_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
+	//	_curActivityState = ActivityState.Walking;
+	//}
+
+	//
+	public void WalkTo(AvatarActivity.Target target, bool isOwned) {
+		_curTargetObj = FindNearestDevice(target, isOwned);
 		if(_curTargetObj == null) { return; }
 
 		_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
@@ -234,31 +254,22 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	//
-	public void WalkTo(string targetTag, bool isOwned) {
-		_curTargetObj = FindNearestDevice(targetTag, isOwned);
-		if(_curTargetObj == null) { return; }
-
-		_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
-		_curActivityState = ActivityState.Walking;
-	}
-
-	//
-	public void TurnOnLight(Appliance lightSwitch) {
-		_agent.SetDestination(lightSwitch.interactionPos);
-		_curTargetObj = lightSwitch.gameObject;
-		_curActivityState = ActivityState.TurningOnLight;
-	}
-
-	//
-	public void TeleportTo(string[] args) {
-		_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
+	public void TeleportTo(AvatarActivity.Target target, bool isOwned) {
+		_curTargetObj = FindNearestDevice(target, isOwned);
 		if(_curTargetObj == null) { return; }
 
 		_curTargetObj.GetComponent<Appliance>().AddHarvest();
 		_agent.Warp(_curTargetObj.GetComponent<Appliance>().interactionPos);
-		//_agent.SetDestination(transform.position);
-		//_curActivityState = ActivityState.OverrideWalking;
 	}
+
+	//
+	//public void TeleportTo(string[] args) {
+	//	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
+	//	if(_curTargetObj == null) { return; }
+
+	//	_curTargetObj.GetComponent<Appliance>().AddHarvest();
+	//	_agent.Warp(_curTargetObj.GetComponent<Appliance>().interactionPos);
+	//}
 
 	//
 	public void WarpToDestination() {
@@ -273,12 +284,12 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
 	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-	public GameObject FindNearestDevice(string affordance, bool isOwned) {
+	public GameObject FindNearestDevice(AvatarActivity.Target affordance, bool isOwned) {
 		GameObject target = null;
 		float minDist = float.MaxValue;
 
 		foreach(Appliance device in _devices) {
-			List<string> affordances = device.avatarAffordances;
+			List<AvatarActivity.Target> affordances = device.avatarAffordances;
 			if(affordances.Contains(affordance) && (!isOwned || device.owners.Contains(_stats.avatarName))) {
 				float dist = Vector3.Distance(transform.position, device.transform.position);
 				if(dist < minDist) {
@@ -312,14 +323,61 @@ public class BehaviourAI : MonoBehaviour {
 	//
 	public void CheckLighting() {
 		if(_curRoom) {
-			//if(_curRoom.lux < 1) {
-			//	Debug.Log(transform.parent.name + " thinks it's to dark in the " + _curRoom.name);
-			//	Appliance lightSwitch = _curRoom.GetLightSwitch();
-			//	if(lightSwitch) {
-			//		//Debug.Log(transform.parent.name +  " found a light switch");
-			//		TurnOnLight(lightSwitch);
-			//	}
-			//}
+			if(_curRoom.lux < 1) {
+				//Debug.Log(name + " thinks it's to dark in the " + _curRoom.name);
+				Appliance lightSwitch = _curRoom.GetLightSwitch();
+				if(lightSwitch) {
+					//Debug.Log(transform.parent.name +  " found a light switch");
+					TurnOnLight(lightSwitch);
+				}
+			} else {
+				//Debug.Log(name + " is ok with light in " + _curRoom.name);
+			}
 		}
+	}
+
+	//
+	public void CheckLighting(GameObject device) {
+		Room deviceRoom = device.GetComponentInParent<Room>();
+		if(deviceRoom) {
+			if(deviceRoom.lux < 1) {
+				Appliance lightSwitch = deviceRoom.GetLightSwitch();
+				if(lightSwitch) {
+					QuickTurnLightOn(lightSwitch);
+				}
+			}
+		}
+	}
+
+	//
+	public void TurnOnLight(Appliance lightSwitch) {
+		AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
+		walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
+		walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
+		walkToLightSwitch.currentRoom = true;
+
+		AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
+		turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
+		turnOnLight.target = AvatarActivity.Target.LampSwitch;
+		turnOnLight.parameter = "1";
+
+		_curActivity.InsertSession(turnOnLight);
+		_curActivity.InsertSession(walkToLightSwitch);
+	}
+
+	//
+	public void QuickTurnLightOn(Appliance lightSwitch) {
+		AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
+		walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
+		walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
+		walkToLightSwitch.currentRoom = true;
+
+		AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
+		turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
+		turnOnLight.target = AvatarActivity.Target.LampSwitch;
+		turnOnLight.parameter = "0";
+
+		_curActivity.InsertSession(turnOnLight);
+		_curActivity.InsertSession(walkToLightSwitch);
 	}
 }

@@ -13,50 +13,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sessions:
   - title: Walking to fridge
+    probability: 1
     type: 0
-    parameter: get_lunch
+    target: 6
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Getting lunch from fridge
+    probability: 1
     type: 4
-    parameter: get_lunch,1,30,0
+    target: 6
+    parameter: 1,30,0
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Walking to micro
+    probability: 1
     type: 0
-    parameter: heat_lunch
+    target: 14
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Heating lunch
+    probability: 1
     type: 4
-    parameter: heat_lunch,1,180,0
+    target: 14
+    parameter: 1,180,0
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Walking to nice lunch spot
+    probability: 1
     type: 0
-    parameter: eat_lunch
+    target: 3
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Eating lunch
-    type: 4
-    parameter: eat_lunch,1600
+    probability: 1
+    type: 1
+    target: 0
+    parameter: 1600
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Taking dishes to dishwasher
+    probability: 1
+    type: 0
+    target: 4
+    parameter: 
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Idle until done
+    probability: 1
+    type: 2
+    target: 0
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   SkipSession:
     title: 
+    probability: 1
     type: 0
+    target: 0
     parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0

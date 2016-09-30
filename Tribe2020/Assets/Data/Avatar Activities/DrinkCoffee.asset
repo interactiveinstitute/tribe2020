@@ -13,65 +13,92 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sessions:
   - title: Walking to coffee machine
+    probability: 1
     type: 0
-    parameter: get_coffee
+    target: 5
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Getting coffee
+    probability: 1
     type: 4
-    parameter: get_coffee,1,30,0
+    target: 5
+    parameter: 1,30,0
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Walking to fridge
+    probability: 1
     type: 0
-    parameter: get_milk
+    target: 6
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Getting milk
+    probability: 1
     type: 4
-    parameter: get_milk,1,30,0
+    target: 6
+    parameter: 1,30,0
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Walking to nice coffee spot
+    probability: 1
     type: 0
-    parameter: hang_out
+    target: 2
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Drinking coffee
-    type: 4
-    parameter: hang_out,180
+    probability: 1
+    type: 1
+    target: 0
+    parameter: 180
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Walking to dishwasher
+    probability: 1
     type: 0
-    parameter: wash_dishes
+    target: 4
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Putting cup in dishwasher
+    probability: 1
     type: 4
-    parameter: wash_dishes
+    target: 4
+    parameter: 
+    avatarOwnsTarget: 0
+    relatedEfficieny: 0
+    checkType: 0
+    efficienyLevel: 0
+  - title: Idle until over
+    probability: 1
+    type: 2
+    target: 0
+    parameter: 
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   SkipSession:
     title: 
-    type: 0
-    parameter: 
+    probability: 1
+    type: 5
+    target: 0
+    parameter: wash_dishes
     avatarOwnsTarget: 0
     relatedEfficieny: 0
     checkType: 0

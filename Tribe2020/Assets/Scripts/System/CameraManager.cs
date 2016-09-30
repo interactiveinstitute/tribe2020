@@ -19,6 +19,7 @@ public class CameraManager : MonoBehaviour {
 	public const string PANNED = "camera_panned";
 
 	//public Transform pilotTransform;
+	public GameObject viewPointContainer;
 
 	//Viewpoint variables
 	private Vector2 _curView = Vector2.zero;
@@ -59,7 +60,7 @@ public class CameraManager : MonoBehaviour {
 		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
 		//Populate collection of viewpoints
-		PopulateViewpoints(GameObject.FindGameObjectsWithTag("ViewPoint"));
+		PopulateViewpoints();
 
 		//PopulateViewpoints(Object.FindObjectsOfType<Viewpoint>());
 
@@ -179,21 +180,25 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	private void PopulateViewpoints(GameObject[] viewObjects) {
+	private void PopulateViewpoints() {
+		List<Viewpoint> viewPoints = new List<Viewpoint>(Object.FindObjectsOfType<Viewpoint>());
+
 		int maxY = 0;
 
-		foreach(GameObject vo in viewObjects) {
-			int curY = vo.GetComponent<Viewpoint>().yIndex;
+		//Find max y
+		foreach(Viewpoint vp in viewPoints) {
+			int curY = vp.yIndex;
 			if(maxY <= curY) { maxY = curY + 1; }
 		}
 		_viewpoints = new Transform[maxY][];
 
+		//Find max x for each floor
 		for(int y = 0; y < maxY; y++) {
 			int maxX = 0;
 
-			foreach(GameObject vo in viewObjects) {
-				if(vo.GetComponent<Viewpoint>().yIndex == y) {
-					int curX = vo.GetComponent<Viewpoint>().xIndex;
+			foreach(Viewpoint vp in viewPoints) {
+				if(vp.yIndex == y) {
+					int curX = vp.xIndex;
 					if(maxX <= curX) { maxX = curX + 1; }
 				}
 			}
@@ -201,12 +206,12 @@ public class CameraManager : MonoBehaviour {
 			_viewpoints[y] = new Transform[maxX];
 		}
 		
+		//Add viewpoints to camera manager
+		foreach(Viewpoint vp in viewPoints) {
+			int curX = vp.xIndex;
+			int curY = vp.yIndex;
 
-		foreach(GameObject vo in viewObjects) {
-			int curX = vo.GetComponent<Viewpoint>().xIndex;
-			int curY = vo.GetComponent<Viewpoint>().yIndex;
-
-			_viewpoints[curY][curX] = vo.transform;
+			_viewpoints[curY][curX] = vp.transform;
 		}
 
 		//Debug.Log("Populated " + _viewpoints.Length + " floors with " + viewObjects.Length + " views");

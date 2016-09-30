@@ -9,7 +9,7 @@ public class ElectricMeter : MonoBehaviour {
 	public ElectricMeter PowerSource;
 	[Tooltip("Indicates if the device is connected to power or not. Can also be set manually so that a meter point becomes a power source if the Power From parameter is empty.")]
 	[SerializeField]
-	protected bool HasPower = false;
+	public bool HasPower = false;
 	[Tooltip("Makes the meterpoint conduct power to the conneced devices or not")]
 	public bool GivesPower = true;
 	protected GameTime _timeMgr;
@@ -180,26 +180,14 @@ public class ElectricMeter : MonoBehaviour {
 
 	public virtual void On () {
 		powering (true);
-
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
 	}
 
 	public virtual void Off () {
 		powering (false);
-
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
 	}
 
 	public void Toggle () {
 		powering (!GivesPower);
-
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
 	}
 
 }

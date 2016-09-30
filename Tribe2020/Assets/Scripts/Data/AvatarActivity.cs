@@ -23,19 +23,25 @@ public class AvatarActivity : ScriptableObject {
 	public double endTime = 0;
 
 	//Activity session types
-	public enum SessionType { WalkTo, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact };
+	public enum SessionType { WalkTo, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
+	//
+	public enum Target { None, OfficeDesk, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
+		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home };
 
 	//Definition of a quest step
 	[System.Serializable]
 	public class Session {
 		public string title;
+		public float probability = 1f;
 		public SessionType type;
+		public Target target;
 		public string parameter;
 		public bool avatarOwnsTarget;
+		public bool currentRoom;
 		public EfficiencyType relatedEfficieny;
 		public CheckType checkType;
 		public float efficienyLevel;
@@ -82,15 +88,20 @@ public class AvatarActivity : ScriptableObject {
 		Debug.Log(name + " started session " + session.title);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
+				_ai.Stop();
 				_delay = int.Parse(session.parameter);
 				break;
 			case SessionType.WaitUntilEnd:
+				_ai.Stop();
 				break;
 			case SessionType.WalkTo:
-				_ai.WalkTo(session.parameter, session.avatarOwnsTarget);
+				_ai.WalkTo(session.target, session.avatarOwnsTarget);
 				break;
 			case SessionType.Interact:
 				NextSession();
+				break;
+			case SessionType.Teleport:
+				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
 		}
 	}
@@ -104,8 +115,11 @@ public class AvatarActivity : ScriptableObject {
 	//
 	public void NextSession() {
 		_curStep++;
+
 		if(_curStep >= sessions.Count) {
 			_ai.OnActivityOver();
+		} else {
+			StartSession(sessions[_curStep]);
 		}
 	}
 
@@ -132,7 +146,7 @@ public class AvatarActivity : ScriptableObject {
 	}
 
 	//
-	public void Simulate() {
+	public void QuickRun() {
 		if(_curStep > 0) {
 			sessions.RemoveRange(0, _curStep - 1);
 		}
@@ -145,11 +159,24 @@ public class AvatarActivity : ScriptableObject {
 	}
 
 	//
+	public void Revert() {
+	}
+
+	//
 	public void SimulateSession(Session session) {
 		switch(session.type) {
-			case SessionType.WaitForDuration: break;
-			case SessionType.WaitUntilEnd: break;
-			case SessionType.WalkTo: _ai.WarpToDestination(); break;
+			case SessionType.WaitForDuration:
+				break;
+			case SessionType.WaitUntilEnd:
+				break;
+			case SessionType.WalkTo:
+				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
+				break;
+			case SessionType.Interact:
+				_ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
+				break;
+			default:
+                break;
 		}
 	}
 
@@ -179,13 +206,17 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void SimulateExecution(BehaviourAI ai) {
+
+
 		//Debug.Log("SimulateExecution:" + onSkipCommand);
 
-		ExecuteCommand(ai, onSkipCommand);
+		//ExecuteCommand(ai, onSkipCommand);
 	}
 
 	//
 	public void ResumeSession(BehaviourAI ai) {
+		_curStep = 0;
+		StartSession(sessions[_curStep]);
 		//ExecuteCommand(ai, sessions[_curStep]);
 	}
 
