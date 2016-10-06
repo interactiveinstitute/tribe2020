@@ -9,7 +9,7 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 
-public class ServerConnection : MonoBehaviour {
+public class MQTT : ServerObject {
 
 
 	//http://tdoc.info/blog/2014/11/10/mqtt_csharp.html
@@ -22,17 +22,17 @@ public class ServerConnection : MonoBehaviour {
 	public string topic = null;
 	
 	private Queue msgq = new Queue();
-	
+
 	string lastMessage = null;
 
 	//Singleton functionality 
-	private static ServerConnection _instance;
+	private static MQTT _instance;
 
 	void Awake () {
 		_instance = this;
 	}
 
-	public static ServerConnection GetInstance () {
+	public static MQTT GetInstance () {
 		return _instance;
 	}
 
@@ -95,6 +95,6 @@ public class ServerConnection : MonoBehaviour {
 		ts.Values = new double[4] {1.0,2.0,3.0,4.0};
 		ts.TimeStamps = new double[4] {1452691843.0,1452691849.0,1452691858.0,1452691890.0};
 		ts.BufferValid = true;
-		ts.BufferSize = BufferSize;
+		ts.CurrentSize = BufferSize;
 	}
 }

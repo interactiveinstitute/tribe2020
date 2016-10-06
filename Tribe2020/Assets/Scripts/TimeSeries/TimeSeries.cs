@@ -3,38 +3,67 @@ using System.Collections;
 
 
 public class TimeSeries : MonoBehaviour {
-
+	[Header("General")]
 	public string Name;
+	[Space(10)]
 	public double StartTime;
+	public double StopTime;
 	public bool Absolute = true;
-
-	public int BufferSize;
+	[Space(10)]
+	public string ValueUnit;
+	public string IntegralUnit;
+	[Space(10)]
+	public int BufferMaxSize;
 	public bool isAsync = false;
+	public bool hasIntegral = false;
+	public bool isTextSeries = false;
+	public int ReloadLimit = 0;
 
+
+
+
+
+	[Header("Data manipulation")]
+	public double ValueOffset = 0;
+	public double ValueScaleFactor = 1;
+	public double TimeOffset = 0;
+
+	[Header("Status")]
+	public bool UpdateStatus;
+	[Space(10)]
 	public bool BufferValid = false;
-
-	public bool Debug;
 	public int CurrentIndex;
 	public double CurrentValue;
+	public double CurrentIntegral;
+	public string CurrentText;
+	public int CurrentSize;
 
-
+	[Header("Buffer")]
 	public double[] Values;
+	public double[] Integral;
 	public double[] TimeStamps;	
 
-	public ServerConnection Server = null;
+	[Header("Server")]
+	public ServerObject Server = null;
 	private GameTime TTime = null;
+	[Space(10)]
+	public string Topic;
+	public string Subproperty;
+
+
 
 	// Use this for initialization
 	void Start () {
-
-		Server = ServerConnection.GetInstance ();
+		//Auto set if not set allready.
+		if (Server == null)
+			Server = MQTT.GetInstance ();
 		TTime = GameTime.GetInstance ();
 		RequestData ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Debug == true) {
+		if (UpdateStatus == true) {
 			CurrentValue = GetCurrentValue ();
 			CurrentIndex = GetCurrentIndex (TTime.time);
 		}
@@ -44,7 +73,7 @@ public class TimeSeries : MonoBehaviour {
 		if (Server == null)
 			return false;
 
-		Server.Request(this,Name,StartTime,Absolute,BufferSize);
+		Server.Request(this,Name,StartTime,Absolute,BufferMaxSize);
 
 		return true;
 	}
