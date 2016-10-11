@@ -11,6 +11,6 @@ public class MenuView : View {
 	
 	// Update is called once per frame
 	void Update () {
-		animator.SetFloat("Speed", 100);
+		//animator.SetFloat("Speed", 100);
 	}
 }

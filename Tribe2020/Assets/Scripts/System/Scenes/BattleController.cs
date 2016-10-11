@@ -48,7 +48,7 @@ public class BattleController : Controller {
 	void Update () {
 		if(!_isLoaded) {
 			_isLoaded = true;
-			_saveMgr.Load();
+			_saveMgr.Load(SaveManager.currentSlot);
 		}
 
 		_view.foeCPNumber.text = foeCP + "/100";
@@ -68,7 +68,7 @@ public class BattleController : Controller {
 
 	//
 	void OnDestroy() {
-		_saveMgr.Save();
+		_saveMgr.Save(SaveManager.currentSlot);
 	}
 
 	//
@@ -79,7 +79,7 @@ public class BattleController : Controller {
 	//
 	private void OnTouchEnded(Vector3 pos) {
 		if(_isTouching && _hasWon) {
-			_sceneMgr.LoadScene("ga_madrid_erik");
+			_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "pilot"));
 		}
 	}
 

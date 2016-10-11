@@ -71,7 +71,7 @@ public class PilotController : Controller{
 	void Update(){
 		if(!_isLoaded) {
 			_isLoaded = true;
-			_saveMgr.Load();
+			_saveMgr.Load(SaveManager.currentSlot);
 		}
 
 		//Mobile interaction
@@ -441,7 +441,7 @@ public class PilotController : Controller{
 
 	//
 	public override void SaveGameState() {
-		_saveMgr.Save();
+		_saveMgr.Save(SaveManager.currentSlot);
 	}
 
 	//

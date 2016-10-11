@@ -11,6 +11,8 @@ public class SaveManager : MonoBehaviour{
 		return _instance;
 	}
 
+	public static int currentSlot = 0;
+
 	private GameTime _timeMgr;
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
@@ -23,6 +25,7 @@ public class SaveManager : MonoBehaviour{
 	void Awake(){
 		_instance = this;
 		_filePath = Application.persistentDataPath + "/" + fileName + ".gd";
+		_dataClone = ReadFileAsJSON();
 	}
 
 	//Use this for initialization
@@ -38,54 +41,114 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public JSONNode GetData(int instance, string field) {
-		if(_dataClone["instances"][instance][field] != null) {
-			return _dataClone["instances"][0][field];
+	public JSONNode GetData(int slot, string field) {
+		if(_dataClone["instances"][slot] != null) {
+			if(_dataClone["instances"][slot][field] != null) {
+				return _dataClone["instances"][slot][field];
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	//
+	public JSONClass GetClass(int slot, string field) {
+		if(_dataClone["instances"][slot][field] != null) {
+			return _dataClone["instances"][slot][field].AsObject;
 		} else {
 			return null;
 		}
 	}
 
 	//
-	public JSONClass GetClass(int instance, string field) {
-		if(_dataClone["instances"][instance][field] != null) {
-			return _dataClone["instances"][0][field].AsObject;
-		} else {
-			return null;
+	public void SetData(int slot, string field, string value) {
+		_dataClone["instances"][slot].Add(field, value);
+	}
+
+	//
+	public void SetData(int slot, string field, JSONClass value) {
+		_dataClone["instances"][slot].Add(field, value);
+	}
+
+	//
+	public bool IsSlotVacant(int slot) {
+		return GetData(slot, "pilot") == null;
+	}
+
+	public void Delete(int slot) {
+		_dataClone["instances"][slot].Remove("pilot");
+		_dataClone["instances"][slot].Remove("lastTime");
+		File.WriteAllText(_filePath, _dataClone.ToString());
+	}
+
+	//
+	public string GetSlotData(int slot) {
+		//_dataClone = ReadFileAsJSON();
+		//Debug.Log("GetSlotData: " + slot);
+
+		JSONNode fileData = GetData(slot, "pilot");
+
+		if(fileData == null) {
+			return "New Game";
 		}
+
+		return fileData;
 	}
 
 	//
-	public void SetData(int instance, string field, string value) {
-		_dataClone["instances"][instance].Add(field, value);
+	public int GetLastSlot() {
+		if(_dataClone["lastSlot"] != null) {
+			return _dataClone["lastSlot"].AsInt;
+		}
+		return -1;
 	}
 
 	//
-	public void SetData(int instance, string field, JSONClass value) {
-		_dataClone["instances"][instance].Add(field, value);
+	public void ResetLastSlot() {
+		_dataClone.Remove("lastSlot");
+		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
-	public void Save() {
-		SetData(0, "lastTime", _timeMgr.time.ToString());
-		SetData(0, "money", _resourceMgr.cash.ToString());
-		SetData(0, "comfort", _resourceMgr.comfort.ToString());
+	public void InitSlot(int slot, string pilot) {
+		//SetData(slot, "pilot", pilot);
 
-		SetData(0, "questState", _narrationMgr.Encode());
+		//SetData(slot, "lastTime", "1452691843.939");
+		//SetData(slot, "money", "500");
+		//SetData(slot, "comfort", "500");
+
+		//SetData(slot, "questState", _narrationMgr.Encode());
+
+		//File.WriteAllText(_filePath, _dataClone.ToString());
+	}
+
+	//
+	public void Save(int slot) {
+		SetData(slot, "pilot", "ga_madrid_erik");
+
+		SetData(slot, "lastTime", _timeMgr.time.ToString());
+		SetData(slot, "money", _resourceMgr.cash.ToString());
+		SetData(slot, "comfort", _resourceMgr.comfort.ToString());
+
+		SetData(slot, "questState", _narrationMgr.Encode());
 
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
-	public void Load() {
+	public void Load(int slot) {
+		//Debug.Log("Load: " + currentSlot);
 		_dataClone = ReadFileAsJSON();
 
-		if(GetData(0, "lastTime") != null) {
-			_timeMgr.SetTime(GetData(0, "lastTime").AsDouble);
-			_resourceMgr.cash = GetData(0, "money").AsInt;
-			_resourceMgr.comfort = GetData(0, "comfort").AsInt;
+		_dataClone.Add("lastSlot", "" + slot);
 
-			_narrationMgr.Decode(GetClass(0, "questState"));
+		if(GetData(slot, "lastTime") != null) {
+			_timeMgr.SetTime(GetData(slot, "lastTime").AsDouble);
+			_resourceMgr.cash = GetData(slot, "money").AsInt;
+			_resourceMgr.comfort = GetData(slot, "comfort").AsInt;
+
+			_narrationMgr.Decode(GetClass(slot, "questState"));
 		} else {
 			_narrationMgr.SetStartState();
 		}
