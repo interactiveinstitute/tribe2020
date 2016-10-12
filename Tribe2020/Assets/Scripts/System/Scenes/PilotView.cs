@@ -172,7 +172,7 @@ public class PilotView : View{
 				break;
 		}
 
-		Debug.Log("ControlInterface: " + id + ", " + visibility);
+		//Debug.Log("ControlInterface: " + id + ", " + visibility);
 	}
 
 	//

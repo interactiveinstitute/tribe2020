@@ -85,7 +85,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void StartSession(Session session) {
-		Debug.Log(name + " started session " + session.title);
+		Debug.Log(_ai.name + " started session " + session.title);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
 				_ai.Stop();
@@ -102,6 +102,10 @@ public class AvatarActivity : ScriptableObject {
 				break;
 			case SessionType.Teleport:
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
+				break;
+			case SessionType.SetRunlevel:
+				_ai.SetRunLevel(session.target, session.parameter);
+				NextSession();
 				break;
 		}
 	}
@@ -140,6 +144,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
+		Debug.Log(_ai.name + " reached destination " + sessions[_curStep].target);
 		if(sessions[_curStep].type == SessionType.WalkTo) {
 			NextSession();
 		}

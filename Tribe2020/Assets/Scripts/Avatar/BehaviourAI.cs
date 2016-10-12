@@ -283,6 +283,13 @@ public class BehaviourAI : MonoBehaviour {
 		_delay = seconds;
 	}
 
+	//
+	public void SetRunLevel(AvatarActivity.Target target, string parameter) {
+		GameObject device = FindNearestDevice(target, false);
+		device.GetComponent<ElectricMeter>().On();
+			//.SetRunlevel(int.Parse(parameter));
+	}
+
 	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
 	public GameObject FindNearestDevice(AvatarActivity.Target affordance, bool isOwned) {
 		GameObject target = null;
@@ -352,11 +359,13 @@ public class BehaviourAI : MonoBehaviour {
 	//
 	public void TurnOnLight(Appliance lightSwitch) {
 		AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
+		walkToLightSwitch.title = "Walking to light switch";
 		walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
 		walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
 		walkToLightSwitch.currentRoom = true;
 
 		AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
+		turnOnLight.title = "Turning on light";
 		turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
 		turnOnLight.target = AvatarActivity.Target.LampSwitch;
 		turnOnLight.parameter = "1";
@@ -373,6 +382,7 @@ public class BehaviourAI : MonoBehaviour {
 		walkToLightSwitch.currentRoom = true;
 
 		AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
+		turnOnLight.title = "Turn on light";
 		turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
 		turnOnLight.target = AvatarActivity.Target.LampSwitch;
 		turnOnLight.parameter = "0";
