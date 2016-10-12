@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 
 public class ElectricMeter : MonoBehaviour {
-
+	[Header("Source")]
 	[Tooltip("Makes the meterpoint powered regardless of state of power source.")]
 	public bool AlwaysPowered=false;
 	[Tooltip("The object from where the meterpoint gets its power.")]
 	public ElectricMeter PowerSource;
+	[Tooltip("If this is checked and the the PowerSouce is empty the Electric meter will seach up the gameobjects hierarchy for a power source.")]
+	public bool AutomaticallyFindSource;
 	[Tooltip("Indicates if the device is connected to power or not. Can also be set manually so that a meter point becomes a power source if the Power From parameter is empty.")]
 	[SerializeField]
 	public bool HasPower = false;
+
+	[Header("Targets")]
 	[Tooltip("Makes the meterpoint conduct power to the conneced devices or not")]
 	public bool GivesPower = true;
 	protected GameTime _timeMgr;
@@ -17,12 +21,14 @@ public class ElectricMeter : MonoBehaviour {
 
 	public List<ElectricMeter> Powering = new List<ElectricMeter>();
 
+	[Header("Readings")]
 	public float Power = 0;
 	public double Energy = 0;
 	protected double lastupdate;
 
+	[Header("Debug tools")]
 	public bool continous_updates = false;
-
+	[Space(10)]
 
 	// Use this for initialization
 	public virtual void Start () {
