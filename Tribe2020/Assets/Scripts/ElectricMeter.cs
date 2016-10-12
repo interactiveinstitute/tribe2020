@@ -8,7 +8,7 @@ public class ElectricMeter : MonoBehaviour {
 	[Tooltip("The object from where the meterpoint gets its power.")]
 	public ElectricMeter PowerSource;
 	[Tooltip("If this is checked and the the PowerSouce is empty the Electric meter will seach up the gameobjects hierarchy for a power source.")]
-	public bool AutomaticallyFindSource;
+	public bool AutomaticallyFindSource = false;
 	[Tooltip("Indicates if the device is connected to power or not. Can also be set manually so that a meter point becomes a power source if the Power From parameter is empty.")]
 	[SerializeField]
 	public bool HasPower = false;
@@ -28,15 +28,17 @@ public class ElectricMeter : MonoBehaviour {
 
 	[Header("Debug tools")]
 	public bool continous_updates = false;
-	[Space(10)]
 
 	// Use this for initialization
 	public virtual void Start () {
 
 		_timeMgr = GameTime.GetInstance();
-
-
 		lastupdate = _timeMgr.time;
+
+		//Auto
+		if (PowerSource == null && AutomaticallyFindSource)
+			AutoFindPowerSource ();
+
 
 		//Check if source has electricity?
 		if (AlwaysPowered)
@@ -50,6 +52,48 @@ public class ElectricMeter : MonoBehaviour {
 		Connect (PowerSource);
 	}
 
+	public void AutoFindPowerSource () {
+		ElectricMeter source;
+		GameObject parentObject;
+		MainMeter _mm;
+
+		if (transform.parent == null) {
+			
+			_mm = MainMeter.GetInstance ();
+
+			if (_mm != null)
+				PowerSource = _mm;
+
+			return;
+		}
+		parentObject = this.transform.parent.gameObject;
+
+		while (true) {
+
+			//No more parents and nothing found 
+			if (parentObject == null) {
+				_mm = MainMeter.GetInstance ();
+
+				if (_mm != null)
+					PowerSource = _mm;
+				return;
+			}
+
+			source = parentObject.GetComponent<ElectricMeter> ();
+
+			//If there is a hit use the first one. 
+			if (source != null) {
+
+				if (this != source) {
+					PowerSource = source;
+					return;
+					}
+			}
+
+			parentObject = parentObject.transform.parent.gameObject;
+		}
+	}	
+
 	//Connects the meter to another meter. 
 	public void Connect(ElectricMeter meter) {
 
@@ -61,7 +105,7 @@ public class ElectricMeter : MonoBehaviour {
 		}
 
 		if (PowerSource == null)
-			return;
+			AutoFindPowerSource ();
 		
 		if (!PowerSource.Powering.Contains(this))
 			PowerSource.Powering.Add (this);

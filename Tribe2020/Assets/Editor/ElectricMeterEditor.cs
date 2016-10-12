@@ -34,6 +34,8 @@ public class ElectricMeterEditor : Editor
 		{
 			myScript.Connect(myScript.PowerSource);
 		}
+
+
 			
 	}
 }
