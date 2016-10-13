@@ -116,7 +116,7 @@ public class MenuController : Controller {
 
 	//
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
-		Debug.Log("InitSlotButton" + button.name + ", " + removeButton.name + ", " + slot + ", " + _saveMgr.IsSlotVacant(slot));
+		//Debug.Log("InitSlotButton" + button.name + ", " + removeButton.name + ", " + slot + ", " + _saveMgr.IsSlotVacant(slot));
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
 			button.GetComponentInChildren<Text>().text = "New Game";
@@ -137,7 +137,7 @@ public class MenuController : Controller {
 	//
 	public void NewGame(string pilot) {
 		SaveManager.currentSlot = pendingNewGameSlot;
-		Debug.Log("NewGame: " + SaveManager.currentSlot);
+		//Debug.Log("NewGame: " + SaveManager.currentSlot);
 		_saveMgr.InitSlot(pendingNewGameSlot, pilot);
 		LoadScene(pilot);
 	}
