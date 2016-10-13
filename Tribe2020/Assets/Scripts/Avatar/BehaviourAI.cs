@@ -7,8 +7,6 @@ public class BehaviourAI : MonoBehaviour {
 	public enum ActivityState { Idle, Walking, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
 	[SerializeField]
 	private ActivityState _curActivityState = ActivityState.Idle;
-	[SerializeField]
-	private float _delay = 0;
 
 	private PilotController _controller;
 	private GameTime _timeMgr;
@@ -73,14 +71,16 @@ public class BehaviourAI : MonoBehaviour {
 			_curActivity.Run();
 		}
 
-		//CheckLighting();
+        //CheckLighting();
+        _curActivity.Step(this);
 
-		switch(_curActivityState) {
+        switch (_curActivityState) {
 			//Not doing anything, do something feasible in the pilot
 			case ActivityState.Idle:
-				//	_curActivity.Init(this);
-				//	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
-				break;
+                //_curActivity.Step(this);
+                //	_curActivity.Init(this);
+                //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+                break;
 			// Walking towards an object, check if arrived to proceed
 			case ActivityState.OverrideWalking:
 			case ActivityState.Walking:
@@ -103,8 +103,7 @@ public class BehaviourAI : MonoBehaviour {
 			// Waiting for a duration, check if wait is over to proceed
 			case ActivityState.Waiting:
 				_charController.Move(Vector3.zero, false, false);
-				_curActivity.Step(this);
-				_delay -= Time.deltaTime;
+				//_curActivity.Step(this);
 				//if(_delay < 0) {
 				//	_controller.OnAvatarSessionComplete(_curActivity.name);
 				//	_curActivity.NextStep(this);
@@ -144,16 +143,16 @@ public class BehaviourAI : MonoBehaviour {
 
 		SetActivity(curItem.activity, startTime, endTime);
 
-		//Step forward and then backward until time is right
-		while(curTime > _curActivity.endTime) {
-			NextActivity();
-		}
+        //Step forward and then backward until time is right
+        while (curTime > _curActivity.endTime) {
+            NextActivity();
+        }
 
-		while(curTime < _curActivity.startTime) {
-			PreviousActivity();
-		}
+        while (curTime < _curActivity.startTime) {
+            PreviousActivity();
+        }
 
-		_curActivity.Run();
+        _curActivity.Run();
 	}
 
 	//
@@ -223,8 +222,16 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void Stop() {
-		_charController.Move(Vector3.zero, false, false);
+        _curActivityState = ActivityState.Idle;
+        _charController.Move(Vector3.zero, false, false);
 	}
+
+    public void Wait()
+    {
+        _curActivityState = ActivityState.Idle;
+        _charController.Move(Vector3.zero, false, false);
+
+    }
 
 	//
 	public void WalkTo(Vector3 target) {
@@ -280,7 +287,6 @@ public class BehaviourAI : MonoBehaviour {
 	public void Delay(float seconds) {
 		//Debug.Log(name + ".Delay(" + seconds + ")");
 		_curActivityState = ActivityState.Waiting;
-		_delay = seconds;
 	}
 
 	//
@@ -313,7 +319,6 @@ public class BehaviourAI : MonoBehaviour {
 	public void OnActivityOver() {
 		_controller.OnAvatarActivityComplete(_curActivity.name);
 		_curActivityState = ActivityState.Idle;
-		_delay = 0;
 	}
 
 	//

@@ -55,10 +55,27 @@ public class AvatarActivity : ScriptableObject {
 	}
 
 	public virtual void Step(BehaviourAI ai) {
-		//if(_delay > 0f) {
-		//	_delay -= Time.deltaTime;
-		//}
+        if (sessions[_curStep].type == SessionType.WaitForDuration)
+        {
+            if (_delay > 0f)
+            {
+                _delay -= Time.deltaTime;
+            }else
+            {
+                NextSession();
+            }
+        }
 	}
+
+    public void Wait() {
+        if (_delay > 0f)
+        {
+            _delay -= Time.deltaTime;
+        }else
+        {
+            NextSession();
+        }
+    }
 
 	//
 	public void Init(BehaviourAI ai, double startTime, double endTime) {
@@ -78,7 +95,8 @@ public class AvatarActivity : ScriptableObject {
 	public void Run() {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
 		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
-		Debug.Log(_ai.name + " doing " + name + " start " + startTimeView + ", end " + endTimeView);
+        string currTime = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
+		Debug.Log(_ai.name + " doing " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTime);
 
 		StartSession(sessions[_curStep]);
 	}
@@ -88,8 +106,8 @@ public class AvatarActivity : ScriptableObject {
 		Debug.Log(_ai.name + " started session " + session.title);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
-				_ai.Stop();
-				_delay = int.Parse(session.parameter);
+                _delay = int.Parse(session.parameter);
+                _ai.Wait();
 				break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
