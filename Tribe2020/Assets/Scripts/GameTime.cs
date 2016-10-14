@@ -70,25 +70,25 @@ public class GameTime : MonoBehaviour {
 		return (double)span.TotalSeconds;
 	}
 
-	//
-	public double ScheduleToTimestamp(string hourMinute) {
-		DateTime curTime = TimestampToDateTime(time);
-		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day, hourMinute);
-	}
+	////Convert timestring from schedule to timestamp
+	//public double ScheduleToTimestamp(string hourMinute) {
+	//	DateTime curTime = TimestampToDateTime(time);
+	//	return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day, hourMinute);
+	//}
 
-	//
-	public double ScheduleToTimestamp(int dOff, string hourMinute) {
-		DateTime curTime = TimestampToDateTime(time);
-		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dOff, hourMinute);
-	}
+	////
+	//public double ScheduleToTimestamp(int dOff, string hourMinute) {
+	//	DateTime curTime = TimestampToDateTime(time);
+	//	return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dOff, hourMinute);
+	//}
 
-	//
-	public double ScheduleToTimestamp(int mOff, int dOff, string hourMinute) {
-		DateTime curTime = TimestampToDateTime(time);
-		return ScheduleToTS(curTime.Year, curTime.Month + mOff, curTime.Day + dOff, hourMinute);
-	}
+	////
+	//public double ScheduleToTimestamp(int mOff, int dOff, string hourMinute) {
+	//	DateTime curTime = TimestampToDateTime(time);
+	//	return ScheduleToTS(curTime.Year, curTime.Month + mOff, curTime.Day + dOff, hourMinute);
+	//}
 
-	//
+	//Returns a timestamp derived from year, month, day and an hourminute string
 	public double ScheduleToTS(int year, int month, int day, string hourMinute) {
 		string[] timeParse = hourMinute.Split(':');
 		int hour = int.Parse(timeParse[0]);
@@ -103,9 +103,11 @@ public class GameTime : MonoBehaviour {
 		return (double)span.TotalSeconds;
 	}
 
-	//
-	public double ScheduleToTS(double timeOffset, int dayOffset, string hourMinute) {
-		DateTime curTime = TimestampToDateTime(timeOffset);
+	//Returns a timestamp derived from an hour-minute string and a day offset
+    //The returned timestamp is based on the hour-minute from the day of the referenceStamp
+    //offset by dayoffset.
+	public double ScheduleToTS(double referenceStamp, int dayOffset, string hourMinute) {
+		DateTime curTime = TimestampToDateTime(referenceStamp);
 		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dayOffset, hourMinute);
 	}
 

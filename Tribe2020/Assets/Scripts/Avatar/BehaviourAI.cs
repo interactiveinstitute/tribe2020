@@ -59,25 +59,29 @@ public class BehaviourAI : MonoBehaviour {
 	void Update() {
 		double curTime = _timeMgr.GetTotalSeconds();
 
+        // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
+        // the script will try to simulate the schedule until the curTime is reached.
 		if(curTime > _curActivity.endTime) {
-			_curActivity.QuickRun();
+            Debug.Log("Current activity's endTime passed. Finish it and start next one");
+			_curActivity.FinishCurrentActivity();
 			NextActivity();
 			_curActivity.Run();
 		}
 
-		if(curTime < _curActivity.startTime) {
-			_curActivity.Revert();
+        //same as above but backwards.
+		if(curTime < _curActivity.startTime)
+        {
+            Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
+            _curActivity.Revert();
 			PreviousActivity();
 			_curActivity.Run();
 		}
-
-        //CheckLighting();
+        
         _curActivity.Step(this);
 
         switch (_curActivityState) {
 			//Not doing anything, do something feasible in the pilot
 			case ActivityState.Idle:
-                //_curActivity.Step(this);
                 //	_curActivity.Init(this);
                 //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
                 break;
@@ -87,6 +91,7 @@ public class BehaviourAI : MonoBehaviour {
 				if(_agent.remainingDistance > _agent.stoppingDistance) {
 					_charController.Move(_agent.desiredVelocity, false, false);
 				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
+                    //Hurray. We got there.
 					_charController.Move(Vector3.zero, false, false);
 					_curActivity.OnDestinationReached();
 
@@ -100,14 +105,9 @@ public class BehaviourAI : MonoBehaviour {
 					//}
 				}
 				break;
-			// Waiting for a duration, check if wait is over to proceed
+			// Waiting
 			case ActivityState.Waiting:
 				_charController.Move(Vector3.zero, false, false);
-				//_curActivity.Step(this);
-				//if(_delay < 0) {
-				//	_controller.OnAvatarSessionComplete(_curActivity.name);
-				//	_curActivity.NextStep(this);
-				//}
 				break;
 			case ActivityState.OverrideIdle:
 				_charController.Move(Vector3.zero, false, false);
@@ -125,38 +125,102 @@ public class BehaviourAI : MonoBehaviour {
 		}
 	}
 
-	//
-	public void SyncSchedule() {
-		double curTime = _timeMgr.GetTotalSeconds();
+    //Erik claims that this part might be related to have the avatar behave correctly when making jumps in time.
+    //I'm not convinced though... It seems to run only once when initiating an avatar, 
+    //so the only chance it might relate to jumps in time is if _scheduleIndex is somehow
+    //set from save on startup (now it's always 0 when entering the function, no?).
+    //And my understanding is that the schedule is not part of save?
+    //I'm now changing it to always find the closest upcoming activity in the schedule and choose it as _curActivity...
+    public void SyncSchedule() {
+        double curTime = _timeMgr.GetTotalSeconds();
+        DateTime curDateTime = _timeMgr.GetDateTime();
+        double curHour = curDateTime.Hour;
+        double curMinute = curDateTime.Minute;
 
-		//Get next schedule index with potential offset in days
-		int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
-		int endTimeDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
+        //loop through the schedule until we get to an actvity that should happen in the future
+        for(; _scheduleIndex < schedule.Length; _scheduleIndex++)
+        {
 
-		//Setup next schedule item and the one after that
-		ScheduleItem curItem = schedule[_scheduleIndex];
-		ScheduleItem nxtItem = schedule[nxtIndex];
+            string[] timeParse = schedule[_scheduleIndex].time.Split(':');
+            int schedHour = int.Parse(timeParse[0]);
+            int schedMinute = int.Parse(timeParse[1]);
 
-		//Determine end time for next item from current time and start time of item after that
-		double startTime = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
-		double endTime = _timeMgr.ScheduleToTS(curTime, endTimeDayOffset, nxtItem.time);
+            //Is this activity in the future
+            if(curHour <= schedHour)
+            {
+                //if same hour. also check minutes.
+                if (curHour == schedHour && curMinute > schedMinute)
+                {
+                    continue; // if same hour and minutes already past, don't pick this activity.
+                }
 
-		SetActivity(curItem.activity, startTime, endTime);
+                //ok. this activity is in the future. Let's set it as the _curActivity.
+                //To achieve that we must first calculate some timstamps and stuff...
 
-        //Step forward and then backward until time is right
-        while (curTime > _curActivity.endTime) {
-            NextActivity();
+                ////Get next schedule index with potential offset in days
+                int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
+
+                //Setup the current schedule item and the one after that.
+                //We need the second one to set endtime of the first
+                ScheduleItem curItem = schedule[_scheduleIndex];
+                ScheduleItem nxtItem = schedule[nxtIndex];
+
+                //Will be set to 1 if the current activity is the last in schedule.
+                //If that's the case we want to set the endTime for current activity to be on the next day
+                int endTimeDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
+
+                //Determine startTime as timeStamp
+                double startTime = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
+                //Determine end time from current time and start time of item after current
+                double endTime = _timeMgr.ScheduleToTS(curTime, endTimeDayOffset, nxtItem.time);
+
+                    
+                SetActivity(schedule[_scheduleIndex].activity, startTime, endTime);
+
+                Debug.Log("startActivity set. It's " + schedule[_scheduleIndex].activity + " with timeStamps " + startTime + ", " + endTime);
+                return;
+            }
         }
 
-        while (curTime < _curActivity.startTime) {
-            PreviousActivity();
-        }
 
-        _curActivity.Run();
-	}
+
+
+        //---------------------OLD ERIK VERSION
+        //      // get da time!
+        //double curTime = _timeMgr.GetTotalSeconds();
+
+        ////Get next schedule index with potential offset in days
+        //int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
+
+        //Will be set to 1 if the next activity is the last in schedule.
+        //If that's the case we want to set the endTime to be on the next day
+        //int endTimeDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
+
+        ////Setup next schedule item and the one after that
+        //ScheduleItem curItem = schedule[_scheduleIndex];
+        //ScheduleItem nxtItem = schedule[nxtIndex];
+
+        ////Determine end time for next item from current time and start time of item after that
+        //double startTime = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
+        //double endTime = _timeMgr.ScheduleToTS(curTime, endTimeDayOffset, nxtItem.time);
+
+        //SetActivity(curItem.activity, startTime, endTime);
+
+        //      //Step forward and then backward until time is right
+        //      while (curTime > _curActivity.endTime) {
+        //          NextActivity();
+        //      }
+
+        //      while (curTime < _curActivity.startTime) {
+        //          PreviousActivity();
+        //      }
+
+        //      _curActivity.Run();
+    }
 
 	//
 	public void SetActivity(AvatarActivity activity, double startTime, double endTime) {
+        Debug.Log("setting current activity: " + activity);
 		_curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
 		_curActivity.Init(this, startTime, endTime);
 	}
@@ -188,26 +252,33 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void PreviousActivity() {
-		int prevIndex = 0;
+        //int prevIndex = 0;
+        int nextIndex = 0;
 		if(schedule.Length > 0) {
-			//Iterate schedule index
-			_scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
+            //Sooo. Since we're stepping backwards, the current index will become nextIndex
+            nextIndex = _scheduleIndex;
 
-			//Get next schedule index with potential offset in days
-			prevIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
+            //Iterate schedule index
+            _scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
+
+            ////Get previous schedule index
+            //prevIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
 		}
+
 		int startTimeDayOffset = 0;
-		if(prevIndex > _scheduleIndex) { startTimeDayOffset = -1; }
+        //Is the previous activity started the previous day?
+        if (_scheduleIndex > nextIndex) { startTimeDayOffset = -1; }
 
-		//Setup next schedule item and the one after that
-		ScheduleItem curItem = schedule[_scheduleIndex];
-		ScheduleItem prevItem = schedule[prevIndex];
+		//Setup previous schedule item and the one after that
+		ScheduleItem prevItem = schedule[_scheduleIndex];
+		ScheduleItem curItem = schedule[nextIndex];
 
-		//Determine end time for next item from current time and start time of item after that
+        //Determine the startTime of the activity we're stepping back to,
+        //using the activity before that to get startTime
 		double startTime = _timeMgr.ScheduleToTS(_curActivity.startTime, startTimeDayOffset, prevItem.time);
 
 		SetActivity(prevItem.activity, startTime, _curActivity.startTime);
-		_curActivity.Run();
+		//_curActivity.Run();
 	}
 
 	//
@@ -254,7 +325,10 @@ public class BehaviourAI : MonoBehaviour {
 	//
 	public void WalkTo(AvatarActivity.Target target, bool isOwned) {
 		_curTargetObj = FindNearestDevice(target, isOwned);
-		if(_curTargetObj == null) { return; }
+		if(_curTargetObj == null) {
+            Debug.LogError("Didn't find a target " + target);
+            return;
+        }
 
 		_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
 		_curActivityState = ActivityState.Walking;

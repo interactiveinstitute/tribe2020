@@ -10,7 +10,7 @@ public class AvatarActivity : ScriptableObject {
 	public Session SkipSession;
 
 	public string onSkipCommand;
-	private int _curStep;
+	private int _currSession;
 	private BehaviourAI _ai;
 
 	protected float _weight = 0;
@@ -48,14 +48,14 @@ public class AvatarActivity : ScriptableObject {
 	}
 
 	public virtual void Init(BehaviourAI ai) {
-		
 
-		_curStep = 0;
-		//ExecuteCommand(ai, sessions[_curStep]);
+        _ai = ai;
+		_currSession = 0;
+		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
 	public virtual void Step(BehaviourAI ai) {
-        if (sessions[_curStep].type == SessionType.WaitForDuration)
+        if (sessions[_currSession].type == SessionType.WaitForDuration)
         {
             if (_delay > 0f)
             {
@@ -67,15 +67,15 @@ public class AvatarActivity : ScriptableObject {
         }
 	}
 
-    public void Wait() {
-        if (_delay > 0f)
-        {
-            _delay -= Time.deltaTime;
-        }else
-        {
-            NextSession();
-        }
-    }
+    //public void Wait() {
+    //    if (_delay > 0f)
+    //    {
+    //        _delay -= Time.deltaTime;
+    //    }else
+    //    {
+    //        NextSession();
+    //    }
+    //}
 
 	//
 	public void Init(BehaviourAI ai, double startTime, double endTime) {
@@ -85,10 +85,10 @@ public class AvatarActivity : ScriptableObject {
 		this.startTime = startTime;
 		this.endTime = endTime;
 
-		_curStep = 0;
+		_currSession = 0;
 		
 
-		//ExecuteCommand(ai, sessions[_curStep]);
+		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
 	//
@@ -96,14 +96,14 @@ public class AvatarActivity : ScriptableObject {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
 		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
         string currTime = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-		Debug.Log(_ai.name + " doing " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTime);
+		Debug.Log(_ai.name + " doing activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTime);
 
-		StartSession(sessions[_curStep]);
+		StartSession(sessions[_currSession]);
 	}
 
 	//
 	public void StartSession(Session session) {
-		Debug.Log(_ai.name + " started session " + session.title);
+		Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
                 _delay = int.Parse(session.parameter);
@@ -130,18 +130,18 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void InsertSession(Session session) {
-		sessions.Insert(_curStep, session);
+		sessions.Insert(_currSession, session);
 		StartSession(session);
 	}
 
 	//
 	public void NextSession() {
-		_curStep++;
+		_currSession++;
 
-		if(_curStep >= sessions.Count) {
+		if(_currSession >= sessions.Count) {
 			_ai.OnActivityOver();
 		} else {
-			StartSession(sessions[_curStep]);
+			StartSession(sessions[_currSession]);
 		}
 	}
 
@@ -152,32 +152,35 @@ public class AvatarActivity : ScriptableObject {
 		//	Simulate();
 		//}
 
-		if(sessions[_curStep].type == SessionType.WaitForDuration) {
-			_delay -= Time.deltaTime;
-			if(_delay <= 0) {
-				NextSession();
-			}
-		}
+		//if(sessions[_currSession].type == SessionType.WaitForDuration) {
+		//	_delay -= Time.deltaTime;
+		//	if(_delay <= 0) {
+		//		NextSession();
+		//	}
+		//}
 	}
 
 	//
 	public void OnDestinationReached() {
-		Debug.Log(_ai.name + " reached destination " + sessions[_curStep].target);
-		if(sessions[_curStep].type == SessionType.WalkTo) {
+		Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target);
+		if(sessions[_currSession].type == SessionType.WalkTo) {
 			NextSession();
 		}
 	}
 
 	//
-	public void QuickRun() {
-		if(_curStep > 0) {
-			sessions.RemoveRange(0, _curStep - 1);
+	public void FinishCurrentActivity() {
+        //Remove the sessions already performed
+		if(_currSession > 0) {
+			sessions.RemoveRange(0, _currSession - 1);
 		}
 
+        //Simulate the sessions note yet performed
 		foreach(Session session in sessions) {
 			SimulateSession(session);
 		}
 
+        //Trigger callback for finished activity
 		_ai.OnActivityOver();
 	}
 
@@ -193,10 +196,12 @@ public class AvatarActivity : ScriptableObject {
 			case SessionType.WaitUntilEnd:
 				break;
 			case SessionType.WalkTo:
+                Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
 			case SessionType.Interact:
-				_ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
+                Debug.Log("Simulating Interaction. Interacting with " + session.target);
+                _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
 				break;
 			default:
                 break;
@@ -238,22 +243,22 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void ResumeSession(BehaviourAI ai) {
-		_curStep = 0;
-		StartSession(sessions[_curStep]);
-		//ExecuteCommand(ai, sessions[_curStep]);
+		_currSession = 0;
+		StartSession(sessions[_currSession]);
+		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
 	//
 	public void NextStep(BehaviourAI ai) {
-		//Debug.Log(ai.name + ".CurrentStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
-		_curStep++;
+		//Debug.Log(ai.name + ".CurrentStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+		_currSession++;
 
-		//if(_curStep == sessions.Count) {
+		//if(_currSession == sessions.Count) {
 		//	OnActivityDone(ai);
 		//} else {
-		//	//Debug.Log(ai.name + ".NextStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
-		//	//Debug.Log("NextStep" + _curStep + ", " + sessions.Count + ", " + sessions[_curStep]);
-		//	ExecuteCommand(ai, sessions[_curStep]);
+		//	//Debug.Log(ai.name + ".NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+		//	//Debug.Log("NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+		//	ExecuteCommand(ai, sessions[_currSession]);
 		//}
 	}
 

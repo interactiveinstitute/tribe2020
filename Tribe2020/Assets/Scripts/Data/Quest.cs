@@ -71,7 +71,7 @@ public class Quest : ScriptableObject {
 
 	//
 	//public Argument GetArguments() {
-	//	return questSteps[_curStep].arguments;
+	//	return questSteps[_currSession].arguments;
 	//}
 
 	//
@@ -91,12 +91,12 @@ public class Quest : ScriptableObject {
 
 	////
 	//public string GetCurrentStepMessage() {
-	//	return questSteps[_curStep].message;
+	//	return questSteps[_currSession].message;
 	//}
 
 	////
 	//public string GetCurrentStepAnimation() {
-	//	return questSteps[_curStep].animation;
+	//	return questSteps[_currSession].animation;
 	//}
 
 	//
@@ -106,7 +106,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public void AttemptCompletion(QuestEvent questEvent, string argument) {
-		//List<QuestCondition> conditions = questSteps[_curStep].conditions;
+		//List<QuestCondition> conditions = questSteps[_currSession].conditions;
 
 		//Debug.Log("AttemptCompletion: " + questEvent + ", " + argument);
 		//foreach(QuestCondition condition in conditions) {
@@ -118,7 +118,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public bool IsCurrentStepComplete() {
-		//if(_curStep >= questSteps.Count) {
+		//if(_currSession >= questSteps.Count) {
 		//	return true;
 		//}
 
@@ -126,7 +126,7 @@ public class Quest : ScriptableObject {
 
 		//bool result = true;
 
-		//List<QuestCondition> conditions = questSteps[_curStep].conditions;
+		//List<QuestCondition> conditions = questSteps[_currSession].conditions;
 		//foreach(QuestCondition condition in conditions) {
 		//	if(!condition.GetComplete()) {
 		//		result = false;
