@@ -92,9 +92,9 @@ public class MQTT : ServerObject {
 		//Add to query list. 
 
 		//Test
-		ts.Values = new double[4] {1.0,2.0,3.0,4.0};
-		ts.TimeStamps = new double[4] {1452691843.0,1452691849.0,1452691858.0,1452691890.0};
-		ts.BufferValid = true;
-		ts.CurrentSize = BufferSize;
+		//ts.Values = new double[4] {1.0,2.0,3.0,4.0};
+		//ts.TimeStamps = new double[4] {1452691843.0,1452691849.0,1452691858.0,1452691890.0};
+		//ts.BufferValid = true;
+		//ts.CurrentSize = BufferSize;
 	}
-}
+}  

@@ -7,9 +7,13 @@ public class Subscriber : MonoBehaviour {
 	void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+
+	virtual public void Data_Update(JSONObject json) {
+		print("Unhandled data!");
 	}
+
+
 }
+
+
