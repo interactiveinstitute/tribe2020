@@ -103,9 +103,7 @@ public class ElectricMeter : MonoBehaviour {
 			Disconnect ();
 			PowerSource = meter;
 		}
-
-		if (PowerSource == null)
-			AutoFindPowerSource ();
+			
 		
 		if (!PowerSource.Powering.Contains(this))
 			PowerSource.Powering.Add (this);
