@@ -79,7 +79,8 @@ public class PilotController : Controller{
 		UpdatePinch();
 
 		//		if(!InspectorUI.activeSelf){
-		if(IsOutsideUI(Input.mousePosition) && !_touchReset) {
+		//if(IsOutsideUI(Input.mousePosition) && !_touchReset) {
+		if(_view.AllUIsClosed() && !_touchReset) {
 			//Touch start
 			if(Input.GetMouseButtonDown(0)) {
 				OnTouchStart(Input.mousePosition);
@@ -165,7 +166,6 @@ public class PilotController : Controller{
 		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		//	RaycastHit hit;
 		//}
-		
 	}
 
 	//
@@ -261,6 +261,22 @@ public class PilotController : Controller{
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
 		}
+	}
+
+	//
+	public void OpenSettings() {
+		_view.ShowSettings();
+	}
+
+	//
+	public void CloseSettings() {
+		_view.HideSettings();
+		_touchReset = true;
+	}
+
+	//
+	public void SetCurrentUI(RectTransform ui) {
+		_view.SetCurrentUI(ui);
 	}
 
 	//
@@ -432,6 +448,8 @@ public class PilotController : Controller{
 		outsideMailButton =
 			pos.x < Screen.width - Screen.width * 0.2f ||
 			pos.y < Screen.height - Screen.height * 0.12f;
+
+		return true;
 
 		return outsideInspector && outsideMailButton && !_view.mailUI.activeSelf;
 	}

@@ -3,13 +3,24 @@ using System.Collections;
 
 public class Subscriber : MonoBehaviour {
 
+	[Header("Server")]
+	public ServerObject Server = null;
+
+	[Space(10)]
+	public string Topic;
+	public string Subproperty;
+
 	// Use this for initialization
 	void Start () {
 	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+
+	virtual public void Data_Update(JSONObject json) {
+		print("Unhandled data!");
 	}
+
+
 }
+
+

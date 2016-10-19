@@ -32,15 +32,15 @@ using SocketIO;
 
 public class TestSocketIO : MonoBehaviour
 {
-	private SocketIOComponent socket;
+	private SocketIOComponentMod socket;
 
 	public void Start() 
 	{
 		GameObject go = GameObject.Find("SocketIO");
-		socket = go.GetComponent<SocketIOComponent>();
+		socket = go.GetComponent<SocketIOComponentMod>();
 
 		socket.On("open", TestOpen);
-		socket.On("boop", TestBoop);
+		socket.On("mqtt", TestBoop);
 		socket.On("error", TestError);
 		socket.On("close", TestClose);
 		

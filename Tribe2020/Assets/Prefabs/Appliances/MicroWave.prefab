@@ -10,6 +10,9 @@ GameObject:
   - 4: {fileID: 454036}
   - 65: {fileID: 6518112}
   - 114: {fileID: 11492776}
+  - 114: {fileID: 114000011583822320}
+  - 114: {fileID: 114000011033430742}
+  - 114: {fileID: 114000012915175194}
   m_Layer: 0
   m_Name: MicroWave
   m_TagString: Appliance
@@ -60,6 +63,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 454036}
   m_RootOrder: 0
@@ -72,6 +76,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: 6.633, y: 1.031, z: -2.891}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 415520}
   - {fileID: 491460}
@@ -86,6 +91,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 454036}
   m_RootOrder: 1
@@ -98,18 +104,21 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: c995acb9e6abb234daff8173657245b0, type: 2}
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -125,18 +134,21 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
   - {fileID: 2100000, guid: c995acb9e6abb234daff8173657245b0, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -181,8 +193,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: Microwave Oven
-  description: 
-  playerAffordances: []
+  description: Heats and cooks food by exposing it to microwave radiation in the electromagnetic
+    spectrum.
+  playerAffordances:
+  - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
   avatarAffordances: 0e000000
   owners: []
   performedActions: []
@@ -222,3 +236,66 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 130056}
   m_IsPrefabParent: 1
+--- !u!114 &114000011033430742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 
+  description: 
+  playerAffordances: []
+  avatarAffordances: 
+  owners: []
+  performedActions: []
+  interactionPos: {x: 0, y: 0, z: 0}
+  cashProduction: 0
+  comfortPorduction: 0
+  harvestButtonRef: {fileID: 0}
+--- !u!114 &114000011583822320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AlwaysPowered: 0
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 0
+  HasPower: 0
+  GivesPower: 1
+  Powering: []
+  Power: 0
+  Energy: 0
+  continous_updates: 1
+  Unplugged: 0
+  runlevels:
+  - 3
+  - 26
+  - 1500
+  runlevel: 0
+  runlevelOn: 1
+  runlevelOff: 0
+  RetainsRunlevel: 0
+  DefaultRunlevel: 1
+--- !u!114 &114000012915175194
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 

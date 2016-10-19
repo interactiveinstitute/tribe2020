@@ -46,6 +46,12 @@ public class PilotView : View{
 
 	public GameObject FeedbackNumber;
 
+	private RectTransform _curMenu;
+	public List<Transform> menus;
+
+	public RectTransform settingsPanel, energyPanel, comfortPanel, mailPanel;
+	private bool _settingsIsVisible = false;
+
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
@@ -57,6 +63,13 @@ public class PilotView : View{
 		_timeMgr = GameTime.GetInstance();
 		_energyMgr = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+
+		_curMenu = null;
+		menus = new List<Transform>();
+		menus.Add(settingsPanel);
+		menus.Add(energyPanel);
+		menus.Add(comfortPanel);
+		menus.Add(mailPanel);
 	}
 	
 	//Update is called once per frame
@@ -70,6 +83,26 @@ public class PilotView : View{
 			energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
 		} else {
 			energyCounter.text = Mathf.Floor(energy) + " kWh";
+		}
+
+		foreach(RectTransform menu in menus) {
+			Vector2 origPos = menu.GetComponent<UIPanel>().originalPosition;
+
+			if(menu == _curMenu) {
+				if(menu.anchoredPosition.x != 0 || menu.anchoredPosition.y != 0) {
+					float curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
+					float curY = 0 + (menu.anchoredPosition.y + 0) * 0.75f;
+					//curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
+					menu.anchoredPosition = new Vector2(curX, curY);
+				}
+			} else {
+				if(menu.anchoredPosition.x != origPos.x || menu.anchoredPosition.y != origPos.y) {
+					float curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
+					float curY = origPos.y + (menu.anchoredPosition.y - origPos.y) * 0.75f;
+					//curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
+					menu.anchoredPosition = new Vector2(curX, curY);
+				}
+			}
 		}
 	}
 
@@ -223,11 +256,13 @@ public class PilotView : View{
 			questObj.transform.SetParent(mailList, false);
 		}
 
-		mailUI.SetActive(true);
+		_curMenu = mailPanel;
+		//mailUI.SetActive(true);
 	}
 
 	public void HideQuestList() {
-		mailUI.SetActive(false);
+		//mailUI.SetActive(false);
+		_curMenu = null;
 	}
 
 	//
@@ -267,11 +302,31 @@ public class PilotView : View{
 	}
 
 	//
+	public void ShowSettings() {
+		_curMenu = settingsPanel;
+	}
+
+	//
+	public void HideSettings() {
+		_curMenu = null;
+	}
+
+	//
+	public void SetCurrentUI(RectTransform ui) {
+		_curMenu = ui;
+	}
+
+	//
 	public void AddQuest() {
 
 	}
 
 	//
 	public void RemoveQuest() {
+	}
+
+	//
+	public bool AllUIsClosed() {
+		return _curMenu == null && !inspectorUI.activeSelf;
 	}
 }
