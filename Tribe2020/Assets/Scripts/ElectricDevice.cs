@@ -16,7 +16,7 @@ public class ElectricDevice : ElectricMeter {
 	[SerializeField]
 	protected bool Unplugged = false;
 
-	[Header("Device state")]
+	[Header("Device states")]
 	[Space(10)]
 	[Tooltip("This is a list of the diffent power states that the device can be in.")]
 	//public float[] runlevels;
@@ -32,6 +32,7 @@ public class ElectricDevice : ElectricMeter {
 	[Tooltip("This is the runlevel that the device assumes after power failure if retain is set to false.")]
 	public int DefaultRunlevel=0;
 	private int RetainedRunlevel;
+	[Space(10)]
 	[Tooltip("For backward compability with ElectricMeter.")]
 	public int runlevelOn;
 	[Tooltip("For backward compability with ElectricMeter.")]
@@ -39,9 +40,10 @@ public class ElectricDevice : ElectricMeter {
 	[Tooltip("For backward compability with ElectricMeter.")]
 	public int runlevelUnpowered = 0;
 
-	private Material[] default_materials;
+	//[Header("Sound")]
+	private AudioSource noisesource; 
 
-	public AudioSource noise; 
+	
 
 
 	//var time_event = new Tuple<long, float>(0,0.0f);
@@ -52,7 +54,17 @@ public class ElectricDevice : ElectricMeter {
 	public override void Start () {
 
 		//This is used for replacing a material
-		default_materials = gameObject.GetComponent<Renderer> ().sharedMaterials;
+		foreach (Runlevel rl in runlevels) {
+			//Materials 
+			Renderer rend = rl.Target;
+
+			if (rend == null)
+				rend = gameObject.GetComponent<Renderer> ();
+
+			if (rend != null)
+				rl.default_materials = (Material[]) rend.sharedMaterials;
+		}
+
 
 		base.Start ();
 		lastupdate = _timeMgr.time;
@@ -87,18 +99,24 @@ public class ElectricDevice : ElectricMeter {
 		if (rl < 0)
 			rl = runlevelUnpowered;
 
-		//Materials 
-		Material[] runlevel_materials = (Material[]) default_materials.Clone();
+		//Materials
+		if (runlevels [rl].Target != null) {
 
-		int len = runlevels [rl].materials.Length;
+		Material[] runlevel_materials = (Material[]) runlevels [rl].default_materials.Clone();
 
-		//Replace only the materials that are not null.
-		for (int f=0; f < len; f++) {
-			if (runlevels [rl].materials [f] != null)
-				runlevel_materials [f] = runlevels [rl].materials [f];
+
+
+			int len = runlevels [rl].materials.Length;
+
+			//Replace only the materials that are not null.
+			for (int f = 0; f < len; f++) {
+
+				if (runlevels [rl].materials [f] != null)
+					runlevel_materials [f] = runlevels [rl].materials [f];
+			}
+
+			runlevels [rl].Target.sharedMaterials = runlevel_materials;
 		}
-
-		gameObject.GetComponent<Renderer>().sharedMaterials= runlevel_materials ;
 
 
 		//Lights
