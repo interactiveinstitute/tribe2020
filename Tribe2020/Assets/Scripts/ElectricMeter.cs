@@ -109,18 +109,18 @@ public class ElectricMeter : MonoBehaviour {
 			Disconnect ();
 			PowerSource = meter;
 		}
-			
-		
-		if (!PowerSource.Powering.Contains(this))
-			PowerSource.Powering.Add (this);
-
-
 
 		//Check if source has electricity?
 		if (AlwaysPowered)
 			powered (true);
-		else
+			
+		if (PowerSource != null) {
+
+			if (!PowerSource.Powering.Contains (this))
+				PowerSource.Powering.Add (this);
+		
 			powered (PowerSource.HasPower && PowerSource.GivesPower);
+		}
 
 	}
 

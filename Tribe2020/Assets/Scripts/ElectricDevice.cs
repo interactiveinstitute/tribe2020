@@ -39,6 +39,8 @@ public class ElectricDevice : ElectricMeter {
 
 	private Material[] default_materials;
 
+	public AudioSource noise; 
+
 
 	//var time_event = new Tuple<long, float>(0,0.0f);
 
@@ -78,7 +80,7 @@ public class ElectricDevice : ElectricMeter {
 
 	public void ApplyEffects() {
 
-		//New copy 
+		//Materials 
 		Material[] runlevel_materials = (Material[]) default_materials.Clone();
 
 		//Replace only the materials that are not null.
@@ -88,8 +90,28 @@ public class ElectricDevice : ElectricMeter {
 		}
 
 		gameObject.GetComponent<Renderer>().sharedMaterials= runlevel_materials ;
+
+
+		//Lights
+		foreach (Light l in runlevels [runlevel].LightsOn) {
+			l.enabled = true;
+		}
+
+		foreach (Light l in runlevels [runlevel].LightsOff) {
+			l.enabled = false;
+		}
+
+		if(GetComponentInParent<Room>()) {
+			GetComponentInParent<Room>().UpdateLighting();
+		}
+
+		//Sound
+		//TODO
+
 			
 	}
+
+
 
 //	public void VisualizeOn() {
 //		int i = (int) UnityEngine.Random.Range (0.0F, screen_shots.Length);
