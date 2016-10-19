@@ -605,6 +605,7 @@ MonoBehaviour:
   DefaultRunlevel: 0
   runlevelOn: 0
   runlevelOff: 0
+  noise: {fileID: 0}
   PowerSaving: 0
 --- !u!1001 &50603863
 Prefab:
@@ -3520,7 +3521,7 @@ Transform:
   - {fileID: 1468074370}
   - {fileID: 393303950}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
 --- !u!1001 &237125742
 Prefab:
   m_ObjectHideFlags: 0
@@ -3558,7 +3559,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 408378, guid: 4cb4f057c8bb44de3913eaf46046591d, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 107960, guid: 4cb4f057c8bb44de3913eaf46046591d, type: 2}
       propertyPath: m_Name
@@ -5585,7 +5586,7 @@ Transform:
   - {fileID: 1507018366}
   - {fileID: 389490935}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
 --- !u!114 &394890974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5597,7 +5598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PowerSource: {fileID: 0}
+  PowerSource: {fileID: 1040012395}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
   GivesPower: 1
@@ -6259,7 +6260,7 @@ Transform:
   - {fileID: 886343158}
   - {fileID: 218166655}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 15
 --- !u!1001 &460003438
 Prefab:
   m_ObjectHideFlags: 0
@@ -8512,7 +8513,7 @@ Transform:
   m_Children:
   - {fileID: 1166238641}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
 --- !u!1001 &635198348
 Prefab:
   m_ObjectHideFlags: 0
@@ -9019,23 +9020,36 @@ MonoBehaviour:
     Power: 0
     materials: []
     sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   - Name: 
     Power: 0
     materials: []
     sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   - Name: 
     Power: 0
     materials: []
     sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   - Name: 
     Power: 0
     materials: []
     sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   runlevel: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 2
   runlevelOn: 3
   runlevelOff: 0
+  noise: {fileID: 0}
   PowerSaving: 0
 --- !u!1 &689230359
 GameObject:
@@ -9072,7 +9086,7 @@ Transform:
   - {fileID: 1179834880}
   - {fileID: 1216066777}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
 --- !u!4 &689711281 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: b18e3d25d8c98eb448181a9351f6a24a, type: 3}
@@ -14389,7 +14403,7 @@ Transform:
   - {fileID: 1075702711}
   - {fileID: 1211908818}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
 --- !u!1 &949039004
 GameObject:
   m_ObjectHideFlags: 0
@@ -16270,7 +16284,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401396, guid: 88a18da5027d8664ca9427b902aafdd0, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2300470, guid: 88a18da5027d8664ca9427b902aafdd0, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -16577,6 +16591,11 @@ MonoBehaviour:
   viewpointIconPrefab: {fileID: 116102, guid: c7a72ab6e32b78741a00240101091fe5, type: 2}
   mailButtonPrefab: {fileID: 175994, guid: 459384aa2c48e8249bc882ca3db6caf9, type: 2}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
+  menus: []
+  settingsPanel: {fileID: 0}
+  energyPanel: {fileID: 0}
+  comfortPanel: {fileID: 0}
+  mailPanel: {fileID: 0}
 --- !u!114 &1080407343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16916,7 +16935,7 @@ Transform:
   - {fileID: 147184377}
   - {fileID: 1898784014}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
 --- !u!1001 &1114214418
 Prefab:
   m_ObjectHideFlags: 0
@@ -22971,7 +22990,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1001 &1455620312
 Prefab:
   m_ObjectHideFlags: 0
@@ -24864,6 +24883,63 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1626514359}
+--- !u!1001 &1627568859
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.6861529
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.421
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.3201053
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000012915112082, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010489083436, guid: 76b573e863d72fa42ac12be129d551e8,
+        type: 2}
+      propertyPath: PowerSource
+      value: 
+      objectReference: {fileID: 394890974}
+    - target: {fileID: 114000010489083436, guid: 76b573e863d72fa42ac12be129d551e8,
+        type: 2}
+      propertyPath: runlevels.Array.data[0].Power
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010489083436, guid: 76b573e863d72fa42ac12be129d551e8,
+        type: 2}
+      propertyPath: runlevels.Array.data[2].Power
+      value: 7000
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1633295083
 GameObject:
   m_ObjectHideFlags: 0
@@ -25058,7 +25134,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_TagString
@@ -28377,7 +28453,7 @@ Transform:
   - {fileID: 1080407341}
   - {fileID: 816033836}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1001 &1867311487
 Prefab:
   m_ObjectHideFlags: 0
@@ -28850,7 +28926,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &1892321279
 GameObject:
   m_ObjectHideFlags: 0
@@ -29154,7 +29230,7 @@ Transform:
   - {fileID: 1082369621}
   - {fileID: 2017151708}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
 --- !u!1 &1926467312
 GameObject:
   m_ObjectHideFlags: 0
@@ -29633,7 +29709,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c6453f8e1f814744d8b94e5a6d1f9942, type: 2}
@@ -30728,7 +30804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PowerSource: {fileID: 0}
+  PowerSource: {fileID: 1040012395}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
   GivesPower: 1
@@ -30762,7 +30838,7 @@ Transform:
   - {fileID: 1389838126}
   - {fileID: 1115247753}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
 --- !u!1 &2053270235
 GameObject:
   m_ObjectHideFlags: 0

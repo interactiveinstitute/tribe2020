@@ -1,15 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &117874
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1000012039282014}
+  m_IsPrefabParent: 1
+--- !u!1 &1000011923093242
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 454636}
-  - 33: {fileID: 3361464}
-  - 23: {fileID: 2351158}
+  - 4: {fileID: 4000011967792086}
+  - 33: {fileID: 33000011880132464}
+  - 23: {fileID: 23000010927107336}
+  - 114: {fileID: 114000011241124400}
   m_Layer: 0
   m_Name: Dishwasher__Door
   m_TagString: Untagged
@@ -17,36 +29,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &151884
+--- !u!1 &1000012039282014
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 489456}
-  - 33: {fileID: 3343228}
-  - 23: {fileID: 2396538}
-  m_Layer: 0
-  m_Name: Dishwasher__Body
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &191498
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 463716}
-  - 65: {fileID: 6512934}
-  - 114: {fileID: 11456374}
-  - 114: {fileID: 11439876}
-  - 114: {fileID: 11445130}
-  - 208: {fileID: 208000011018697550}
+  - 4: {fileID: 4000013252929828}
+  - 65: {fileID: 65000010848045582}
+  - 114: {fileID: 114000012198612464}
+  - 114: {fileID: 114000012345237712}
+  - 208: {fileID: 208000013055306586}
   m_Layer: 0
   m_Name: Dish Washer
   m_TagString: Appliance
@@ -54,53 +48,70 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &454636
+--- !u!1 &1000012100825228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000013164820084}
+  - 33: {fileID: 33000010917244138}
+  - 23: {fileID: 23000014091926604}
+  m_Layer: 0
+  m_Name: Dishwasher__Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4000011967792086
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117874}
+  m_GameObject: {fileID: 1000011923093242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 463716}
+  m_Father: {fileID: 4000013252929828}
   m_RootOrder: 1
---- !u!4 &463716
+--- !u!4 &4000013164820084
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
+  m_GameObject: {fileID: 1000012100825228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000013252929828}
+  m_RootOrder: 0
+--- !u!4 &4000013252929828
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012039282014}
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.00000028312206}
-  m_LocalPosition: {x: 8.58, y: 0.27, z: -2.67}
+  m_LocalPosition: {x: -0.21093854, y: 0.42094573, z: 2.708445}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 489456}
-  - {fileID: 454636}
+  - {fileID: 4000013164820084}
+  - {fileID: 4000011967792086}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!4 &489456
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151884}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 463716}
-  m_RootOrder: 0
---- !u!23 &2351158
+--- !u!23 &23000010927107336
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117874}
+  m_GameObject: {fileID: 1000011923093242}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -125,12 +136,12 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!23 &2396538
+--- !u!23 &23000014091926604
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151884}
+  m_GameObject: {fileID: 1000012100825228}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -155,38 +166,90 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3343228
+--- !u!33 &33000010917244138
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151884}
+  m_GameObject: {fileID: 1000012100825228}
   m_Mesh: {fileID: 4300008, guid: 8a2deb1e74ac87343865944557bcbdd6, type: 3}
---- !u!33 &3361464
+--- !u!33 &33000011880132464
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117874}
+  m_GameObject: {fileID: 1000011923093242}
   m_Mesh: {fileID: 4300010, guid: 8a2deb1e74ac87343865944557bcbdd6, type: 3}
---- !u!65 &6512934
+--- !u!65 &65000010848045582
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
+  m_GameObject: {fileID: 1000012039282014}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.6194852, y: 0.7881305, z: 0.590028}
   m_Center: {x: -0.000021456646, y: 0.41842923, z: -0.001811266}
---- !u!114 &11439876
+--- !u!114 &114000011241124400
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
+  m_GameObject: {fileID: 1000011923093242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 0
+  AlwaysPowered: 1
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0
+  Unplugged: 0
+  runlevels:
+  - Name: Off
+    Power: 1
+    materials:
+    - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
+    - {fileID: 2100000, guid: dc76204d91d864db6977a0a7d6bfb8b2, type: 2}
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: Standby
+    Power: 3
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: On
+    Power: 1400
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  runlevel: 0
+  RetainsRunlevel: 0
+  DefaultRunlevel: 1
+  runlevelOn: 2
+  runlevelOff: 1
+  noise: {fileID: 0}
+--- !u!114 &114000012198612464
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012039282014}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
@@ -206,93 +269,30 @@ MonoBehaviour:
   cashProduction: 0
   comfortPorduction: 0
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
---- !u!114 &11445130
+--- !u!114 &114000012345237712
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
+  m_GameObject: {fileID: 1000012039282014}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueId: 34d67756-67bb-411a-bb97-c79050bb5d05
---- !u!114 &11456374
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AlwaysPowered: 0
-  PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
-  HasPower: 0
-  GivesPower: 1
-  Powering: []
-  Power: 0
-  Energy: 0
-  continous_updates: 0
-  Unplugged: 0
-  runlevels: []
-  runlevel: 0
-  runlevelOn: 0
-  runlevelOff: 0
-  RetainsRunlevel: 0
-  DefaultRunlevel: 0
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 0}
-      propertyPath: avatarAffordances.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: harvestButton
-      value: 
-      objectReference: {fileID: 22460674, guid: 5d16f8f0f7e294048b78788b64ed7ffa,
-        type: 2}
-    - target: {fileID: 0}
-      propertyPath: harvestButtonRef
-      value: 
-      objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
-    - target: {fileID: 0}
-      propertyPath: uniqueId
-      value: 34d67756-67bb-411a-bb97-c79050bb5d05
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: avatarAffordances.Array.data[1]
-      value: wash_dishes
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: avatarAffordances.Array.data[0]
-      value: 4
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 191498}
-  m_IsPrefabParent: 1
---- !u!208 &208000011018697550
+--- !u!208 &208000013055306586
 NavMeshObstacle:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191498}
+  m_GameObject: {fileID: 1000012039282014}
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_Extents: {x: 0.3, y: 0.4, z: 0.3}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.4, z: 0}
   m_TimeToStationary: 0.5

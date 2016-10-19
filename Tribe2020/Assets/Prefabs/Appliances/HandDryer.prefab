@@ -225,25 +225,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlwaysPowered: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
-  HasPower: 0
+  AlwaysPowered: 0
   GivesPower: 1
   Powering: []
+  HasPower: 0
   Power: 0
   Energy: 0
+  lastupdate: 0
   continous_updates: 0
   Unplugged: 0
   runlevels:
-  - 0
-  - 10
-  - 1500
+  - Name: 
+    Power: 0
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: 
+    Power: 0
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: 
+    Power: 0
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   runlevel: 0
-  runlevelOn: 2
-  runlevelOff: 1
   RetainsRunlevel: 0
   DefaultRunlevel: 0
+  runlevelOn: 2
+  runlevelOff: 1
+  noise: {fileID: 0}
 --- !u!114 &114000014169079046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -265,9 +285,9 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_Extents: {x: 0.1, y: 0.13, z: 0.1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.13, z: 0}
   m_TimeToStationary: 0.5
