@@ -6,23 +6,23 @@ using SocketIO;
 
 public class AppServer : SocketIOComponentMod {
 
-	//public int Debug;
+	public string[] topics;
 
 	// Use this for initialization
 	void Start () {
 		//Debug = Subscribers;
 
-		On("open", Open);
-		On("mqtt", Mqtt);
-		On("error", Error);
-		On("close", Close);
+		On("open", DoOnOpen);
+		On("mqtt", DoOnMqtt);
+		On("error", DoOnError);
+		On("close", DoOnClose);
 		Debug.Log ("Starting");
 		base.Start();
 	}
 		
 	// Update is called once per frame
 	void Update () {
-	
+		base.Update();
 	}
 
 	public string Get(string Name,double StartTime,bool Absolute,int BufferSize)
@@ -50,12 +50,13 @@ public class AppServer : SocketIOComponentMod {
 
 	}
 
-	public void Open(SocketIOEvent e)
+	public void DoOnOpen(SocketIOEvent e)
 	{
-		Debug.Log("[SocketIO] Open received: " + e.name + " " + e.data);
+		//Debug.Log("[SocketIO] Open received: " + e.name + " " + e.data);
+
 	}
 
-	public void Mqtt(SocketIOEvent e)
+	public void DoOnMqtt(SocketIOEvent e)
 	{
 		Debug.Log("[SocketIO] Mqtt received: " + e.name + " " + e.data);
 
@@ -68,12 +69,12 @@ public class AppServer : SocketIOComponentMod {
 		);
 	}
 
-	public void Error(SocketIOEvent e)
+	public void DoOnError(SocketIOEvent e)
 	{
 		//Debug.Log("[SocketIO] Error received: " + e.name + " " + e.data);
 	}
 
-	public void Close(SocketIOEvent e)
+	public void DoOnClose(SocketIOEvent e)
 	{	
 		Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
 	}

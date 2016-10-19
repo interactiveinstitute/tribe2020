@@ -57,12 +57,7 @@ public class TimeSeries : Subscriber {
 	public List<DataPoint> DataPoints = new List<DataPoint>();
 
 
-	[Header("Server")]
-	public ServerObject Server = null;
 
-	[Space(10)]
-	public string Topic;
-	public string Subproperty;
 
 
 	private GameTime TTime = null;
