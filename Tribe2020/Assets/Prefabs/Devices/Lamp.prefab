@@ -72,17 +72,20 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -115,7 +118,7 @@ Light:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152506}
   m_Enabled: 1
-  serializedVersion: 6
+  serializedVersion: 7
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 0.5
@@ -125,6 +128,7 @@ Light:
   m_Shadows:
     m_Type: 0
     m_Resolution: 0
+    m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0
     m_NormalBias: 0.4
@@ -137,10 +141,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Lightmapping: 1
+  m_AreaSize: {x: 10, y: 10}
   m_BounceIntensity: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_AreaSize: {x: 10, y: 10}
 --- !u!114 &11468768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,7 +159,7 @@ MonoBehaviour:
   title: 
   description: 
   playerAffordances: []
-  avatarAffordances: []
+  avatarAffordances: 
   owners: []
   performedActions: []
   interactionPos: {x: 0, y: 0, z: 0}
@@ -173,23 +177,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5bb95233a4594be7990cf05ade31cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlwaysPowered: 0
   PowerSource: {fileID: 0}
-  HasPower: 1
+  AutomaticallyFindSource: 0
+  AlwaysPowered: 0
   GivesPower: 1
   Powering: []
+  HasPower: 1
   Power: 0
   Energy: 0
+  lastupdate: 0
   continous_updates: 1
   Unplugged: 0
   runlevels:
-  - 0
-  - 40
+  - Name: Off
+    Power: 0
+    materials: []
+    sound: {fileID: 0}
+  - Name: On
+    Power: 40
+    materials: []
+    sound: {fileID: 0}
   runlevel: 0
-  runlevelOn: 1
-  runlevelOff: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 1
+  runlevelOn: 1
+  runlevelOff: 0
   lights: []
   AutoFindLights: 1
 --- !u!1001 &100100000
