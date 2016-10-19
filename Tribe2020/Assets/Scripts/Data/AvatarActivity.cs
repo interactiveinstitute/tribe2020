@@ -23,13 +23,13 @@ public class AvatarActivity : ScriptableObject {
 	public double endTime = 0;
 
 	//Activity session types
-	public enum SessionType { WalkTo, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
+	public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
-	public enum Target { None, OfficeDesk, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
+	public enum Target { None, OfficeDesk, HelpDesk, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
 		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home };
 
 	//Definition of a quest step
@@ -109,6 +109,9 @@ public class AvatarActivity : ScriptableObject {
                 _delay = int.Parse(session.parameter);
                 _ai.Wait();
 				break;
+            case SessionType.SitUntilEnd:
+                _ai.SitDown();
+                break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
 				break;
@@ -136,11 +139,14 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextSession() {
+        Debug.Log("icrementing _currSssion for " + _ai.name);
 		_currSession++;
 
 		if(_currSession >= sessions.Count) {
-			_ai.OnActivityOver();
+            Debug.Log("_currSession out of bound. No more sessions in this activity. calling activity over callback");
+			//_ai.OnActivityOver();
 		} else {
+            Debug.Log("starting session" + sessions[_currSession].title);
 			StartSession(sessions[_currSession]);
 		}
 	}

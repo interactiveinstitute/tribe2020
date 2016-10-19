@@ -28,6 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
+        bool m_Sitting;
 
 
 		void Start()
@@ -41,6 +42,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
 		}
+
+        public void SetSitState(bool sit)
+        {
+            m_Sitting = sit;
+        }
+
+        public void SitDown()
+        {
+            m_Sitting = true;
+        }
+
+        public void StandUp()
+        {
+            m_Sitting = false;
+        }
 
 
 		public void Move(Vector3 move, bool crouch, bool jump)
@@ -121,6 +137,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetBool("Crouch", m_Crouching);
+            m_Animator.SetBool("Sit", m_Sitting);
 			m_Animator.SetBool("OnGround", m_IsGrounded);
 			if (!m_IsGrounded)
 			{

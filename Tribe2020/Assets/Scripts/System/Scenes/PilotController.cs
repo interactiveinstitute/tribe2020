@@ -210,6 +210,7 @@ public class PilotController : Controller{
 
 	//
 	public override void ControlAvatar(string id, string action, Vector3 pos) {
+        Debug.Log("ControlAvatar called in pilotcontroller");
 		_avatars[0].WalkTo(pos);
 	}
 
@@ -220,7 +221,8 @@ public class PilotController : Controller{
 
 	//
 	public void MakeAvatarWalkTo(Vector3 target) {
-		_avatars[0].WalkTo(target);
+        Debug.Log("MakeAvatarWalkTo called in pilotcontroller");
+        _avatars[0].WalkTo(target);
 	}
 
 	//

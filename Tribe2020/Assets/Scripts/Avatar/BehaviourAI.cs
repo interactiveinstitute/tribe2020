@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System;
 using UnityStandardAssets.Characters.ThirdPerson;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(ThirdPersonCharacter))]
 public class BehaviourAI : MonoBehaviour {
-	public enum ActivityState { Idle, Walking, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
+	public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
 	[SerializeField]
 	private ActivityState _curActivityState = ActivityState.Idle;
 
@@ -43,8 +45,13 @@ public class BehaviourAI : MonoBehaviour {
 		_timeMgr = GameTime.GetInstance();
 
 		_stats = GetComponent<AvatarStats>();
+
 		_agent = GetComponent<NavMeshAgent>();
 		_charController = GetComponent<ThirdPersonCharacter>();
+
+        //added by Gunnar.
+        _agent.updatePosition = true;
+        _agent.updateRotation = false;
 
 		//Prepare collection of devices in pilot
 		//if(_devices.Length == 0) {
@@ -79,6 +86,12 @@ public class BehaviourAI : MonoBehaviour {
         
         _curActivity.Step(this);
 
+        //First disable sit flag if we're not in that state
+        if(_curActivityState != ActivityState.Sitting)
+        {
+            _charController.StandUp();
+        }
+
         switch (_curActivityState) {
 			//Not doing anything, do something feasible in the pilot
 			case ActivityState.Idle:
@@ -87,28 +100,33 @@ public class BehaviourAI : MonoBehaviour {
                 break;
 			// Walking towards an object, check if arrived to proceed
 			case ActivityState.OverrideWalking:
+                //Debug.Log("override walking!");
 			case ActivityState.Walking:
 				if(_agent.remainingDistance > _agent.stoppingDistance) {
 					_charController.Move(_agent.desiredVelocity, false, false);
-				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
+				} else if(!_agent.pathPending) {
                     //Hurray. We got there.
-					_charController.Move(Vector3.zero, false, false);
-					_curActivity.OnDestinationReached();
+                    //Debug.Log("we got here!");
+                    _charController.Move(Vector3.zero, false, false);
+                    //_curActivity.OnDestinationReached();
 
-					//if(_curActivityState == ActivityState.Walking) {
-					//	_curTargetObj.GetComponent<Appliance>().AddHarvest();
-					//	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-					//	_curActivity.NextStep(this);
-					//} else if(_curActivityState == ActivityState.OverrideWalking) {
-					//	_curActivityState = ActivityState.OverrideIdle;
-					//	_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
-					//}
-				}
+                    //if(_curActivityState == ActivityState.Walking) {
+                    //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
+                    //	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
+                    //	_curActivity.NextStep(this);
+                    //} else if(_curActivityState == ActivityState.OverrideWalking) {
+                    //	_curActivityState = ActivityState.OverrideIdle;
+                    //	_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
+                    //}
+                }
 				break;
+            case ActivityState.Sitting:
+                _charController.SitDown();
+                break;
 			// Waiting
 			case ActivityState.Waiting:
-				_charController.Move(Vector3.zero, false, false);
-				break;
+                _charController.Move(Vector3.zero, false, false);
+                break;
 			case ActivityState.OverrideIdle:
 				_charController.Move(Vector3.zero, false, false);
 				break;
@@ -145,11 +163,12 @@ public class BehaviourAI : MonoBehaviour {
             int schedHour = int.Parse(timeParse[0]);
             int schedMinute = int.Parse(timeParse[1]);
 
-            //Is this activity in the future
-            if(curHour <= schedHour)
+            //Is this activity in the future. OR. Is it the last in the schedule?
+            if(curHour <= schedHour || _scheduleIndex+1 == schedule.Length)
             {
-                //if same hour. also check minutes.
-                if (curHour == schedHour && curMinute > schedMinute)
+                //if same hour. also check minutes. Skip if same hour but minutes already passed.
+                //Don't skip if last activity in schedule
+                if (curHour == schedHour && curMinute > schedMinute && _scheduleIndex + 1 != schedule.Length)
                 {
                     continue; // if same hour and minutes already past, don't pick this activity.
                 }
@@ -301,10 +320,9 @@ public class BehaviourAI : MonoBehaviour {
     {
         _curActivityState = ActivityState.Idle;
         _charController.Move(Vector3.zero, false, false);
-
     }
 
-	//
+	//This is an override walk. Should be clearer that's the case.
 	public void WalkTo(Vector3 target) {
 		//_curTargetPos = target;
 		
@@ -322,7 +340,7 @@ public class BehaviourAI : MonoBehaviour {
 	//	_curActivityState = ActivityState.Walking;
 	//}
 
-	//
+	//Makes the avatar walks towards an object by setting the navmeshagent destination.
 	public void WalkTo(AvatarActivity.Target target, bool isOwned) {
 		_curTargetObj = FindNearestDevice(target, isOwned);
 		if(_curTargetObj == null) {
@@ -356,6 +374,12 @@ public class BehaviourAI : MonoBehaviour {
 	public void WarpToDestination() {
 		_agent.Warp(_agent.destination);
 	}
+
+    //
+    public void SitDown()
+    {
+        _curActivityState = ActivityState.Sitting;
+    }
 
 	//
 	public void Delay(float seconds) {
@@ -391,8 +415,8 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void OnActivityOver() {
-		_controller.OnAvatarActivityComplete(_curActivity.name);
-		_curActivityState = ActivityState.Idle;
+        _controller.OnAvatarActivityComplete(_curActivity.name);
+        _curActivityState = ActivityState.Idle;
 	}
 
 	//

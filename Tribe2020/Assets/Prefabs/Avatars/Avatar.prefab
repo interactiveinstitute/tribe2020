@@ -55,13 +55,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 430866}
   - 95: {fileID: 9549474}
-  - 54: {fileID: 54000011006912900}
-  - 136: {fileID: 136000010730490938}
+  - 54: {fileID: 54000013768559364}
+  - 136: {fileID: 136000010393999776}
   - 195: {fileID: 19581572}
   - 114: {fileID: 11493526}
   - 114: {fileID: 11482754}
   - 114: {fileID: 11496632}
-  - 114: {fileID: 114000013643366794}
+  - 114: {fileID: 114000011139800278}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Avatar
@@ -816,7 +816,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108742}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.21, y: -0.765, z: -13.04}
+  m_LocalPosition: {x: 2.45, y: -0.87, z: 10.967}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1222,15 +1222,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _curActivityState: 0
   schedule:
-  - time: 13:50
+  - time: 08:30
     activity: {fileID: 11400000, guid: 06b1be30471c43a46b052cf354aca41d, type: 2}
-  - time: 14:00
-    activity: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5, type: 2}
-  - time: 14:30
+  - time: 09:30
     activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
-  - time: 14:35
+  - time: 09:45
     activity: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5, type: 2}
-  - time: 23:00
+  - time: 09:50
+    activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
+  - time: 16:00
     activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
 --- !u!114 &11493526
 MonoBehaviour:
@@ -1243,7 +1243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e424426b3183249802db809d698863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarName: Klas Klaesson
+  avatarName: Bob Alison
   conviction: 100
   energy: 60
   lightingEfficieny: 1
@@ -1262,8 +1262,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Klas Klaesson
-  description: Da bauwz!
+  title: Bob Alison
+  description: Anton is passion for energy issues is only matched by his love for
+    tinkering in his "man cave".
   playerAffordances:
   - {fileID: 11400000, guid: dc02b731afc6747488f8f1e589578827, type: 2}
   avatarAffordances: 
@@ -1712,17 +1713,17 @@ NavMeshAgent:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108742}
   m_Enabled: 1
-  m_Radius: 0.3
-  m_Speed: 2
+  m_Radius: 0.2
+  m_Speed: 0.5
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0.25
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1.6
-  m_BaseOffset: 0.1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
 --- !u!1001 &100100000
@@ -1799,6 +1800,7 @@ GameObject:
   - 222: {fileID: 222000010153860610}
   - 114: {fileID: 114000012352551280}
   - 114: {fileID: 114000013391082490}
+  - 114: {fileID: 114000011284692266}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -1806,7 +1808,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &54000011006912900
+--- !u!54 &54000013768559364
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1821,6 +1823,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114000011139800278
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MovingTurnSpeed: 360
+  m_StationaryTurnSpeed: 180
+  m_JumpPower: 12
+  m_GravityMultiplier: 2
+  m_RunCycleLegOffset: 0.2
+  m_MoveSpeedMultiplier: 1
+  m_AnimSpeedMultiplier: 1
+  m_GroundCheckDistance: 2
+--- !u!114 &114000011284692266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010672762364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114000011445669354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1845,7 +1880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1865,7 +1900,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Klas bhdsflkjdsf
+  m_Text: '
+
+'
 --- !u!114 &114000012469099146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1914,26 +1951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4520cf235c8dca8469f0fcea678ab380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000013643366794
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 108742}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 12
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 2
---- !u!136 &136000010730490938
+--- !u!136 &136000010393999776
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1941,7 +1959,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 108742}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.3
   m_Height: 1.6
   m_Direction: 1
@@ -1995,7 +2013,7 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010519605168}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2005,6 +2023,6 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.86}
+  m_AnchoredPosition: {x: 0, y: 1.8}
   m_SizeDelta: {x: 293, y: 183}
   m_Pivot: {x: 0.5, y: 0.5}
