@@ -36,6 +36,8 @@ public class ElectricDevice : ElectricMeter {
 	public int runlevelOn;
 	[Tooltip("For backward compability with ElectricMeter.")]
 	public int runlevelOff;
+	[Tooltip("For backward compability with ElectricMeter.")]
+	public int runlevelUnpowered = 0;
 
 	private Material[] default_materials;
 
@@ -80,24 +82,31 @@ public class ElectricDevice : ElectricMeter {
 
 	public void ApplyEffects() {
 
+		int rl = runlevel;
+
+		if (rl < 0)
+			rl = runlevelUnpowered;
+
 		//Materials 
 		Material[] runlevel_materials = (Material[]) default_materials.Clone();
 
+		int len = runlevels [rl].materials.Length;
+
 		//Replace only the materials that are not null.
-		for (int f=0; f < runlevels [runlevel].materials.Length; f++) {
-			if (runlevels [runlevel].materials [f] != null)
-				runlevel_materials [f] = runlevels [runlevel].materials [f];
+		for (int f=0; f < len; f++) {
+			if (runlevels [rl].materials [f] != null)
+				runlevel_materials [f] = runlevels [rl].materials [f];
 		}
 
 		gameObject.GetComponent<Renderer>().sharedMaterials= runlevel_materials ;
 
 
 		//Lights
-		foreach (Light l in runlevels [runlevel].LightsOn) {
+		foreach (Light l in runlevels [rl].LightsOn) {
 			l.enabled = true;
 		}
 
-		foreach (Light l in runlevels [runlevel].LightsOff) {
+		foreach (Light l in runlevels [rl].LightsOff) {
 			l.enabled = false;
 		}
 
@@ -108,7 +117,7 @@ public class ElectricDevice : ElectricMeter {
 		//Sound
 		//TODO
 
-			
+			  
 	}
 
 
