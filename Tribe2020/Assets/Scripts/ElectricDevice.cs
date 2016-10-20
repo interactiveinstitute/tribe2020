@@ -99,6 +99,9 @@ public class ElectricDevice : ElectricMeter {
 		if (rl < 0)
 			rl = runlevelUnpowered;
 
+		if (runlevels.Length == 0)
+			return;
+
 		//Materials
 		if (runlevels [rl].Target != null) {
 

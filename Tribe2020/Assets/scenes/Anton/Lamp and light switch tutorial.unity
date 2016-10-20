@@ -643,16 +643,22 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
-    materials: []
+    Target: {fileID: 1547468560}
+    materials:
+    - {fileID: 2100000, guid: 9a63ce4f5f5ca6d4fa0aea20b38e1be2, type: 2}
+    - {fileID: 0}
     sound: {fileID: 0}
     LoopSound: 0
+    default_materials: []
     LightsOn: []
     LightsOff: []
   - Name: On
     Power: 60
+    Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
     LoopSound: 0
+    default_materials: []
     LightsOn: []
     LightsOff: []
   runlevel: -1
@@ -661,6 +667,11 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+--- !u!23 &1547468560 stripped
+MeshRenderer:
+  m_PrefabParentObject: {fileID: 2300010, guid: c0a1a970f2f328844a44284866fb2a3b,
+    type: 3}
+  m_PrefabInternal: {fileID: 816712502}
 --- !u!1001 &1780788258
 Prefab:
   m_ObjectHideFlags: 0
