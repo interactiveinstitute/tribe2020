@@ -37,7 +37,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		if(ip != null) {
 			interactionPos = ip.transform.position;
 		} else {
-            Debug.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead");
+            //Debug.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead");
 			interactionPos = transform.position;
 		}
 	}

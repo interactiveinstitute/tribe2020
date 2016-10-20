@@ -466,7 +466,7 @@ public class PilotController : Controller{
 
 	//
 	public void LoadScene(string scene) {
-		Debug.Log("LoadScene " + scene);
+		//Debug.Log("LoadScene " + scene);
 		_sceneMgr.LoadScene(scene);
 	}
 }
