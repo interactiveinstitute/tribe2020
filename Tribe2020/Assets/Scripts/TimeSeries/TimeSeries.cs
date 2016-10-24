@@ -57,10 +57,13 @@ public class TimeSeries : Subscriber {
 	public List<DataPoint> DataPoints = new List<DataPoint>();
 
 
+	[Header("CSV file")]
+	public TextAsset File;
 
 
 
 	private GameTime TTime = null;
+
 
 
 
@@ -175,6 +178,56 @@ public class TimeSeries : Subscriber {
 		double now = (double)TTime.time;
 
 		return DataPoints[GetCurrentIndex(now)].Value;
+	}
+
+
+	public void LoadFromCVSFile() {
+
+		if (File == null)
+			return;
+
+		//string fileData  = System.IO.File.ReadAllText(FileName);
+		string[] lines = File.text.Split("\n"[0]);
+		
+		string[] Names = (lines[0].Trim()).Split(","[0]);
+		string[] Units = (lines[1].Trim()).Split(","[0]);
+
+		Name = File.name;
+		Absolute = true;
+		ValueUnit = Units [1];
+		IntegralUnit = Units [2];
+
+		//TODO fill in when we have a buffer already... 
+		//if (BufferValid == true)
+		//	return;
+
+		//Reload everything. 
+		DataPoints.Clear ();
+		double tsmin = double.PositiveInfinity, tsmax=0;
+
+		for (int i = 2; i < lines.Length; i++) {
+			string[] Values = (lines[i].Trim()).Split(","[0]);
+			DataPoint data = new DataPoint();
+			data.Timestamp = double.Parse( Values[0]) ;
+			data.Value = double.Parse( Values[1] );
+			data.Integral = double.Parse(Values[2]);
+			DataPoints.Add (data);
+
+			//Save min and max. 
+			if (data.Timestamp > tsmax)
+				tsmax = data.Timestamp;
+			if (data.Timestamp < tsmin)
+				tsmin = data.Timestamp;
+		}
+
+		StartTime = tsmin;
+		StopTime = tsmax;
+
+		BufferValid = true;
+
+		Debug.Log(File.name);
+
+		
 	}
 
 }
