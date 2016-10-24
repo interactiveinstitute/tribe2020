@@ -48,6 +48,8 @@ public class TimeSeries : Subscriber {
 	[Space(10)]
 	public bool BufferValid = false;
 	public int CurrentIndex;
+	public double CurrentTimestamp;
+	public string CurrentDate;
 	public double CurrentValue;
 	public double CurrentIntegral; 
 	public string CurrentText;
@@ -85,6 +87,8 @@ public class TimeSeries : Subscriber {
 		if (UpdateStatus == true) {
 			CurrentValue = GetCurrentValue ();
 			CurrentIndex = GetCurrentIndex (TTime.time);
+			CurrentTimestamp = DataPoints [CurrentIndex].Timestamp;
+			CurrentDate = TTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
 		}
 	}
 
@@ -151,7 +155,7 @@ public class TimeSeries : Subscriber {
 		{
 			//print(TimeStamps [i].ToString ("F4") + " > " + ts.ToString ("F4"));
 
-			if (DataPoints[i].Timestamp < ts)
+			if (DataPoints[i].Timestamp + TimeOffset < ts )
 			{
 				return i;
 			}
