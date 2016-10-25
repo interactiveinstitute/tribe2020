@@ -18,10 +18,8 @@ public class PilotView : View{
 
 	public Transform cash;
 	public Transform comfort;
-	public Transform temperature;
 	public Transform power;
 	public Text energyCounter;
-	public Transform co2;
 
 	public GameObject inspectorUI;
 	public Transform inspectorActionList;
@@ -87,11 +85,12 @@ public class PilotView : View{
 
 		foreach(RectTransform menu in menus) {
 			Vector2 origPos = menu.GetComponent<UIPanel>().originalPosition;
+			Vector2 targetPos = menu.GetComponent<UIPanel>().targetPosition;
 
 			if(menu == _curMenu) {
-				if(menu.anchoredPosition.x != 0 || menu.anchoredPosition.y != 0) {
-					float curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
-					float curY = 0 + (menu.anchoredPosition.y + 0) * 0.75f;
+				if(menu.anchoredPosition.x != targetPos.x || menu.anchoredPosition.y != targetPos.y) {
+					float curX = targetPos.x + (menu.anchoredPosition.x - targetPos.x) * 0.75f;
+					float curY = targetPos.y + (menu.anchoredPosition.y - targetPos.y) * 0.75f;
 					//curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
@@ -313,7 +312,17 @@ public class PilotView : View{
 
 	//
 	public void SetCurrentUI(RectTransform ui) {
-		_curMenu = ui;
+		if(ui && ui.GetComponent<UIPanel>().toggleButton) {
+			ui.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
+		}
+		if(_curMenu == ui) {
+			_curMenu = null;
+		} else {
+			if(_curMenu && _curMenu.GetComponent<UIPanel>().toggleButton) {
+				_curMenu.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
+			}
+			_curMenu = ui;
+		}
 	}
 
 	//
