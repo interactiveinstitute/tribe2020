@@ -29,7 +29,7 @@ public class AvatarActivity : ScriptableObject {
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
-	public enum Target { None, OfficeDesk, HelpDesk, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
+	public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
 		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home };
 
 	//Definition of a quest step
@@ -95,8 +95,8 @@ public class AvatarActivity : ScriptableObject {
 	public void Run() {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
 		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
-        string currTime = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-		Debug.Log(_ai.name + " doing activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTime);
+        string currTimeView = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
+		Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTimeView);
 
 		StartSession(sessions[_currSession]);
 	}
@@ -128,6 +128,9 @@ public class AvatarActivity : ScriptableObject {
 				_ai.SetRunLevel(session.target, session.parameter);
 				NextSession();
 				break;
+            default:
+                Debug.Log("unknown SessionType");
+                break;
 		}
 	}
 
@@ -168,20 +171,23 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-		Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target);
-		if(sessions[_currSession].type == SessionType.WalkTo) {
+		Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
+		if(sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		}
 	}
 
 	//
 	public void FinishCurrentActivity() {
+        Debug.Log("Gonna finish this activity. Sessions is currently: " + sessions);
+
         //Remove the sessions already performed
 		if(_currSession > 0) {
 			sessions.RemoveRange(0, _currSession - 1);
 		}
 
-        //Simulate the sessions note yet performed
+        Debug.Log("After deletion sessions is: " + sessions);
+        //Simulate the sessions not yet performed
 		foreach(Session session in sessions) {
 			SimulateSession(session);
 		}

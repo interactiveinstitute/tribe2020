@@ -40,33 +40,36 @@ public class ElectricDevice : ElectricMeter {
 	[Tooltip("For backward compability with ElectricMeter.")]
 	public int runlevelUnpowered = 0;
 
-	//[Header("Sound")]
-	private AudioSource noisesource; 
-
-	
-
-
-	//var time_event = new Tuple<long, float>(0,0.0f);
-
-	//public List<Tuple<long, float>> Pattern;
-
-	// Use this for initialization
-	public override void Start () {
-
-		//This is used for replacing a material
-		foreach (Runlevel rl in runlevels) {
-			//Materials 
-			Renderer rend = rl.Target;
-
-			if (rend == null)
-				rend = gameObject.GetComponent<Renderer> ();
-
-			if (rend != null)
-				rl.default_materials = (Material[]) rend.sharedMaterials;
-		}
+    //[Header("Sound")]
+    private AudioSource noisesource;
+    private Material[] default_materials;
 
 
-		base.Start ();
+    //var time_event = new Tuple<long, float>(0,0.0f);
+
+    //public List<Tuple<long, float>> Pattern;
+
+    // Use this for initialization
+    public override void Start () {
+
+        //This is used for replacing a material
+        //We initially save the gameobjects materials to the side in order to be able to switch back to them.
+        foreach (Runlevel rl in runlevels)
+        {
+            //Materials 
+            Renderer rend = rl.Target;
+
+            //If target not set, use the gameobjetcs renderer
+            if (rend == null)
+                rend = gameObject.GetComponent<Renderer>();
+
+            //Shouldn't be null at this point!
+            Debug.Assert(rend != null);
+
+            rl.Default_materials = (Material[])rend.sharedMaterials;
+        }
+
+        base.Start ();
 		lastupdate = _timeMgr.time;
 
 		//Set initial runlevel.
@@ -93,6 +96,7 @@ public class ElectricDevice : ElectricMeter {
 
 
 	public void ApplyEffects() {
+        Debug.Log("Applying effects");
 
 		int rl = runlevel;
 
@@ -102,24 +106,36 @@ public class ElectricDevice : ElectricMeter {
 		if (runlevels.Length == 0)
 			return;
 
-		//Materials
-		if (runlevels [rl].Target != null) {
 
-		Material[] runlevel_materials = (Material[]) runlevels [rl].default_materials.Clone();
+        //Materials 
+        Renderer rend = runlevels[rl].Target;
+
+        //If target not set, apply the effect on the gameobject instead.
+        if (rend == null)
+            rend = gameObject.GetComponent<Renderer>();
+
+        //Shouldn't be null at this point!
+        Debug.Assert(rend != null);
+
+        //First fill up with the default materials.
+        Material[] runlevel_materials = (Material[])runlevels[rl].Default_materials.Clone();
+        //Material[] runlevel_materials = (Material[]) default_materials.Clone();
 
 
+        //how many materials in the material list of this runlevel.
+        int len = runlevels [rl].materials.Length;
 
-			int len = runlevels [rl].materials.Length;
+		//Replace only the materials that are not null.
+		for (int f = 0; f < len; f++) {
 
-			//Replace only the materials that are not null.
-			for (int f = 0; f < len; f++) {
-
-				if (runlevels [rl].materials [f] != null)
-					runlevel_materials [f] = runlevels [rl].materials [f];
-			}
-
-			runlevels [rl].Target.sharedMaterials = runlevel_materials;
+			if (runlevels [rl].materials [f] != null)
+				runlevel_materials [f] = runlevels [rl].materials [f];
 		}
+
+        //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
+        Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
+		//runlevels [rl].Target.sharedMaterials = runlevel_materials;
+        rend.materials = runlevel_materials;
 
 
 		//Lights
@@ -155,11 +171,10 @@ public class ElectricDevice : ElectricMeter {
 
 
 	public virtual void SetRunlevel(int level) {
-
-
+        Debug.Log("Setting runlevel for " + this.name + ". input parameter is " + level);
 
 		if (!HasPower) {
-
+            Debug.Log("this device hasn't got power. Can't turn it on." + this.name);
 			if (runlevel < 0)
 				return;
 			else

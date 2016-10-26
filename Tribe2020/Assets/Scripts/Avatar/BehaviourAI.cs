@@ -84,12 +84,13 @@ public class BehaviourAI : MonoBehaviour {
 			_curActivity.Run();
 		}
         
+        //do delta time stuffz
         _curActivity.Step(this);
 
-        //First disable sit flag if we're not in that state
+        //First disable sit flag if we're not in the sitting state
         if(_curActivityState != ActivityState.Sitting)
         {
-            _charController.StandUp();
+            _charController.StandUp();//Turns off a state boolean for the animator.
         }
 
         switch (_curActivityState) {
@@ -106,9 +107,10 @@ public class BehaviourAI : MonoBehaviour {
 					_charController.Move(_agent.desiredVelocity, false, false);
 				} else if(!_agent.pathPending) {
                     //Hurray. We got there.
-                    //Debug.Log("we got here!");
+                    Debug.Log("we got here!");
                     _charController.Move(Vector3.zero, false, false);
-                    //_curActivity.OnDestinationReached();
+                    //Ok. Let's notify the activity that the current session is finished
+                    _curActivity.OnDestinationReached();
 
                     //if(_curActivityState == ActivityState.Walking) {
                     //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
@@ -122,6 +124,7 @@ public class BehaviourAI : MonoBehaviour {
 				break;
             case ActivityState.Sitting:
                 _charController.SitDown();
+                _charController.Move(Vector3.zero, false, false);
                 break;
 			// Waiting
 			case ActivityState.Waiting:
@@ -344,7 +347,7 @@ public class BehaviourAI : MonoBehaviour {
 	public void WalkTo(AvatarActivity.Target target, bool isOwned) {
 		_curTargetObj = FindNearestDevice(target, isOwned);
 		if(_curTargetObj == null) {
-            Debug.LogError("Didn't find a target " + target);
+            Debug.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name);
             return;
         }
 
@@ -390,6 +393,12 @@ public class BehaviourAI : MonoBehaviour {
 	//
 	public void SetRunLevel(AvatarActivity.Target target, string parameter) {
 		GameObject device = FindNearestDevice(target, false);
+        if(device == null)
+        {
+            Debug.LogError("Didn't find device for setting runlevel");
+            return;
+        }
+
 		device.GetComponent<ElectricMeter>().On();
 			//.SetRunlevel(int.Parse(parameter));
 	}
@@ -409,6 +418,11 @@ public class BehaviourAI : MonoBehaviour {
 				}
 			}
 		}
+
+        if(target == null)
+        {
+            Debug.Log("woops! Didn't find nearest device");
+        }
 
 		return target;
 	}
