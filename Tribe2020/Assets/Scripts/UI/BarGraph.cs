@@ -20,7 +20,7 @@ public class BarGraph : MonoBehaviour {
 	void Start () {
 		_line = Instantiate(linePrefab);
 		_line.GetComponent<RawImage>().color = color;
-		_line.GetComponent<RectTransform>().Rotate(0, 0, 90);
+		_line.GetComponent<RectTransform>().Rotate(0, 180, 90);
 		_line.transform.SetParent(transform, false);
 		_line.transform.localPosition = Vector2.zero;
 	}

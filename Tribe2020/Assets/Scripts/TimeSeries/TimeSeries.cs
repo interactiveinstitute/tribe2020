@@ -20,16 +20,17 @@ public class CompareDataPoint : IComparer<DataPoint>
 	}
 }
 
-public class TimeSeries : Subscriber {
+public class TimeSeries : TimeDataObject {
 	[Header("General")]
 	public string Name;
 	[Space(10)]
 	public double StartTime;
 	public double StopTime;
-	public bool Absolute = true;
+	public bool Relative = false;
 	[Space(10)]
-	public string ValueUnit;
-	public string IntegralUnit;
+	public string[] Units;
+	public string[] Columns; 
+
 	[Space(10)]
 	public int BufferMaxSize;
 	public bool isAsync = false;
@@ -44,19 +45,27 @@ public class TimeSeries : Subscriber {
 	public double TimeOffset = 0;
 
 	[Header("Status")]
-	public bool UpdateStatus;
+	public bool Enabled;
 	[Space(10)]
 	public bool BufferValid = false;
 	public int CurrentIndex;
+	public double CurrentTimestamp;
+	public string CurrentDate;
 	public double CurrentValue;
 	public double CurrentIntegral; 
 	public string CurrentText;
 	public int CurrentSize;
 
+
 	[Header("Buffer")]
+//	public int Pointer = 0;
+//	private int lastPointer = -1;
+//	public List<DataPoint> Viewer = null;
 	public List<DataPoint> DataPoints = new List<DataPoint>();
 
 
+	[Header("CSV file")]
+	public TextAsset File;
 
 
 
@@ -64,12 +73,15 @@ public class TimeSeries : Subscriber {
 
 
 
+
 	// Use this for initialization
 	void Start () {
 
+		CurrentIndex = -1;
+
 		//Auto set if not set allready.
-		if (Server == null)
-			Server = MQTT.GetInstance ();
+		//if (Server == null)
+		//	Server = MQTT.GetInstance ();
 		TTime = GameTime.GetInstance ();
 		RequestData ();
 
@@ -79,9 +91,34 @@ public class TimeSeries : Subscriber {
 	
 	// Update is called once per frame
 	void Update () {
-		if (UpdateStatus == true) {
-			CurrentValue = GetCurrentValue ();
+		if ( Enabled == true) {
+			int index = CurrentIndex;
+
 			CurrentIndex = GetCurrentIndex (TTime.time);
+
+			if (CurrentIndex == index)
+				return;
+				
+
+			CurrentValue = GetCurrentValue ();
+
+
+			if (CurrentIndex == -1 ) {
+				CurrentTimestamp = double.NaN;
+				CurrentDate = "Out of range";
+				return;
+
+			
+			
+			}
+
+			CurrentTimestamp = DataPoints [CurrentIndex].Timestamp;
+			CurrentDate = TTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
+
+			DataPoint Data = DataPoints [CurrentIndex].Clone ();
+			Data.Timestamp += TimeOffset;
+			UpdateAllTargets (Data);
+
 		}
 	}
 
@@ -117,7 +154,7 @@ public class TimeSeries : Subscriber {
 	}
 
 	public double getStartTime() {
-		if (Absolute)
+		if (!Relative)
 			return StartTime;
 
 		return TTime.time + StartTime;
@@ -125,7 +162,7 @@ public class TimeSeries : Subscriber {
 	}
 
 	public double getStopTime() {
-		if (Absolute)
+		if (!Relative)
 			return StopTime;
 
 		return TTime.time + StopTime; 
@@ -133,10 +170,10 @@ public class TimeSeries : Subscriber {
 
 
 	public bool RequestData () {
-		if (Server == null)
-			return false;
+		//if (Server == null)
+		//	return false;
 
-		Server.Get(Name,StartTime,Absolute,BufferMaxSize);
+		//Server.Get(Name,StartTime,Absolute,BufferMaxSize);
 
 		return true;
 	}
@@ -148,7 +185,7 @@ public class TimeSeries : Subscriber {
 		{
 			//print(TimeStamps [i].ToString ("F4") + " > " + ts.ToString ("F4"));
 
-			if (DataPoints[i].Timestamp < ts)
+			if (DataPoints[i].Timestamp + TimeOffset < ts )
 			{
 				return i;
 			}
@@ -166,7 +203,7 @@ public class TimeSeries : Subscriber {
 		if (i == -1)
 			return double.NaN;
 
-		return DataPoints[i].Value;
+		return DataPoints[i].Values[0];
 	}
 
 
@@ -174,7 +211,105 @@ public class TimeSeries : Subscriber {
 	public double InterpolateCurrentValue() {
 		double now = (double)TTime.time;
 
-		return DataPoints[GetCurrentIndex(now)].Value;
+		return DataPoints[GetCurrentIndex(now)].Values[0];
+	}
+
+
+	public void LoadFromCVSFile() {
+
+		if (File == null)
+			return;
+
+		//string fileData  = System.IO.File.ReadAllText(FileName);
+		string[] lines = File.text.Split("\n"[0]);
+
+		Columns = (lines[0].Trim()).Split(","[0]);
+		Units = (lines[1].Trim()).Split(","[0]);
+
+		Name = File.name;
+		Relative = false;
+
+
+		//TODO fill in when we have a buffer already... 
+		//if (BufferValid == true)
+		//	return;
+
+		//Reload everything. 
+		DataPoints.Clear ();
+		double tsmin = double.PositiveInfinity, tsmax=0;
+
+		for (int i = 2; i < lines.Length; i++) {
+			string[] Values = (lines[i].Trim()).Split(","[0]);
+			DataPoint data = new DataPoint();
+			data.Timestamp = double.Parse( Values[0]) ;
+			Debug.Log (data);
+
+
+			data.Values = new double[Values.Length-1]; 
+
+			for (int c = 1; c < Values.Length; c++) {
+				
+//				Debug.Log (data);
+//				Debug.Log (data.Values[c]);
+//				Debug.Log (Values [c]);
+
+				data.Values[c-1] = double.Parse (Values [c]);
+			}
+
+			DataPoints.Add (data);
+
+			//Save min and max. 
+			if (data.Timestamp > tsmax)
+				tsmax = data.Timestamp;
+			if (data.Timestamp < tsmin)
+				tsmin = data.Timestamp;
+		}
+
+		StartTime = tsmin;
+		StopTime = tsmax;
+
+		BufferValid = true;
+
+
+
+		
+	}
+
+	public bool TsWithinBuffer(double TimeStamp) {
+	
+		double start, stop;
+
+		start = getStartTime ();
+		stop = getStopTime ();
+
+		if (TimeStamp > stop)
+			return false;
+		if (TimeStamp < start)
+			return false;
+
+		return true;
+			
+	}
+
+	//Make sure that the number of datapoints does not exceed the max buffer size variable. 
+	public void TrimDatapoints() {
+		int excess;
+
+		//If zero or less then no restrictions apply
+		if (BufferMaxSize < 1)
+			return;
+
+		excess = DataPoints.Count - BufferMaxSize;
+
+		if (excess > 0)
+			DataPoints.RemoveRange (0, excess);
+	}
+
+	override public void TimeDataUpdate(Connection Con,DataPoint data) {
+		if (TsWithinBuffer(data.Timestamp)) {
+			DataPoints.Add(data);
+			TrimDatapoints();
+		}
 	}
 
 }

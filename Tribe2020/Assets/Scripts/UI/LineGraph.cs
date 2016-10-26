@@ -9,6 +9,8 @@ public class LineGraph : MonoBehaviour {
 	private float _stepSize;
 	public int maxValue = 100;
 	public int minValue = 0;
+	public float sampleStep = 1;
+	private float _timeCount = 0;
 	public List<float> values;
 
 	public ElectricMeter electricMeter;
@@ -25,12 +27,16 @@ public class LineGraph : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(timeSeries != null) {
-			PushValue((float)timeSeries.GetCurrentValue());
-		} else {
-			PushValue(electricMeter.Power);
+		if(_timeCount > sampleStep) {
+			if(timeSeries != null) {
+				PushValue((float)timeSeries.GetCurrentValue());
+			} else {
+				PushValue(electricMeter.Power);
+			}
+			_timeCount = 0;
 		}
 
+		_timeCount += Time.deltaTime;
 		Refresh();
 	}
 
@@ -41,20 +47,25 @@ public class LineGraph : MonoBehaviour {
 	}
 
 	//
+	public void Init() {
+		for(int i = 0; i < values.Count - 1; i++) {
+			GameObject newLine = Instantiate(linePrefab);
+			newLine.GetComponent<RawImage>().color = color;
+			newLine.transform.SetParent(transform, false);
+			_lines.Add(newLine);
+		}
+	}
+
+	//
 	public void Refresh() {
 		RectTransform prevTrans = null;
 		_stepSize = GetComponent<RectTransform>().rect.width / (values.Count - 1);
 
 		for(int i = 0; i < values.Count - 1; i++) {
-			GameObject newLine;
 			if(_lines.Count <= i || _lines[i] == null) {
-				newLine = Instantiate(linePrefab);
-				newLine.GetComponent<RawImage>().color = color;
-				newLine.transform.SetParent(transform, false);
-				_lines.Add(newLine);
-			} else {
-				newLine = _lines[i];
+				Init();
 			}
+			GameObject newLine = _lines[i];
 
 			RectTransform newTrans = newLine.GetComponent<RectTransform>();
 			if(!float.IsNaN(values[i])) {

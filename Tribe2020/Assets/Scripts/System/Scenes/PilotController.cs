@@ -277,6 +277,7 @@ public class PilotController : Controller{
 	//
 	public void SetCurrentUI(RectTransform ui) {
 		_view.SetCurrentUI(ui);
+		ResetTouch();
 	}
 
 	//
