@@ -7,7 +7,7 @@ public class ServerObject : MonoBehaviour {
 	public string Name;
 
 	[Header("Local clients")]
-	public Subscription[] Subscriptions;
+//	public Subscription[] Subscriptions;
 	public string[] Payloads;
 
 

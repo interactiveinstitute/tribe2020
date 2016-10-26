@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ElectricMeter : MonoBehaviour {
-	[Header("Connection")]
+public class ElectricMeter : TimeDataObject {
+	[Header("Electric upward connection")]
 	[Space(10)]
 	[Tooltip("The object from where the meterpoint gets its power.")]
 	public ElectricMeter PowerSource;
@@ -15,7 +15,7 @@ public class ElectricMeter : MonoBehaviour {
 
 
 
-	[Header("Powers")]
+	[Header("Electric downward connection")]
 
 	[Tooltip("Makes the meterpoint conduct power to the conneced devices or not")]
 	[Space(10)]
@@ -180,6 +180,17 @@ public class ElectricMeter : MonoBehaviour {
 		float change;	
 		change = new_power - Power; 
 		add_to_power (ts, change);
+
+		foreach (Connection Conn in Targets) {
+			if (Conn == null)
+				continue;
+			DataPoint Data = new DataPoint ();
+			Data.Timestamp = ts;
+			Data.Values = new double[2];
+			Data.Values [0] = new_power;
+			Data.Values [1] = Energy;
+			Conn.Target.TimeDataUpdate (Conn, Data);
+		}
 	}
 
 	public void add_to_power(double ts,float change){
@@ -242,6 +253,11 @@ public class ElectricMeter : MonoBehaviour {
 
 	public void Toggle () {
 		powering (!GivesPower);
+	}
+
+	override public void TimeDataUpdate(Connection Con,DataPoint data) {
+		Debug.Log ("Got data!");
+		update_power(data.Timestamp,(float)data.Values[0]);
 	}
 
 }

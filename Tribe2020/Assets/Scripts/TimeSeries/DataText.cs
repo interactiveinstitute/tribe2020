@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DataText : Subscriber {
+public class DataText : TimeDataObject {
 
-	TextMesh textMesh = null;
-
+	public TextMesh textMesh = null;
+	public string Subproperty = null;
+	public int SubpropertyId = 0;
 
 
 	// Use this for initialization
@@ -19,13 +20,33 @@ public class DataText : Subscriber {
 	
 	}
 
-	virtual public void Data_Update(string payload) {
+	override public void JsonUpdate(Connection Sub, JSONObject json) {
 
 		if (Subproperty == null)
-			textMesh.text = payload;
+			textMesh.text = json.str;
 		else {
-			
+			textMesh.text = json.GetField (Subproperty).str;
 		}
 	}
+
+	override public void TimeDataUpdate(Connection Sub,DataPoint data) {
+
+		if (SubpropertyId > data.Values.Length)
+			return; 
+
+		if (data.Values [SubpropertyId] != null) {
+			textMesh.text = data.Values [SubpropertyId].ToString ();
+			return;
+		}
+
+		if (data.Texts [SubpropertyId] != null) {
+			textMesh.text = data.Texts [SubpropertyId];
+		}
+
+	}
+
+
+
+
 
 }
