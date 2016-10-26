@@ -26,7 +26,7 @@ public class TimeSeries : TimeDataObject {
 	[Space(10)]
 	public double StartTime;
 	public double StopTime;
-	public bool Absolute = true;
+	public bool Relative = false;
 	[Space(10)]
 	public string[] Units;
 	public string[] Columns; 
@@ -154,7 +154,7 @@ public class TimeSeries : TimeDataObject {
 	}
 
 	public double getStartTime() {
-		if (Absolute)
+		if (!Relative)
 			return StartTime;
 
 		return TTime.time + StartTime;
@@ -162,7 +162,7 @@ public class TimeSeries : TimeDataObject {
 	}
 
 	public double getStopTime() {
-		if (Absolute)
+		if (!Relative)
 			return StopTime;
 
 		return TTime.time + StopTime; 
@@ -227,7 +227,7 @@ public class TimeSeries : TimeDataObject {
 		Units = (lines[1].Trim()).Split(","[0]);
 
 		Name = File.name;
-		Absolute = true;
+		Relative = false;
 
 
 		//TODO fill in when we have a buffer already... 
@@ -273,6 +273,43 @@ public class TimeSeries : TimeDataObject {
 
 
 		
+	}
+
+	public bool TsWithinBuffer(double TimeStamp) {
+	
+		double start, stop;
+
+		start = getStartTime ();
+		stop = getStopTime ();
+
+		if (TimeStamp > stop)
+			return false;
+		if (TimeStamp < start)
+			return false;
+
+		return true;
+			
+	}
+
+	//Make sure that the number of datapoints does not exceed the max buffer size variable. 
+	public void TrimDatapoints() {
+		int excess;
+
+		//If zero or less then no restrictions apply
+		if (BufferMaxSize < 1)
+			return;
+
+		excess = DataPoints.Count - BufferMaxSize;
+
+		if (excess > 0)
+			DataPoints.RemoveRange (0, excess);
+	}
+
+	override public void TimeDataUpdate(Connection Con,DataPoint data) {
+		if (TsWithinBuffer(data.Timestamp)) {
+			DataPoints.Add(data);
+			TrimDatapoints();
+		}
 	}
 
 }
