@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class CompareDataPoint : IComparer<DataPoint>
 {
@@ -74,6 +75,7 @@ public class TimeSeries : TimeDataObject {
 
 
 
+
 	// Use this for initialization
 	void Start () {
 
@@ -94,7 +96,7 @@ public class TimeSeries : TimeDataObject {
 		if ( Enabled == true) {
 			int index = CurrentIndex;
 
-			CurrentIndex = GetCurrentIndex (TTime.time);
+			CurrentIndex = GetIndex (TTime.time);
 
 			if (CurrentIndex == index)
 				return;
@@ -179,13 +181,13 @@ public class TimeSeries : TimeDataObject {
 	}
 
 	//Get index based on a timestamp
-	public int GetCurrentIndex(double ts) {
+	public int GetIndex(double ts) {
 
 		for (int i = DataPoints.Count - 1; i >= 0 ; i--)
 		{
 			//print(TimeStamps [i].ToString ("F4") + " > " + ts.ToString ("F4"));
 
-			if (DataPoints[i].Timestamp + TimeOffset < ts )
+			if ((DataPoints[i].Timestamp + TimeOffset) <= ts )
 			{
 				return i;
 			}
@@ -198,7 +200,7 @@ public class TimeSeries : TimeDataObject {
 	public double GetCurrentValue () {
 		double now = TTime.time;
 
-		int i = GetCurrentIndex (now);
+		int i = GetIndex (now);
 
 		if (i == -1)
 			return double.NaN;
@@ -211,7 +213,7 @@ public class TimeSeries : TimeDataObject {
 	public double InterpolateCurrentValue() {
 		double now = (double)TTime.time;
 
-		return DataPoints[GetCurrentIndex(now)].Values[0];
+		return DataPoints[GetIndex(now)].Values[0];
 	}
 
 
@@ -312,4 +314,50 @@ public class TimeSeries : TimeDataObject {
 		}
 	}
 
+	public List<DataPoint> GetPeriod(double From, double To) {
+		int iFrom, iTo;
+
+		iFrom = GetIndex (From);
+		iTo = GetIndex (To);
+		Debug.Log (From);
+		Debug.Log (To);
+		Debug.Log (iFrom);
+		Debug.Log (iTo);
+
+		if (iFrom < 0)
+			iFrom = 0;
+		if (iTo < 0)
+			iTo = 0;
+
+		return GetRange(iFrom, iTo - iFrom +1);
+
+	}
+
+	public List<DataPoint> GetRange(int index,int count){
+
+		List<DataPoint> rawdata, newdata;
+		DataPoint newpoint;
+
+		if (index > DataPoints.Count)
+			index = DataPoints.Count-1;
+
+		if ((count + index - 1) > DataPoints.Count)
+			count = DataPoints.Count - index -1;
+
+		rawdata = DataPoints.GetRange(index,count);
+		newdata = new List<DataPoint>(rawdata.Count);
+
+		//if (TimeOffset == 0)
+		//	return rawdata;
+
+		foreach (DataPoint point in rawdata) {
+			newpoint = point.Clone ();
+			newpoint.Timestamp += TimeOffset;
+			newdata.Add (newpoint);
+		}
+
+		return newdata;
+
+	}
+		
 }
