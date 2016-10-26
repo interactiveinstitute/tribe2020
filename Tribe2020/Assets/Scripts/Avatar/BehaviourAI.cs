@@ -66,61 +66,64 @@ public class BehaviourAI : MonoBehaviour {
 	void Update() {
 		double curTime = _timeMgr.GetTotalSeconds();
 
-        // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
-        // the script will try to simulate the schedule until the curTime is reached.
-		if(curTime > _curActivity.endTime) {
-            Debug.Log("Current activity's endTime passed. Finish it and start next one");
-			_curActivity.FinishCurrentActivity();
-			NextActivity();
-			_curActivity.Run();
-		}
+		// These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
+		// the script will try to simulate the schedule until the curTime is reached.
+		if(_curActivityState != ActivityState.OverrideWalking && _curActivityState != ActivityState.OverrideIdle) {
+			if(curTime > _curActivity.endTime) {
+				Debug.Log("Current activity's endTime (" + _curActivity.endTime + ") passed. Finish it and start next one");
+				_curActivity.FinishCurrentActivity();
+				NextActivity();
+				_curActivity.Run();
+			}
 
-        //same as above but backwards.
-		if(curTime < _curActivity.startTime)
-        {
-            Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
-            _curActivity.Revert();
-			PreviousActivity();
-			_curActivity.Run();
+			//same as above but backwards.
+			if(curTime < _curActivity.startTime) {
+				Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
+				_curActivity.Revert();
+				PreviousActivity();
+				_curActivity.Run();
+			}
 		}
         
         //do delta time stuffz
         _curActivity.Step(this);
 
         //First disable sit flag if we're not in the sitting state
-        if(_curActivityState != ActivityState.Sitting)
-        {
+        if(_curActivityState != ActivityState.Sitting) {
             _charController.StandUp();//Turns off a state boolean for the animator.
         }
 
         switch (_curActivityState) {
 			//Not doing anything, do something feasible in the pilot
 			case ActivityState.Idle:
-                //	_curActivity.Init(this);
-                //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
-                break;
+				_charController.Move(Vector3.zero, false, false);
+				//	_curActivity.Init(this);
+				//	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+				break;
 			// Walking towards an object, check if arrived to proceed
-			case ActivityState.OverrideWalking:
-                //Debug.Log("override walking!");
+			case ActivityState.OverrideWalking:	
+				//Debug.Log("override walking!");
 			case ActivityState.Walking:
 				if(_agent.remainingDistance > _agent.stoppingDistance) {
 					_charController.Move(_agent.desiredVelocity, false, false);
 				} else if(!_agent.pathPending) {
-                    //Hurray. We got there.
-                    Debug.Log("we got here!");
                     _charController.Move(Vector3.zero, false, false);
                     //Ok. Let's notify the activity that the current session is finished
                     _curActivity.OnDestinationReached();
 
-                    //if(_curActivityState == ActivityState.Walking) {
-                    //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
-                    //	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-                    //	_curActivity.NextStep(this);
-                    //} else if(_curActivityState == ActivityState.OverrideWalking) {
-                    //	_curActivityState = ActivityState.OverrideIdle;
-                    //	_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
-                    //}
-                }
+					//if(_curActivityState == ActivityState.Walking) {
+					//	_curTargetObj.GetComponent<Appliance>().AddHarvest();
+					//	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
+					//	_curActivity.NextStep(this);
+					//} else if(_curActivityState == ActivityState.OverrideWalking) {
+					if(_curActivityState == ActivityState.OverrideWalking) {
+						_curActivityState = ActivityState.OverrideIdle;
+					} else {
+						_curActivityState = ActivityState.Idle;
+					}
+					_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition);
+					//}
+				}
 				break;
             case ActivityState.Sitting:
                 _charController.SitDown();
@@ -199,13 +202,10 @@ public class BehaviourAI : MonoBehaviour {
                     
                 SetActivity(schedule[_scheduleIndex].activity, startTime, endTime);
 
-                Debug.Log("startActivity set. It's " + schedule[_scheduleIndex].activity + " with timeStamps " + startTime + ", " + endTime);
+                //Debug.Log("startActivity set. It's " + schedule[_scheduleIndex].activity + " with timeStamps " + startTime + ", " + endTime);
                 return;
             }
         }
-
-
-
 
         //---------------------OLD ERIK VERSION
         //      // get da time!
@@ -242,13 +242,16 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void SetActivity(AvatarActivity activity, double startTime, double endTime) {
-        Debug.Log("setting current activity: " + activity);
+        //Debug.Log("setting current activity: " + activity);
 		_curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
 		_curActivity.Init(this, startTime, endTime);
 	}
 
 	//
 	public void StartActivity(AvatarActivity activity) {
+		//Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
+		_curActivityState = ActivityState.Idle;
+		activity.endTime = _timeMgr.time + 60 * 3;
 		_curActivity = activity;
 		_curActivity.Init(this);
 	}
@@ -379,8 +382,7 @@ public class BehaviourAI : MonoBehaviour {
 	}
 
     //
-    public void SitDown()
-    {
+    public void SitDown() {
         _curActivityState = ActivityState.Sitting;
     }
 
@@ -419,9 +421,8 @@ public class BehaviourAI : MonoBehaviour {
 			}
 		}
 
-        if(target == null)
-        {
-            Debug.Log("woops! Didn't find nearest device");
+        if(target == null) {
+            Debug.Log(name + " could not find the affordance " + affordance.ToString());
         }
 
 		return target;
@@ -429,6 +430,7 @@ public class BehaviourAI : MonoBehaviour {
 
 	//
 	public void OnActivityOver() {
+		Debug.Log(name + "'s activity " + _curActivity.name + " is over");
         _controller.OnAvatarActivityComplete(_curActivity.name);
         _curActivityState = ActivityState.Idle;
 	}

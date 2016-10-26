@@ -68,7 +68,7 @@ public class BattleController : Controller {
 
 	//
 	void OnDestroy() {
-		_saveMgr.Save(SaveManager.currentSlot);
+		//_saveMgr.Save(SaveManager.currentSlot);
 	}
 
 	//
@@ -122,6 +122,7 @@ public class BattleController : Controller {
 		_hasWon = true;
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
+		_saveMgr.Save(SaveManager.currentSlot, false);
 		//_sceneMgr.LoadScene("ga_madrid_erik");
 	}
 }

@@ -130,8 +130,11 @@ public class NarrationManager : MonoBehaviour {
 			if(curQuest.GetCurrentStep().condition == questEvent) {
 				if(curQuest.GetCurrentStep().conditionField == "" ||
 					curQuest.GetCurrentStep().conditionField == argument) {
+					Debug.Log("Narration: " + curQuest.name + " was progressed by event " + questEvent);
 
-					_view.ClearView();
+					if(_view != null) {
+						_view.ClearView();
+					}
 
 					curQuest.NextStep();
 					if(curQuest.IsComplete()) {
@@ -141,9 +144,9 @@ public class NarrationManager : MonoBehaviour {
 							Quest nextQuest = Object.Instantiate(curQuest.nextQuest) as Quest;
 							_curQuests.Add(nextQuest);
 							StartQuestStep(nextQuest);
-
-							_controller.SaveGameState();
 						}
+
+						_controller.SaveGameState();
 					} else {
 						StartQuestStep(_curQuests[i]);
 					}

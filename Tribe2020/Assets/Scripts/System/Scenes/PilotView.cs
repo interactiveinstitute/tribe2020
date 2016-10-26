@@ -68,6 +68,9 @@ public class PilotView : View{
 		menus.Add(energyPanel);
 		menus.Add(comfortPanel);
 		menus.Add(mailPanel);
+
+		//Clear inbox
+		RemoveChildren(mailList);
 	}
 	
 	//Update is called once per frame
@@ -240,6 +243,18 @@ public class PilotView : View{
 	}
 
 	//
+	//public void SendMail(string title, string content) {
+	//	////Quest curQuest = quest;
+	//	//GameObject questObj = Instantiate(mailButtonPrefab) as GameObject;
+	//	////questObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
+	//	//Text[] texts = questObj.GetComponentsInChildren<Text>();
+	//	//texts[0].text = "";
+	//	//texts[1].text = curQuest.title;
+	//	//texts[2].text = "some date";
+	//	//questObj.transform.SetParent(mailList, false);
+	//}
+
+	//
 	public void ShowQuestList(List<Quest> quests) {
 		//
 		RemoveChildren(mailList);
@@ -323,6 +338,11 @@ public class PilotView : View{
 			}
 			_curMenu = ui;
 		}
+	}
+
+	//
+	public RectTransform GetCurrentUI() {
+		return _curMenu;
 	}
 
 	//

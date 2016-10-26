@@ -9,6 +9,9 @@ public class BaseAction : ScriptableObject {
 	public string callback;
 	public string callbackArgument;
 
+	public string deactivateDeviceName;
+	public string activateDeviceName;
+
 	public int cashCost;
 	public int comfortCost;
 

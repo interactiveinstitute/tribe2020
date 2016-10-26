@@ -58,6 +58,17 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			cashProduction += action.cashProduction;
 			comfortPorduction += action.comfortPorduction;
 		}
+
+		if(action.deactivateDeviceName != "") {
+			foreach(Transform child in transform) {
+				if(child.name == action.deactivateDeviceName) {
+					child.gameObject.SetActive(false);
+				}
+				if(child.name == action.activateDeviceName) {
+					child.gameObject.SetActive(true);
+				}
+			}
+		}
 	}
 
 	//

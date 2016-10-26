@@ -7,6 +7,9 @@ public class Viewpoint : MonoBehaviour {
 	public int yIndex;
 	public string title;
 
+	public List<Room> relatedZones;
+	public bool locked;
+
     public List<GameObject> hideObjects;
 
 	// Use this for initialization

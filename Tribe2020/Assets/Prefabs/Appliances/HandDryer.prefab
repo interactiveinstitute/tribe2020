@@ -42,9 +42,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 426034}
   - 65: {fileID: 6516222}
+  - 114: {fileID: 114000010453038570}
   - 114: {fileID: 11479856}
   - 208: {fileID: 208000012191567596}
-  - 114: {fileID: 114000010453038570}
   - 114: {fileID: 114000014169079046}
   m_Layer: 0
   m_Name: HandDryer
@@ -59,10 +59,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 190636}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -6.35, y: 1, z: 4}
+  m_LocalRotation: {x: -0, y: -0.000007376074, z: -0, w: 1}
+  m_LocalPosition: {x: -1.6358447, y: 1.300794, z: -4.1830006}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.001, z: 0}
   m_Children:
   - {fileID: 467642}
   - {fileID: 458032}
@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -237,22 +238,17 @@ MonoBehaviour:
   continous_updates: 0
   Unplugged: 0
   runlevels:
-  - Name: 
+  - Name: Off
     Power: 0
+    Target: {fileID: 2388912}
     materials: []
     sound: {fileID: 0}
     LoopSound: 0
     LightsOn: []
     LightsOff: []
-  - Name: 
+  - Name: On
     Power: 0
-    materials: []
-    sound: {fileID: 0}
-    LoopSound: 0
-    LightsOn: []
-    LightsOff: []
-  - Name: 
-    Power: 0
+    Target: {fileID: 2388912}
     materials: []
     sound: {fileID: 0}
     LoopSound: 0
@@ -261,10 +257,9 @@ MonoBehaviour:
   runlevel: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 0
-  runlevelOn: 2
-  runlevelOff: 1
+  runlevelOn: 1
+  runlevelOff: 0
   runlevelUnpowered: 0
-  noise: {fileID: 0}
 --- !u!114 &114000014169079046
 MonoBehaviour:
   m_ObjectHideFlags: 1

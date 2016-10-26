@@ -55,13 +55,10 @@ public class AvatarActivity : ScriptableObject {
 	}
 
 	public virtual void Step(BehaviourAI ai) {
-        if (sessions[_currSession].type == SessionType.WaitForDuration)
-        {
-            if (_delay > 0f)
-            {
+        if(sessions[_currSession].type == SessionType.WaitForDuration) {
+            if(_delay > 0f) {
                 _delay -= Time.deltaTime;
-            }else
-            {
+            } else {
                 NextSession();
             }
         }
@@ -96,14 +93,14 @@ public class AvatarActivity : ScriptableObject {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
 		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
         string currTimeView = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-		Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTimeView);
+		//Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTimeView);
 
 		StartSession(sessions[_currSession]);
 	}
 
 	//
 	public void StartSession(Session session) {
-		Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
+		//Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
                 _delay = int.Parse(session.parameter);
@@ -129,7 +126,7 @@ public class AvatarActivity : ScriptableObject {
 				NextSession();
 				break;
             default:
-                Debug.Log("unknown SessionType");
+                //Debug.Log("unknown SessionType");
                 break;
 		}
 	}
@@ -142,14 +139,14 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextSession() {
-        Debug.Log("icrementing _currSssion for " + _ai.name);
+        //Debug.Log("icrementing _currSssion for " + _ai.name);
 		_currSession++;
 
 		if(_currSession >= sessions.Count) {
-            Debug.Log("_currSession out of bound. No more sessions in this activity. calling activity over callback");
-			//_ai.OnActivityOver();
+            //Debug.Log("_currSession out of bound. No more sessions in this activity. calling activity over callback");
+			_ai.OnActivityOver();
 		} else {
-            Debug.Log("starting session" + sessions[_currSession].title);
+            //Debug.Log("starting session" + sessions[_currSession].title);
 			StartSession(sessions[_currSession]);
 		}
 	}
@@ -171,7 +168,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-		Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
+		//Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
 		if(sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		}
@@ -179,14 +176,14 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void FinishCurrentActivity() {
-        Debug.Log("Gonna finish this activity. Sessions is currently: " + sessions);
+        //Debug.Log("Gonna finish this activity. Sessions is currently: " + sessions);
 
         //Remove the sessions already performed
 		if(_currSession > 0) {
 			sessions.RemoveRange(0, _currSession - 1);
 		}
 
-        Debug.Log("After deletion sessions is: " + sessions);
+        //Debug.Log("After deletion sessions is: " + sessions);
         //Simulate the sessions not yet performed
 		foreach(Session session in sessions) {
 			SimulateSession(session);
@@ -208,11 +205,11 @@ public class AvatarActivity : ScriptableObject {
 			case SessionType.WaitUntilEnd:
 				break;
 			case SessionType.WalkTo:
-                Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
+                //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
 			case SessionType.Interact:
-                Debug.Log("Simulating Interaction. Interacting with " + session.target);
+                //Debug.Log("Simulating Interaction. Interacting with " + session.target);
                 _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
 				break;
 			default:

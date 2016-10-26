@@ -124,8 +124,10 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public void Save(int slot) {
-		SetData(slot, "pilot", "ga_madrid_erik");
+	public void Save(int slot, bool currentScene = true) {
+		if(currentScene) {
+			SetData(slot, "pilot", Application.loadedLevelName);
+		}
 
 		SetData(slot, "lastTime", _timeMgr.time.ToString());
 		SetData(slot, "money", _resourceMgr.cash.ToString());

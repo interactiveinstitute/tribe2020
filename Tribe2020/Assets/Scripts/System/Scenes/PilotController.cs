@@ -157,11 +157,12 @@ public class PilotController : Controller{
 			}
 		}
 
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
+		
 	}
 	
 	//
 	private void OnTap(Vector3 pos){
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
 		//if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
 		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		//	RaycastHit hit;
@@ -210,13 +211,25 @@ public class PilotController : Controller{
 
 	//
 	public override void ControlAvatar(string id, string action, Vector3 pos) {
-        Debug.Log("ControlAvatar called in pilotcontroller");
-		_avatars[0].WalkTo(pos);
+        //Debug.Log("ControlAvatar called in pilotcontroller");
+		foreach(BehaviourAI avatar in _avatars) {
+			//Debug.Log("ControlAvatar." + avatar.name + " == " + id);
+			if(avatar.name == id) {
+				avatar.WalkTo(pos);
+			}
+		}
+		//_avatars[0].WalkTo(pos);
 	}
 
 	//
 	public override void ControlAvatar(string id, Object action) {
-		_avatars[0].StartActivity(action as AvatarActivity);
+		foreach(BehaviourAI avatar in _avatars) {
+			if(avatar.name == id) {
+				//Debug.Log("ControlAvatar." + id);
+				avatar.StartActivity(action as AvatarActivity);
+			}
+		}
+		//_avatars[0].StartActivity(action as AvatarActivity);
 	}
 
 	//
@@ -263,42 +276,57 @@ public class PilotController : Controller{
 		}
 	}
 
-	//
-	public void OpenSettings() {
-		_view.ShowSettings();
-	}
+	////
+	//public void OpenSettings() {
+	//	_view.ShowSettings();
+	//}
+
+	////
+	//public void CloseSettings() {
+	//	_view.HideSettings();
+	//	_touchReset = true;
+	//}
 
 	//
-	public void CloseSettings() {
-		_view.HideSettings();
-		_touchReset = true;
+	public void HideUI() {
+		_view.SetCurrentUI(null);
 	}
 
 	//
 	public void SetCurrentUI(RectTransform ui) {
-		_view.SetCurrentUI(ui);
+		//Debug.Log(ui == _view.GetCurrentUI());
+		if(ui == _view.GetCurrentUI()) {
+			HideUI();
+		} else {
+			_view.SetCurrentUI(ui);
+			if(ui.name == "Mail Browse") {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
+				_view.ShowQuestList(_narrationMgr.GetQuests());
+			}
+		}
+
 		ResetTouch();
 	}
 
-	//
-	public void OnQuestListOpenend() {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST_LIST) {
-			_view.ShowQuestList(_narrationMgr.GetQuests());
-			ResetTouch();
+	////
+	//public void OnQuestListOpenend() {
+	//	if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST_LIST) {
+	//		_view.ShowQuestList(_narrationMgr.GetQuests());
+	//		ResetTouch();
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
-		}
-	}
+	//		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
+	//	}
+	//}
 
-	//
-	public void OnQuestListClosed() {
-		if(_curState == InputState.ALL) {
-			_view.HideQuestList();
-			ResetTouch();
+	////
+	//public void OnQuestListClosed() {
+	//	if(_curState == InputState.ALL) {
+	//		_view.HideQuestList();
+	//		ResetTouch();
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
-		}
-	}
+	//		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
+	//	}
+	//}
 
 	//
 	public void OnQuestPressed(Quest quest) {
@@ -366,7 +394,7 @@ public class PilotController : Controller{
 
 	//
 	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
-		Debug.Log("OnAvatarReachedPosition");
+		//Debug.Log("OnAvatarReachedPosition");
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
 	}
 
@@ -462,11 +490,13 @@ public class PilotController : Controller{
 
 	//
 	public override void SaveGameState() {
+		Debug.Log("Game Saved");
 		_saveMgr.Save(SaveManager.currentSlot);
 	}
 
 	//
 	public void LoadScene(string scene) {
+		SaveGameState();
 		//Debug.Log("LoadScene " + scene);
 		_sceneMgr.LoadScene(scene);
 	}

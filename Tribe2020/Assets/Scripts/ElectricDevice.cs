@@ -96,7 +96,7 @@ public class ElectricDevice : ElectricMeter {
 
 
 	public void ApplyEffects() {
-        Debug.Log("Applying effects");
+        //Debug.Log("Applying effects");
 
 		int rl = runlevel;
 
@@ -133,7 +133,7 @@ public class ElectricDevice : ElectricMeter {
 		}
 
         //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
-        Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
+        //Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
 		//runlevels [rl].Target.sharedMaterials = runlevel_materials;
         rend.materials = runlevel_materials;
 
@@ -171,10 +171,10 @@ public class ElectricDevice : ElectricMeter {
 
 
 	public virtual void SetRunlevel(int level) {
-        Debug.Log("Setting runlevel for " + this.name + ". input parameter is " + level);
+        //Debug.Log("Setting runlevel for " + this.name + ". input parameter is " + level);
 
 		if (!HasPower) {
-            Debug.Log("this device hasn't got power. Can't turn it on." + this.name);
+            //Debug.Log("this device hasn't got power. Can't turn it on." + this.name);
 			if (runlevel < 0)
 				return;
 			else
