@@ -54,6 +54,7 @@ public class AvatarActivity : ScriptableObject {
 		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
+
 	public virtual void Step(BehaviourAI ai) {
         if(sessions[_currSession].type == SessionType.WaitForDuration) {
             if(_delay > 0f) {
@@ -63,16 +64,6 @@ public class AvatarActivity : ScriptableObject {
             }
         }
 	}
-
-    //public void Wait() {
-    //    if (_delay > 0f)
-    //    {
-    //        _delay -= Time.deltaTime;
-    //    }else
-    //    {
-    //        NextSession();
-    //    }
-    //}
 
 	//
 	public void Init(BehaviourAI ai, double startTime, double endTime) {
@@ -103,7 +94,15 @@ public class AvatarActivity : ScriptableObject {
 		//Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
 		switch(session.type) {
 			case SessionType.WaitForDuration:
-                _delay = int.Parse(session.parameter);
+                if (session.parameter == "")
+                {
+                    Debug.LogError("No duration set for parameter in session WaitForDuration in activity " + name + "avatar " + _ai.name);
+                    _delay = 20; //Didn't get a wait parameter. Setting a default.
+                }
+                else
+                {
+                    _delay = int.Parse(session.parameter);
+                }
                 _ai.Wait();
 				break;
             case SessionType.SitUntilEnd:

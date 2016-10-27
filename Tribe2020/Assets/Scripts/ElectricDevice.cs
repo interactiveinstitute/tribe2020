@@ -57,12 +57,20 @@ public class ElectricDevice : ElectricMeter {
         foreach (Runlevel rl in runlevels)
         {
             //Materials 
+
+            //Maybe we have a specifically targeted renderer (of a gameObject) that we want to affect
             Renderer rend = rl.Target;
 
-            //If target not set, use the gameobjetcs renderer
+            //If target not set, use the gameobjects renderer
             if (rend == null)
                 rend = gameObject.GetComponent<Renderer>();
 
+            
+            if(rend == null)
+            {
+                //Apparently the object doesn't have a renderer
+                continue;
+            }
             //Shouldn't be null at this point!
             Debug.Assert(rend != null);
 
@@ -114,28 +122,31 @@ public class ElectricDevice : ElectricMeter {
         if (rend == null)
             rend = gameObject.GetComponent<Renderer>();
 
-        //Shouldn't be null at this point!
-        Debug.Assert(rend != null);
 
-        //First fill up with the default materials.
-        Material[] runlevel_materials = (Material[])runlevels[rl].Default_materials.Clone();
-        //Material[] runlevel_materials = (Material[]) default_materials.Clone();
+        //If the gameObject doesn't have a renderer, skip material change.
+        if (rend != null)
+        {
+            //First fill up with the default materials.
+            Material[] runlevel_materials = (Material[])runlevels[rl].Default_materials.Clone();
+            //Material[] runlevel_materials = (Material[]) default_materials.Clone();
 
 
-        //how many materials in the material list of this runlevel.
-        int len = runlevels [rl].materials.Length;
+            //how many materials in the material list of this runlevel.
+            int len = runlevels[rl].materials.Length;
 
-		//Replace only the materials that are not null.
-		for (int f = 0; f < len; f++) {
+            //Replace only the materials that are not null.
+            for (int f = 0; f < len; f++)
+            {
 
-			if (runlevels [rl].materials [f] != null)
-				runlevel_materials [f] = runlevels [rl].materials [f];
-		}
+                if (runlevels[rl].materials[f] != null)
+                    runlevel_materials[f] = runlevels[rl].materials[f];
+            }
 
-        //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
-        //Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
-		//runlevels [rl].Target.sharedMaterials = runlevel_materials;
-        rend.materials = runlevel_materials;
+            //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
+            //Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
+            //runlevels [rl].Target.sharedMaterials = runlevel_materials;
+            rend.materials = runlevel_materials;
+        }
 
 
 		//Lights

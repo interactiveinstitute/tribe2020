@@ -323,6 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -494,20 +495,6 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1289435265}
-  - {fileID: 564471093}
-  - {fileID: 1132113815}
-  - {fileID: 526500844}
-  - {fileID: 989397747}
-  - {fileID: 146386293}
-  - {fileID: 2095057009}
-  - {fileID: 50611596}
-  - {fileID: 1667717020}
-  - {fileID: 2099874393}
-  - {fileID: 1791416976}
-  - {fileID: 1681324718}
-  - {fileID: 558958130}
-  - {fileID: 422498472}
-  - {fileID: 941073800}
   m_Father: {fileID: 0}
   m_RootOrder: 5
 --- !u!1001 &47238159
@@ -660,10 +647,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 219de06e16fcf5d4aa14ad3e1c6655fc, type: 3}
   m_PrefabInternal: {fileID: 50603863}
---- !u!4 &50611596 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 991598422}
 --- !u!1001 &52300004
 Prefab:
   m_ObjectHideFlags: 0
@@ -768,6 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -956,6 +940,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalPosition: {x: -800, y: 0}
+  targetPosition: {x: 0, y: 0}
+  toggleButton: {fileID: 0}
 --- !u!222 &71373449
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1166,6 +1152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -2155,6 +2142,8 @@ MonoBehaviour:
   xIndex: 0
   yIndex: 1
   title: Office One Floor 2
+  relatedZones: []
+  locked: 0
   hideObjects:
   - {fileID: 0}
 --- !u!1001 &143711114
@@ -2203,10 +2192,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 219de06e16fcf5d4aa14ad3e1c6655fc, type: 3}
   m_IsPrefabParent: 0
---- !u!4 &146386293 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1144706146}
 --- !u!1 &147184376
 GameObject:
   m_ObjectHideFlags: 0
@@ -2249,6 +2234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -2604,6 +2590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -3286,118 +3273,6 @@ Transform:
   - {fileID: 1429984556}
   m_Father: {fileID: 0}
   m_RootOrder: 20
---- !u!1001 &230757305
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 9.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.421
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (9)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &233033118
 GameObject:
   m_ObjectHideFlags: 0
@@ -3485,37 +3360,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4cb4f057c8bb44de3913eaf46046591d, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &238286826 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000011446839298, guid: b1b421edbaf7b7543a10e02928960628,
-    type: 2}
-  m_PrefabInternal: {fileID: 944676918}
---- !u!23 &238286829 stripped
-MeshRenderer:
-  m_PrefabParentObject: {fileID: 23000011515183506, guid: b1b421edbaf7b7543a10e02928960628,
-    type: 2}
-  m_PrefabInternal: {fileID: 944676918}
---- !u!114 &238286831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 238286826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Monitor
-  description: The computer screen used on the office
-  playerAffordances: []
-  avatarAffordances: 03000000
-  owners: []
-  performedActions: []
-  interactionPos: {x: 0, y: 0, z: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1 &239281466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3649,6 +3493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -3659,118 +3504,6 @@ MonoBehaviour:
   Energy: 0
   lastupdate: 0
   continous_updates: 0
---- !u!1001 &255366965
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 5.732
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.421
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &257105470
 GameObject:
   m_ObjectHideFlags: 0
@@ -3966,118 +3699,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: be3251d7a3c44324fbf085fe23c51f10, type: 3}
   m_PrefabInternal: {fileID: 263150220}
---- !u!1001 &267412207
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 8.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!4 &281191293 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 78b0554715b14ac45869ea39e26d0a74, type: 3}
@@ -4298,10 +3919,8 @@ MonoBehaviour:
   date: {fileID: 1357336290}
   cash: {fileID: 317161613}
   comfort: {fileID: 991993872}
-  temperature: {fileID: 1333807451}
   power: {fileID: 1894314163}
   energyCounter: {fileID: 1381775864}
-  co2: {fileID: 1371060986}
   inspectorUI: {fileID: 494609590}
   inspectorActionList: {fileID: 1654123216}
   mailUI: {fileID: 1019904745}
@@ -5679,15 +5298,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -5696,14 +5313,17 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints: []
+  File: {fileID: 0}
 --- !u!114 &383682350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5720,6 +5340,7 @@ MonoBehaviour:
   color: {r: 0.3897059, g: 0.7979715, b: 1, a: 1}
   maxValue: 100
   minValue: 0
+  sampleStep: 1
   values:
   - 0
   - 0
@@ -5796,6 +5417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 394890974}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -5922,6 +5544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1806975056}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
@@ -6234,122 +5857,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: b18e3d25d8c98eb448181a9351f6a24a, type: 3}
   m_PrefabInternal: {fileID: 203442942}
---- !u!1001 &421036088
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 5.105
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.610001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (13)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
---- !u!4 &422498472 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 421036088}
 --- !u!1001 &427949676
 Prefab:
   m_ObjectHideFlags: 0
@@ -7287,6 +6794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -7894,10 +7402,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 4d76b51233bb16747b30b02fcf47720f, type: 3}
   m_PrefabInternal: {fileID: 518972940}
---- !u!4 &526500844 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1623188576}
 --- !u!4 &527274276 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 219de06e16fcf5d4aa14ad3e1c6655fc, type: 3}
@@ -8423,15 +7927,13 @@ MonoBehaviour:
   xIndex: 1
   yIndex: 0
   title: Entrance
+  relatedZones: []
+  locked: 0
   hideObjects: []
 --- !u!4 &557153854 stripped
 Transform:
   m_PrefabParentObject: {fileID: 420386, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
   m_PrefabInternal: {fileID: 538783052}
---- !u!4 &558958130 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1326038618}
 --- !u!1001 &562761158
 Prefab:
   m_ObjectHideFlags: 0
@@ -8567,10 +8069,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 563496060}
---- !u!4 &564471093 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 701870909}
 --- !u!1 &567465300
 GameObject:
   m_ObjectHideFlags: 0
@@ -8657,7 +8155,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 10.9232, y: -134.77559, z: -0.0011999999}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!4 &569554196 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 3bc18d0987be8be49a67aa27e55f5f8e, type: 3}
@@ -9006,6 +8504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -9075,6 +8574,8 @@ MonoBehaviour:
   xIndex: 0
   yIndex: 0
   title: 
+  relatedZones: []
+  locked: 0
   hideObjects: []
 --- !u!1001 &604556864
 Prefab:
@@ -9224,15 +8725,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -9241,26 +8740,26 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints:
   - Timestamp: 1452691843.939
-    Value: 10
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1452691897.63669
-    Value: 20
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
+  File: {fileID: 0}
 --- !u!114 &605205371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9277,6 +8776,7 @@ MonoBehaviour:
   color: {r: 0.6380325, g: 1, b: 0.3897059, a: 1}
   maxValue: 100
   minValue: 0
+  sampleStep: 1
   values:
   - 0
   - 0
@@ -10084,15 +9584,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -10101,14 +9599,17 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints: []
+  File: {fileID: 0}
 --- !u!114 &674014700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10413,118 +9914,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: f8df34e597901ed4b86a603da386ca2b, type: 3}
   m_PrefabInternal: {fileID: 693019579}
---- !u!1001 &701870909
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 3.83
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &702095213
 GameObject:
   m_ObjectHideFlags: 0
@@ -10595,15 +9984,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -10612,14 +9999,17 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints: []
+  File: {fileID: 0}
 --- !u!114 &702095217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10636,6 +10026,7 @@ MonoBehaviour:
   color: {r: 0.3897059, g: 0.4191684, b: 1, a: 1}
   maxValue: 100
   minValue: 0
+  sampleStep: 1
   values:
   - 0
   - 0
@@ -11293,6 +10684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -11570,6 +10962,8 @@ MonoBehaviour:
   xIndex: 3
   yIndex: 0
   title: Office One
+  relatedZones: []
+  locked: 0
   hideObjects:
   - {fileID: 0}
 --- !u!1 &749985907
@@ -12461,6 +11855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -12621,6 +12016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -14397,15 +13793,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -14414,14 +13808,17 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints: []
+  File: {fileID: 0}
 --- !u!114 &924141403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14778,10 +14175,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 939077940}
---- !u!4 &941073800 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1969009907}
 --- !u!1001 &941512618
 Prefab:
   m_ObjectHideFlags: 0
@@ -14955,7 +14348,7 @@ Prefab:
         type: 2}
       propertyPath: runlevels.Array.data[0].Target
       value: 
-      objectReference: {fileID: 238286829}
+      objectReference: {fileID: 0}
     - target: {fileID: 114000010954918382, guid: b1b421edbaf7b7543a10e02928960628,
         type: 2}
       propertyPath: runlevels.Array.data[1].Name
@@ -14975,7 +14368,7 @@ Prefab:
         type: 2}
       propertyPath: runlevels.Array.data[1].Target
       value: 
-      objectReference: {fileID: 238286829}
+      objectReference: {fileID: 0}
     - target: {fileID: 114000010954918382, guid: b1b421edbaf7b7543a10e02928960628,
         type: 2}
       propertyPath: AlwaysPowered
@@ -15809,15 +15202,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: San Pablo Energy Consumption
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: W
-  IntegralUnit: kWh
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 10
   isAsync: 0
   hasIntegral: 0
@@ -15826,54 +15217,47 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints:
   - Timestamp: 1452691843.939
-    Value: 10
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1452691897.63669
-    Value: 20
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
+  File: {fileID: 0}
 --- !u!114 &971537919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15890,6 +15274,7 @@ MonoBehaviour:
   color: {r: 1, g: 0.3897059, b: 0.3897059, a: 1}
   maxValue: 2000
   minValue: 0
+  sampleStep: 1
   values:
   - 0
   - 0
@@ -16181,122 +15566,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 102c05a8dab7a4842bfb270705b89dd1, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &989397747 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 267412207}
---- !u!1001 &991598422
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 5.732
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (7)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &991993871
 GameObject:
   m_ObjectHideFlags: 0
@@ -16535,118 +15804,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1004047112}
---- !u!1001 &1004464608
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 5.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1004569007
 GameObject:
   m_ObjectHideFlags: 0
@@ -16923,6 +16080,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalPosition: {x: 0, y: -450}
+  targetPosition: {x: 0, y: 0}
+  toggleButton: {fileID: 0}
 --- !u!114 &1019904748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17169,6 +16328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -17224,6 +16384,8 @@ MonoBehaviour:
   xIndex: 1
   yIndex: 1
   title: Office One Floor 2
+  relatedZones: []
+  locked: 0
   hideObjects:
   - {fileID: 0}
 --- !u!1 &1049991770
@@ -17270,6 +16432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 394890974}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -17661,118 +16824,6 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 4d76b51233bb16747b30b02fcf47720f, type: 3}
   m_PrefabInternal: {fileID: 715722002}
---- !u!1001 &1080991491
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 8.44
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.610001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (11)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1082369620
 Prefab:
   m_ObjectHideFlags: 0
@@ -17980,118 +17031,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1103273174}
---- !u!1001 &1105414972
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 6.321
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (6)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1106896918
 GameObject:
   m_ObjectHideFlags: 0
@@ -18119,6 +17058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1806975056}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
@@ -18333,6 +17273,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalPosition: {x: 800, y: 0}
+  targetPosition: {x: 0, y: 0}
+  toggleButton: {fileID: 0}
 --- !u!222 &1112451400
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18503,6 +17445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -18699,6 +17642,8 @@ MonoBehaviour:
   xIndex: 2
   yIndex: 0
   title: Conference Room
+  relatedZones: []
+  locked: 0
   hideObjects: []
 --- !u!1 &1125390947
 GameObject:
@@ -18770,10 +17715,6 @@ CanvasRenderer:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e26740e66fbc7a04393691a7c4053b80, type: 3}
   m_PrefabInternal: {fileID: 1494614191}
---- !u!4 &1132113815 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1004464608}
 --- !u!1 &1134860182
 GameObject:
   m_ObjectHideFlags: 0
@@ -18906,118 +17847,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 499606, guid: 102c05a8dab7a4842bfb270705b89dd1, type: 2}
   m_PrefabInternal: {fileID: 1137780455}
---- !u!1001 &1144706146
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 7.149
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1147143838
 Prefab:
   m_ObjectHideFlags: 0
@@ -21669,118 +20498,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c7930109887ede543981995b5cc131c8, type: 2}
   m_IsPrefabParent: 0
---- !u!1001 &1326038618
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 7.456
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.610001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (12)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1330549234
 GameObject:
   m_ObjectHideFlags: 0
@@ -22445,118 +21162,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1350612303}
---- !u!1001 &1350914257
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 9.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.61
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (10)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1354130589
 GameObject:
   m_ObjectHideFlags: 0
@@ -22704,6 +21309,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalPosition: {x: -800, y: 0}
+  targetPosition: {x: 0, y: 0}
+  toggleButton: {fileID: 0}
 --- !u!114 &1356788970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23430,6 +22037,8 @@ MonoBehaviour:
   xIndex: 2
   yIndex: 0
   title: Bathroom
+  relatedZones: []
+  locked: 0
   hideObjects: []
 --- !u!1001 &1388066941
 Prefab:
@@ -23693,6 +22302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -24520,7 +23130,7 @@ Transform:
   - {fileID: 1039722761}
   - {fileID: 1156734217}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &1469340196
 GameObject:
   m_ObjectHideFlags: 0
@@ -26968,6 +25578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 394890974}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -27490,6 +26101,8 @@ MonoBehaviour:
   xIndex: 2
   yIndex: 1
   title: Office Two Floor 2
+  relatedZones: []
+  locked: 0
   hideObjects:
   - {fileID: 0}
 --- !u!1 &1557711608
@@ -28524,118 +27137,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f8df34e597901ed4b86a603da386ca2b, type: 3}
   m_IsPrefabParent: 0
---- !u!1001 &1623188576
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 9.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.967001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1626454230
 Prefab:
   m_ObjectHideFlags: 0
@@ -28744,6 +27245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 394890974}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -29328,10 +27830,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1665532894}
---- !u!4 &1667717020 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 255366965}
 --- !u!4 &1668467884 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 3bc18d0987be8be49a67aa27e55f5f8e, type: 3}
@@ -29444,10 +27942,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e26740e66fbc7a04393691a7c4053b80, type: 3}
   m_IsPrefabParent: 0
---- !u!4 &1681324718 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1080991491}
 --- !u!1001 &1685607743
 Prefab:
   m_ObjectHideFlags: 0
@@ -30528,6 +29022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 394890974}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -31120,10 +29615,6 @@ MonoBehaviour:
 Transform:
   m_PrefabParentObject: {fileID: 422808, guid: 25d2fe34402eb3d48a7b80764ad93471, type: 2}
   m_PrefabInternal: {fileID: 1787308365}
---- !u!4 &1791416976 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1350914257}
 --- !u!1001 &1792847526
 Prefab:
   m_ObjectHideFlags: 0
@@ -31432,6 +29923,8 @@ MonoBehaviour:
   xIndex: 0
   yIndex: 0
   title: Pentry
+  relatedZones: []
+  locked: 0
   hideObjects: []
 --- !u!114 &1806975056
 MonoBehaviour:
@@ -31445,6 +29938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd63c7487b3220b4f9ee321b57f573d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
@@ -31555,6 +30049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -32879,7 +31374,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!4 &1893409037 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 219de06e16fcf5d4aa14ad3e1c6655fc, type: 3}
@@ -32945,6 +31440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -33335,6 +31831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1106896919}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -33862,118 +32359,6 @@ MonoBehaviour:
 Transform:
   m_PrefabParentObject: {fileID: 422808, guid: 25d2fe34402eb3d48a7b80764ad93471, type: 2}
   m_PrefabInternal: {fileID: 1968075089}
---- !u!1001 &1969009907
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 43483287}
-    m_Modifications:
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 4.454
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 10.610001
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_RootOrder
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 108742, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Name
-      value: Bob Alison (14)
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].time
-      value: 16:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[5].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[4].time
-      value: 08:05
-      objectReference: {fileID: 0}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
-        type: 2}
-    - target: {fileID: 19581572, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: m_StoppingDistance
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].time
-      value: 08:02
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[1].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[2].time
-      value: 08:03
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].time
-      value: 08:04
-      objectReference: {fileID: 0}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[3].activity
-      value: 
-      objectReference: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e,
-        type: 2}
-    - target: {fileID: 11482754, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-      propertyPath: schedule.Array.data[0].time
-      value: 08:01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &1971791166
 Prefab:
   m_ObjectHideFlags: 0
@@ -34875,6 +33260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 1806975056}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
@@ -37358,10 +35744,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 78b0554715b14ac45869ea39e26d0a74, type: 3}
   m_PrefabInternal: {fileID: 2093724505}
---- !u!4 &2095057009 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 1105414972}
 --- !u!1001 &2096565102
 Prefab:
   m_ObjectHideFlags: 0
@@ -37424,10 +35806,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 25d2fe34402eb3d48a7b80764ad93471, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &2099874393 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 430866, guid: 506d51a752361724ebb1c0c5bc57c02e, type: 2}
-  m_PrefabInternal: {fileID: 230757305}
 --- !u!1 &2102407511
 GameObject:
   m_ObjectHideFlags: 0
@@ -37470,6 +35848,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Targets: []
   PowerSource: {fileID: 2051637517}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -38342,15 +36721,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Server: {fileID: 0}
-  Topic: 
-  Subproperty: 
+  Targets: []
   Name: 
   StartTime: 0
   StopTime: 0
-  Absolute: 0
-  ValueUnit: 
-  IntegralUnit: 
+  Relative: 0
+  Units: []
+  Columns: []
   BufferMaxSize: 0
   isAsync: 0
   hasIntegral: 0
@@ -38359,26 +36736,26 @@ MonoBehaviour:
   ValueOffset: 0
   ValueScaleFactor: 1
   TimeOffset: 0
-  UpdateStatus: 0
+  Enabled: 0
   BufferValid: 0
   CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
   CurrentValue: 0
   CurrentIntegral: 0
   CurrentText: 
   CurrentSize: 0
   DataPoints:
   - Timestamp: 1452691843.939
-    Value: 10
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1452691873.939
-    Value: 60
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
   - Timestamp: 1552691897.63669
-    Value: 0
-    Integral: 0
-    Text: 
+    Values: []
+    Texts: []
+  File: {fileID: 0}
 --- !u!114 &2144173184
 MonoBehaviour:
   m_ObjectHideFlags: 0

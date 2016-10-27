@@ -12,7 +12,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<AvatarActivity.Target> avatarAffordances;
 	public List<string> owners;
 
-	public List<BaseAction> performedActions;
+	public List<BaseAction> performedEnergyMeasures;
 	public Vector3 interactionPos;
 	public float cashProduction;
 	public float comfortPorduction;
@@ -53,8 +53,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void PerformAction(BaseAction action) {
-		if(playerAffordances.Contains(action) && !performedActions.Contains(action)) {
-			performedActions.Add(action);
+		if(playerAffordances.Contains(action) && !performedEnergyMeasures.Contains(action)) {
+			performedEnergyMeasures.Add(action);
 			cashProduction += action.cashProduction;
 			comfortPorduction += action.comfortPorduction;
 		}
@@ -73,14 +73,14 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public bool IsPerformed(BaseAction action) {
-		return !performedActions.Contains(action);
+		return !performedEnergyMeasures.Contains(action);
 	}
 
 	//
 	public List<BaseAction> GetPlayerActions() {
 		List<BaseAction> availableActions = new List<BaseAction>();
 		foreach(BaseAction action in playerAffordances) {
-			if(!performedActions.Contains(action)) {
+			if(!performedEnergyMeasures.Contains(action)) {
 				availableActions.Add(action);
 			}
 		}
