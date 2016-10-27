@@ -109,7 +109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &235961525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,7 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08b9ade3a9e62743b1767cf44265ec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_objVideo: {fileID: 2033009029}
 --- !u!81 &235961526
 AudioListener:
   m_ObjectHideFlags: 0
@@ -536,6 +535,80 @@ Transform:
   - {fileID: 1712719577}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!1001 &1535853202
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_Name
+      value: FullScreen (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_strFileName
+      value: Tribe Intro_work in progress.mp4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_TargetMaterial
+      value: 
+      objectReference: {fileID: 1535853203}
+    - target: {fileID: 11400002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_bFullScreen
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_objResize
+      value: 
+      objectReference: {fileID: 1535853203}
+    - target: {fileID: 11400002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_bLoop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1 &1535853203 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100002, guid: 80e2a8c30a78c0a40b7649bcc2f253e3, type: 2}
+  m_PrefabInternal: {fileID: 1535853202}
 --- !u!1 &1712719576
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,7 +678,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2033009029}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70bd79ad28091ae4b96040d99cdd02e1, type: 3}
+  m_Script: {fileID: 11500000, guid: fb521e9ace49d8546a83f420a0debd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_strFileName: Tribe Intro_work in progress.mp4
@@ -613,6 +686,7 @@ MonoBehaviour:
   m_bFullScreen: 1
   m_bSupportRockchip: 1
   mute: 0
+  audioManager: {fileID: 0}
   m_ScaleValue: 0
   m_objResize: {fileID: 2033009029}
   m_bLoop: 0
