@@ -17,6 +17,7 @@ public class SaveManager : MonoBehaviour{
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
 
+    public Boolean enableSaveLoad;
 	public string fileName;
 	private string _filePath;
 	private JSONNode _dataClone = new JSONNode();
@@ -140,6 +141,11 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Load(int slot) {
+        if (!enableSaveLoad)
+        {
+            Debug.Log("save/load disabled. Will nnot load game data.");
+            return;
+        }
 		//Debug.Log("Load: " + currentSlot);
 		_dataClone = ReadFileAsJSON();
 

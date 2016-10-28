@@ -84,9 +84,9 @@ public class AvatarActivity : ScriptableObject {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
 		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
         string currTimeView = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-		//Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is "+ currTimeView);
+        Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is " + currTimeView);
 
-		StartSession(sessions[_currSession]);
+        StartSession(sessions[_currSession]);
 	}
 
 	//
@@ -125,7 +125,7 @@ public class AvatarActivity : ScriptableObject {
 				NextSession();
 				break;
             default:
-                //Debug.Log("unknown SessionType");
+                Debug.Log("unknown SessionType");
                 break;
 		}
 	}
