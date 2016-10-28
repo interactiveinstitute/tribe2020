@@ -11,6 +11,7 @@ public class Graph : TimeDataObject {
 	public bool Relative=false;
 
 
+
 	[Header("Source")]
 	public TimeSeries Source;
 	public  int ValueIndex = 0;
@@ -57,7 +58,6 @@ public class Graph : TimeDataObject {
 		graphHeight = GetComponent<RectTransform>().rect.height;
 
 		scalefactorY = graphHeight / (float)Max;
-
 
 		Data = Source.GetPeriod (GetStartTime (), GetStopTime ());
 
@@ -109,31 +109,75 @@ public class Graph : TimeDataObject {
 		if (values.Count == 0)
 			return Verts;
 
-		px = TimeToCoordinate (values[0].Timestamp);
-		py = ValueToCoordinate (values[0].Values [ValueIndex]);
+		x = TimeToCoordinate (values[0].Timestamp);
+		y = ValueToCoordinate (values[0].Values [ValueIndex]);
 
-		Verts.Add(new Vector2(px,0));
-		Verts.Add(new Vector2(px,py));
+		//Handle special case. 
+		if (values.Count == 1 && (x < 0 || x > graphWidth))
+			return Verts;
+
+		if (x < 0)
+			Verts.Add(new Vector2(0,0));
+		else
+			Verts.Add(new Vector2(x,0));
+		//Verts.Add(new Vector2(px,py));
 
 		//newVerts.Add(new Vector2(0, 0));
 		for (int i=1; i<Data.Count;i++) {
+			px = x;
+			py = y;
 
 			x = TimeToCoordinate (values[i].Timestamp);
 			y = ValueToCoordinate (values[i].Values [ValueIndex]);
 
+			//The both this and previus is outside we can skip it. 
+			if (x < 0 && px < 0) 
+				continue;
+			if (x > graphWidth && px > graphWidth)
+				continue;
+
+			//Interpolate
+			if (x >= 0 && px < 0) {
+
+				if (!Staircase)
+					py = interpolate (0,px, py, x, y);
+				
+				px = 0;
+			}
+
+			//Interpolate
+			if (x > graphWidth && px <= graphWidth) {
+
+				if (!Staircase)
+					y = interpolate (graphWidth,px, py, x, y);
+
+				x = graphWidth;
+			}
+				
+
+			Verts.Add(new Vector2(px,py));
+
+
 			if (staircase)
 				Verts.Add(new Vector2(x,py));
 
-			Verts.Add(new Vector2(x,y));
-			//newVerts.Add(new Vector2(i * stepWidth, values[i] / maxValue * graphHeight));
 
-			px = x;
-			py = y;
 		}
-
+		if (x >= 0 && x <= graphWidth)
+			Verts.Add(new Vector2(x,y));
+		
 		Verts.Add(new Vector2(x,0));
 
 		return Verts;
+	}
+
+	public float interpolate(float x, float x0, float y0,float x1,float y1) {
+		float m,c;
+		m = (y0 - y1) / (x0 - x1);
+		//y=mx+c  => y-mx = c
+		c = y0 - m * x0;
+
+		return m * x + c;
 	}
 
 	public void Plot() {

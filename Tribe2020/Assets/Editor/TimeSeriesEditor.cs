@@ -20,6 +20,10 @@ public class TimeSeriesEditor : Editor
 		{
 			myScript.LoadFromCVSFile();
 		}
+		if(GUILayout.Button("Clear data",GUILayout.Width(100) ))
+		{
+			myScript.Clear();
+		}
 			
 	}
 }

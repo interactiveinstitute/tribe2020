@@ -21,16 +21,12 @@ public class CompareDataPoint : IComparer<DataPoint>
 	}
 }
 
-public class TimeSeries : TimeDataObject {
-	[Header("General")]
-	public string Name;
-	[Space(10)]
+public class TimeSeries : DataModifier {
+	[Header("Timeseries properties")]
 	public double StartTime;
 	public double StopTime;
 	public bool Relative = false;
-	[Space(10)]
-	public string[] Units;
-	public string[] Columns; 
+
 
 	[Space(10)]
 	public int BufferMaxSize;
@@ -38,12 +34,6 @@ public class TimeSeries : TimeDataObject {
 	public bool hasIntegral = false;
 	public bool isTextSeries = false;
 	public int ReloadLimit = 0;
-
-
-	[Header("Data manipulation")]
-	public double ValueOffset = 0;
-	public double ValueScaleFactor = 1;
-	public double TimeOffset = 0;
 
 	[Header("Status")]
 	public bool Enabled;
@@ -205,7 +195,18 @@ public class TimeSeries : TimeDataObject {
 		if (i == -1)
 			return double.NaN;
 
-		return DataPoints[i].Values[0];
+		return ApplyModifiers(DataPoints[i]).Values[0];
+	}
+
+	public double[] GetCurrentValues () {
+		double now = TTime.time;
+
+		int i = GetIndex (now);
+
+		if (i == -1)
+			return null;
+
+		return ApplyModifiers(DataPoints[i]).Values;
 	}
 
 
@@ -244,7 +245,7 @@ public class TimeSeries : TimeDataObject {
 			string[] Values = (lines[i].Trim()).Split(","[0]);
 			DataPoint data = new DataPoint();
 			data.Timestamp = double.Parse( Values[0]) ;
-			Debug.Log (data);
+
 
 
 			data.Values = new double[Values.Length-1]; 
@@ -311,38 +312,39 @@ public class TimeSeries : TimeDataObject {
 		if (TsWithinBuffer(data.Timestamp)) {
 			DataPoints.Add(data);
 			TrimDatapoints();
+			UpdateAllTargets (data);
 		}
 	}
 
 	public List<DataPoint> GetPeriod(double From, double To) {
 		int iFrom, iTo;
 
-		iFrom = GetIndex (From);
+		iFrom = GetIndex (From) -1;
 		iTo = GetIndex (To);
-		Debug.Log (From);
-		Debug.Log (To);
-		Debug.Log (iFrom);
-		Debug.Log (iTo);
+	
 
 		if (iFrom < 0)
 			iFrom = 0;
 		if (iTo < 0)
 			iTo = 0;
 
-		return GetRange(iFrom, iTo - iFrom +1);
+		return GetRange(iFrom, iTo - iFrom + 2);
 
 	}
 
 	public List<DataPoint> GetRange(int index,int count){
 
 		List<DataPoint> rawdata, newdata;
-		DataPoint newpoint;
 
-		if (index > DataPoints.Count)
+		if (index >= DataPoints.Count)
 			index = DataPoints.Count-1;
 
-		if ((count + index - 1) > DataPoints.Count)
-			count = DataPoints.Count - index -1;
+		if ((count + index ) > DataPoints.Count)
+			count = DataPoints.Count - index;
+
+
+		//Debug.Log ("I: " + index.ToString());
+		//Debug.Log ("C: " + count.ToString());
 
 		rawdata = DataPoints.GetRange(index,count);
 		newdata = new List<DataPoint>(rawdata.Count);
@@ -351,13 +353,16 @@ public class TimeSeries : TimeDataObject {
 		//	return rawdata;
 
 		foreach (DataPoint point in rawdata) {
-			newpoint = point.Clone ();
-			newpoint.Timestamp += TimeOffset;
-			newdata.Add (newpoint);
+			newdata.Add (ApplyModifiers(point));
 		}
 
 		return newdata;
 
 	}
+
+	public void Clear() {
+		DataPoints.Clear ();
+	}
+		
 		
 }
