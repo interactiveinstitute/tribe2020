@@ -80,7 +80,7 @@ public class PilotController : Controller{
 
 		//		if(!InspectorUI.activeSelf){
 		//if(IsOutsideUI(Input.mousePosition) && !_touchReset) {
-		if(_view.AllUIsClosed() && !_touchReset) {
+		if(!_touchReset) {
 			//Touch start
 			if(Input.GetMouseButtonDown(0)) {
 				OnTouchStart(Input.mousePosition);
@@ -120,6 +120,7 @@ public class PilotController : Controller{
 
 	//
 	private void OnTouchStart(Vector3 pos){
+		//Debug.Log("OnTouchStart");
 		_touchTimer = 0;
 		if(_touchState == IDLE) {
 			_startPos = pos;
@@ -138,6 +139,7 @@ public class PilotController : Controller{
 	
 	//
 	private void OnTouchEnded(Vector3 pos){
+		//Debug.Log("ontouchended");
 		_camMgr.cameraState = CameraManager.IDLE;
 		float dist = Vector3.Distance(_startPos, pos);
 
@@ -153,6 +155,7 @@ public class PilotController : Controller{
 					OnDoubleTap(pos);
 				}
 			} else if(dist >= SWIPE_THRESH) {
+				//Debug.Log("swipe");
 				OnSwipe(_startPos, pos);
 			}
 		}
@@ -480,7 +483,7 @@ public class PilotController : Controller{
 
 		return true;
 
-		return outsideInspector && outsideMailButton && !_view.mailUI.activeSelf;
+		//return !_view.inspector.gameObject.activeSelf && outsideMailButton && !_view.mailUI.activeSelf;
 	}
 
 	//

@@ -12,6 +12,12 @@ public class BaseAction : ScriptableObject {
 	public string deactivateDeviceName;
 	public string activateDeviceName;
 
+	public float energyFactor = 0;
+	public float gasFactor = 0;
+	public float co2Factor = 0;
+	public float moneyFactor = 0;
+	public float comfortFactor = 0;
+
 	public int cashCost;
 	public int comfortCost;
 
