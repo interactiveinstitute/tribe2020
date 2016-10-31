@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 478450}
-  - 114: {fileID: 11488570}
+  - 114: {fileID: 114000011789275556}
   m_Layer: 0
   m_Name: MainMeter
   m_TagString: Untagged
@@ -29,25 +29,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11488570
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab8c192e0018b994e8b46135b95121c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AlwaysPowered: 1
-  PowerSource: {fileID: 0}
-  HasPower: 1
-  GivesPower: 1
-  Powering: []
-  Power: 0
-  Energy: 0
-  continous_updates: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -59,3 +40,44 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151486}
   m_IsPrefabParent: 1
+--- !u!114 &114000011789275556
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Mainmeter datastream
+  Units:
+  - W
+  - Wh
+  Columns:
+  - Power
+  - Energy
+  Targets:
+  - Topic: 
+    Target: {fileID: 0}
+    Source: {fileID: 114000011789275556}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 0
+  AlwaysPowered: 1
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0

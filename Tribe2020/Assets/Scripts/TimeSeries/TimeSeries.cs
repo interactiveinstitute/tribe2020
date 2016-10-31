@@ -36,7 +36,8 @@ public class TimeSeries : DataModifier {
 	public int ReloadLimit = 0;
 
 	[Header("Status")]
-	public bool Enabled;
+	public bool Enabled = true;
+	public bool Record = false;
 	[Space(10)]
 	public bool BufferValid = false;
 	public int CurrentIndex;
@@ -83,7 +84,7 @@ public class TimeSeries : DataModifier {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Enabled == true) {
+		if ( Enabled == true ) {
 			int index = CurrentIndex;
 
 			CurrentIndex = GetIndex (TTime.time);
@@ -109,9 +110,25 @@ public class TimeSeries : DataModifier {
 
 			DataPoint Data = DataPoints [CurrentIndex].Clone ();
 			Data.Timestamp += TimeOffset;
-			UpdateAllTargets (Data);
+
+			//if (!Record)
+			base.UpdateAllTargets (Data);
 
 		}
+	}
+
+
+
+	override public void UpdateAllTargets(DataPoint Data) {
+
+		Debug.Log ("Update");
+		Debug.Log (Data);
+
+		if (Record)
+			AddPoint (Data);
+		//if (Enabled)
+		//	base.UpdateAllTargets (Data);
+		
 	}
 
 	void AddPoint(DataPoint Data) {
@@ -317,14 +334,7 @@ public class TimeSeries : DataModifier {
 		if (excess > 0)
 			DataPoints.RemoveRange (0, excess);
 	}
-
-	override public void TimeDataUpdate(Connection Con,DataPoint data) {
-		if (TsWithinBuffer(data.Timestamp)) {
-			DataPoints.Add(data);
-			TrimDatapoints();
-			UpdateAllTargets (data);
-		}
-	}
+		
 
 	public List<DataPoint> GetPeriod(double From, double To) {
 		int iFrom, iTo;
