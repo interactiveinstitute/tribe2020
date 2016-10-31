@@ -256,7 +256,7 @@ public class ElectricMeter : TimeDataObject {
 	}
 
 	override public void TimeDataUpdate(Connection Con,DataPoint data) {
-		Debug.Log ("Got data!");
+		//Debug.Log ("Got data!");
 		update_power(data.Timestamp,(float)data.Values[0]);
 	}
 

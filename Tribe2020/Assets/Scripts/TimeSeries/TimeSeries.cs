@@ -114,35 +114,45 @@ public class TimeSeries : DataModifier {
 		}
 	}
 
-	void Data_Update(DataPoint[] DataSet) {
-
+	void AddPoint(DataPoint Data) {
 		int index;
 
-		foreach(var item in DataSet )
-		{
-			//Skip if not inside buffer. 
-			if (item.Timestamp < this.getStartTime() || item.Timestamp > this.getStopTime())
-				continue;
-
-			index = DataPoints.BinarySearch (item, new CompareDataPoint() );
-
-			//Insert
-			if (index < 0)
-			{
-				DataPoints.Insert(~index, item);
-			}
-			//Replace
-			else if (index > 0)
-			{
-					DataPoints.RemoveAt(index);
-					DataPoints.Insert(index, item);
-			}
+		//Skip if not inside buffer. 
+		if (Data.Timestamp < this.getStartTime () || Data.Timestamp > this.getStopTime ()) {
+			//If limits are both zero we assume its not usex
+			if (StartTime != 0 && StopTime != 0)
+				return;
 
 		}
 
+		index = DataPoints.BinarySearch (Data, new CompareDataPoint() );
+
+		//Insert
+		if (index < 0)
+		{
+			DataPoints.Insert(~index, Data);
+		}
+		//Replace
+		else if (index > 0)
+		{
+			DataPoints.RemoveAt(index);
+			DataPoints.Insert(index, Data);
+		}
+
 		//Maintain size limitation. 
-		if (DataPoints.Count > BufferMaxSize)
+		if (BufferMaxSize != 0 && DataPoints.Count > BufferMaxSize)
 			DataPoints.RemoveRange (BufferMaxSize, BufferMaxSize - DataPoints.Count);
+
+	}
+
+
+	void AddPoints(DataPoint[] DataSet) {
+
+		foreach(var item in DataSet )
+		{
+			AddPoint (item);
+		}
+			
 	}
 
 	public double getStartTime() {
@@ -341,6 +351,9 @@ public class TimeSeries : DataModifier {
 
 		if ((count + index ) > DataPoints.Count)
 			count = DataPoints.Count - index;
+
+		if (index < 0)
+			return new List<DataPoint>(0);
 
 
 		//Debug.Log ("I: " + index.ToString());

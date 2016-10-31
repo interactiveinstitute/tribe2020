@@ -12,11 +12,9 @@ public class DataModifier : TimeDataObject {
 	public TimeSeries ScaleWithTimeSeries;
 	public TimeSeries OffsetWithTimeSeries;
 
+	override public void UpdateAllTargets(DataPoint Data) {
 
-	override public void TimeDataUpdate(Connection Con,DataPoint data) {
-
-		UpdateAllTargets (ApplyModifiers(data));
-	
+		base.UpdateAllTargets (ApplyModifiers (Data));
 	}
 
 	public DataPoint ApplyModifiers(DataPoint point) {
