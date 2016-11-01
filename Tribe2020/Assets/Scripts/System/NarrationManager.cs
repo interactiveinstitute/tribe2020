@@ -75,10 +75,10 @@ public class NarrationManager : MonoBehaviour {
 		if(_view != null) {
 			switch(quest.GetCurrentStepType()) {
 				case Quest.QuestStepType.Popup:
-					_view.ShowMessage(step.valueField, step.showAtBottom, false);
+					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom, false);
 					break;
 				case Quest.QuestStepType.Prompt:
-					_view.ShowMessage(step.valueField, step.showAtBottom);
+					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom);
 					break;
 				case Quest.QuestStepType.SendMail:
 					//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);

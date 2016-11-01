@@ -9,6 +9,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public List<BaseAction> playerAffordances;
+	public List<EnergyEfficiencyMeasure> playerAffordances_;
 	public List<AvatarActivity.Target> avatarAffordances;
 	public List<string> owners;
 
@@ -85,6 +86,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			}
 		}
 		return availableActions;
+	}
+
+	//
+	public List<EnergyEfficiencyMeasure> GetEEMs() {
+		return playerAffordances_;
 	}
 
 	//

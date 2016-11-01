@@ -12,6 +12,7 @@ public class PilotView : View{
 	private GameTime _timeMgr;
 	private MainMeter _energyMgr;
 	private ResourceManager _resourceMgr;
+	private LocalisationManager _localMgr;
 
 	[Header("Header")]
 	public Transform cash;
@@ -34,6 +35,7 @@ public class PilotView : View{
 
 	[Header("Overlay")]
 	public GameObject inspectorUI;
+	public Transform inspectorEEMContainer;
 	public Transform inspectorActionList;
 
 	public GameObject messageUI;
@@ -68,6 +70,7 @@ public class PilotView : View{
 		_timeMgr = GameTime.GetInstance();
 		_energyMgr = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
 
 		_curMenu = null;
 		//menus = new List<Transform>();
@@ -116,6 +119,35 @@ public class PilotView : View{
 	}
 
 	//
+	public void BuildEEMInterface(Appliance app, List<EnergyEfficiencyMeasure> eems) {
+		RemoveChildren(inspectorEEMContainer);
+
+		foreach(EnergyEfficiencyMeasure eem in eems) {
+			EnergyEfficiencyMeasure curEEM = eem;
+			GameObject buttonObj = Instantiate(EEMButtonPrefab);
+			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
+			Button button = buttonObj.GetComponent<Button>();
+
+			if(eem.callback != null) {
+				//button.onClick.AddListener(() => _ctrlMgr.OnAction(app, curEEM, buttonObj));
+			} else {
+				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+			}
+
+			eemProps.title.text = _localMgr.GetPhrase(curEEM.title);
+			buttonObj.GetComponent<Image>().color = eem.color;
+			eemProps.SetCost(eem.cashCost, eem.comfortCost);
+			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
+
+			buttonObj.transform.SetParent(inspectorEEMContainer, false);
+		}
+	}
+
+	//
+	public void BuildInboxInterface() {
+	}
+
+	//
 	public void SetActions(Appliance appliance, List<BaseAction> actions){
 		RemoveChildren(inspectorActionList);
 		
@@ -135,7 +167,7 @@ public class PilotView : View{
 
 			button.title.text = a.actionName;
 			button.SetCost(a.cashCost, a.comfortCost);
-			button.SetImpact((int)a.energyFactor, (int)a.gasFactor, (int)a.co2Factor, (int)a.moneyFactor, (int)a.comfortCost);
+			button.SetImpact((int)a.energyFactor, (int)a.gasFactor, (int)a.co2Factor, (int)a.moneyFactor, (int)a.comfortFactor);
 
 			//Text[] texts = actionObj.GetComponentsInChildren<Text>();
 			//texts[0].text = a.actionName;
@@ -228,9 +260,10 @@ public class PilotView : View{
 		SetCurrentUI(inspector);
 
 		//inspectorUI.SetActive(true);
-		inspector.GetComponentsInChildren<Text>()[0].text = appliance.title;
-		inspector.GetComponentsInChildren<Text>()[2].text = appliance.description;
-		SetActions(appliance, appliance.GetPlayerActions());
+		inspector.GetComponentsInChildren<Text>()[0].text = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
+		inspector.GetComponentsInChildren<Text>()[2].text = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
+		//SetActions(appliance, appliance.GetPlayerActions());
+		BuildEEMInterface(appliance, appliance.GetEEMs());
 	}
 
 	//
@@ -242,7 +275,7 @@ public class PilotView : View{
 	//
 	public override void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
-		messageUI.GetComponentInChildren<Text>().text = message;
+		messageUI.GetComponentInChildren<Text>().text = _localMgr.GetPhrase(message);
 
 		messageUI.transform.GetChild(1).gameObject.SetActive(showOkButton);
 
@@ -371,7 +404,12 @@ public class PilotView : View{
 	}
 
 	//
-	public bool AllUIsClosed() {
-		return _curMenu == null && !inspectorUI.activeSelf;
+	//public bool AllUIsClosed() {
+	//	return _curMenu == null && !inspectorUI.activeSelf;
+	//}
+
+	//
+	public bool IsAnyOverlayActive() {
+		return _curMenu != null;
 	}
 }

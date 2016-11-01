@@ -34,6 +34,7 @@ public class EEMButton : MonoBehaviour {
 	public void SetCost(int money, int comfort) {
 		moneyCost.SetActive(money != 0);
 		comfortCost.SetActive(comfort != 0);
+
 		moneyCost.GetComponentInChildren<Text>().text = "" + money;
 		comfortCost.GetComponentInChildren<Text>().text = "" + comfort;
 	}
