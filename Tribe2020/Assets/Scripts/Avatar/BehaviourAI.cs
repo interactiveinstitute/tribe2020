@@ -6,122 +6,113 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class BehaviourAI : MonoBehaviour {
-	public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
-	[SerializeField]
-	private ActivityState _curActivityState = ActivityState.Idle;
+    public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
+    [SerializeField]
+    private ActivityState _curActivityState = ActivityState.Idle;
 
-	private PilotController _controller;
-	private GameTime _timeMgr;
+    private PilotController _controller;
+    private GameTime _timeMgr;
 
-	private AvatarStats _stats;
-	private NavMeshAgent _agent;
-	private ThirdPersonCharacter _charController;
+    private AvatarStats _stats;
+    private NavMeshAgent _agent;
+    private ThirdPersonCharacter _charController;
 
-	//private Vector3 _curTargetPos;
-	private GameObject _curTargetObj;
-	private AvatarActivity _curActivity;
-	private AvatarActivity _nextActivity;
+    //private Vector3 _curTargetPos;
+    private GameObject _curTargetObj;
+    private AvatarActivity _curActivity;
+    private AvatarActivity _nextActivity;
     private AvatarActivity _prevActivity;
 
-	//private GameObject[] _appliances;
-	private static Appliance[] _devices;
-	private Room _curRoom;
+    //private GameObject[] _appliances;
+    private static Appliance[] _devices;
+    private Room _curRoom;
 
-	private float _startTime;
-	private bool _isSync = false;
-	private bool _isScheduleOver = false;
+    private float _startTime;
+    private bool _isSync = false;
+    private bool _isScheduleOver = false;
 
-	//Definition of a schedule item
-	[System.Serializable]
-	public struct ScheduleItem {
-		public string time;
-		public AvatarActivity activity;
-	}
-	public ScheduleItem[] schedule;
-	private int _scheduleIndex = 0;
+    //Definition of a schedule item
+    [System.Serializable]
+    public struct ScheduleItem {
+        public string time;
+        public AvatarActivity activity;
+    }
+    public ScheduleItem[] schedule;
+    private int _scheduleIndex = 0;
 
-	// Use this for initialization
-	void Start() {
-		_controller = PilotController.GetInstance();
-		_timeMgr = GameTime.GetInstance();
+    // Use this for initialization
+    void Start() {
+        _controller = PilotController.GetInstance();
+        _timeMgr = GameTime.GetInstance();
 
-		_stats = GetComponent<AvatarStats>();
+        _stats = GetComponent<AvatarStats>();
 
-		_agent = GetComponent<NavMeshAgent>();
-		_charController = GetComponent<ThirdPersonCharacter>();
+        _agent = GetComponent<NavMeshAgent>();
+        _charController = GetComponent<ThirdPersonCharacter>();
 
         //added by Gunnar.
         _agent.updatePosition = true;
         _agent.updateRotation = false;
 
-		//Prepare collection of devices in pilot
-		//if(_devices.Length == 0) {
-			_devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
-		//}
+        //Prepare collection of devices in pilot
+        //if(_devices.Length == 0) {
+        _devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
+        //}
 
-		//Synchronise schedule to get current activity for time
-		SyncSchedule();
-	}
+        //Synchronise schedule to get current activity for time
+        SyncSchedule();
+    }
 
-	// Update is called once per frame
-	void Update() {
-		double curTime = _timeMgr.GetTotalSeconds();
+    // Update is called once per frame
+    void Update() {
+        double curTime = _timeMgr.GetTotalSeconds();
 
-		// These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
-		// the script will try to simulate the schedule until the curTime is reached.
-		if(_curActivityState != ActivityState.OverrideWalking && _curActivityState != ActivityState.OverrideIdle) {
-			
-            //Ok. Let's find the stamp for the next activity.
-            if(curTime > _nextActivity.startTime)
-            {
-                Debug.Log("Next activity's startTime (" + _nextActivity.startTime+ ") passed. Finish current one and start the next one");
-                _curActivity.FinishCurrentActivity();
-                NextActivity();
-                _curActivity.Run();
-            }
+        // Start activities on scheduled times.
+        // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
+        // the script will try to simulate the schedule until the curTime is reached.
 
+        //Ok. Let's find the stamp for the next activity.
+        if (_nextActivity.startTimePassed()) {
+            Debug.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one");
+            _curActivity.FinishCurrentActivity();
+            NextActivity();
+            _curActivity.Run();
+        }
 
-            //if(curTime > _curActivity.endTime) {
-            //	Debug.Log("Current activity's endTime (" + _curActivity.endTime + ") passed. Finish it and start next one");
-            //	_curActivity.FinishCurrentActivity();
-            //	NextActivity();
-            //	_curActivity.Run();
-            //}
+        //same as above but backwards.
+        //We are most likely not handling backwards time very well. But that's out of scope for now.
+        if (!_curActivity.startTimePassed()) {
+            Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
+            _curActivity.Revert();
+            PreviousActivity();
+            _curActivity.Run();
+        }
 
-            //same as above but backwards.
-            if (curTime < _curActivity.startTime) {
-				Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
-				_curActivity.Revert();
-				PreviousActivity();
-				_curActivity.Run();
-			}
-		}
-        
         //do delta time stuffz
         _curActivity.Step(this);
 
         //First disable sit flag if we're not in the sitting state
-        if(_curActivityState != ActivityState.Sitting) {
+        if (_curActivityState != ActivityState.Sitting) {
             _charController.StandUp();//Turns off a state boolean for the animator.
-        }else
+        } else
         {
             Debug.Log("ActivityState is Sitting");
         }
 
         switch (_curActivityState) {
-			//Not doing anything, do something feasible in the pilot
-			case ActivityState.Idle:
-				_charController.Move(Vector3.zero, false, false);
-				//	_curActivity.Init(this);
-				//	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
-				break;
-			// Walking towards an object, check if arrived to proceed
-			case ActivityState.OverrideWalking:	
-				//Debug.Log("override walking!");
-			case ActivityState.Walking:
-				if(_agent.remainingDistance > _agent.stoppingDistance) {
-					_charController.Move(_agent.desiredVelocity, false, false);
-				} else if(!_agent.pathPending) {
+            //Not doing anything, do something feasible in the pilot
+            case ActivityState.Idle:
+                _charController.Move(Vector3.zero, false, false);
+                //	_curActivity.Init(this);
+                //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+                break;
+            // Walking towards an object, check if arrived to proceed
+            case ActivityState.OverrideWalking:
+            //Debug.Log("override walking!");
+            case ActivityState.Walking:
+                if (_agent.remainingDistance > _agent.stoppingDistance) {
+                    _charController.Move(_agent.desiredVelocity, false, false);
+                } else if (!_agent.pathPending) {
                     _charController.Move(Vector3.zero, false, false);
                     //Ok. Let's notify the activity that the current session is finished
                     _curActivity.OnDestinationReached();
@@ -137,33 +128,33 @@ public class BehaviourAI : MonoBehaviour {
                     //	_curActivityState = ActivityState.Idle;
                     //}
                     _controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
-					//}
-				}
-				break;
+                                                                                       //}
+                }
+                break;
             case ActivityState.Sitting:
                 //Be aware. This SitDown method is another than the one in this class.
                 //_charController.SitDown(); //Sets a boolean in the animator object
                 _charController.Move(Vector3.zero, false, false);
                 break;
-			// Waiting
-			case ActivityState.Waiting:
+            // Waiting
+            case ActivityState.Waiting:
                 _charController.Move(Vector3.zero, false, false);
                 break;
-			case ActivityState.OverrideIdle:
-				_charController.Move(Vector3.zero, false, false);
-				break;
-			case ActivityState.TurningOnLight:
-				if(_agent.remainingDistance > _agent.stoppingDistance) {
-					_charController.Move(_agent.desiredVelocity, false, false);
-				} else if(!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
-					_charController.Move(Vector3.zero, false, false);
-					_curTargetObj.GetComponent<ElectricMeter>().On();
-					_curTargetObj.GetComponentInParent<Room>().UpdateLighting();
-					_curActivity.ResumeSession(this);
-				}
-				break;
-		}
-	}
+            case ActivityState.OverrideIdle:
+                _charController.Move(Vector3.zero, false, false);
+                break;
+            case ActivityState.TurningOnLight:
+                if (_agent.remainingDistance > _agent.stoppingDistance) {
+                    _charController.Move(_agent.desiredVelocity, false, false);
+                } else if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) {
+                    _charController.Move(Vector3.zero, false, false);
+                    _curTargetObj.GetComponent<ElectricMeter>().On();
+                    _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
+                    _curActivity.ResumeSession(this);
+                }
+                break;
+        }
+    }
 
     //Erik claims that this part might be related to have the avatar behave correctly when making jumps in time.
     //I'm not convinced though... It seems to run only once when initiating an avatar, 
@@ -171,7 +162,7 @@ public class BehaviourAI : MonoBehaviour {
     //set from save on startup (now it's always 0 when entering the function, no?).
     //And my understanding is that the schedule is not part of save?
     //I'm now changing it to always find the closest upcoming activity in the schedule and choose it as _curActivity...
-    
+
     //Soooo. What this function is doing now is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
     public void SyncSchedule() {
         double curTime = _timeMgr.GetTotalSeconds();
@@ -182,10 +173,10 @@ public class BehaviourAI : MonoBehaviour {
         Debug.Log("starting schedule sync");
 
         //loop through the schedule until we get to an actvity that should happen in the future
-        for(; _scheduleIndex < schedule.Length; _scheduleIndex++)
+        for (; _scheduleIndex < schedule.Length; _scheduleIndex++)
         {
             //Handle schedule posts without time. Such activities should happen as soon as the activity before is finished.
-            if(schedule[_scheduleIndex].time == null || schedule[_scheduleIndex].time == "")
+            if (schedule[_scheduleIndex].time == null || schedule[_scheduleIndex].time == "")
             {
                 //Ok. so this schedule post has no time specified. Let's loop further.
                 continue;
@@ -195,7 +186,7 @@ public class BehaviourAI : MonoBehaviour {
             int schedMinute = int.Parse(timeParse[1]);
 
             //Is this activity in the future. OR. Is it the last in the schedule?
-            if(curHour <= schedHour || _scheduleIndex+1 == schedule.Length)
+            if (curHour <= schedHour || _scheduleIndex + 1 == schedule.Length)
             {
                 //if same hour. also check minutes. Skip if same hour but minutes already passed.
                 //Don't skip if last activity in schedule
@@ -228,7 +219,7 @@ public class BehaviourAI : MonoBehaviour {
                 double startTime = 0;
                 if (curItem.time != "")
                 {
-                    startTime  = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
+                    startTime = _timeMgr.ScheduleToTS(curTime, 0, curItem.time);
                     SetCurrentActivity(curItem.activity, startTime);
                 }
                 else {
@@ -253,13 +244,13 @@ public class BehaviourAI : MonoBehaviour {
                 {
                     prevStartTime = _timeMgr.ScheduleToTS(curTime, prevActivityDayOffset, prevItem.time);
                     SetPrevActivity(prevItem.activity, prevStartTime);
-                }else
+                } else
                 {
                     SetPrevActivity(prevItem.activity);
                 }
 
-                
-                
+
+
 
                 Debug.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime);
                 return;
@@ -267,12 +258,12 @@ public class BehaviourAI : MonoBehaviour {
         }
     }
 
-	//
-	public void SetCurrentActivity(AvatarActivity activity, double startTime) {
+    //
+    public void SetCurrentActivity(AvatarActivity activity, double startTime) {
         //Debug.Log("setting current activity: " + activity);
-		_curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
-		_curActivity.Init(this, startTime);
-	}
+        _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
+        _curActivity.Init(this, startTime);
+    }
 
     public void SetCurrentActivity(AvatarActivity activity)
     {
@@ -307,33 +298,42 @@ public class BehaviourAI : MonoBehaviour {
 
     //
     public void StartActivity(AvatarActivity activity) {
-		//Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
-		_curActivityState = ActivityState.Idle;
-		//activity.endTime = _timeMgr.time + 60 * 3;
-		_curActivity = activity;
-		_curActivity.Init(this);
-	}
+        //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
+        _curActivityState = ActivityState.Idle;
+        //activity.endTime = _timeMgr.time + 60 * 3;
+        _curActivity = activity;
+        _curActivity.Init(this);
+    }
 
-	//Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
-	public void NextActivity() {
-		//Iterate schedule index
+    //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
+    public void NextActivity() {
+        Debug.Log("Next activity called. " + _nextActivity.name);
+        //Iterate schedule index
         //Soo. _scheduleIndex is here incremented to point on the activity we jump to.
-		_scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
+        _scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
 
         //Get next schedule index with potential offset in days
         int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
         int nxtActivityDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
 
-		//Setup next schedule item
+        //Setup next schedule item
         ScheduleItem nxtItem = schedule[nxtIndex];
-
-        //Determine startTime for nextActivity
-        double nxtStartTime = _timeMgr.ScheduleToTS(_curActivity.startTime, nxtActivityDayOffset, nxtItem.time);
 
         //We have already an instantiated activity in _nextActivity. So we set _curActivity as _prevActivity and _nextActivity as _curActivity. Then we instantiate a new one for _nextActivity.
         _prevActivity = _curActivity;
         _curActivity = _nextActivity;
-        SetNextActivity(nxtItem.activity, nxtStartTime);
+
+
+        if (nxtItem.time != "")
+        {
+            //Determine startTime for nextActivity
+            double nxtStartTime = _timeMgr.ScheduleToTS(_curActivity.startTime, nxtActivityDayOffset, nxtItem.time);
+            SetNextActivity(nxtItem.activity, nxtStartTime);
+        }
+        else
+        {
+            SetNextActivity(nxtItem.activity);
+        }
     }
 
 	//
@@ -353,18 +353,24 @@ public class BehaviourAI : MonoBehaviour {
 		//Setup cur schedule item and the one after that
 		ScheduleItem prevItem = schedule[prevIndex];
 
-        //Determine the startTime of the new _prevActivity,
-        //using the _prevActivity as day reference
-        //This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
-        //If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
-        //we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
-		double prevActivityStartTime = _timeMgr.ScheduleToTS(_prevActivity.startTime, startTimeDayOffset, prevItem.time);
-        
         //Move all the three activities one step back
         _nextActivity = _curActivity;
         _curActivity = _prevActivity;
-        SetPrevActivity(prevItem.activity, prevActivityStartTime);
-	}
+
+        if (prevItem.time != "") {
+            //Determine the startTime of the new _prevActivity,
+            //using the _prevActivity as day reference
+            //This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
+            //If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
+            //we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
+            double prevActivityStartTime = _timeMgr.ScheduleToTS(_prevActivity.startTime, startTimeDayOffset, prevItem.time);
+            SetPrevActivity(prevItem.activity, prevActivityStartTime);
+        }
+        else
+        {
+            SetPrevActivity(prevItem.activity);
+        }
+    }
 
 	//
 	public void EndOverride() {
@@ -449,14 +455,15 @@ public class BehaviourAI : MonoBehaviour {
         Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            Debug.LogError("Didn't find a gameobject called sitPosition inside " + _curTargetObj.name);
+            Debug.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name);
         }
         else
         {
             coord.x = sitPosition.position.x;
             coord.z = sitPosition.position.z;
             coord.y = transform.position.y;
-            transform.position = coord;
+            transform.position = sitPosition.position;//coord;
+            transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
         _curActivityState = ActivityState.Sitting;

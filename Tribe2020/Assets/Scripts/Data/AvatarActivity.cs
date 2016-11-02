@@ -240,6 +240,17 @@ public class AvatarActivity : ScriptableObject {
 		return true;
 	}
 
+
+    //Checks if current time is more than startTime of this activity
+    public bool startTimePassed()
+    {
+        if (hasStartTime)
+        {
+            return startTime < _timeMgr.GetTotalSeconds();
+        }
+        return false;
+    }
+
 	//
 	public void ExecuteCommand(BehaviourAI ai, string command) {
 		string[] cmdParse = command.Split(',');
