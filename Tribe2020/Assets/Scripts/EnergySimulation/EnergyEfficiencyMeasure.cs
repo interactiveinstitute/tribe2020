@@ -3,11 +3,11 @@ using System.Collections;
 
 [CreateAssetMenu(fileName = "EEM", menuName = "TRIBE/EnergyEfficiencyMeasure", order = 1)]
 public class EnergyEfficiencyMeasure : ScriptableObject {
-	[TextArea(3, 10)]
 	public string title;
 	[TextArea(3, 10)]
 	public string description;
 	public Color color;
+	public string category;
 
 	public int cashCost;
 	public int comfortCost;

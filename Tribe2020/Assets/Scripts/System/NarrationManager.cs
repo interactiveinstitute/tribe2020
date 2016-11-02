@@ -111,7 +111,7 @@ public class NarrationManager : MonoBehaviour {
 					_timeMgr.TimeScale = int.Parse(step.valueField);
 					break;
 				case Quest.QuestStepType.QuestComplete:
-					_view.ShowCongratualations(step.valueField);
+					_view.ShowCongratualations("Narrative." + quest.title + ":Quest Complete");
 					break;
 			}
 		}

@@ -134,7 +134,8 @@ public class PilotView : View{
 				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
 			}
 
-			eemProps.title.text = _localMgr.GetPhrase(curEEM.title);
+			eemProps.title.text = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
 			buttonObj.GetComponent<Image>().color = eem.color;
 			eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
@@ -343,7 +344,7 @@ public class PilotView : View{
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
 		victoryUI.SetActive(true);
-		victoryText.text = text;
+		victoryText.text = _localMgr.GetPhrase(text);
 	}
 
 	//
