@@ -176,6 +176,9 @@ public class TimeSeries : DataModifier {
 		if (!Relative)
 			return StartTime;
 
+		if (TTime == null)
+			TTime = GameTime.GetInstance ();
+
 		return TTime.time + StartTime;
 		
 	}
