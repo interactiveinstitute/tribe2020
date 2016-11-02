@@ -19,9 +19,9 @@ public class BehaviourAI : MonoBehaviour {
 
 	//private Vector3 _curTargetPos;
 	private GameObject _curTargetObj;
-	private AvatarActivity _curActivity;
-	private AvatarActivity _nextActivity;
-    private AvatarActivity _prevActivity;
+	public AvatarActivity _curActivity;
+    public AvatarActivity _nextActivity;
+    public AvatarActivity _prevActivity;
 
 	//private GameObject[] _appliances;
 	private static Appliance[] _devices;
@@ -478,7 +478,14 @@ public class BehaviourAI : MonoBehaviour {
             return;
         }
 
-		device.GetComponent<ElectricMeter>().On();
+        ElectricMeter electricMeter = device.GetComponent<ElectricMeter>();
+        if (electricMeter == null)
+        {
+            Debug.LogError("Didn't find electric meter for device");
+            return;
+        }
+
+        device.GetComponent<ElectricMeter>().On();
 			//.SetRunlevel(int.Parse(parameter));
 	}
 

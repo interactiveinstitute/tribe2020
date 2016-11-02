@@ -44,6 +44,9 @@ public class Room : MonoBehaviour {
 
 	//
 	void OnTriggerEnter(Collider other) {
+
+        print(other.name + " entered " + gameObject.name);
+
 		if(other.GetComponent<BehaviourAI>()) {
 			//Debug.Log(other.name + " entered " + name);
 			personCount++;
