@@ -107,7 +107,7 @@ public class GameTime : MonoBehaviour {
     //The returned timestamp is based on the hour-minute from the day of the referenceStamp
     //offset by dayoffset.
 	public double ScheduleToTS(double referenceStamp, int dayOffset, string hourMinute) {
-		DateTime curTime = TimestampToDateTime(referenceStamp);
+		DateTime curTime = TimestampToDateTime(referenceStamp); //Ok we want a stamp from this day (+- dayoffset) corresponding to the hour:minute string
 		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dayOffset, hourMinute);
 	}
 

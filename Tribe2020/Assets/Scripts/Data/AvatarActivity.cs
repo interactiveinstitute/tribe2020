@@ -20,7 +20,9 @@ public class AvatarActivity : ScriptableObject {
 	public float _duration = 0;
 
 	public double startTime = 0;
-	public double endTime = 0;
+    [HideInInspector]
+    public bool hasStartTime = true;
+	//public double endTime = 0;
 
 	//Activity session types
 	public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
@@ -30,7 +32,7 @@ public class AvatarActivity : ScriptableObject {
 	public enum CheckType { LessThan, GreaterThan };
 	//
 	public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
-		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home };
+		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home, Work };
 
 	//Definition of a quest step
 	[System.Serializable]
@@ -47,12 +49,12 @@ public class AvatarActivity : ScriptableObject {
 		public float efficienyLevel;
 	}
 
-	public virtual void Init(BehaviourAI ai) {
+	//public virtual void Init(BehaviourAI ai) {
 
-        _ai = ai;
-		_currSession = 0;
-		//ExecuteCommand(ai, sessions[_currSession]);
-	}
+ //       _ai = ai;
+	//	_currSession = 0;
+	//	//ExecuteCommand(ai, sessions[_currSession]);
+	//}
 
 
 	public virtual void Step(BehaviourAI ai) {
@@ -65,13 +67,28 @@ public class AvatarActivity : ScriptableObject {
         }
 	}
 
-	//
-	public void Init(BehaviourAI ai, double startTime, double endTime) {
+    //Initialize without startTime
+    public void Init(BehaviourAI ai)
+    {
+        _timeMgr = GameTime.GetInstance();
+
+        _ai = ai;
+        _currSession = 0;
+
+        hasStartTime = false;
+
+
+        //ExecuteCommand(ai, sessions[_currSession]);
+    }
+
+    //Initialize
+    public void Init(BehaviourAI ai, double startTime) {
 		_timeMgr = GameTime.GetInstance();
 
 		_ai = ai;
 		this.startTime = startTime;
-		this.endTime = endTime;
+        hasStartTime = true;
+		//this.endTime = endTime;
 
 		_currSession = 0;
 		
@@ -79,20 +96,20 @@ public class AvatarActivity : ScriptableObject {
 		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
-	//
-	public void Run() {
+    //
+    public void Run() {
 		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-		string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
+		//string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
         string currTimeView = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-        Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", end " + endTimeView + ", currTime is " + currTimeView);
+        Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + currTimeView);
 
         StartSession(sessions[_currSession]);
 	}
 
 	//
 	public void StartSession(Session session) {
-		//Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
-		switch(session.type) {
+        Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
+        switch (session.type) {
 			case SessionType.WaitForDuration:
                 if (session.parameter == "")
                 {
