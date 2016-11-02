@@ -28,6 +28,8 @@ public class Graph : TimeDataObject {
 	float scalefactorY;
 	double Now;
 
+	public List<Vector2> Debug;
+
 	public List<DataPoint> Data;
 
 	GameTime _timeMgr = GameTime.GetInstance();
@@ -103,7 +105,7 @@ public class Graph : TimeDataObject {
 
 	public List<Vector2> Draw(List<DataPoint> values,bool staircase)  {
 
-		float x=0, y,px,py;
+		float x=0, y,px,py,xnow;
 		List<Vector2> Verts = new List<Vector2>();
 
 		if (values.Count == 0)
@@ -117,24 +119,35 @@ public class Graph : TimeDataObject {
 			return Verts;
 
 		if (x < 0)
-			Verts.Add(new Vector2(0,0));
+			Verts.Add(new Vector2(0,-1));
 		else
-			Verts.Add(new Vector2(x,0));
+			Verts.Add(new Vector2(x,-1));
 		//Verts.Add(new Vector2(px,py));
 
 		//newVerts.Add(new Vector2(0, 0));
-		for (int i=1; i<Data.Count;i++) {
+		for (int i = 1; i < Data.Count; i++) {
 			px = x;
 			py = y;
 
-			x = TimeToCoordinate (values[i].Timestamp);
-			y = ValueToCoordinate (values[i].Values [ValueIndex]);
+			x = TimeToCoordinate (values [i].Timestamp);
+			y = ValueToCoordinate (values [i].Values [ValueIndex]);
 
 			//The both this and previus is outside we can skip it. 
-			if (x < 0 && px < 0) 
+			if (x < 0 && px < 0) {
+
+				if (i == Data.Count - 1) {
+					if (!Staircase)
+						y = interpolate (0,px, py, x, y);
+
+					x = 0;
+					break;
+				}
+
 				continue;
+			}
+	
 			if (x > graphWidth && px > graphWidth)
-				continue;
+				break;
 
 			//Interpolate
 			if (x >= 0 && px < 0) {
@@ -152,6 +165,14 @@ public class Graph : TimeDataObject {
 					y = interpolate (graphWidth,px, py, x, y);
 
 				x = graphWidth;
+
+				Verts.Add(new Vector2(px,py));
+
+
+				if (staircase)
+					Verts.Add(new Vector2(x,py));
+
+				break;
 			}
 				
 
@@ -163,11 +184,28 @@ public class Graph : TimeDataObject {
 
 
 		}
-		if (x >= 0 && x <= graphWidth)
-			Verts.Add(new Vector2(x,y));
-		
-		Verts.Add(new Vector2(x,0));
 
+		if (x >= 0 && x <= graphWidth) {
+			Verts.Add (new Vector2 (x, y));
+
+			if (Staircase) {
+				xnow = TimeToCoordinate (Now);
+
+				if (xnow > x && xnow <= graphWidth) {
+					Verts.Add (new Vector2 (xnow, y));
+					x = xnow;
+				}
+			}
+
+		}
+
+			
+		Verts.Add(new Vector2(x,-1));
+
+
+
+
+		Debug = Verts;
 		return Verts;
 	}
 
