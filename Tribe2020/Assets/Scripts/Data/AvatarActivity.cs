@@ -40,6 +40,7 @@ public class AvatarActivity : ScriptableObject {
 		public string title;
 		public float probability = 1f;
 		public SessionType type;
+        public Appliance appliance = null;
 		public Target target;
 		public string parameter;
 		public bool avatarOwnsTarget;
@@ -138,7 +139,15 @@ public class AvatarActivity : ScriptableObject {
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
 			case SessionType.SetRunlevel:
-				_ai.SetRunLevel(session.target, session.parameter);
+                if(session.appliance != null)
+                {
+                    _ai.SetRunLevel(session.appliance, session.parameter);
+                }
+                else
+                {
+                    _ai.SetRunLevel(session.target, session.parameter);
+                }
+				
 				NextSession();
 				break;
             default:

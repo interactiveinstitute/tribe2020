@@ -520,6 +520,33 @@ public class BehaviourAI : MonoBehaviour
             return;
         }
 
+        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        if (meter == null)
+        {
+            Debug.LogError("Didn't find electric meter for setting runlevel");
+            return;
+        }
+
+        device.GetComponent<ElectricMeter>().On();
+        //.SetRunlevel(int.Parse(parameter));
+    }
+
+    public void SetRunLevel(Appliance appliance, string parameter)
+    {
+        GameObject device = appliance.gameObject;
+        if (device == null)
+        {
+            Debug.LogError("Didn't find device for setting runlevel");
+            return;
+        }
+
+        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        if (meter == null)
+        {
+            Debug.LogError("Didn't find electric meter for setting runlevel");
+            return;
+        }
+
         device.GetComponent<ElectricMeter>().On();
         //.SetRunlevel(int.Parse(parameter));
     }
@@ -618,17 +645,19 @@ public class BehaviourAI : MonoBehaviour
         AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
         walkToLightSwitch.title = "Walking to light switch";
         walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-        walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
+        walkToLightSwitch.target = AvatarActivity.Target.LampSwitch; //Is this needed if we instead set appliance below? I didn't remove this, if it would mess something else up. /Martin
+        walkToLightSwitch.appliance = lightSwitch;
         walkToLightSwitch.currentRoom = true;
 
         AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
         turnOnLight.title = "Turning on light";
         turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
-        turnOnLight.target = AvatarActivity.Target.LampSwitch;
+        turnOnLight.target = AvatarActivity.Target.LampSwitch; //Is this needed if we instead set appliance below? I didn't remove this, if it would mess something else up. /Martin
+        turnOnLight.appliance = lightSwitch;
         turnOnLight.parameter = "1";
 
-        _curActivity.InsertSession(turnOnLight);
         _curActivity.InsertSession(walkToLightSwitch);
+        _curActivity.InsertSession(turnOnLight);   
     }
 
     //
