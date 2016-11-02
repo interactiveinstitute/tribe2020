@@ -180,6 +180,9 @@ public class PilotController : Controller{
 	//
 	private void OnSwipe(Vector3 start, Vector3 end){
 		//Debug.Log("cotroller.OnSwipe " + start + " , " + end);
+		if(_view.IsAnyOverlayActive()) {
+			return;
+		}
 
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
 			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
@@ -481,7 +484,7 @@ public class PilotController : Controller{
 			pos.x < Screen.width - Screen.width * 0.2f ||
 			pos.y < Screen.height - Screen.height * 0.12f;
 
-		return true;
+		return !_view.IsAnyOverlayActive();
 
 		//return !_view.inspector.gameObject.activeSelf && outsideMailButton && !_view.mailUI.activeSelf;
 	}

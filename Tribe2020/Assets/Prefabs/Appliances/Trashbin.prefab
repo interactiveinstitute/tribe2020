@@ -8,6 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 493740}
+  - 65: {fileID: 65000013372537618}
   - 114: {fileID: 11475222}
   m_Layer: 0
   m_Name: Trashbin
@@ -42,6 +43,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 493740}
   m_RootOrder: 0
@@ -52,8 +54,9 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 117060}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.19, y: 0.25, z: -2.72}
+  m_LocalPosition: {x: 7.300793, y: -0.03699327, z: 5.683044}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 413728}
   m_Father: {fileID: 0}
@@ -67,17 +70,20 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: c5bc7f6457a72f1449f1057a294fb86b, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -103,11 +109,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: Trashbin
-  description: 
+  description: Magically transforms your waste into someone else's problem
   playerAffordances: []
+  playerAffordances_: []
   avatarAffordances: 02000000
   owners: []
-  performedActions: []
+  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
@@ -144,3 +151,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 117060}
   m_IsPrefabParent: 1
+--- !u!65 &65000013372537618
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 117060}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.31460902, y: 0.40292728, z: 0.3154318}
+  m_Center: {x: -0.002523899, y: 0.20108, z: 0.0013508797}

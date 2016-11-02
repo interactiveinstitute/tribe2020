@@ -165,6 +165,8 @@ public class ElectricMeter : TimeDataObject {
 
 		lastupdate = now;
 
+	
+
 	}
 
 	public void update_power(float new_power)
@@ -181,16 +183,16 @@ public class ElectricMeter : TimeDataObject {
 		change = new_power - Power; 
 		add_to_power (ts, change);
 
-		foreach (Connection Conn in Targets) {
-			if (Conn == null)
-				continue;
-			DataPoint Data = new DataPoint ();
-			Data.Timestamp = ts;
-			Data.Values = new double[2];
-			Data.Values [0] = new_power;
-			Data.Values [1] = Energy;
-			Conn.Target.TimeDataUpdate (Conn, Data);
-		}
+
+		DataPoint Data = new DataPoint ();
+		Data.Timestamp = ts;
+		Data.Values = new double[2];
+		Data.Values [0] = new_power;
+		Data.Values [1] = Energy;
+
+		Debug.Log ("update power");
+		UpdateAllTargets(Data);
+
 	}
 
 	public void add_to_power(double ts,float change){
@@ -256,8 +258,10 @@ public class ElectricMeter : TimeDataObject {
 	}
 
 	override public void TimeDataUpdate(Connection Con,DataPoint data) {
-		Debug.Log ("Got data!");
+		//Debug.Log ("Got data!");
 		update_power(data.Timestamp,(float)data.Values[0]);
+
+
 	}
 
 }

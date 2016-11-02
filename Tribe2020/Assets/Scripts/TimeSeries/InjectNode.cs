@@ -24,7 +24,8 @@ public class InjectNode : TimeDataObject {
 		foreach (TimeDataObject.Connection Sub in Targets) {
 			Debug.Log("Injecting!");
 
-
+			if (Sub.Source == null)
+				Sub.Source = this;
 
 
 			if (Randomize) {
@@ -39,7 +40,7 @@ public class InjectNode : TimeDataObject {
 				Sub.Target.TimeDataUpdate (Sub,Data2);
 				return;
 			}
-				
+
 			Sub.Target.TimeDataUpdate (Sub,Data);
 		}
 	}

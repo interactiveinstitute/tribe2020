@@ -36,7 +36,8 @@ public class TimeSeries : DataModifier {
 	public int ReloadLimit = 0;
 
 	[Header("Status")]
-	public bool Enabled;
+	public bool Enabled = true;
+	public bool Record = false;
 	[Space(10)]
 	public bool BufferValid = false;
 	public int CurrentIndex;
@@ -83,7 +84,7 @@ public class TimeSeries : DataModifier {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Enabled == true) {
+		if ( Enabled == true ) {
 			int index = CurrentIndex;
 
 			CurrentIndex = GetIndex (TTime.time);
@@ -109,45 +110,74 @@ public class TimeSeries : DataModifier {
 
 			DataPoint Data = DataPoints [CurrentIndex].Clone ();
 			Data.Timestamp += TimeOffset;
-			UpdateAllTargets (Data);
+
+			//if (!Record)
+			base.UpdateAllTargets (Data);
 
 		}
 	}
 
-	void Data_Update(DataPoint[] DataSet) {
 
+
+	override public void UpdateAllTargets(DataPoint Data) {
+
+		Debug.Log ("Update");
+		Debug.Log (Data);
+
+		if (Record)
+			AddPoint (Data);
+		//if (Enabled)
+		//	base.UpdateAllTargets (Data);
+		
+	}
+
+	void AddPoint(DataPoint Data) {
 		int index;
 
-		foreach(var item in DataSet )
-		{
-			//Skip if not inside buffer. 
-			if (item.Timestamp < this.getStartTime() || item.Timestamp > this.getStopTime())
-				continue;
-
-			index = DataPoints.BinarySearch (item, new CompareDataPoint() );
-
-			//Insert
-			if (index < 0)
-			{
-				DataPoints.Insert(~index, item);
-			}
-			//Replace
-			else if (index > 0)
-			{
-					DataPoints.RemoveAt(index);
-					DataPoints.Insert(index, item);
-			}
+		//Skip if not inside buffer. 
+		if (Data.Timestamp < this.getStartTime () || Data.Timestamp > this.getStopTime ()) {
+			//If limits are both zero we assume its not usex
+			if (StartTime != 0 && StopTime != 0)
+				return;
 
 		}
 
+		index = DataPoints.BinarySearch (Data, new CompareDataPoint() );
+
+		//Insert
+		if (index < 0)
+		{
+			DataPoints.Insert(~index, Data);
+		}
+		//Replace
+		else if (index > 0)
+		{
+			DataPoints.RemoveAt(index);
+			DataPoints.Insert(index, Data);
+		}
+
 		//Maintain size limitation. 
-		if (DataPoints.Count > BufferMaxSize)
+		if (BufferMaxSize != 0 && DataPoints.Count > BufferMaxSize)
 			DataPoints.RemoveRange (BufferMaxSize, BufferMaxSize - DataPoints.Count);
+
+	}
+
+
+	void AddPoints(DataPoint[] DataSet) {
+
+		foreach(var item in DataSet )
+		{
+			AddPoint (item);
+		}
+			
 	}
 
 	public double getStartTime() {
 		if (!Relative)
 			return StartTime;
+
+		if (TTime == null)
+			TTime = GameTime.GetInstance ();
 
 		return TTime.time + StartTime;
 		
@@ -307,14 +337,7 @@ public class TimeSeries : DataModifier {
 		if (excess > 0)
 			DataPoints.RemoveRange (0, excess);
 	}
-
-	override public void TimeDataUpdate(Connection Con,DataPoint data) {
-		if (TsWithinBuffer(data.Timestamp)) {
-			DataPoints.Add(data);
-			TrimDatapoints();
-			UpdateAllTargets (data);
-		}
-	}
+		
 
 	public List<DataPoint> GetPeriod(double From, double To) {
 		int iFrom, iTo;
@@ -341,6 +364,9 @@ public class TimeSeries : DataModifier {
 
 		if ((count + index ) > DataPoints.Count)
 			count = DataPoints.Count - index;
+
+		if (index < 0)
+			return new List<DataPoint>(0);
 
 
 		//Debug.Log ("I: " + index.ToString());

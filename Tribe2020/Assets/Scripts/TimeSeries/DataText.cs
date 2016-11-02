@@ -29,11 +29,19 @@ public class DataText : TimeDataObject {
 		}
 	}
 
-	override public void TimeDataUpdate(Connection Sub,DataPoint data) {
+	override public void TimeDataUpdate(Connection Sub, DataPoint data) {
 
-		if (SubpropertyId > data.Values.Length)
+		if (data == null)
+			return;
+
+		if (data.Values == null)
+			return;
+		
+		if (SubpropertyId >= data.Values.Length)
 			return; 
 
+		Debug.Log (data.Values.Length);
+		Debug.Log (SubpropertyId);
 		if (data.Values [SubpropertyId] != null) {
 			textMesh.text = data.Values [SubpropertyId].ToString ();
 			return;
