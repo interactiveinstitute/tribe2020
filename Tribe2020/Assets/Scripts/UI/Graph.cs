@@ -179,7 +179,7 @@ public class Graph : TimeDataObject {
 			Verts.Add(new Vector2(px,py));
 
 
-			if (staircase)
+			if (staircase && (py != y))
 				Verts.Add(new Vector2(x,py));
 
 
