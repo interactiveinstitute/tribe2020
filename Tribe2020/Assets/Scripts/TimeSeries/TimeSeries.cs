@@ -13,9 +13,9 @@ public class CompareDataPoint : IComparer<DataPoint>
 		if (x == null) return -1;
 		if (y == null) return 1;
 		if (x.Timestamp > y.Timestamp)
-			return -1;
-		if (x.Timestamp < y.Timestamp)
 			return 1;
+		if (x.Timestamp < y.Timestamp)
+			return -1;
 
 		return 0;
 	}
@@ -121,8 +121,8 @@ public class TimeSeries : DataModifier {
 
 	override public void UpdateAllTargets(DataPoint Data) {
 
-		Debug.Log ("Update");
-		Debug.Log (Data);
+		//Debug.Log ("Update");
+		//Debug.Log (Data);
 
 		if (Record)
 			AddPoint (Data);
@@ -143,17 +143,26 @@ public class TimeSeries : DataModifier {
 		}
 
 		index = DataPoints.BinarySearch (Data, new CompareDataPoint() );
+		//Debug.Log ("Binary search: " + index.ToString ());
 
 		//Insert
 		if (index < 0)
 		{
-			DataPoints.Insert(~index, Data);
+			index = ~index;
+
+			//if (index > DataPoints.Count)
+			//	index = DataPoints.Count;
+			
+			//Debug.Log("INSERT DATA AT:" +  (index).ToString() );
+			DataPoints.Insert(index, Data);
 		}
 		//Replace
-		else if (index > 0)
+		else if (index >= 0)
 		{
 			DataPoints.RemoveAt(index);
 			DataPoints.Insert(index, Data);
+			//Debug.Log("REPLACE DATA");
+
 		}
 
 		//Maintain size limitation. 

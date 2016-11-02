@@ -183,24 +183,27 @@ public class ElectricMeter : TimeDataObject {
 		change = new_power - Power; 
 		add_to_power (ts, change);
 
-
-		DataPoint Data = new DataPoint ();
-		Data.Timestamp = ts;
-		Data.Values = new double[2];
-		Data.Values [0] = new_power;
-		Data.Values [1] = Energy;
-
-		Debug.Log ("update power");
-		UpdateAllTargets(Data);
-
 	}
 
 	public void add_to_power(double ts,float change){
+
+		if (change == 0)
+			return;
+		
 		update_energy (ts);
 		Power = Power + change;
 
 		if (PowerSource)
 			PowerSource.add_to_power (ts, change);
+
+		DataPoint Data = new DataPoint ();
+		Data.Timestamp = ts;
+		Data.Values = new double[2];
+		Data.Values [0] = Power;
+		Data.Values [1] = Energy;
+
+		//Debug.Log ("update power");	
+		UpdateAllTargets(Data);
 	}
 
 	public void reset_energy() {

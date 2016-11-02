@@ -23,25 +23,21 @@ public class InjectNode : TimeDataObject {
 	public void Inject() {
 		foreach (TimeDataObject.Connection Sub in Targets) {
 			Debug.Log("Injecting!");
+			DataPoint Data2 = Data.Clone ();
 
 			if (Sub.Source == null)
 				Sub.Source = this;
 
 
 			if (Randomize) {
-				DataPoint Data2 = Data.Clone ();
-
-
 
 				for(int i=0; i<Data.Values.Length;i++) {
 					Data2.Values [i] = Random.Range (0,(float) Data.Values [i]);
 				}
-
-				Sub.Target.TimeDataUpdate (Sub,Data2);
-				return;
+					
 			}
 
-			Sub.Target.TimeDataUpdate (Sub,Data);
+			Sub.Target.TimeDataUpdate (Sub,Data2);
 		}
 	}
 }
