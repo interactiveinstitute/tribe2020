@@ -9,8 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 464974}
   - 65: {fileID: 6588910}
-  - 114: {fileID: 11459902}
   - 208: {fileID: 208000011165712788}
+  - 114: {fileID: 11459902}
   - 114: {fileID: 114000013522905054}
   - 114: {fileID: 114000014029411852}
   m_Layer: 0
@@ -144,9 +144,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
   - {fileID: 11400000, guid: 5c83ceb5bb2ec9b498bc97f77a5b16c6, type: 2}
   - {fileID: 11400000, guid: 11583c97573c0344b9e29495e9f32f8b, type: 2}
-  avatarAffordances: 06000000
+  playerAffordances_: []
+  avatarAffordances: 08000000
   owners: []
-  performedActions: []
+  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
@@ -194,24 +195,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlwaysPowered: 0
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
   PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
-  HasPower: 0
+  AutomaticallyFindSource: 1
+  AlwaysPowered: 0
   GivesPower: 1
   Powering: []
+  HasPower: 0
   Power: 0
   Energy: 0
+  lastupdate: 0
   continous_updates: 0
   Unplugged: 1
   runlevels:
-  - 0
-  - 300
+  - Name: 
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: 
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   runlevel: 0
-  runlevelOn: 1
-  runlevelOff: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 1
+  runlevelOn: 1
+  runlevelOff: 0
+  runlevelUnpowered: 0
 --- !u!114 &114000014029411852
 MonoBehaviour:
   m_ObjectHideFlags: 1

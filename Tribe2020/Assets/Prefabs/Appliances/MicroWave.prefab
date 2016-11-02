@@ -9,9 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 454036}
   - 65: {fileID: 6518112}
-  - 114: {fileID: 11492776}
   - 114: {fileID: 114000011583822320}
-  - 114: {fileID: 114000011033430742}
+  - 114: {fileID: 11492776}
   - 114: {fileID: 114000012915175194}
   m_Layer: 0
   m_Name: MicroWave
@@ -197,9 +196,10 @@ MonoBehaviour:
     spectrum.
   playerAffordances:
   - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
-  avatarAffordances: 0e000000
+  playerAffordances_: []
+  avatarAffordances: 10000000
   owners: []
-  performedActions: []
+  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
@@ -236,27 +236,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 130056}
   m_IsPrefabParent: 1
---- !u!114 &114000011033430742
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 130056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: 
-  description: 
-  playerAffordances: []
-  avatarAffordances: 
-  owners: []
-  performedActions: []
-  interactionPos: {x: 0, y: 0, z: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  harvestButtonRef: {fileID: 0}
 --- !u!114 &114000011583822320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -268,25 +247,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlwaysPowered: 0
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
   PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
-  HasPower: 0
+  AutomaticallyFindSource: 1
+  AlwaysPowered: 0
   GivesPower: 1
   Powering: []
+  HasPower: 0
   Power: 0
   Energy: 0
+  lastupdate: 0
   continous_updates: 1
   Unplugged: 0
   runlevels:
-  - 3
-  - 26
-  - 1500
+  - Name: 
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: 
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: 
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   runlevel: 0
-  runlevelOn: 1
-  runlevelOff: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 1
+  runlevelOn: 1
+  runlevelOff: 0
+  runlevelUnpowered: 0
 --- !u!114 &114000012915175194
 MonoBehaviour:
   m_ObjectHideFlags: 1

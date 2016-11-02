@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1000012039282014}
   m_IsPrefabParent: 1
+--- !u!1 &1000010354743880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000012092985852}
+  - 114: {fileID: 114000012992921528}
+  m_Layer: 0
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: -6039275892498968547, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000011923093242
 GameObject:
   m_ObjectHideFlags: 0
@@ -21,7 +37,6 @@ GameObject:
   - 4: {fileID: 4000011967792086}
   - 33: {fileID: 33000011880132464}
   - 23: {fileID: 23000010927107336}
-  - 114: {fileID: 114000011241124400}
   m_Layer: 0
   m_Name: Dishwasher__Door
   m_TagString: Untagged
@@ -38,9 +53,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013252929828}
   - 65: {fileID: 65000010848045582}
+  - 208: {fileID: 208000013055306586}
+  - 114: {fileID: 114000012973624526}
   - 114: {fileID: 114000012198612464}
   - 114: {fileID: 114000012345237712}
-  - 208: {fileID: 208000013055306586}
   m_Layer: 0
   m_Name: Dish Washer
   m_TagString: Appliance
@@ -78,6 +94,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000013252929828}
   m_RootOrder: 1
+--- !u!4 &4000012092985852
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010354743880}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000013252929828}
+  m_RootOrder: 2
 --- !u!4 &4000013164820084
 Transform:
   m_ObjectHideFlags: 1
@@ -97,13 +126,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012039282014}
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.00000028312206}
-  m_LocalPosition: {x: -0.21093854, y: 0.42094573, z: 2.708445}
+  m_LocalRotation: {x: -0, y: -0.99735546, z: -0, w: -0.07267861}
+  m_LocalPosition: {x: -0.343, y: -0.6359999, z: 0.493}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 171.886, z: 0}
   m_Children:
   - {fileID: 4000013164820084}
   - {fileID: 4000011967792086}
+  - {fileID: 4000012092985852}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!23 &23000010927107336
@@ -192,58 +222,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6194852, y: 0.7881305, z: 0.590028}
   m_Center: {x: -0.000021456646, y: 0.41842923, z: -0.001811266}
---- !u!114 &114000011241124400
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011923093242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
-  AlwaysPowered: 1
-  GivesPower: 1
-  Powering: []
-  HasPower: 0
-  Power: 0
-  Energy: 0
-  lastupdate: 0
-  continous_updates: 0
-  Unplugged: 0
-  runlevels:
-  - Name: Off
-    Power: 1
-    materials:
-    - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
-    - {fileID: 2100000, guid: dc76204d91d864db6977a0a7d6bfb8b2, type: 2}
-    sound: {fileID: 0}
-    LoopSound: 0
-    LightsOn: []
-    LightsOff: []
-  - Name: Standby
-    Power: 3
-    materials: []
-    sound: {fileID: 0}
-    LoopSound: 0
-    LightsOn: []
-    LightsOff: []
-  - Name: On
-    Power: 1400
-    materials: []
-    sound: {fileID: 0}
-    LoopSound: 0
-    LightsOn: []
-    LightsOff: []
-  runlevel: 0
-  RetainsRunlevel: 0
-  DefaultRunlevel: 1
-  runlevelOn: 2
-  runlevelOff: 1
-  noise: {fileID: 0}
 --- !u!114 &114000012198612464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -262,9 +240,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b369dd305587cc4688658cbcb2e774d, type: 2}
   - {fileID: 11400000, guid: 5c83ceb5bb2ec9b498bc97f77a5b16c6, type: 2}
   - {fileID: 11400000, guid: ae28c597f383db04d80943ff60c84859, type: 2}
-  avatarAffordances: 04000000
+  playerAffordances_: []
+  avatarAffordances: 06000000
   owners: []
-  performedActions: []
+  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
@@ -281,6 +260,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueId: 34d67756-67bb-411a-bb97-c79050bb5d05
+--- !u!114 &114000012973624526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012039282014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 1
+  AlwaysPowered: 0
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0
+  Unplugged: 0
+  runlevels:
+  - Name: Off
+    Power: 1
+    Target: {fileID: 0}
+    materials:
+    - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
+    - {fileID: 2100000, guid: dc76204d91d864db6977a0a7d6bfb8b2, type: 2}
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: Standby
+    Power: 3
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: On
+    Power: 1400
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  runlevel: 0
+  RetainsRunlevel: 0
+  DefaultRunlevel: 1
+  runlevelOn: 2
+  runlevelOff: 1
+  runlevelUnpowered: 0
+--- !u!114 &114000012992921528
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010354743880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!208 &208000013055306586
 NavMeshObstacle:
   m_ObjectHideFlags: 1

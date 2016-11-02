@@ -54,9 +54,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000012915112082}
+  - 114: {fileID: 114000011745709356}
   - 114: {fileID: 114000011355022280}
   - 208: {fileID: 208000011827619174}
-  - 114: {fileID: 114000011745709356}
   m_Layer: 0
   m_Name: Laptop
   m_TagString: Untagged
@@ -190,6 +190,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 1
@@ -204,6 +213,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    Target: {fileID: 0}
     materials:
     - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
     - {fileID: 0}
@@ -213,6 +223,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: Standby
     Power: 15
+    Target: {fileID: 0}
     materials:
     - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
     - {fileID: 0}
@@ -222,6 +233,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 70
+    Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
     LoopSound: 0
@@ -232,7 +244,7 @@ MonoBehaviour:
   DefaultRunlevel: 2
   runlevelOn: 2
   runlevelOff: 1
-  noise: {fileID: 0}
+  runlevelUnpowered: 0
 --- !u!114 &114000011355022280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,9 +272,10 @@ MonoBehaviour:
   description: Laptop, Laptop whacha gonna do? When they sit on yoooh.
   playerAffordances:
   - {fileID: 11400000, guid: 74c7e812d16eb994386a019a95bfd852, type: 2}
+  playerAffordances_: []
   avatarAffordances: 01000000
   owners: []
-  performedActions: []
+  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0

@@ -58,12 +58,6 @@ public class PilotController : Controller{
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 
-		//_avatars = new List<BehaviourAI>();
-
-		//GameObject[] avatarObjs = GameObject.FindGameObjectsWithTag("Avatar");
-		//foreach(GameObject avatarObj in avatarObjs) {
-		//	_avatars.Add(avatarObj.GetComponent<BehaviourAI>());
-		//}
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
 	}
 	
@@ -282,17 +276,6 @@ public class PilotController : Controller{
 		}
 	}
 
-	////
-	//public void OpenSettings() {
-	//	_view.ShowSettings();
-	//}
-
-	////
-	//public void CloseSettings() {
-	//	_view.HideSettings();
-	//	_touchReset = true;
-	//}
-
 	//
 	public void HideUI() {
 		_view.SetCurrentUI(null);
@@ -313,26 +296,6 @@ public class PilotController : Controller{
 
 		ResetTouch();
 	}
-
-	////
-	//public void OnQuestListOpenend() {
-	//	if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST_LIST) {
-	//		_view.ShowQuestList(_narrationMgr.GetQuests());
-	//		ResetTouch();
-
-	//		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
-	//	}
-	//}
-
-	////
-	//public void OnQuestListClosed() {
-	//	if(_curState == InputState.ALL) {
-	//		_view.HideQuestList();
-	//		ResetTouch();
-
-	//		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListClosed);
-	//	}
-	//}
 
 	//
 	public void OnQuestPressed(Quest quest) {
@@ -415,14 +378,6 @@ public class PilotController : Controller{
 	}
 
 	//
-	//public void OnNextDay() {
-	//	Debug.Log("OnNextDay()");
-	//	foreach(BehaviourAI avatar in _avatars) {
-	//		avatar.OnNextDay();
-	//	}
-	//}
-
-	//
 	public void UpdatePinch(){
 		if(Input.touchCount == 2){
 			_isPinching = true;
@@ -485,8 +440,6 @@ public class PilotController : Controller{
 			pos.y < Screen.height - Screen.height * 0.12f;
 
 		return !_view.IsAnyOverlayActive();
-
-		//return !_view.inspector.gameObject.activeSelf && outsideMailButton && !_view.mailUI.activeSelf;
 	}
 
 	//

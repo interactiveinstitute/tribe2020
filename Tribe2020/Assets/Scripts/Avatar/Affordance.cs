@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
-public class Affordance : MonoBehaviour {
-    public List<string> affordances;
+[CreateAssetMenu(fileName = "Affordance", menuName = "Avatar/Affordance", order = 1)]
+public class Affordance : ScriptableObject {
 
 	// Use this for initialization
 	void Start () {
