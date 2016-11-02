@@ -9,7 +9,8 @@ public class Room : MonoBehaviour {
 	public float airQuality;
 	public float lux;
 	public int personCount;
-	private List<BehaviourAI> _occupants;
+    public int personCountDerived;
+    private List<BehaviourAI> _occupants;
 
 	// Use this for initialization
 	void Start() {
@@ -42,25 +43,36 @@ public class Room : MonoBehaviour {
 		return null;
 	}
 
+    public int GetPersonCount()
+    {
+        return _occupants.Count;
+    }
+
+    public bool IsEmpty()
+    {
+        return GetPersonCount() == 0;
+    }
+
 	//
 	void OnTriggerEnter(Collider other) {
 
-        print(other.name + " entered " + gameObject.name);
+        Debug.Log(other.name + " ENTERED " + name, gameObject);
 
 		if(other.GetComponent<BehaviourAI>()) {
 			//Debug.Log(other.name + " entered " + name);
-			personCount++;
 			_occupants.Add(other.GetComponent<BehaviourAI>());
-		}
+        }
 	}
 
 	//
 	void OnTriggerExit(Collider other) {
-		if(other.GetComponent<BehaviourAI>()) {
+
+        Debug.Log(other.name + " EXITED " + gameObject.name, gameObject);
+
+        if (other.GetComponent<BehaviourAI>()) {
 			//Debug.Log(other.name + " left " + name);
-			personCount--;
 			_occupants.Remove(other.GetComponent<BehaviourAI>());
-		}
+        }
 	}
 
 	//
