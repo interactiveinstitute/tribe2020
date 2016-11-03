@@ -103,7 +103,7 @@ public class AvatarActivity : ScriptableObject {
 	}
 
     //
-    public void Run() {
+    public void Start() {
         string curTimeView = _timeMgr.GetDateTime().ToString("HH:mm");
         if (hasStartTime)
         {

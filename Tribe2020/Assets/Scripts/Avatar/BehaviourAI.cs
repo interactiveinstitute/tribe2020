@@ -25,13 +25,15 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
 
+    public bool isTemporarilyUnscheduled = false;
+
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
     private Room _curRoom;
 
     private float _startTime;
-    private bool _isSync = false;
-    private bool _isScheduleOver = false;
+    //private bool _isSync = false;
+    //private bool _isScheduleOver = false;
 
     //Definition of a schedule item
     [System.Serializable]
@@ -70,8 +72,13 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        double curTime = _timeMgr.GetTotalSeconds();
-
+        if (isTemporarilyUnscheduled)
+        {
+            //Handle override actions
+            //UpdateActivity(tempActivity);
+            return;
+        }
+        
         // Start activities on scheduled times.
         // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
         // the script will try to simulate the schedule until the curTime is reached.
@@ -82,7 +89,7 @@ public class BehaviourAI : MonoBehaviour
             Debug.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one");
             _curActivity.FinishCurrentActivity();
             NextActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
 
         //same as above but backwards.
@@ -92,29 +99,27 @@ public class BehaviourAI : MonoBehaviour
             Debug.Log("Current time is before current activity's startTime. Revert the activity and start the previous one");
             _curActivity.Revert();
             PreviousActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
 
+        UpdateActivity();
+
+    }
+
+    private void UpdateActivity(AvatarActivity activity)
+    {
+
         //do delta time stuffz
-        _curActivity.Step(this);
+        activity.Step(this);
 
-        ////First disable sit flag if we're not in the sitting state
-        //if (_curActivityState != ActivityState.Sitting)
-        //{
-        //    _charController.StandUp();//Turns off a state boolean for the animator.
-        //}
-        //else
-        //{
-        //    //Debug.Log("ActivityState is Sitting");
-        //}
-
+        //do activity stuff!
         switch (_curActivityState)
         {
             //Not doing anything, do something feasible in the pilot
             case ActivityState.Idle:
                 _charController.Move(Vector3.zero, false, false);
-                //	_curActivity.Init(this);
-                //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+                //	activity.Init(this);
+                //	Debug.Log(name + " began " + activity.name + " at " + time.Hour + ":" + time.Minute);
                 break;
             // Walking towards an object, check if arrived to proceed
             case ActivityState.OverrideWalking:
@@ -128,12 +133,12 @@ public class BehaviourAI : MonoBehaviour
                 {
                     _charController.Move(Vector3.zero, false, false);
                     //Ok. Let's notify the activity that the current session is finished
-                    _curActivity.OnDestinationReached();
+                    activity.OnDestinationReached();
 
                     //if(_curActivityState == ActivityState.Walking) {
                     //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
                     //	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-                    //	_curActivity.NextStep(this);
+                    //	activity.NextStep(this);
                     //} else if(_curActivityState == ActivityState.OverrideWalking) {
                     //if(_curActivityState == ActivityState.OverrideWalking) {
                     //	_curActivityState = ActivityState.OverrideIdle;
@@ -166,10 +171,15 @@ public class BehaviourAI : MonoBehaviour
                     _charController.Move(Vector3.zero, false, false);
                     _curTargetObj.GetComponent<ElectricMeter>().On();
                     _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
-                    _curActivity.ResumeSession(this);
+                    activity.ResumeSession(this);
                 }
                 break;
         }
+    }
+
+    private void UpdateActivity()
+    {
+        UpdateActivity(_curActivity);
     }
 
     //Erik claims that this part might be related to have the avatar behave correctly when making jumps in time.
@@ -364,6 +374,9 @@ public class BehaviourAI : MonoBehaviour
     //
     public void PreviousActivity()
     {
+        //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+        double curTime = _timeMgr.GetTotalSeconds();
+
         int prevIndex = 0;
         if (schedule.Length > 0)
         {
@@ -391,7 +404,7 @@ public class BehaviourAI : MonoBehaviour
             //This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
             //If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
             //we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
-            double prevActivityStartTime = _timeMgr.ScheduleToTS(_prevActivity.startTime, startTimeDayOffset, prevItem.time);
+            double prevActivityStartTime = _timeMgr.ScheduleToTS(curTime, startTimeDayOffset, prevItem.time);
             SetPrevActivity(prevItem.activity, prevActivityStartTime);
         }
         else
@@ -632,7 +645,7 @@ public class BehaviourAI : MonoBehaviour
         {
             Debug.Log("Next activity have no startTime specified so let's start it immediately");
             NextActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
     }
 
