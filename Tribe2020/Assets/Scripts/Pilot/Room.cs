@@ -8,8 +8,6 @@ public class Room : MonoBehaviour {
 	public float temperature;
 	public float airQuality;
 	public float lux;
-	public int personCount;
-    public int personCountDerived;
     private List<BehaviourAI> _occupants;
 
 	// Use this for initialization
