@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011676730910}
-  - 114: {fileID: 114000012640036216}
+  - 114: {fileID: 114000014104096992}
   m_Layer: 0
   m_Name: Mainmeter
   m_TagString: Untagged
@@ -88284,43 +88284,6 @@ MonoBehaviour:
   CurrentSize: 0
   DataPoints: []
   File: {fileID: 0}
---- !u!114 &114000012640036216
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010604573020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: MainMeter
-  Units: []
-  Columns: []
-  Targets:
-  - Topic: 
-    Target: {fileID: 114000012434811560}
-    Source: {fileID: 0}
-    LastTransmission:
-      Timestamp: 0
-      Values: []
-      Texts: []
-  Sources: []
-  LastData:
-    Timestamp: 0
-    Values: []
-    Texts: []
-  PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
-  AlwaysPowered: 1
-  GivesPower: 1
-  Powering: []
-  HasPower: 0
-  Power: 0
-  Energy: 0
-  lastupdate: 0
-  continous_updates: 0
 --- !u!114 &114000012774719584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -88405,7 +88368,7 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
-  PowerSource: {fileID: 114000012640036216}
+  PowerSource: {fileID: 114000014104096992}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
   GivesPower: 1
@@ -88446,9 +88409,46 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
-  PowerSource: {fileID: 114000012640036216}
+  PowerSource: {fileID: 114000014104096992}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0
+--- !u!114 &114000014104096992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010604573020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ac0622686de27428af1621f0ab9710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: MainMeter
+  Units: []
+  Columns: []
+  Targets:
+  - Topic: 
+    Target: {fileID: 114000012434811560}
+    Source: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 0
+  AlwaysPowered: 1
   GivesPower: 1
   Powering: []
   HasPower: 0

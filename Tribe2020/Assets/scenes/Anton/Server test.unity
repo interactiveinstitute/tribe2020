@@ -692,7 +692,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 114000013508071600, guid: 79769193b9ce28c45b0fa41ff393f086,
+        type: 2}
+      propertyPath: PowerSource
+      value: 
+      objectReference: {fileID: 1693436857}
+    - target: {fileID: 114000013663346218, guid: 79769193b9ce28c45b0fa41ff393f086,
+        type: 2}
+      propertyPath: PowerSource
+      value: 
+      objectReference: {fileID: 1693436857}
+    m_RemovedComponents:
+    - {fileID: 114000012640036216, guid: 79769193b9ce28c45b0fa41ff393f086, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 79769193b9ce28c45b0fa41ff393f086, type: 2}
   m_IsPrefabParent: 0
 --- !u!114 &935896051 stripped
@@ -1148,6 +1159,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!1 &1693436856 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000010604573020, guid: 79769193b9ce28c45b0fa41ff393f086,
+    type: 2}
+  m_PrefabInternal: {fileID: 932191607}
+--- !u!114 &1693436857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693436856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ac0622686de27428af1621f0ab9710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: MainMeter
+  Units: []
+  Columns: []
+  Targets:
+  - Topic: 
+    Target: {fileID: 935896051}
+    Source: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 0
+  AlwaysPowered: 1
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0
 --- !u!114 &1708501529 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114000010791178532, guid: 79769193b9ce28c45b0fa41ff393f086,
