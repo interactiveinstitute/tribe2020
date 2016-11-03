@@ -214,7 +214,6 @@ public class CameraManager : MonoBehaviour {
 			_viewpoints[curY][curX] = vp.transform;
 		}
 
-		//Debug.Log("Populated " + _viewpoints.Length + " floors with " + viewObjects.Length + " views");
 	}
 
 	//

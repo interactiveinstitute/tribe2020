@@ -517,14 +517,14 @@ public class BehaviourAI : MonoBehaviour
         GameObject device = FindNearestDevice(target, false);
         if (device == null)
         {
-            Debug.LogError("Didn't find device for setting runlevel");
+            Debug.LogError("Didn't find device for setting runlevel: " + target);
             return;
         }
 
         ElectricMeter meter = device.GetComponent<ElectricMeter>();
         if (meter == null)
         {
-            Debug.LogError("Didn't find electric meter for setting runlevel");
+            Debug.LogError("Didn't find electric meter for setting runlevel", device);
             return;
         }
 
