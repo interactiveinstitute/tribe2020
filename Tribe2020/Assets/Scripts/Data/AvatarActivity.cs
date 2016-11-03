@@ -59,6 +59,11 @@ public class AvatarActivity : ScriptableObject {
 
 
 	public virtual void Step(BehaviourAI ai) {
+        //Don't try any stuff if where not in a session.
+        if (IsThisActivityFinished())
+        {
+            return;
+        }
         if(sessions[_currSession].type == SessionType.WaitForDuration) {
             if(_delay > 0f) {
                 _delay -= Time.deltaTime;
@@ -325,4 +330,10 @@ public class AvatarActivity : ScriptableObject {
 		//Debug.Log("OnBehaviourDone");
 		ai.OnActivityOver();
 	}
+
+    private bool IsThisActivityFinished()
+    {
+        //If we have got past the last session, the activity must be finished. Right?
+        return _currSession >= sessions.Count;
+    }
 }

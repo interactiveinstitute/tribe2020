@@ -77,7 +77,7 @@ public class BehaviourAI : MonoBehaviour
         // the script will try to simulate the schedule until the curTime is reached.
 
         //Ok. Let's find the stamp for the next activity.
-        if (_nextActivity.startTimePassed())
+        if (_nextActivity.hasStartTime && _nextActivity.startTimePassed())
         {
             Debug.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one");
             _curActivity.FinishCurrentActivity();
@@ -87,7 +87,7 @@ public class BehaviourAI : MonoBehaviour
 
         //same as above but backwards.
         //We are most likely not handling backwards time very well. But that's out of scope for now.
-        if (!_curActivity.startTimePassed())
+        if (_curActivity.hasStartTime && !_curActivity.startTimePassed())
         {
             Debug.Log("Current time is before current activity's startTime. Revert the activity and start the previous one");
             _curActivity.Revert();
@@ -329,6 +329,9 @@ public class BehaviourAI : MonoBehaviour
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
     public void NextActivity()
     {
+        //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+        double curTime = _timeMgr.GetTotalSeconds();
+
         Debug.Log("Next activity called. " + _nextActivity.name);
         //Iterate schedule index
         //Soo. _scheduleIndex is here incremented to point on the activity we jump to.
@@ -349,7 +352,7 @@ public class BehaviourAI : MonoBehaviour
         if (nxtItem.time != "")
         {
             //Determine startTime for nextActivity
-            double nxtStartTime = _timeMgr.ScheduleToTS(_curActivity.startTime, nxtActivityDayOffset, nxtItem.time);
+            double nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
             SetNextActivity(nxtItem.activity, nxtStartTime);
         }
         else
