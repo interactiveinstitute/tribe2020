@@ -59,6 +59,7 @@ public class PilotController : Controller{
 		_saveMgr = SaveManager.GetInstance();
 
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
+        _saveMgr.SetAvatars(_avatars);
 	}
 	
 	// Update is called once per frame

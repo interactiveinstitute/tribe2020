@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityStandardAssets.Characters.ThirdPerson;
+using SimpleJSON; // For encoding and decoding avatar states
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonCharacter))]
@@ -676,5 +677,25 @@ public class BehaviourAI : MonoBehaviour
 
         _curActivity.InsertSession(turnOnLight);
         _curActivity.InsertSession(walkToLightSwitch);
+    }
+
+    // Save function
+    public JSONClass Encode()
+    {
+        JSONClass json = new JSONClass();
+        json.Add("name", name);
+        json.Add("transform", transform.ToString());
+        json.Add("scheduleIndex", _scheduleIndex.ToString());
+        //Should be mooore here!
+
+        return json;
+    }
+
+    // Load function
+    public void Decode(JSONClass json)
+    {
+        _scheduleIndex = json["scheduleIndex"].AsInt;
+
+        //Should be more here!
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using SimpleJSON;
+using System.Collections.Generic;
 
 public class SaveManager : MonoBehaviour{
 	//Singleton features
@@ -16,6 +17,10 @@ public class SaveManager : MonoBehaviour{
 	private GameTime _timeMgr;
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
+    private PilotController _pilotController;
+
+    //Need reference to all avatars for saving and loading their state. Maybe we should have the pilotcontroller hand over the references on init? Yeah let's try to achieve that.
+    private List<BehaviourAI> _avatars;
 
     public Boolean enableSaveLoad;
 	public string fileName;
@@ -34,6 +39,7 @@ public class SaveManager : MonoBehaviour{
 		_timeMgr = GameTime.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
 		_narrationMgr = NarrationManager.GetInstance();
+
 	}
 	
 	//Update is called once per frame
@@ -136,6 +142,15 @@ public class SaveManager : MonoBehaviour{
 
 		SetData(slot, "questState", _narrationMgr.Encode());
 
+        //Create a json node for holding avatar states
+        JSONArray avatarsJSON = new JSONArray();
+        //Fill it up with the avatars states
+        foreach(BehaviourAI avatar in _avatars)
+        {
+            avatarsJSON.Add(avatar.Encode());
+        }
+        SetData(slot, "avatarStates", avatarsJSON);//Add it to save object
+
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
@@ -143,7 +158,7 @@ public class SaveManager : MonoBehaviour{
 	public void Load(int slot) {
         if (!enableSaveLoad)
         {
-            Debug.Log("save/load disabled. Will nnot load game data.");
+            Debug.Log("save/load disabled. Will not load game data.");
             return;
         }
 		//Debug.Log("Load: " + currentSlot);
@@ -172,4 +187,10 @@ public class SaveManager : MonoBehaviour{
 		JSONNode json = JSON.Parse(fileClone);
 		return json;
 	}
+
+    //Set the avatars so we can access them for save and load of avatar states
+    public void SetAvatars(List<BehaviourAI> avatars)
+    {
+        _avatars = avatars;
+    }
 }
