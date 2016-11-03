@@ -22,6 +22,7 @@ public class ObjectInteraction : MonoBehaviour {
 	void Start () {
 		_interactionPanel = Instantiate(panelPrefab);
 		_interactionPanel.SetParent(transform, false);
+		_interactionPanel.transform.localPosition = Vector3.forward * 0.5f;
 
 		_powerButton = _interactionPanel.GetChild(0).GetComponent<Button>();
 		_moneyButton = _interactionPanel.GetChild(1).GetComponent<Button>();

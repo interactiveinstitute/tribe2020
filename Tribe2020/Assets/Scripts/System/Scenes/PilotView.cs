@@ -87,7 +87,7 @@ public class PilotView : View{
 	void Update(){
 		date.GetComponent<Text>().text = _timeMgr.CurrentDate;
 
-		power.GetComponent<Text>().text = _energyMgr.Power + " W";
+		power.GetComponent<Text>().text = Mathf.Floor(_energyMgr.Power) + " W";
 
 		float energy = (float)_energyMgr.Energy;
 		if(energy < 1) {
