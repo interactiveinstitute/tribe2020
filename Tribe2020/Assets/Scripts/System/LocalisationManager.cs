@@ -37,7 +37,7 @@ public class LocalisationManager : MonoBehaviour {
 		if(parse.Length == 2) {
 			return GetPhrase(parse[0], parse[1]);
 		}
-		return "Failed Localisation";
+		return "";
 	}
 
 	//
@@ -55,6 +55,6 @@ public class LocalisationManager : MonoBehaviour {
 				}
 			}
 		}
-		return "Missing Localisation";
+		return "";
 	}
 }

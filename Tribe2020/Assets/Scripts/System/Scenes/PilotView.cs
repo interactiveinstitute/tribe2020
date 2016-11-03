@@ -134,8 +134,10 @@ public class PilotView : View{
 				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
 			}
 
-			eemProps.title.text = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
-			Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
+			eemProps.title.text = eemTitle;
+			//Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
 			buttonObj.GetComponent<Image>().color = eem.color;
 			eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
@@ -260,9 +262,15 @@ public class PilotView : View{
 	public void ShowAppliance(Appliance appliance) {
 		SetCurrentUI(inspector);
 
+		string title = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
+		string description = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
+
+		if(title == "") { title = appliance.title + "!"; }
+		if(description == "") { description = appliance.description + "!"; }
+
 		//inspectorUI.SetActive(true);
-		inspector.GetComponentsInChildren<Text>()[0].text = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
-		inspector.GetComponentsInChildren<Text>()[2].text = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
+		inspector.GetComponentsInChildren<Text>()[0].text = title;
+		inspector.GetComponentsInChildren<Text>()[2].text = description;
 		//SetActions(appliance, appliance.GetPlayerActions());
 		BuildEEMInterface(appliance, appliance.GetEEMs());
 	}
