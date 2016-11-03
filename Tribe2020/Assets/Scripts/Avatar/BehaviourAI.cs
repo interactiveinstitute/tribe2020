@@ -21,9 +21,9 @@ public class BehaviourAI : MonoBehaviour
 
     //private Vector3 _curTargetPos;
     private GameObject _curTargetObj;
-    private AvatarActivity _curActivity;
-    private AvatarActivity _nextActivity;
-    private AvatarActivity _prevActivity;
+    public AvatarActivity _curActivity;
+    public AvatarActivity _nextActivity;
+    public AvatarActivity _prevActivity;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
@@ -89,7 +89,7 @@ public class BehaviourAI : MonoBehaviour
         //We are most likely not handling backwards time very well. But that's out of scope for now.
         if (!_curActivity.startTimePassed())
         {
-            Debug.Log("Current activity's startTime passed. Revert the activity and start the previous one");
+            Debug.Log("Current time is before current activity's startTime. Revert the activity and start the previous one");
             _curActivity.Revert();
             PreviousActivity();
             _curActivity.Run();
@@ -98,15 +98,15 @@ public class BehaviourAI : MonoBehaviour
         //do delta time stuffz
         _curActivity.Step(this);
 
-        //First disable sit flag if we're not in the sitting state
-        if (_curActivityState != ActivityState.Sitting)
-        {
-            _charController.StandUp();//Turns off a state boolean for the animator.
-        }
-        else
-        {
-            Debug.Log("ActivityState is Sitting");
-        }
+        ////First disable sit flag if we're not in the sitting state
+        //if (_curActivityState != ActivityState.Sitting)
+        //{
+        //    _charController.StandUp();//Turns off a state boolean for the animator.
+        //}
+        //else
+        //{
+        //    //Debug.Log("ActivityState is Sitting");
+        //}
 
         switch (_curActivityState)
         {
@@ -280,14 +280,14 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SetCurrentActivity(AvatarActivity activity, double startTime)
     {
-        //Debug.Log("setting current activity: " + activity);
+        Debug.Log("setting current activity: " + activity);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this, startTime);
     }
 
     public void SetCurrentActivity(AvatarActivity activity)
     {
-        //Debug.Log("setting current activity: " + activity);
+        Debug.Log("setting current activity: " + activity);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this);
     }
@@ -455,6 +455,26 @@ public class BehaviourAI : MonoBehaviour
         _curActivityState = ActivityState.Walking;
     }
 
+    //Let's use the reference to the appliance
+    public void WalkTo(Appliance appliance, bool isOwned)
+    {
+
+        //GameObject _curTargetObj = appliance.gameObject;
+        //if (_curTargetObj == null)
+        //{
+        //    Debug.LogError("Didn't find a WalkTo appliance, doing activity " + _curActivity.name);
+        //    return;
+        //}
+
+        if(appliance == null)
+        {
+            Debug.LogError("Daaa fuuuck! no appliance i just got from you!");
+        }
+        
+        _agent.SetDestination(appliance.interactionPos);
+        _curActivityState = ActivityState.Walking;
+    }
+
     //
     public void TeleportTo(AvatarActivity.Target target, bool isOwned)
     {
@@ -485,7 +505,8 @@ public class BehaviourAI : MonoBehaviour
     {
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
-        Vector3 coord;
+        //Vector3 coord;
+        //Let's search for a gameObject called Sit Position
         Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
         if (sitPosition == null)
         {
@@ -493,15 +514,26 @@ public class BehaviourAI : MonoBehaviour
         }
         else
         {
-            coord.x = sitPosition.position.x;
-            coord.z = sitPosition.position.z;
-            coord.y = transform.position.y;
+            //coord.x = sitPosition.position.x;
+            //coord.z = sitPosition.position.z;
+            //coord.y = transform.position.y;
             transform.position = sitPosition.position;//coord;
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
         _curActivityState = ActivityState.Sitting;
         _charController.SitDown(); //Sets a boolean in the animator object
+    }
+
+    public void standUp()
+    {
+        //First position the avatar at the interaction point. Then turn navmeshagent back on.
+        Debug.Log("_curTargetObj is " + _curTargetObj, _curTargetObj);
+        transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
+        _agent.enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+        _charController.StandUp();
+
     }
 
     //
@@ -584,8 +616,21 @@ public class BehaviourAI : MonoBehaviour
     public void OnActivityOver()
     {
         Debug.Log(name + "'s activity " + _curActivity.name + " is over");
+        if (_curActivityState == ActivityState.Sitting)
+        {
+            Debug.Log("avatar was sitting. Standing up.");
+            standUp();
+        }
         _controller.OnAvatarActivityComplete(_curActivity.name);
         _curActivityState = ActivityState.Idle;
+
+        //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
+        if (!_nextActivity.hasStartTime)
+        {
+            Debug.Log("Next activity have no startTime specified so let's start it immediately");
+            NextActivity();
+            _curActivity.Run();
+        }
     }
 
     //

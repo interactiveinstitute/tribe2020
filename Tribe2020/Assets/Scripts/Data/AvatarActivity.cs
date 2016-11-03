@@ -99,10 +99,17 @@ public class AvatarActivity : ScriptableObject {
 
     //
     public void Run() {
-		string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-		//string endTimeView = _timeMgr.TimestampToDateTime(endTime).ToString("HH:mm");
-        string currTimeView = _timeMgr.GetDateTime().ToString("HH:mm");//TimestampToDateTime(_timeMgr.time).ToString("HH:mm");
-        Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + currTimeView);
+        string curTimeView = _timeMgr.GetDateTime().ToString("HH:mm");
+        if (hasStartTime)
+        {
+            string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
+            Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + curTimeView);
+        }
+        else
+        {
+            Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " without startTime, curTime is " + curTimeView);
+        }
+
 
         StartSession(sessions[_currSession]);
 	}
@@ -130,7 +137,13 @@ public class AvatarActivity : ScriptableObject {
 				_ai.Stop();
 				break;
 			case SessionType.WalkTo:
-				_ai.WalkTo(session.target, session.avatarOwnsTarget);
+                if(session.appliance != null)
+                {
+                    _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
+                }else
+                {
+                    _ai.WalkTo(session.target, session.avatarOwnsTarget);
+                }
 				break;
 			case SessionType.Interact:
 				NextSession();
@@ -164,15 +177,15 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextSession() {
-        //Debug.Log("icrementing _currSssion for " + _ai.name);
-		_currSession++;
+        Debug.Log("incrementing _currSssion");
+        _currSession++;
 
 		if(_currSession >= sessions.Count) {
-            //Debug.Log("_currSession out of bound. No more sessions in this activity. calling activity over callback");
-			_ai.OnActivityOver();
+            Debug.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback");
+            _ai.OnActivityOver();
 		} else {
-            //Debug.Log("starting session" + sessions[_currSession].title);
-			StartSession(sessions[_currSession]);
+            Debug.Log("starting session" + sessions[_currSession].title);
+            StartSession(sessions[_currSession]);
 		}
 	}
 
@@ -193,24 +206,24 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-		//Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
-		if(sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
+        Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
+        if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		}
 	}
 
 	//
 	public void FinishCurrentActivity() {
-        //Debug.Log("Gonna finish this activity. Sessions is currently: " + sessions);
+        Debug.Log("Gonna finish this activity. Sessions are currently: " + sessions);
 
         //Remove the sessions already performed
-		if(_currSession > 0) {
+        if (_currSession > 0) {
 			sessions.RemoveRange(0, _currSession - 1);
 		}
 
-        //Debug.Log("After deletion sessions is: " + sessions);
+        Debug.Log("After deletion sessions are: " + sessions);
         //Simulate the sessions not yet performed
-		foreach(Session session in sessions) {
+        foreach (Session session in sessions) {
 			SimulateSession(session);
 		}
 
