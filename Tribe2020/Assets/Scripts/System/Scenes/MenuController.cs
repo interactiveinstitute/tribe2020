@@ -30,6 +30,8 @@ public class MenuController : Controller {
 	int pendingNewGameSlot = 0;
 	//private bool _isLoaded = false;
 
+	public Transform languageDropdown;
+
 	// Use this for initialization
 	void Start () {
 		_sceneMgr = CustomSceneManager.GetInstance();
