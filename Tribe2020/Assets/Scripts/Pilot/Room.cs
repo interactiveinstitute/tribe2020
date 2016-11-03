@@ -17,6 +17,9 @@ public class Room : MonoBehaviour {
 		foreach(Appliance device in GetComponentsInChildren<Appliance>()) {
 			_devices.Add(device);
 		}
+
+        
+
 	}
 	
 	// Update is called once per frame
