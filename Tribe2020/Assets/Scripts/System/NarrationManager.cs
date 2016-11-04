@@ -19,11 +19,14 @@ public class NarrationManager : MonoBehaviour {
 	private GameTime _timeMgr;
 
 	//public Transform tutorialAnimation;
-	public bool autoStart;
+	public bool autoStart = true;
+	public bool saveProgress = true;
+	public bool debug = false;
 
 	public Quest startQuest;
 	public List<Quest> quests;
-	public List<Quest> _curQuests = new List<Quest>();
+	public List<Quest> curQuests = new List<Quest>();
+	public List<Quest> completedQuests = new List<Quest>();
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -44,22 +47,45 @@ public class NarrationManager : MonoBehaviour {
 
 	//
 	public void SetStartState() {
-		AddQuest(0, 0);
+		AddQuest(startQuest, 0);
 	}
 
 	//
 	public List<Quest> GetQuests() {
-		return _curQuests;
+		return curQuests;
+	}
+
+	//
+	public List<Quest> GetCompletedQuests() {
+		return completedQuests;
 	}
 
 	//
 	public void AddQuest(int questIndex, int questStep) {
-		Quest questInstance = Object.Instantiate(quests[questIndex]) as Quest;
-		questInstance.SetCurrentStep(questStep);
-		_curQuests.Add(questInstance);
+		AddQuest(quests[questIndex], questIndex);
+		//if(debug) { Debug.Log(name + ":AddQuest " + quests[questIndex].name); }
+
+		//Quest newQuest = Object.Instantiate(quests[questIndex]) as Quest;
+		//newQuest.SetCurrentStep(questStep);
+		//newQuest.date = _timeMgr.CurrentDate;
+		//curQuests.Add(newQuest);
+
+		//if(autoStart) {
+		//	StartQuestStep(newQuest);
+		//}
+	}
+
+	//
+	public void AddQuest(Quest quest, int questStep) {
+		if(debug) { Debug.Log(name + ":AddQuest " + quest.name); }
+
+		Quest newQuest = Object.Instantiate(quest) as Quest;
+		newQuest.SetCurrentStep(questStep);
+		newQuest.date = _timeMgr.CurrentDate;
+		curQuests.Add(newQuest);
 
 		if(autoStart) {
-			StartQuestStep(questInstance);
+			StartQuestStep(newQuest);
 		}
 	}
 
@@ -70,24 +96,23 @@ public class NarrationManager : MonoBehaviour {
 		// Limit user interaction
 		_controller.SetControlState(quest.GetCurrentInteractionLimits());
 		string id, action;
-		Vector3 pos;
 
 		if(_view != null) {
 			switch(quest.GetCurrentStepType()) {
 				case Quest.QuestStepType.Popup:
+					if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
 					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom, false);
 					break;
 				case Quest.QuestStepType.Prompt:
+					if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
 					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom);
 					break;
-				case Quest.QuestStepType.SendMail:
-					//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
-					break;
+				//case Quest.QuestStepType.SendMail:
+				//	//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
+				//	break;
 				case Quest.QuestStepType.PlayAnimation:
 					_view.ControlInterface("animation", "show");
 					_view.ControlInterface("playAnimation", step.valueField);
-					//tutorialAnimation.gameObject.SetActive(true);
-					//tutorialAnimation.GetComponent<Animation>().Play(step.valueField);
 					break;
 				case Quest.QuestStepType.PlaySound:
 					_audioMgr.PlaySound(step.valueField);
@@ -95,7 +120,7 @@ public class NarrationManager : MonoBehaviour {
 				case Quest.QuestStepType.ControlAvatar:
 					id = quest.ParseAsString("id");
 					action = quest.ParseAsString("action");
-					pos = quest.ParseAsVector3("pos");
+					Vector3 pos = quest.ParseAsVector3("pos");
 					if(pos != Vector3.back) {
 						_controller.ControlAvatar(id, action, pos);
 					} else {
@@ -125,12 +150,12 @@ public class NarrationManager : MonoBehaviour {
 	// Called to send quest related event to all active quest. Progresses related quests
 	// and starts next quest if quest fully progressed
 	public void OnQuestEvent(Quest.QuestEvent questEvent, string argument = "") {
-		for(int i = _curQuests.Count - 1; i >= 0; i--) {
-			Quest curQuest = _curQuests[i];
+		for(int i = curQuests.Count - 1; i >= 0; i--) {
+			Quest curQuest = curQuests[i];
 			if(curQuest.GetCurrentStep().condition == questEvent) {
 				if(curQuest.GetCurrentStep().conditionField == "" ||
 					curQuest.GetCurrentStep().conditionField == argument) {
-					Debug.Log("Narration: " + curQuest.name + " was progressed by event " + questEvent);
+					if(debug) { Debug.Log(name + ":" + curQuest.name + " was progressed by event " + questEvent); }
 
 					if(_view != null) {
 						_view.ClearView();
@@ -138,17 +163,16 @@ public class NarrationManager : MonoBehaviour {
 
 					curQuest.NextStep();
 					if(curQuest.IsComplete()) {
-						_curQuests.Remove(curQuest);
+						completedQuests.Add(curQuest);
+						curQuests.Remove(curQuest);
 
 						if(curQuest.nextQuest != null) {
-							Quest nextQuest = Object.Instantiate(curQuest.nextQuest) as Quest;
-							_curQuests.Add(nextQuest);
-							StartQuestStep(nextQuest);
+							AddQuest(curQuest.nextQuest, 0);
 						}
 
 						_controller.SaveGameState();
 					} else {
-						StartQuestStep(_curQuests[i]);
+						StartQuestStep(curQuests[i]);
 					}
 				}
 			}
@@ -179,7 +203,7 @@ public class NarrationManager : MonoBehaviour {
 		JSONClass questStateJSON = new JSONClass();
 
 		JSONArray questsJSON = new JSONArray();
-		foreach(Quest quest in _curQuests) {
+		foreach(Quest quest in curQuests) {
 			JSONClass questJSON = new JSONClass();
 			questJSON.Add("index", GetQuestIndex(quest).ToString());
 			questJSON.Add("step", quest.Encode());
@@ -197,10 +221,5 @@ public class NarrationManager : MonoBehaviour {
 		foreach(JSONClass quest in quests) {
 			AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
 		}
-
-		//if(quests.Count == 0) {
-		//	_curQuests.Add(Object.Instantiate(startQuest) as Quest);
-		//	StartQuestStep(_curQuests[0]);
-		//}
 	}
 }

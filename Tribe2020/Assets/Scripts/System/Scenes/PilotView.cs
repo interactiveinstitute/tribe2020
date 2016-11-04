@@ -8,6 +8,7 @@ public class PilotView : View{
 		return _instance as PilotView;
 	}
 
+	#region Fields
 	private PilotController _ctrlMgr;
 	private GameTime _timeMgr;
 	private MainMeter _energyMgr;
@@ -25,8 +26,8 @@ public class PilotView : View{
 	public Text energyCounter;
 
 	[Header("Quest UI")]
-	public GameObject mailUI;
-	public Transform mailList;
+	public GameObject inboxUI;
+	public Transform inboxList;
 	public GameObject mailReadUI;
 	public Text mailCountText;
 
@@ -58,6 +59,7 @@ public class PilotView : View{
 
 	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector;
 	private bool _settingsIsVisible = false;
+	#endregion
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -72,15 +74,11 @@ public class PilotView : View{
 		_resourceMgr = ResourceManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
 
+		//Clear interface
 		_curMenu = null;
-		//menus = new List<Transform>();
-		//menus.Add(settingsPanel);
-		//menus.Add(energyPanel);
-		//menus.Add(comfortPanel);
-		//menus.Add(inbox);
 
 		//Clear inbox
-		RemoveChildren(mailList);
+		RemoveChildren(inboxList);
 	}
 	
 	//Update is called once per frame
@@ -115,83 +113,6 @@ public class PilotView : View{
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
 			}
-		}
-	}
-
-	//
-	public void BuildEEMInterface(Appliance app, List<EnergyEfficiencyMeasure> eems) {
-		RemoveChildren(inspectorEEMContainer);
-
-		foreach(EnergyEfficiencyMeasure eem in eems) {
-			EnergyEfficiencyMeasure curEEM = eem;
-			GameObject buttonObj = Instantiate(EEMButtonPrefab);
-			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
-			Button button = buttonObj.GetComponent<Button>();
-
-			if(eem.callback != null) {
-				//button.onClick.AddListener(() => _ctrlMgr.OnAction(app, curEEM, buttonObj));
-			} else {
-				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
-			}
-
-			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
-			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
-			eemProps.title.text = eemTitle;
-			//Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
-			buttonObj.GetComponent<Image>().color = eem.color;
-			eemProps.SetCost(eem.cashCost, eem.comfortCost);
-			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
-
-			buttonObj.transform.SetParent(inspectorEEMContainer, false);
-		}
-	}
-
-	//
-	public void BuildInboxInterface() {
-	}
-
-	//
-	public void SetActions(Appliance appliance, List<BaseAction> actions){
-		RemoveChildren(inspectorActionList);
-		
-		foreach(BaseAction a in actions){
-			BaseAction curAction = a;
-			GameObject actionObj;
-			actionObj = Instantiate(EEMButtonPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-			EEMButton button = actionObj.GetComponent<EEMButton>();
-
-			if(curAction.callback == null || curAction.callback.Equals(string.Empty)) {
-				actionObj.GetComponent<Button>().
-					onClick.AddListener(() => _ctrlMgr.OnAction(appliance, curAction, actionObj));
-			} else {
-				actionObj.GetComponent<Button>().
-					onClick.AddListener(() => _ctrlMgr.SendMessage(a.callback, a.callbackArgument));
-			}
-
-			button.title.text = a.actionName;
-			button.SetCost(a.cashCost, a.comfortCost);
-			button.SetImpact((int)a.energyFactor, (int)a.gasFactor, (int)a.co2Factor, (int)a.moneyFactor, (int)a.comfortFactor);
-
-			//Text[] texts = actionObj.GetComponentsInChildren<Text>();
-			//texts[0].text = a.actionName;
-			//texts[1].text = "€" + a.cashCost;
-			//texts[2].transform.parent.gameObject.SetActive(false);
-
-			//if(a.cashProduction != 0){
-			//	texts[3].text = a.cashProduction + "/s";
-			//} else {
-			//	texts[3].transform.parent.gameObject.SetActive(false);
-			//}
-
-			//if(a.comfortPorduction != 0){
-			//	texts[4].text = a.comfortPorduction + "/s";
-			//} else {
-			//	texts[4].transform.parent.gameObject.SetActive(false);
-			//}
-
-			//texts[5].transform.parent.gameObject.SetActive(false);
-
-			actionObj.transform.SetParent(inspectorActionList, false);
 		}
 	}
 
@@ -242,10 +163,13 @@ public class PilotView : View{
 
 	//
 	public override void ControlInterface(string id, string action) {
+		AnimationUI animation = animationUI.GetComponent<AnimationUI>();
+
 		bool visibility = action == "show";
 		switch(id) {
 			case "inspector":
-				inspectorUI.SetActive(visibility);
+				_ctrlMgr.HideUI();
+				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
 				animationUI.gameObject.SetActive(visibility);
@@ -258,27 +182,45 @@ public class PilotView : View{
 		//Debug.Log("ControlInterface: " + id + ", " + visibility);
 	}
 
-	//
-	public void ShowAppliance(Appliance appliance) {
-		SetCurrentUI(inspector);
-
+	//Fill INSPECTOR with details and eem options for selected appliance
+	public void BuildInspector(Appliance appliance) {
 		string title = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
 		string description = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
 
 		if(title == "") { title = appliance.title + "!"; }
 		if(description == "") { description = appliance.description + "!"; }
 
-		//inspectorUI.SetActive(true);
 		inspector.GetComponentsInChildren<Text>()[0].text = title;
 		inspector.GetComponentsInChildren<Text>()[2].text = description;
-		//SetActions(appliance, appliance.GetPlayerActions());
 		BuildEEMInterface(appliance, appliance.GetEEMs());
 	}
 
-	//
-	public void HideAppliance() {
-		SetCurrentUI(null);
-		//inspectorUI.SetActive(false);
+	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
+	public void BuildEEMInterface(Appliance app, List<EnergyEfficiencyMeasure> eems) {
+		RemoveChildren(inspectorEEMContainer);
+
+		foreach(EnergyEfficiencyMeasure eem in eems) {
+			EnergyEfficiencyMeasure curEEM = eem;
+			GameObject buttonObj = Instantiate(EEMButtonPrefab);
+			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
+			Button button = buttonObj.GetComponent<Button>();
+
+			if(eem.callback == "") {
+				button.onClick.AddListener(() => _ctrlMgr.ApplyEEM(app, curEEM));
+			} else {
+				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+			}
+
+			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
+			eemProps.title.text = eemTitle;
+			//Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			buttonObj.GetComponent<Image>().color = eem.color;
+			eemProps.SetCost(eem.cashCost, eem.comfortCost);
+			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
+
+			buttonObj.transform.SetParent(inspectorEEMContainer, false);
+		}
 	}
 
 	//
@@ -300,52 +242,62 @@ public class PilotView : View{
 		}
 	}
 
-	//
-	//public void SendMail(string title, string content) {
-	//	////Quest curQuest = quest;
-	//	//GameObject questObj = Instantiate(mailButtonPrefab) as GameObject;
-	//	////questObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
-	//	//Text[] texts = questObj.GetComponentsInChildren<Text>();
-	//	//texts[0].text = "";
-	//	//texts[1].text = curQuest.title;
-	//	//texts[2].text = "some date";
-	//	//questObj.transform.SetParent(mailList, false);
-	//}
+	//Fill INBOX interface with ongoing and completed narratives
+	public void BuildInbox(List<Quest> currentQuests, List<Quest> completedQuests) {
+		RemoveChildren(inboxList);
 
-	//
-	public void ShowQuestList(List<Quest> quests) {
-		//
-		RemoveChildren(mailList);
-
-		foreach(Quest quest in quests) {
+		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
-			GameObject questObj = Instantiate(mailButtonPrefab) as GameObject;
-			questObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
-			Text[] texts = questObj.GetComponentsInChildren<Text>();
-			texts[0].text = "";
-			texts[1].text = curQuest.title;
-			texts[2].text = "some date";
-			questObj.transform.SetParent(mailList, false);
+			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
+
+			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
+			texts[0].text = curQuest.title;
+			texts[1].text = curQuest.date;
+			mailButtonObj.transform.SetParent(inboxList, false);
 		}
 
-		_curMenu = inbox;
-		//mailUI.SetActive(true);
+		foreach(Quest quest in completedQuests) {
+			Quest curQuest = quest;
+			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
+
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
+
+			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
+			texts[0].text = curQuest.title;
+			texts[1].text = curQuest.date;
+			mailButtonObj.transform.SetParent(inboxList, false);
+		}
+	}
+
+	//Full MAIL with quest data including quest steps and whether they have been completed or not
+	public void BuildMail(Quest quest) {
+		Text title = mailReadUI.GetComponentsInChildren<Text>()[0];
+		Text description = mailReadUI.GetComponentsInChildren<Text>()[2];
+		Text steps = mailReadUI.GetComponentsInChildren<Text>()[4];
+
+		title.text = quest.title;
+		description.text = quest.description;
+
+		string stepConcat = "";
+		for(int i = 0; i < quest.questSteps.Count; i++) {
+			if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
+				if(i < quest.GetCurrentStepIndex()) {
+					stepConcat += " --";
+				} else {
+					stepConcat += "¤ ";
+				}
+				stepConcat += quest.questSteps[i].title + "\n";
+			}
+		}
+		steps.text = stepConcat;
+
+		mailReadUI.SetActive(true);
 	}
 
 	public void HideQuestList() {
-		//mailUI.SetActive(false);
+		mailReadUI.SetActive(false);
 		_curMenu = null;
-	}
-
-	//
-	public void ShowQuest(Quest quest) {
-		Text[] texts = mailReadUI.GetComponentsInChildren<Text>();
-		texts[0].text = quest.title;
-		//texts[2].text = quest.message;
-		texts[3].text = "Objective: Install a Thermal Jug in a coffee machine";
-
-		mailUI.SetActive(false);
-		mailReadUI.SetActive(true);
 	}
 
 	//
@@ -370,7 +322,7 @@ public class PilotView : View{
 	public void HideQuest() {
 		
 		mailReadUI.SetActive(false);
-		mailUI.SetActive(true);
+		inboxUI.SetActive(true);
 	}
 
 	//

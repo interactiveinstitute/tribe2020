@@ -109,11 +109,6 @@ public class PilotController : Controller{
 	}
 
 	//
-	void OnDestroy() {
-		//_saveMgr.Save();
-	}
-
-	//
 	private void OnTouchStart(Vector3 pos){
 		//Debug.Log("OnTouchStart");
 		_touchTimer = 0;
@@ -216,6 +211,7 @@ public class PilotController : Controller{
 		foreach(BehaviourAI avatar in _avatars) {
 			//Debug.Log("ControlAvatar." + avatar.name + " == " + id);
 			if(avatar.name == id) {
+				avatar.TakeControlOfAvatar();
 				avatar.WalkTo(pos);
 			}
 		}
@@ -226,11 +222,11 @@ public class PilotController : Controller{
 	public override void ControlAvatar(string id, Object action) {
 		foreach(BehaviourAI avatar in _avatars) {
 			if(avatar.name == id) {
-				//Debug.Log("ControlAvatar." + id);
-				avatar.StartActivity(action as AvatarActivity);
+				//avatar.TakeControlOfAvatar();
+				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
+				avatar.StartTemporaryActivity(newAct);
 			}
 		}
-		//_avatars[0].StartActivity(action as AvatarActivity);
 	}
 
 	//
@@ -255,53 +251,63 @@ public class PilotController : Controller{
 		}
 	}
 
-	//
-	public void OnDeviceSelected(Appliance appliance) {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_SELECT) {
-			_view.ShowAppliance(appliance);
-			_audioMgr.PlaySound("button");
-			ResetTouch();
+	//Open inspector with details of appliance
+	public void SetCurrentUI(Appliance appliance) {
+		_view.BuildInspector(appliance);
+		SetCurrentUI(_view.inspector);
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
-		}
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
 	}
 
-	//
-	public void OnDeviceClosed() {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_DESELECT) {
-			_view.HideAppliance();
-			ResetTouch();
+	//Open mail with details of narrative
+	public void SetCurrentUI(Quest quest) {
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) { return; }
+		_view.BuildMail(quest);
+		//SetCurrentUI(_view.mail);
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
-		}
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
 	}
 
-	//
-	public void HideUI() {
-		_view.SetCurrentUI(null);
-	}
-
-	//
+	//Open user interface
 	public void SetCurrentUI(RectTransform ui) {
-		//Debug.Log(ui == _view.GetCurrentUI());
 		if(ui == _view.GetCurrentUI()) {
 			HideUI();
 		} else {
 			_view.SetCurrentUI(ui);
-			if(ui.name == "Mail Browse") {
+			if(ui == _view.inbox) {
+				_view.BuildInbox(_narrationMgr.GetQuests(), _narrationMgr.GetCompletedQuests());
 				_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
-				_view.ShowQuestList(_narrationMgr.GetQuests());
 			}
 		}
 
 		ResetTouch();
 	}
 
+	//Hide any open user interface
+	public void HideUI() {
+		if(_view.GetCurrentUI() == _view.inbox) {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
+		}
+
+		_view.SetCurrentUI(null);
+	}
+
+	//
+	public void OpenMail(Quest quest) {
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
+			_view.BuildMail(quest);
+			ResetTouch();
+
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+		}
+	}
+
 	//
 	public void OnQuestPressed(Quest quest) {
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-			_view.ShowQuest(quest);
+			_view.BuildMail(quest);
+			//_view.ShowQuest(quest);
 			ResetTouch();
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
@@ -345,19 +351,19 @@ public class PilotController : Controller{
 	}
 
 	//
-	public void OnAction(Appliance appliance, BaseAction action, GameObject actionObj){
+	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
 		if(_curState == InputState.ALL) {
-			if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
-				_resourceMgr.cash -= action.cashCost;
-				_resourceMgr.comfort -= action.comfortCost;
-				appliance.PerformAction(action);
+			if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
+				_resourceMgr.cash -= eem.cashCost;
+				_resourceMgr.comfort -= eem.comfortCost;
+				appliance.ApplyEEM(eem);
 
 				_resourceMgr.RefreshProduction();
 
-				actionObj.SetActive(false);
+				//actionObj.SetActive(false);
 
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, action.actionName);
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
 			}
 		}
 	}
@@ -366,6 +372,7 @@ public class PilotController : Controller{
 	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
 		//Debug.Log("OnAvatarReachedPosition");
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+		avatar.ReleaseControlOfAvatar();
 	}
 
 	//
@@ -375,7 +382,9 @@ public class PilotController : Controller{
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
+		Debug.Log(name + ": OnAvatarActivityOver " + activity);
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+		//avatar.ReleaseControlOfAvatar();
 	}
 
 	//

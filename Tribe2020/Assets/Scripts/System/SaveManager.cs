@@ -19,8 +19,11 @@ public class SaveManager : MonoBehaviour{
 	private NarrationManager _narrationMgr;
     private PilotController _pilotController;
 
-    //Need reference to all avatars for saving and loading their state. Maybe we should have the pilotcontroller hand over the references on init? Yeah let's try to achieve that.
-    private List<BehaviourAI> _avatars;
+	public bool debug = false;
+
+	/*Need reference to all avatars for saving and loading their state. Maybe we should have 
+	the pilotcontroller hand over the references on init? Yeah let's try to achieve that.*/
+    private List<BehaviourAI> _avatars = new List<BehaviourAI>();
 
     public Boolean enableSaveLoad;
 	public string fileName;
@@ -92,7 +95,7 @@ public class SaveManager : MonoBehaviour{
 	//
 	public string GetSlotData(int slot) {
 		//_dataClone = ReadFileAsJSON();
-		//Debug.Log("GetSlotData: " + slot);
+		if(debug) { Debug.Log("GetSlotData: " + slot); }
 
 		JSONNode fileData = GetData(slot, "pilot");
 
@@ -140,7 +143,8 @@ public class SaveManager : MonoBehaviour{
 		SetData(slot, "money", _resourceMgr.cash.ToString());
 		SetData(slot, "comfort", _resourceMgr.comfort.ToString());
 
-		SetData(slot, "questState", _narrationMgr.Encode());
+		//Store narration and quest progress if flagged to do so
+		if(_narrationMgr.saveProgress) { SetData(slot, "questState", _narrationMgr.Encode()); }
 
         //Create a json node for holding avatar states
         JSONArray avatarsJSON = new JSONArray();
@@ -158,21 +162,24 @@ public class SaveManager : MonoBehaviour{
 	public void Load(int slot) {
         if (!enableSaveLoad)
         {
-            Debug.Log("save/load disabled. Will not load game data.");
+			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
             return;
         }
-		//Debug.Log("Load: " + currentSlot);
-		_dataClone = ReadFileAsJSON();
 
+		if(debug) { Debug.Log("Load: " + currentSlot); }
+
+		_dataClone = ReadFileAsJSON();
 		_dataClone.Add("lastSlot", "" + slot);
 
 		if(GetData(slot, "lastTime") != null) {
 			_timeMgr.SetTime(GetData(slot, "lastTime").AsDouble);
 			_resourceMgr.cash = GetData(slot, "money").AsInt;
 			_resourceMgr.comfort = GetData(slot, "comfort").AsInt;
+		}
 
+		if(GetClass(slot, "questState") != null) {
 			_narrationMgr.Decode(GetClass(slot, "questState"));
-		} else {
+		}  else {
 			_narrationMgr.SetStartState();
 		}
 	}

@@ -48,7 +48,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void OnPointerClick(PointerEventData eventData) {
-		_ctrlMgr.OnDeviceSelected(this);
+		_ctrlMgr.SetCurrentUI(this);
+	}
+
+	//
+	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
+
 	}
 
 	//
