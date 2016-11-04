@@ -7,25 +7,29 @@ public class AvatarActivity : ScriptableObject {
 	private GameTime _timeMgr;
 
 	public List<Session> sessions;
-	public Session SkipSession;
+	//public Session SkipSession;
 
-	public string onSkipCommand;
+	//public string onSkipCommand;
 	private int _currSession;
 	private BehaviourAI _ai;
 
 	protected float _weight = 0;
 	protected string _curState = "";
 
-	public float _delay = 0;
-	public float _duration = 0;
+	private float _delay = 0;
+	//public float _duration = 0;
 
 	public double startTime = 0;
     [HideInInspector]
     public bool hasStartTime = true;
-	//public double endTime = 0;
+    //public double endTime = 0;
 
-	//Activity session types
-	public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
+    //public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
+    //[SerializeField]
+    //public ActivityState curActivityState = ActivityState.Idle;
+
+    //Activity session types
+    public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
@@ -177,7 +181,9 @@ public class AvatarActivity : ScriptableObject {
 	//
 	public void InsertSession(Session session) {
 		sessions.Insert(_currSession, session);
-		StartSession(session);
+
+        //Eeeeeh. Whaaat? We don't want to start this here right? /Gunnar
+		//StartSession(session);
 	}
 
 	//
@@ -251,10 +257,10 @@ public class AvatarActivity : ScriptableObject {
                 //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
-			case SessionType.Interact:
-                //Debug.Log("Simulating Interaction. Interacting with " + session.target);
-                _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
-				break;
+			//case SessionType.Interact:
+   //             //Debug.Log("Simulating Interaction. Interacting with " + session.target);
+   //             _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
+			//	break;
 			default:
                 break;
 		}
