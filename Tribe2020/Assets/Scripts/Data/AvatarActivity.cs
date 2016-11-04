@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class AvatarActivity : ScriptableObject {
 	private GameTime _timeMgr;
 
+	public string title;
 	public List<Session> sessions;
 	//public Session SkipSession;
 
