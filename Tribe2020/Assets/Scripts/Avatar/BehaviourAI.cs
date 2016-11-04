@@ -605,6 +605,7 @@ public class BehaviourAI : MonoBehaviour
     public void SetRunLevel(AvatarActivity.Target target, string parameter)
     {
         GameObject device = FindNearestDevice(target, false);
+        Debug.Log("Setting runlevel for " + device, device);
         if (device == null)
         {
             Debug.LogError("Didn't find device for setting runlevel: " + target);
@@ -624,6 +625,7 @@ public class BehaviourAI : MonoBehaviour
 
     public void SetRunLevel(Appliance appliance, string parameter)
     {
+        Debug.Log("Setting runlevel for " + appliance, appliance);
         GameObject device = appliance.gameObject;
         if (device == null)
         {
@@ -684,7 +686,7 @@ public class BehaviourAI : MonoBehaviour
         if (_isTemporarilyUnscheduled)
         {
             //Notify the gamecontroller that we finished this activity!
-            _controller.OnAvatarActivityComplete(tempActivity.name);
+            _controller.OnAvatarActivityComplete(tempActivity.title);
 
             //Ok. so this overriding activity was finished. Return to schedule.
             _isTemporarilyUnscheduled = false;
@@ -696,7 +698,7 @@ public class BehaviourAI : MonoBehaviour
         }
 
         //Notify the gamecontroller that we finished this activity!
-        _controller.OnAvatarActivityComplete(_curActivity.name);
+        _controller.OnAvatarActivityComplete(_curActivity.title);
 
         //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
         if (!_nextActivity.hasStartTime)
@@ -786,8 +788,8 @@ public class BehaviourAI : MonoBehaviour
         turnOnLight.appliance = lightSwitch;
         turnOnLight.parameter = "1";
 
-        roomLightActivity.InsertSession(walkToLightSwitch);
         roomLightActivity.InsertSession(turnOnLight);
+        roomLightActivity.InsertSession(walkToLightSwitch);
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
         StartTemporaryActivity(roomLightActivity);
