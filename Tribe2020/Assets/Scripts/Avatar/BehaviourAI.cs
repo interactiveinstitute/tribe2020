@@ -338,6 +338,14 @@ public class BehaviourAI : MonoBehaviour
         _curActivity.Init(this);
     }
 
+    public void StartTemporaryActivity(AvatarActivity activity)
+    {
+        //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
+        tempActivity = activity;
+        tempActivity.Init(this);
+        isTemporarilyUnscheduled = true;
+    }
+
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
     public void NextActivity()
     {
@@ -719,11 +727,9 @@ public class BehaviourAI : MonoBehaviour
     //
     public void TurnOnLight(Appliance lightSwitch)
     {
-        //Alright. We are gonna turn on the light! Let's go off schedule
-        isTemporarilyUnscheduled = true;
         //Create an activity for turning on the laaajt!
         AvatarActivity roomLightActivity = new AvatarActivity();
-        roomLightActivity.Init(this);
+        roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
 
 
 
@@ -745,7 +751,8 @@ public class BehaviourAI : MonoBehaviour
         roomLightActivity.InsertSession(walkToLightSwitch);
         roomLightActivity.InsertSession(turnOnLight);
 
-        roomLightActivity.Start();
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(roomLightActivity);
     }
 
     ////
