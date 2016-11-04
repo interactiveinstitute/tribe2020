@@ -612,6 +612,9 @@ public class BehaviourAI : MonoBehaviour
             return;
         }
 
+        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
+        device.GetComponent<Appliance>().AddHarvest();
+
         ElectricMeter meter = device.GetComponent<ElectricMeter>();
         if (meter == null)
         {
@@ -625,6 +628,8 @@ public class BehaviourAI : MonoBehaviour
 
     public void SetRunLevel(Appliance appliance, string parameter)
     {
+        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
+        appliance.AddHarvest();
         Debug.Log("Setting runlevel for " + appliance, appliance);
         GameObject device = appliance.gameObject;
         if (device == null)
