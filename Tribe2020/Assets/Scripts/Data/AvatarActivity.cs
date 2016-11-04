@@ -334,11 +334,11 @@ public class AvatarActivity : ScriptableObject {
 	//	//}
 	//}
 
-	//
-	public void OnActivityDone(BehaviourAI ai) {
-		//Debug.Log("OnBehaviourDone");
-		ai.OnActivityOver();
-	}
+	////
+	//public void OnActivityDone(BehaviourAI ai) {
+	//	//Debug.Log("OnBehaviourDone");
+	//	ai.OnActivityOver();
+	//}
 
     private bool IsThisActivityFinished()
     {
