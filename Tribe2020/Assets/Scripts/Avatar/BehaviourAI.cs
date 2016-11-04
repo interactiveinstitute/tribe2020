@@ -359,6 +359,7 @@ public class BehaviourAI : MonoBehaviour
         tempActivity = activity;
         tempActivity.Init(this);
         _isTemporarilyUnscheduled = true;
+        tempActivity.Start();
     }
 
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
