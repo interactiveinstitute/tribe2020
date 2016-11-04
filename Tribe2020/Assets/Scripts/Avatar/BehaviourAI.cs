@@ -679,11 +679,13 @@ public class BehaviourAI : MonoBehaviour
             Debug.Log("avatar was sitting. Standing up.");
             standUp();
         }
-        _controller.OnAvatarActivityComplete(_curActivity.name);
         _curAvatarState = AvatarState.Idle;
 
         if (_isTemporarilyUnscheduled)
         {
+            //Notify the gamecontroller that we finished this activity!
+            _controller.OnAvatarActivityComplete(tempActivity.name);
+
             //Ok. so this overriding activity was finished. Return to schedule.
             _isTemporarilyUnscheduled = false;
 
@@ -692,6 +694,9 @@ public class BehaviourAI : MonoBehaviour
             //We don't want to do moar stuffz in here. Bail out!
             return;
         }
+
+        //Notify the gamecontroller that we finished this activity!
+        _controller.OnAvatarActivityComplete(_curActivity.name);
 
         //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
         if (!_nextActivity.hasStartTime)
