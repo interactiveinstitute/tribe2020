@@ -25,8 +25,8 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
 
-    public AvatarActivity tempActivity;
-    public bool isTemporarilyUnscheduled = false;
+    private AvatarActivity tempActivity;
+    private bool isTemporarilyUnscheduled = false;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
@@ -135,17 +135,8 @@ public class BehaviourAI : MonoBehaviour
                     _charController.Move(Vector3.zero, false, false);
                     //Ok. Let's notify the activity that the current session is finished
                     activity.OnDestinationReached();
-
-                    //if(_curActivityState == ActivityState.Walking) {
-                    //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
-                    //	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-                    //	activity.NextStep(this);
-                    //} else if(_curActivityState == ActivityState.OverrideWalking) {
-                    //if(_curActivityState == ActivityState.OverrideWalking) {
-                    //	_curActivityState = ActivityState.OverrideIdle;
-                    //} else {
+                    
                     //	_curActivityState = ActivityState.Idle;
-                    //}
                     _controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
                                                                                        //}
                 }
@@ -162,19 +153,19 @@ public class BehaviourAI : MonoBehaviour
             //case AvatarState.OverrideIdle:
             //    _charController.Move(Vector3.zero, false, false);
             //    break;
-            case AvatarState.TurningOnLight:
-                if (_agent.remainingDistance > _agent.stoppingDistance)
-                {
-                    _charController.Move(_agent.desiredVelocity, false, false);
-                }
-                else if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
-                {
-                    _charController.Move(Vector3.zero, false, false);
-                    _curTargetObj.GetComponent<ElectricMeter>().On();
-                    _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
-                    activity.ResumeSession(this);
-                }
-                break;
+            //case AvatarState.TurningOnLight:
+            //    if (_agent.remainingDistance > _agent.stoppingDistance)
+            //    {
+            //        _charController.Move(_agent.desiredVelocity, false, false);
+            //    }
+            //    else if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+            //    {
+            //        _charController.Move(Vector3.zero, false, false);
+            //        _curTargetObj.GetComponent<ElectricMeter>().On();
+            //        _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
+            //        //activity.ResumeSession(this);
+            //    }
+            //    break;
         }
     }
 
@@ -340,7 +331,7 @@ public class BehaviourAI : MonoBehaviour
 
     public void StartTemporaryActivity(AvatarActivity activity)
     {
-        //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
+        Debug.Log(name + ".StartTemporaryActivity(" + activity + ")");
         tempActivity = activity;
         tempActivity.Init(this);
         isTemporarilyUnscheduled = true;
@@ -657,6 +648,8 @@ public class BehaviourAI : MonoBehaviour
             //Ok. so this overriding activity was finished. Return to schedule.
             isTemporarilyUnscheduled = false;
 
+            Debug.Log("Teemporary activity finished!", tempActivity);
+
             //We don't want to do moar stuffz in here. Bail out!
             return;
         }
@@ -727,8 +720,9 @@ public class BehaviourAI : MonoBehaviour
     //
     public void TurnOnLight(Appliance lightSwitch)
     {
+        Debug.Log("Yo! Gonna flip that lamp switch!");
         //Create an activity for turning on the laaajt!
-        AvatarActivity roomLightActivity = new AvatarActivity();
+        AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
 
 

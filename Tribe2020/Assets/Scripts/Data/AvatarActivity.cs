@@ -81,30 +81,29 @@ public class AvatarActivity : ScriptableObject {
     public void Init(BehaviourAI ai)
     {
         _timeMgr = GameTime.GetInstance();
-
         _ai = ai;
-        _currSession = 0;
-
         hasStartTime = false;
-
-
-        //ExecuteCommand(ai, sessions[_currSession]);
+        _currSession = 0;
+        //If this activity for some reason doesn't have a list of sessions, create an empty one.
+        if (sessions == null)
+        {
+            sessions = new List<Session>();
+        }
     }
 
     //Initialize
     public void Init(BehaviourAI ai, double startTime) {
 		_timeMgr = GameTime.GetInstance();
-
 		_ai = ai;
 		this.startTime = startTime;
         hasStartTime = true;
-		//this.endTime = endTime;
-
 		_currSession = 0;
-		
-
-		//ExecuteCommand(ai, sessions[_currSession]);
-	}
+        //If this activity for some reason doesn't have a list of sessions, create an empty one.
+        if (sessions == null)
+        {
+            sessions = new List<Session>();
+        }
+    }
 
     //
     public void Start() {
@@ -180,6 +179,10 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void InsertSession(Session session) {
+        if (session == null)
+        {
+            Debug.LogError("Session is null!");
+        }
 		sessions.Insert(_currSession, session);
 
         //Eeeeeh. Whaaat? We don't want to start this here right? /Gunnar
@@ -218,9 +221,9 @@ public class AvatarActivity : ScriptableObject {
 	//
 	public void OnDestinationReached() {
         Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
-        if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
+        //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
-		}
+		//}
 	}
 
 	//
@@ -317,19 +320,19 @@ public class AvatarActivity : ScriptableObject {
 		//ExecuteCommand(ai, sessions[_currSession]);
 	}
 
-	//
-	public void NextStep(BehaviourAI ai) {
-		//Debug.Log(ai.name + ".CurrentStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
-		_currSession++;
+	////
+	//public void NextStep(BehaviourAI ai) {
+	//	//Debug.Log(ai.name + ".CurrentStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+	//	_currSession++;
 
-		//if(_currSession == sessions.Count) {
-		//	OnActivityDone(ai);
-		//} else {
-		//	//Debug.Log(ai.name + ".NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
-		//	//Debug.Log("NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
-		//	ExecuteCommand(ai, sessions[_currSession]);
-		//}
-	}
+	//	//if(_currSession == sessions.Count) {
+	//	//	OnActivityDone(ai);
+	//	//} else {
+	//	//	//Debug.Log(ai.name + ".NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+	//	//	//Debug.Log("NextStep" + _currSession + ", " + sessions.Count + ", " + sessions[_currSession]);
+	//	//	ExecuteCommand(ai, sessions[_currSession]);
+	//	//}
+	//}
 
 	//
 	public void OnActivityDone(BehaviourAI ai) {
