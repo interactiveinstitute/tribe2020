@@ -26,7 +26,9 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _prevActivity;
 
     private AvatarActivity tempActivity;
-    private bool isTemporarilyUnscheduled = false;
+    private bool _isTemporarilyUnscheduled = false;
+
+    private bool _isControlled = false;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
@@ -73,10 +75,17 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isTemporarilyUnscheduled)
+        if (_isTemporarilyUnscheduled)
         {
             //Handle override actions
             UpdateActivity(tempActivity);
+            return;
+        }
+
+        if (_isControlled)
+        {
+            //Oh snap! This avatar is controlled directly. Let's not interfere with that.
+            UpdateCharController();
             return;
         }
         
@@ -173,6 +182,21 @@ public class BehaviourAI : MonoBehaviour
     private void UpdateActivity()
     {
         UpdateActivity(_curActivity);
+    }
+
+    private void UpdateCharController()
+    {
+        //This function shouldn't do any activity (or AvatarState) related stuff . It should only be concerned with updating the avatar's movements and notify whoever is directly controlling it.
+        if (_agent.remainingDistance > _agent.stoppingDistance)
+        {
+            _charController.Move(_agent.desiredVelocity, false, false);
+        }
+        else if (!_agent.pathPending)
+        {
+            _charController.Move(Vector3.zero, false, false);
+            
+            _controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
+        }
     }
 
     //Erik claims that this part might be related to have the avatar behave correctly when making jumps in time.
@@ -334,7 +358,7 @@ public class BehaviourAI : MonoBehaviour
         Debug.Log(name + ".StartTemporaryActivity(" + activity + ")");
         tempActivity = activity;
         tempActivity.Init(this);
-        isTemporarilyUnscheduled = true;
+        _isTemporarilyUnscheduled = true;
     }
 
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
@@ -442,11 +466,25 @@ public class BehaviourAI : MonoBehaviour
     //This is an override walk. Should be clearer that's the case.
     public void WalkTo(Vector3 target)
     {
+        if (!_isControlled)
+        {
+            Debug.LogError("Hey! Your are trying to control an avatar without first calling TakeControlOfAvatar(). Call TakeControlOfAvatar(). Do Stuff. Then call ReleaseControlOfAvatar()", this);
+        }
         //_curTargetPos = target;
 
         _agent.SetDestination(target);
         _agent.updatePosition = true;
         //_curAvatarState = AvatarState.OverrideWalking;
+    }
+
+    public void TakeControlOfAvatar()
+    {
+        _isControlled = true;
+    }
+
+    public void ReleaseControlOfAvatar()
+    {
+        _isControlled = false;
     }
 
     //
@@ -643,10 +681,10 @@ public class BehaviourAI : MonoBehaviour
         _controller.OnAvatarActivityComplete(_curActivity.name);
         _curAvatarState = AvatarState.Idle;
 
-        if (isTemporarilyUnscheduled)
+        if (_isTemporarilyUnscheduled)
         {
             //Ok. so this overriding activity was finished. Return to schedule.
-            isTemporarilyUnscheduled = false;
+            _isTemporarilyUnscheduled = false;
 
             Debug.Log("Teemporary activity finished!", tempActivity);
 
