@@ -57,7 +57,7 @@ public class PilotView : View{
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
-	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector;
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, mail, inspector;
 	private bool _settingsIsVisible = false;
 	#endregion
 
@@ -172,14 +172,17 @@ public class PilotView : View{
 				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
-				animationUI.gameObject.SetActive(visibility);
+				Debug.Log(name + ": ControlAnimation " + visibility);
+				foreach(Transform t in animationUI.transform) {
+					t.gameObject.SetActive(visibility);
+				}
+				//animationUI.gameObject.SetActive(visibility);
 				break;
 			case "playAnimation":
+				Debug.Log(name + ": PlayAnimation " + animationUI.GetComponent<Animation>().GetClip(action));
 				animationUI.GetComponent<Animation>().Play(action);
 				break;
 		}
-
-		//Debug.Log("ControlInterface: " + id + ", " + visibility);
 	}
 
 	//Fill INSPECTOR with details and eem options for selected appliance
@@ -205,18 +208,23 @@ public class PilotView : View{
 			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
 			Button button = buttonObj.GetComponent<Button>();
 
-			if(eem.callback == "") {
-				button.onClick.AddListener(() => _ctrlMgr.ApplyEEM(app, curEEM));
+			if(!app.appliedEEMs.Contains(curEEM)){
+				if(eem.callback == "") {
+					button.onClick.AddListener(() => _ctrlMgr.ApplyEEM(app, curEEM));
+				} else {
+					button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+				}
+				eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
-				button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+				button.interactable = false;
 			}
 
 			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
 			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
 			eemProps.title.text = eemTitle;
-			//Debug.Log("EEM." + eem.category + ":" + curEEM.name + "_Title");
+
 			buttonObj.GetComponent<Image>().color = eem.color;
-			eemProps.SetCost(eem.cashCost, eem.comfortCost);
+			
 			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
 
 			buttonObj.transform.SetParent(inspectorEEMContainer, false);
@@ -226,20 +234,20 @@ public class PilotView : View{
 	//
 	public override void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
-		messageUI.GetComponentInChildren<Text>().text = _localMgr.GetPhrase(message);
+		messageUI.GetComponentInChildren<Text>().text = message;
 
-		messageUI.transform.GetChild(1).gameObject.SetActive(showOkButton);
+		messageUI.transform.GetChild(1).GetChild(1).gameObject.SetActive(showOkButton);
 
-		RectTransform messageTrans = messageUI.transform as RectTransform;
-		if(showAtBottom) {
-			messageTrans.pivot = Vector2.zero;
-			messageTrans.anchoredPosition = Vector3.zero;
-			messageTrans.anchorMax = Vector2.zero;
-		} else {
-			messageTrans.pivot = Vector2.up;
-			messageTrans.anchoredPosition = Vector3.zero;
-			messageTrans.anchorMax = Vector2.up;
-		}
+		//RectTransform messageTrans = messageUI.transform as RectTransform;
+		//if(showAtBottom) {
+		//	messageTrans.pivot = Vector2.zero;
+		//	messageTrans.anchoredPosition = Vector3.zero;
+		//	messageTrans.anchorMax = Vector2.zero;
+		//} else {
+		//	messageTrans.pivot = Vector2.up;
+		//	messageTrans.anchoredPosition = Vector3.zero;
+		//	messageTrans.anchorMax = Vector2.up;
+		//}
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
@@ -249,7 +257,7 @@ public class PilotView : View{
 		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 			texts[0].text = curQuest.title;
@@ -261,7 +269,7 @@ public class PilotView : View{
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.OnQuestPressed(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 			texts[0].text = curQuest.title;
@@ -303,6 +311,7 @@ public class PilotView : View{
 	//
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
+		_ctrlMgr.PlaySound("fireworks");
 		victoryUI.SetActive(true);
 		victoryText.text = _localMgr.GetPhrase(text);
 	}

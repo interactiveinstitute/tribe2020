@@ -16,11 +16,11 @@ MonoBehaviour:
   date: 
   nextQuest: {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
   questSteps:
-  - title: Prompt.Welcome!
+  - title: Prompt.So this is San Pablo
     type: 0
     inputState: 1
-    valueField: Welcome to TRIBE PlayIt! The world is in dire need for help, and you
-      are the arbitrator!
+    valueField: 'F. Shaman: So this is the San Pablo office building. Looks great,
+      I wonder if it''s energy efficient as well.'
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 1
@@ -33,39 +33,125 @@ MonoBehaviour:
     showAtBottom: 0
     condition: 0
     conditionField: 
-  - title: Popup.Swipe
+  - title: Popup.Move around
     type: 1
     inputState: 2
-    valueField: Let's start with the basics. Swipe the screen in order to move between
-      rooms. Swipe to continue!
+    valueField: 'F. Shaman: Let''s have a look around. Swipe the screen to move to
+      another view.'
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 2
     conditionField: 
-  - title: Play Animation.Tap
+  - title: Animation.MarkViewTitle
     type: 3
     inputState: 0
-    valueField: Tap
+    valueField: MarkViewTitle
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 0
     conditionField: 
-  - title: Popup.Tap
-    type: 1
-    inputState: 4
-    valueField: Let's try something else. Tap on an object in order to interact with
-      it. Tap to continue!
+  - title: Prompt.ViewTitle
+    type: 0
+    inputState: 1
+    valueField: F. Shaman. I see, how charming! The name of the current view can be
+      seen in the center top of the screen.
     objectField: {fileID: 0}
     showAtBottom: 0
-    condition: 3
+    condition: 1
     conditionField: 
-  - title: Control Interface.Hide Animation
-    type: 9
+  - title: Animation.MarkTime
+    type: 3
     inputState: 0
-    valueField: '{id:animation, action:hide}'
+    valueField: Tutorial_MarkTime
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 0
+    conditionField: 
+  - title: Prompt.MarkTime
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: There is nobody around at the moment. I suppose it''s
+      a bit early still. People should start dropping in around 8:00.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Animation.Mark Energy Panel
+    type: 3
+    inputState: 0
+    valueField: MarkEnergyPanel
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: Prompt.EnergyPanel
+    type: 1
+    inputState: 8
+    valueField: 'F. Shaman: Let''s have a look at the energy status of this view.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 22
+    conditionField: 
+  - title: Animation.Hide
+    type: 3
+    inputState: 0
+    valueField: HideAll
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: Prompt.EnergyPanel
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: This is a nifty tool I use to see how energy efficient
+      a certain area is.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Prompt.EnergyGraph
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: The top graph shows the energy consumption in the current
+      view...'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Prompt.GasGraph
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: The center graph shows the gas consumption in relation
+      to where I''m looking...'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Prompt.CO2Graph
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: Finally, the bottom graph shows how much CO2 emissions
+      this place have managed to reduce.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Prompt.CO2Emissions
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: CO2 is an important factor. I need to reduce the emission
+      by 20 percent until year 2020, or else...'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Prompt.LetsNotThink
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: Well, let''s not think about that. :)'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
     conditionField: 
   - title: Control Interface.Hide Inspector
     type: 9
@@ -74,6 +160,32 @@ MonoBehaviour:
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 0
+    conditionField: 
+  - title: Prompt.Shock
+    type: 0
+    inputState: 1
+    valueField: '...!'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Popup.TurnOffLight
+    type: 1
+    inputState: 10
+    valueField: 'F. Shaman: Oh my! Someone left the light on over the night. What
+      a waste! Let''s switch it off.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 26
+    conditionField: 
+  - title: Prompt.TurningOffLights
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: If I am to make this place more efficient I will have
+      to teach the occupants to turn off the lights after themselves.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
     conditionField: 
   - title: Quest Complete
     type: 8

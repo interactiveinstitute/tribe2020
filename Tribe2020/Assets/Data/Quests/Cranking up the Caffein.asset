@@ -17,27 +17,62 @@ MonoBehaviour:
   date: 
   nextQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   questSteps:
-  - title: Popup.Open Inbox
-    type: 1
+  - title: Prompt.Open Inbox
+    type: 0
     inputState: 0
-    valueField: If you forget what going on, check your mail. Try it out now!
+    valueField: 'F. Shaman: OK, let''s get started. Now where did I put my checklist...'
     objectField: {fileID: 0}
     showAtBottom: 0
-    condition: 6
+    condition: 1
     conditionField: 
-  - title: Popup.Open Mail
-    type: 1
+  - title: Animation.MarkInbox
+    type: 3
     inputState: 0
-    valueField: Seems like we got mail, tap the mail to read it
+    valueField: MarkInbox
     objectField: {fileID: 0}
     showAtBottom: 0
-    condition: 8
+    condition: 0
     conditionField: 
-  - title: Popup.Find Pentry
+  - title: Wait until Inbox pressed
+    type: 4
+    inputState: 0
+    valueField: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 18
+    conditionField: 
+  - title: Animation.Hide
+    type: 3
+    inputState: 0
+    valueField: HideAll
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
+    conditionField: 
+  - title: Popup.Recall the Mail
+    type: 1
+    inputState: 7
+    valueField: 'F. Shaman: Right, the Inbox is where I keep track of what needs to
+      be done! Looks like I have some coffee business to attend to...'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 20
+    conditionField: 
+  - title: Popup.Close Mail
+    type: 1
+    inputState: 7
+    valueField: 'F. Shaman: Each task involves several sub tasks. In each respective
+      mail I can see which sub tasks have been completed so far. Let''s close the
+      Inbox.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 21
+    conditionField: 
+  - title: Wait until in Waiting Lounge
     type: 1
     inputState: 0
-    valueField: So we need to fix that coffee. First step is to find the room where
-      it's located. Swipe until you find the lobby.
+    valueField: 'F. Shaman: So we need to fix that coffee. First step is to find the
+      room where it''s located. Swipe until you find the lobby.'
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 10
@@ -49,12 +84,21 @@ MonoBehaviour:
       tap that pesky perculator.
     objectField: {fileID: 0}
     showAtBottom: 0
-    condition: 4
+    condition: 16
     conditionField: Espresso Machine
-  - title: Popup.Install Thermal Jug
-    type: 1
+  - title: Prompt.Install Thermal Jug
+    type: 0
+    inputState: 1
+    valueField: 'F. Shaman: I think we could improve a little bit on this appliance
+      by upgrading the jugs to hermal ones.'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Wait until Thermal Jug Installed
+    type: 4
     inputState: 0
-    valueField: Now install the Thermal Jug in the list of available measures.
+    valueField: 
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 9

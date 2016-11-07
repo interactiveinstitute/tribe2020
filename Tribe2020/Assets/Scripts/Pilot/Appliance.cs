@@ -12,6 +12,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<AvatarActivity.Target> avatarAffordances;
 	public List<string> owners;
 
+	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public List<BaseAction> performedEnergyMeasures;
 	public Vector3 interactionPos;
 	public float cashProduction;
@@ -33,6 +34,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		harvestButtonRef.SetActive(false);
 
+		appliedEEMs = new List<EnergyEfficiencyMeasure>();
+
 		InteractionPoint ip = GetComponentInChildren<InteractionPoint>();
 		if(ip != null) {
 			interactionPos = ip.transform.position;
@@ -53,7 +56,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
-
+		appliedEEMs.Add(eem);
 	}
 
 	//

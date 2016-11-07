@@ -12,6 +12,7 @@ public class SaveManager : MonoBehaviour{
 		return _instance;
 	}
 
+	#region Fields
 	public static int currentSlot = 0;
 
 	private GameTime _timeMgr;
@@ -29,6 +30,9 @@ public class SaveManager : MonoBehaviour{
 	public string fileName;
 	private string _filePath;
 	private JSONNode _dataClone = new JSONNode();
+
+	public List<GameObject> saveObjects;
+	#endregion
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -131,6 +135,12 @@ public class SaveManager : MonoBehaviour{
 		//SetData(slot, "questState", _narrationMgr.Encode());
 
 		//File.WriteAllText(_filePath, _dataClone.ToString());
+	}
+
+	//
+	public void Save() {
+		foreach(GameObject saveObj in saveObjects) {
+		}
 	}
 
 	//

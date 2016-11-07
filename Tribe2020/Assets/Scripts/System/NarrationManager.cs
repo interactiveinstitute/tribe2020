@@ -13,6 +13,7 @@ public class NarrationManager : MonoBehaviour {
 		return _instance;
 	}
 
+	#region Fields
 	private Controller _controller;
 	private View _view;
 	private AudioManager _audioMgr;
@@ -27,6 +28,7 @@ public class NarrationManager : MonoBehaviour {
 	public List<Quest> quests;
 	public List<Quest> curQuests = new List<Quest>();
 	public List<Quest> completedQuests = new List<Quest>();
+	#endregion
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -101,17 +103,20 @@ public class NarrationManager : MonoBehaviour {
 			switch(quest.GetCurrentStepType()) {
 				case Quest.QuestStepType.Popup:
 					if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
-					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom, false);
+					//_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom, false);
+					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, false);
 					break;
 				case Quest.QuestStepType.Prompt:
 					if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
-					_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom);
+					//_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom);
+					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, true);
 					break;
 				//case Quest.QuestStepType.SendMail:
 				//	//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
 				//	break;
 				case Quest.QuestStepType.PlayAnimation:
-					_view.ControlInterface("animation", "show");
+					//_view.ControlInterface("animation", "show");
+					_view.ControlInterface("animation", "hide");
 					_view.ControlInterface("playAnimation", step.valueField);
 					break;
 				case Quest.QuestStepType.PlaySound:
@@ -222,4 +227,14 @@ public class NarrationManager : MonoBehaviour {
 			AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
 		}
 	}
+
+	//
+	public bool DoSave {
+		get {
+			return saveProgress;
+		}
+		set {
+			saveProgress = value;
+		}
+	}	
 }
