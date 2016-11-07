@@ -8,6 +8,9 @@ using SimpleJSON; // For encoding and decoding avatar states
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class BehaviourAI : MonoBehaviour
 {
+    //private static ILogger logger = Debug.logger;
+    //private static string logTag = "BehaviourAI";
+
     public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
     [SerializeField]
     private AvatarState _curAvatarState = AvatarState.Idle;
@@ -96,7 +99,7 @@ public class BehaviourAI : MonoBehaviour
         //Ok. Let's find the stamp for the next activity.
         if (_nextActivity.hasStartTime && _nextActivity.startTimePassed())
         {
-            Debug.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one");
+            DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
             _curActivity.FinishCurrentActivity();
             NextActivity();
             _curActivity.Start();
@@ -106,7 +109,7 @@ public class BehaviourAI : MonoBehaviour
         //We are most likely not handling backwards time very well. But that's out of scope for now.
         if (_curActivity.hasStartTime && !_curActivity.startTimePassed())
         {
-            Debug.Log("Current time is before current activity's startTime. Revert the activity and start the previous one");
+            DebugManager.Log("Current time is before current activity's startTime. Revert the activity and start the previous one", this);
             _curActivity.Revert();
             PreviousActivity();
             _curActivity.Start();
@@ -184,6 +187,17 @@ public class BehaviourAI : MonoBehaviour
         UpdateActivity(_curActivity);
     }
 
+    private AvatarActivity getRunningActivity()
+    {
+        if (_isTemporarilyUnscheduled)
+        {
+            return tempActivity;
+        }else
+        {
+            return _curActivity;
+        }
+    }
+
     private void UpdateCharController()
     {
         //This function shouldn't do any activity (or AvatarState) related stuff . It should only be concerned with updating the avatar's movements and notify whoever is directly controlling it.
@@ -214,7 +228,7 @@ public class BehaviourAI : MonoBehaviour
         double curHour = curDateTime.Hour;
         double curMinute = curDateTime.Minute;
 
-        Debug.Log("starting schedule sync");
+        DebugManager.Log("starting schedule sync", this);
 
         //loop through the schedule until we get to an actvity that should happen in the future
         for (; _scheduleIndex < schedule.Length; _scheduleIndex++)
@@ -298,7 +312,7 @@ public class BehaviourAI : MonoBehaviour
 
 
 
-                Debug.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime);
+                DebugManager.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime, this);
                 return;
             }
         }
@@ -307,14 +321,14 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SetCurrentActivity(AvatarActivity activity, double startTime)
     {
-        Debug.Log("setting current activity: " + activity);
+        DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this, startTime);
     }
 
     public void SetCurrentActivity(AvatarActivity activity)
     {
-        Debug.Log("setting current activity: " + activity);
+        DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this);
     }
@@ -503,30 +517,22 @@ public class BehaviourAI : MonoBehaviour
         _curTargetObj = FindNearestDevice(target, isOwned);
         if (_curTargetObj == null)
         {
-            DebugManager.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name, this);
+            DebugManager.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
+            getRunningActivity().NextSession();
             return;
         }
 
-        _agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
-        _curAvatarState = AvatarState.Walking;
+        WalkTo(_curTargetObj.GetComponent<Appliance>(), isOwned);
+
+        //_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
+        //_curAvatarState = AvatarState.Walking;
     }
 
     //Let's use the reference to the appliance
     public void WalkTo(Appliance appliance, bool isOwned)
     {
+        _curTargetObj = appliance.gameObject;
 
-        //GameObject _curTargetObj = appliance.gameObject;
-        //if (_curTargetObj == null)
-        //{
-        //    Debug.LogError("Didn't find a WalkTo appliance, doing activity " + _curActivity.name);
-        //    return;
-        //}
-
-        if(appliance == null)
-        {
-            DebugManager.LogError("Daaa fuuuck! no appliance i just got from you!", this);
-        }
-        
         _agent.SetDestination(appliance.interactionPos);
         _curAvatarState = AvatarState.Walking;
     }
@@ -556,13 +562,44 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
+    public void SitAt(Appliance thing)
+    {
+        _agent.enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        if(thing == null)
+        {
+            DebugManager.LogError("No appliance object provided. Trying to fallback to _curTargetObject instead", this);
+            thing = _curTargetObj.GetComponent<Appliance>();
+        }
+        Transform sitPosition = thing.gameObject.transform.Find("Sit Position");
+        if (sitPosition == null)
+        {
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
+        }
+        else
+        {
+            //coord.x = sitPosition.position.x;
+            //coord.z = sitPosition.position.z;
+            //coord.y = transform.position.y;
+            transform.position = sitPosition.position;//coord;
+            transform.rotation = sitPosition.rotation;
+            Debug.Log("Setting avatar position to sitPosition from appliance object");
+        }
+        _curAvatarState = AvatarState.Sitting;
+        _charController.SitDown(); //Sets a boolean in the animator object
+    }
+
     //
-    public void SitDown()
+    public void SitAtCurrentTarget()
     {
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         //Vector3 coord;
         //Let's search for a gameObject called Sit Position
+        if(_curTargetObj == null)
+        {
+            DebugManager.LogError("_curTargetObject not set!", this);
+        }
         Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
         if (sitPosition == null)
         {

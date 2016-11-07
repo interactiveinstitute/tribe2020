@@ -112,11 +112,11 @@ public class AvatarActivity : ScriptableObject {
         if (hasStartTime)
         {
             string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-            Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + curTimeView);
+            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
         }
         else
         {
-            Debug.Log(_ai.name + " starting (activity.run()) activity " + name + " without startTime, curTime is " + curTimeView);
+            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
 
@@ -125,12 +125,12 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void StartSession(Session session) {
-        Debug.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name);
+        DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
         switch (session.type) {
 			case SessionType.WaitForDuration:
                 if (session.parameter == "")
                 {
-                    Debug.LogError("No duration set for parameter in session WaitForDuration in activity " + name + "avatar " + _ai.name);
+                    DebugManager.LogError("No duration set for parameter in session WaitForDuration in activity " + name + "avatar " + _ai.name, this);
                     _delay = 20; //Didn't get a wait parameter. Setting a default.
                 }
                 else
@@ -140,7 +140,7 @@ public class AvatarActivity : ScriptableObject {
                 _ai.Wait();
 				break;
             case SessionType.SitUntilEnd:
-                _ai.SitDown();
+                _ai.SitAtCurrentTarget();
                 break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
@@ -154,9 +154,9 @@ public class AvatarActivity : ScriptableObject {
                     _ai.WalkTo(session.target, session.avatarOwnsTarget);
                 }
 				break;
-			case SessionType.Interact:
-				NextSession();
-				break;
+			//case SessionType.Interact:
+			//	NextSession();
+			//	break;
 			case SessionType.Teleport:
 				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
 				break;
@@ -173,7 +173,7 @@ public class AvatarActivity : ScriptableObject {
 				NextSession();
 				break;
             default:
-                Debug.Log("unknown SessionType");
+                DebugManager.Log("unknown SessionType", this);
                 break;
 		}
 	}
@@ -182,7 +182,7 @@ public class AvatarActivity : ScriptableObject {
 	public void InsertSession(Session session) {
         if (session == null)
         {
-            Debug.LogError("Session is null!");
+            DebugManager.LogError("Session is null!", this);
         }
 		sessions.Insert(_currSession, session);
 
@@ -192,14 +192,14 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextSession() {
-        Debug.Log("incrementing _currSssion");
+        DebugManager.Log("incrementing _currSssion", this);
         _currSession++;
 
 		if(_currSession >= sessions.Count) {
-            Debug.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback");
+            DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            Debug.Log("starting session" + sessions[_currSession].title);
+            //Debug.Log("starting session" + sessions[_currSession].title);
             StartSession(sessions[_currSession]);
 		}
 	}
@@ -221,7 +221,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-        Debug.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session");
+        DebugManager.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session", this);
         //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		//}
@@ -229,14 +229,14 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void FinishCurrentActivity() {
-        Debug.Log("Gonna finish this activity. Sessions are currently: " + sessions);
+        DebugManager.Log("Gonna finish this activity. Sessions are currently: " + sessions, this);
 
         //Remove the sessions already performed
         if (_currSession > 0) {
 			sessions.RemoveRange(0, _currSession - 1);
 		}
 
-        Debug.Log("After deletion sessions are: " + sessions);
+        DebugManager.Log("After deletion sessions are: " + sessions, this);
         //Simulate the sessions not yet performed
         foreach (Session session in sessions) {
 			SimulateSession(session);
@@ -289,37 +289,37 @@ public class AvatarActivity : ScriptableObject {
     }
 
 	//
-	public void ExecuteCommand(BehaviourAI ai, string command) {
-		string[] cmdParse = command.Split(',');
-		string cmdFunction = cmdParse[0];
-		string[] cmdArgs = new string[cmdParse.Length - 1];
-		for(int i = 0; i < cmdParse.Length - 1; i++) {
-			cmdArgs[i] = cmdParse[i + 1];
-		}
+	//public void ExecuteCommand(BehaviourAI ai, string command) {
+	//	string[] cmdParse = command.Split(',');
+	//	string cmdFunction = cmdParse[0];
+	//	string[] cmdArgs = new string[cmdParse.Length - 1];
+	//	for(int i = 0; i < cmdParse.Length - 1; i++) {
+	//		cmdArgs[i] = cmdParse[i + 1];
+	//	}
 
-		//Debug.Log(ai.gameObject.GetComponent<AvatarStats>().avatarName + ", command: " + cmdFunction + ", " + cmdArgs[0]);
-		if(cmdFunction == "Delay") {
-			ai.gameObject.SendMessage(cmdFunction, float.Parse(cmdArgs[0]));
-		} else {
-			ai.gameObject.SendMessage(cmdFunction, cmdArgs);
-		}
-	}
-
-	//
-	public void SimulateExecution(BehaviourAI ai) {
-
-
-		//Debug.Log("SimulateExecution:" + onSkipCommand);
-
-		//ExecuteCommand(ai, onSkipCommand);
-	}
+	//	//Debug.Log(ai.gameObject.GetComponent<AvatarStats>().avatarName + ", command: " + cmdFunction + ", " + cmdArgs[0]);
+	//	if(cmdFunction == "Delay") {
+	//		ai.gameObject.SendMessage(cmdFunction, float.Parse(cmdArgs[0]));
+	//	} else {
+	//		ai.gameObject.SendMessage(cmdFunction, cmdArgs);
+	//	}
+	//}
 
 	//
-	public void ResumeSession(BehaviourAI ai) {
-		_currSession = 0;
-		StartSession(sessions[_currSession]);
-		//ExecuteCommand(ai, sessions[_currSession]);
-	}
+	//public void SimulateExecution(BehaviourAI ai) {
+
+
+	//	//Debug.Log("SimulateExecution:" + onSkipCommand);
+
+	//	//ExecuteCommand(ai, onSkipCommand);
+	//}
+
+	//
+	//public void ResumeSession(BehaviourAI ai) {
+	//	_currSession = 0;
+	//	StartSession(sessions[_currSession]);
+	//	//ExecuteCommand(ai, sessions[_currSession]);
+	//}
 
 	////
 	//public void NextStep(BehaviourAI ai) {

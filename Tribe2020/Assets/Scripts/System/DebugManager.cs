@@ -4,8 +4,11 @@ using System.Collections;
 public class DebugManager : MonoBehaviour {
 
 
-    static public bool staticBehaviourAI = true;
-    public bool BehaviourAI;
+    static public bool staticBehaviourAI;
+    public bool BehaviourAI = true;
+
+    static public bool staticAvatarActivity;
+    public bool AvatarActivity = true;
 
 
     //TODO: Make a general function for both logerror and log
@@ -18,35 +21,39 @@ public class DebugManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         staticBehaviourAI = BehaviourAI;
+        staticAvatarActivity = AvatarActivity;
 	}
 
-    static public void Log(string message, MonoBehaviour caller)
+    static public void Log(string message, System.Object caller)
     {
         Log(message, null, caller);
     }
 
-    static public void Log(string message, Object context, MonoBehaviour caller)
+    static public void Log(string message, Object context, System.Object caller)
     {
         Output(message, context, caller, false);
     }
 
-    static public void LogError(string message, MonoBehaviour caller)
+    static public void LogError(string message, System.Object caller)
     {
         LogError(message, null, caller);
     }
 
-    static public void LogError(string message, Object context, MonoBehaviour caller)
+    static public void LogError(string message, Object context, System.Object caller)
     {
         Output(message, context, caller, true);
     }
 
-    static private void Output(string message, Object context, MonoBehaviour caller, bool isErrorLog)
+    static private void Output(string message, Object context, System.Object caller, bool isErrorLog)
     {
         bool print = true;
 
         ///-------------- Insert condition checks for different monobehaviours below!
         //Let's check for conditions when we shouldn't print
         if (caller is BehaviourAI && !staticBehaviourAI)
+        {
+            print = false;
+        }else if(caller is AvatarActivity && !staticAvatarActivity)
         {
             print = false;
         }
