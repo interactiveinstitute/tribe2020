@@ -355,7 +355,7 @@ public class BehaviourAI : MonoBehaviour
 
     public void StartTemporaryActivity(AvatarActivity activity)
     {
-        Debug.Log(name + ".StartTemporaryActivity(" + activity + ")");
+        DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
         tempActivity = activity;
         tempActivity.Init(this);
         _isTemporarilyUnscheduled = true;
@@ -368,7 +368,7 @@ public class BehaviourAI : MonoBehaviour
         //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
         double curTime = _timeMgr.GetTotalSeconds();
 
-        Debug.Log("Next activity called. " + _nextActivity.name);
+        DebugManager.Log("Next activity called. " + _nextActivity.name, this);
         //Iterate schedule index
         //Soo. _scheduleIndex is here incremented to point on the activity we jump to.
         _scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
@@ -503,7 +503,7 @@ public class BehaviourAI : MonoBehaviour
         _curTargetObj = FindNearestDevice(target, isOwned);
         if (_curTargetObj == null)
         {
-            Debug.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name);
+            DebugManager.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name, this);
             return;
         }
 
@@ -524,7 +524,7 @@ public class BehaviourAI : MonoBehaviour
 
         if(appliance == null)
         {
-            Debug.LogError("Daaa fuuuck! no appliance i just got from you!");
+            DebugManager.LogError("Daaa fuuuck! no appliance i just got from you!", this);
         }
         
         _agent.SetDestination(appliance.interactionPos);
@@ -566,7 +566,7 @@ public class BehaviourAI : MonoBehaviour
         Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            Debug.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
         }
         else
         {
@@ -584,7 +584,7 @@ public class BehaviourAI : MonoBehaviour
     public void standUp()
     {
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
-        Debug.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj);
+        DebugManager.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj, this);
         transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
@@ -605,7 +605,7 @@ public class BehaviourAI : MonoBehaviour
     public void SetRunLevel(AvatarActivity.Target target, string parameter)
     {
         GameObject device = FindNearestDevice(target, false);
-        Debug.Log("Setting runlevel for " + device, device);
+        DebugManager.Log("Setting runlevel for " + device, device, this);
         if (device == null)
         {
             Debug.LogError("Didn't find device for setting runlevel: " + target);
@@ -630,18 +630,18 @@ public class BehaviourAI : MonoBehaviour
     {
         ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
         appliance.AddHarvest();
-        Debug.Log("Setting runlevel for " + appliance, appliance);
+        DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
         GameObject device = appliance.gameObject;
         if (device == null)
         {
-            Debug.LogError("Didn't find device for setting runlevel");
+            DebugManager.LogError("Didn't find device for setting runlevel", this);
             return;
         }
 
         ElectricMeter meter = device.GetComponent<ElectricMeter>();
         if (meter == null)
         {
-            Debug.LogError("Didn't find electric meter for setting runlevel");
+            DebugManager.LogError("Didn't find electric meter for setting runlevel", this);
             return;
         }
 
@@ -671,7 +671,7 @@ public class BehaviourAI : MonoBehaviour
 
         if (target == null)
         {
-            Debug.Log(name + " could not find the affordance " + affordance.ToString());
+            DebugManager.Log(name + " could not find the affordance " + affordance.ToString(), this);
         }
 
         return target;
@@ -680,10 +680,10 @@ public class BehaviourAI : MonoBehaviour
     //
     public void OnActivityOver()
     {
-        Debug.Log(name + "'s activity " + _curActivity.name + " is over");
+        DebugManager.Log(name + "'s activity " + _curActivity.name + " is over", this);
         if (_curAvatarState == AvatarState.Sitting)
         {
-            Debug.Log("avatar was sitting. Standing up.");
+            DebugManager.Log("avatar was sitting. Standing up.", this);
             standUp();
         }
         _curAvatarState = AvatarState.Idle;
@@ -696,7 +696,7 @@ public class BehaviourAI : MonoBehaviour
             //Ok. so this overriding activity was finished. Return to schedule.
             _isTemporarilyUnscheduled = false;
 
-            Debug.Log("Teemporary activity finished!", tempActivity);
+            DebugManager.Log("Teemporary activity finished!", tempActivity, this);
 
             //We don't want to do moar stuffz in here. Bail out!
             return;
@@ -708,7 +708,7 @@ public class BehaviourAI : MonoBehaviour
         //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
         if (!_nextActivity.hasStartTime)
         {
-            Debug.Log("Next activity have no startTime specified so let's start it immediately");
+            DebugManager.Log("Next activity have no startTime specified so let's start it immediately", this);
             NextActivity();
             _curActivity.Start();
         }
@@ -742,7 +742,7 @@ public class BehaviourAI : MonoBehaviour
                     TurnOnLight(lightSwitch);
                     return;
                 }
-                Debug.LogError(name + " couldn't find a lightswitch in this room!", _curRoom);
+                DebugManager.LogError(name + " couldn't find a lightswitch in this room!", _curRoom, this);
             }
             else
             {
@@ -771,7 +771,7 @@ public class BehaviourAI : MonoBehaviour
     //
     public void TurnOnLight(Appliance lightSwitch)
     {
-        Debug.Log("Yo! Gonna flip that lamp switch!");
+        DebugManager.Log("Yo! Gonna flip that lamp switch!", this);
         //Create an activity for turning on the laaajt!
         AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
