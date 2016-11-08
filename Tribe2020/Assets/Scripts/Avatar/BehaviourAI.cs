@@ -13,7 +13,6 @@ public class BehaviourAI : MonoBehaviour
 
     public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
     [SerializeField]
-    private AvatarState _curAvatarState = AvatarState.Idle;
 
     private PilotController _controller;
     private GameTime _timeMgr;
@@ -23,7 +22,6 @@ public class BehaviourAI : MonoBehaviour
     private ThirdPersonCharacter _charController;
 
     //private Vector3 _curTargetPos;
-    //public GameObject _curTargetObj;
     public AvatarActivity _curActivity;
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
@@ -126,7 +124,7 @@ public class BehaviourAI : MonoBehaviour
         activity.Step(this);
 
         //do activity stuff!
-        switch (_curAvatarState)
+        switch (GetRunningActivity().GetCurrentAvatarState())
         {
             //Not doing anything, do something feasible in the pilot
             case AvatarState.Idle:
@@ -361,10 +359,11 @@ public class BehaviourAI : MonoBehaviour
     public void StartActivity(AvatarActivity activity)
     {
         //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
-        _curAvatarState = AvatarState.Idle;
+        
         //activity.endTime = _timeMgr.time + 60 * 3;
         _curActivity = activity;
         _curActivity.Init(this);
+        _curActivity.Start();
     }
 
     public void StartTemporaryActivity(AvatarActivity activity)
@@ -468,13 +467,13 @@ public class BehaviourAI : MonoBehaviour
     //
     public void Stop()
     {
-        _curAvatarState = AvatarState.Idle;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
         _charController.Move(Vector3.zero, false, false);
     }
 
     public void Wait()
     {
-        _curAvatarState = AvatarState.Idle;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
         _charController.Move(Vector3.zero, false, false);
     }
 
@@ -502,9 +501,11 @@ public class BehaviourAI : MonoBehaviour
         _isControlled = false;
     }
 
-    bool EfficiencyRoulette(float effeciency)
+    bool EfficiencyRoulette(float efficiency)
     {
-        return effeciency >= UnityEngine.Random.value;
+        float rouletteValue = UnityEngine.Random.value;
+        DebugManager.Log("Efficiency roulette: " + efficiency + " vs. rolled value " + rouletteValue, this);
+        return efficiency >= rouletteValue;
     }
 
 
@@ -535,10 +536,9 @@ public class BehaviourAI : MonoBehaviour
         }
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        //_curTargetObj = appliance.gameObject;
 
         _agent.SetDestination(appliance.interactionPos);
-        _curAvatarState = AvatarState.Walking;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
     }
 
     //
@@ -553,7 +553,6 @@ public class BehaviourAI : MonoBehaviour
         if (appliance == null) { return; }
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        //_curTargetObj = appliance.gameObject;
 
         appliance.AddHarvest();
         _agent.Warp(appliance.interactionPos);
@@ -606,7 +605,7 @@ public class BehaviourAI : MonoBehaviour
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
-        _curAvatarState = AvatarState.Sitting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
         _charController.SitDown(); //Sets a boolean in the animator object
     }
 
@@ -639,7 +638,7 @@ public class BehaviourAI : MonoBehaviour
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
-        _curAvatarState = AvatarState.Sitting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
         _charController.SitDown(); //Sets a boolean in the animator object
     }
 
@@ -667,7 +666,7 @@ public class BehaviourAI : MonoBehaviour
     public void Delay(float seconds)
     {
         //Debug.Log(name + ".Delay(" + seconds + ")");
-        _curAvatarState = AvatarState.Waiting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Waiting);
     }
 
     //
@@ -686,7 +685,6 @@ public class BehaviourAI : MonoBehaviour
         }
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
 
@@ -719,7 +717,6 @@ public class BehaviourAI : MonoBehaviour
         DebugManager.Log("Turning on " + appliance, appliance, this);
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         GameObject device = appliance.gameObject;
         if (device == null)
@@ -753,7 +750,6 @@ public class BehaviourAI : MonoBehaviour
         DebugManager.Log("Turning off " + appliance, appliance, this);
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         GameObject device = appliance.gameObject;
         if (device == null)
@@ -808,12 +804,13 @@ public class BehaviourAI : MonoBehaviour
         string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
-        if (_curAvatarState == AvatarState.Sitting)
+        if(GetRunningActivity().GetCurrentAvatarState() == AvatarState.Sitting)
         {
             DebugManager.Log("avatar was sitting. Standing up.", this);
             standUp();
         }
-        _curAvatarState = AvatarState.Idle;
+
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
 
         if (_isTemporarilyUnscheduled)
         {
@@ -864,7 +861,12 @@ public class BehaviourAI : MonoBehaviour
             _curRoom = other.GetComponent<Room>();
             if (EfficiencyRoulette(_stats.lightingEfficieny))
             {
+                DebugManager.Log("I remembered the lights!",this);
                 CheckLighting(false);
+            }
+            else
+            {
+                DebugManager.Log("I forgot the lights!", this);
             }
         }
 

@@ -15,6 +15,7 @@ public class AvatarActivity : ScriptableObject {
 	private BehaviourAI _ai;
 
     GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
+    BehaviourAI.AvatarState _curAvatarState = BehaviourAI.AvatarState.Idle;
 
     protected float _weight = 0;
 	protected string _curState = "";
@@ -388,6 +389,16 @@ public class AvatarActivity : ScriptableObject {
     public void SetCurrentTargetObject(GameObject targetObject)
     {
         _curTargetObj = targetObject;
+    }
+
+    public BehaviourAI.AvatarState GetCurrentAvatarState()
+    {
+        return _curAvatarState;
+    }
+
+    public void SetCurrentAvatarState(BehaviourAI.AvatarState avatarState)
+    {
+        _curAvatarState = avatarState;
     }
 
 }
