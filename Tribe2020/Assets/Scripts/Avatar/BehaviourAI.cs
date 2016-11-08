@@ -789,7 +789,10 @@ public class BehaviourAI : MonoBehaviour
     //
     public void OnActivityOver()
     {
-        DebugManager.Log(name + "'s activity " + _curActivity.name + " is over", this);
+
+        string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;
+
+        DebugManager.Log(name + "'s activity " + activityName + " is over", this);
         if (_curAvatarState == AvatarState.Sitting)
         {
             DebugManager.Log("avatar was sitting. Standing up.", this);
@@ -806,6 +809,7 @@ public class BehaviourAI : MonoBehaviour
             _isTemporarilyUnscheduled = false;
 
             DebugManager.Log("Teemporary activity finished!", tempActivity, this);
+            DebugManager.Log("Current target object: ", _curTargetObj, this);
 
             //We don't want to do moar stuffz in here. Bail out!
             return;
@@ -843,7 +847,7 @@ public class BehaviourAI : MonoBehaviour
         if (other.GetComponent<Room>())
         {
             _curRoom = other.GetComponent<Room>();
-            if (EfficiencyRoulette(_stats.energy))
+            if (EfficiencyRoulette(_stats.lightingEfficieny))
             {
                 CheckLighting(false);
             }
@@ -919,6 +923,7 @@ public class BehaviourAI : MonoBehaviour
         switchLight.type = turnOn ? AvatarActivity.SessionType.TurnOn : AvatarActivity.SessionType.TurnOff;
         switchLight.appliance = lightSwitch;
 
+        //Insert at beginning (register in inverted performance order)
         roomLightActivity.InsertSession(switchLight);
         roomLightActivity.InsertSession(walkToLightSwitch);
 

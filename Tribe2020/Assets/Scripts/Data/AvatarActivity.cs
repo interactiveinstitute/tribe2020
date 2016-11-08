@@ -223,10 +223,10 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void NextSession() {
-        DebugManager.Log("incrementing _currSssion", this);
+        DebugManager.Log("incrementing _currSssion. Index: " + (_currSession + 1) + ", max: " + (sessions.Count - 1), this);
         _currSession++;
 
-		if(_currSession >= sessions.Count) {
+        if (_currSession >= sessions.Count) {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
