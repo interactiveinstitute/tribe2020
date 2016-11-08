@@ -502,6 +502,11 @@ public class BehaviourAI : MonoBehaviour
         _isControlled = false;
     }
 
+    bool EffeciencyRoulette(float effeciency)
+    {
+        return effeciency >= UnityEngine.Random.value;
+    }
+
     //
     //public void WalkTo(string[] args) {
     //	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
@@ -514,18 +519,8 @@ public class BehaviourAI : MonoBehaviour
     //Makes the avatar walks towards an object by setting the navmeshagent destination.
     public void WalkTo(AvatarActivity.Target target, bool isOwned)
     {
-        _curTargetObj = FindNearestDevice(target, isOwned);
-        if (_curTargetObj == null)
-        {
-            DebugManager.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
-            getRunningActivity().NextSession();
-            return;
-        }
-
-        WalkTo(_curTargetObj.GetComponent<Appliance>(), isOwned);
-
-        //_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
-        //_curAvatarState = AvatarState.Walking;
+        Appliance targetAppliance = FindNearestAppliance(target, isOwned);
+        WalkTo(targetAppliance, isOwned);
     }
 
     //Let's use the reference to the appliance
@@ -533,18 +528,32 @@ public class BehaviourAI : MonoBehaviour
     {
         _curTargetObj = appliance.gameObject;
 
+        if (_curTargetObj == null)
+        {
+            DebugManager.LogError("Didn't find a WalkTo target " + appliance + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
+            getRunningActivity().NextSession();
+            return;
+        }
+
         _agent.SetDestination(appliance.interactionPos);
         _curAvatarState = AvatarState.Walking;
     }
 
     //
-    public void TeleportTo(AvatarActivity.Target target, bool isOwned)
+    public void WarpTo(AvatarActivity.Target target, bool isOwned)
     {
-        _curTargetObj = FindNearestDevice(target, isOwned);
+        Appliance appliance = FindNearestAppliance(target, isOwned);
+        WarpTo(appliance, isOwned);
+    }
+
+    public void WarpTo(Appliance appliance, bool isOwned)
+    {
+        _curTargetObj = appliance.gameObject;
+
         if (_curTargetObj == null) { return; }
 
-        _curTargetObj.GetComponent<Appliance>().AddHarvest();
-        _agent.Warp(_curTargetObj.GetComponent<Appliance>().interactionPos);
+        appliance.AddHarvest();
+        _agent.Warp(appliance.interactionPos);
     }
 
     //
@@ -562,16 +571,18 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
-    public void SitAt(Appliance thing)
+    public void SitAt(AvatarActivity.Target target)
+    {
+        Appliance appliance = _curTargetObj.GetComponent<Appliance>(); //Should we not find nearest object, as in the other "similar" functions, e.g. WalkTo?
+        SitAt(appliance);
+    }
+
+    public void SitAt(Appliance appliance)
     {
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
-        if(thing == null)
-        {
-            DebugManager.LogError("No appliance object provided. Trying to fallback to _curTargetObject instead", this);
-            thing = _curTargetObj.GetComponent<Appliance>();
-        }
-        Transform sitPosition = thing.gameObject.transform.Find("Sit Position");
+
+        Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
             DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
@@ -641,33 +652,19 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SetRunLevel(AvatarActivity.Target target, string parameter)
     {
-        GameObject device = FindNearestDevice(target, false);
-        DebugManager.Log("Setting runlevel for " + device, device, this);
-        if (device == null)
-        {
-            Debug.LogError("Didn't find device for setting runlevel: " + target);
-            return;
-        }
-
-        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
-        device.GetComponent<Appliance>().AddHarvest();
-
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
-        if (meter == null)
-        {
-            Debug.LogError("Didn't find electric meter for setting runlevel", device);
-            return;
-        }
-
-        device.GetComponent<ElectricMeter>().On();
-        //.SetRunlevel(int.Parse(parameter));
+        Appliance targetAppliance = FindNearestAppliance(target, false);
+        SetRunLevel(targetAppliance, parameter);
     }
 
     public void SetRunLevel(Appliance appliance, string parameter)
     {
         ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
         appliance.AddHarvest();
+
+        _curTargetObj = appliance.gameObject; //Should current target object be set?
+
         DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
+
         GameObject device = appliance.gameObject;
         if (device == null)
         {
@@ -682,14 +679,77 @@ public class BehaviourAI : MonoBehaviour
             return;
         }
 
+        device.GetComponent<ElectricMeter>().On(); //Should this be replaced with SetRunlevel - which is only available in ElectricDevice? /Martin
+        //.SetRunlevel(int.Parse(parameter));
+    }
+
+    public void TurnOn(AvatarActivity.Target target)
+    {
+        Appliance targetAppliance = FindNearestAppliance(target, false);
+        TurnOn(targetAppliance);
+    }
+
+    public void TurnOn(Appliance appliance)
+    {
+        DebugManager.Log("Turning on " + appliance, appliance, this);
+
+        _curTargetObj = appliance.gameObject; //Should current target object be set?
+
+        GameObject device = appliance.gameObject;
+        if (device == null)
+        {
+            DebugManager.LogError("Didn't find device to turn on", this);
+            return;
+        }
+
+        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        if (meter == null)
+        {
+            DebugManager.LogError("Didn't find electric meter to turn on", this);
+            return;
+        }
+
         device.GetComponent<ElectricMeter>().On();
         //.SetRunlevel(int.Parse(parameter));
     }
 
-    // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-    public GameObject FindNearestDevice(AvatarActivity.Target affordance, bool isOwned)
+    public void TurnOff(AvatarActivity.Target target)
     {
-        GameObject target = null;
+        Appliance targetAppliance = FindNearestAppliance(target, false);
+        TurnOff(targetAppliance);
+    }
+
+    public void TurnOff(Appliance appliance)
+    {
+        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
+        appliance.AddHarvest();
+
+        DebugManager.Log("Turning off " + appliance, appliance, this);
+
+        _curTargetObj = appliance.gameObject; //Should current target object be set?
+
+        GameObject device = appliance.gameObject;
+        if (device == null)
+        {
+            DebugManager.LogError("Didn't find device to turn off", this);
+            return;
+        }
+
+        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        if (meter == null)
+        {
+            DebugManager.LogError("Didn't find electric meter to turn off", this);
+            return;
+        }
+
+        device.GetComponent<ElectricMeter>().Off();
+        //.SetRunlevel(int.Parse(parameter));
+    }
+
+    // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
+    public Appliance FindNearestAppliance(AvatarActivity.Target affordance, bool isOwned)
+    {
+        Appliance targetAppliance = null;
         float minDist = float.MaxValue;
 
         foreach (Appliance device in _devices)
@@ -701,17 +761,17 @@ public class BehaviourAI : MonoBehaviour
                 if (dist < minDist)
                 {
                     minDist = dist;
-                    target = device.gameObject;
+                    targetAppliance = device;
                 }
             }
         }
 
-        if (target == null)
+        if (targetAppliance == null)
         {
             DebugManager.Log(name + " could not find the affordance " + affordance.ToString(), this);
         }
 
-        return target;
+        return targetAppliance;
     }
 
     //
@@ -758,33 +818,54 @@ public class BehaviourAI : MonoBehaviour
         if (other.GetComponent<Room>())
         {
             _curRoom = other.GetComponent<Room>();
-            CheckLighting();
+            CheckLighting(true);
+        }
+
+        //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
+    }
+
+    //This will get called when avatar (that have rigidbody and collider) leaves a collider. <--- wow, so many colliding words in one sentence!!!
+    void OnTriggerExit(Collider other)
+    {
+        //Did the avatar collide with a roooom?
+        if (other.GetComponent<Room>())
+        {
+            _curRoom = other.GetComponent<Room>();
+            if (EffeciencyRoulette(_stats.energy))
+            {
+                CheckLighting(false);
+            }
         }
 
         //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
     }
 
     //
-    public void CheckLighting()
+    public void CheckLighting(bool wantsLight)
     {
         if (_curRoom)
         {
-            if (_curRoom.lux < 1)
+            if (wantsLight && _curRoom.lux > 0)
             {
-                //Debug.Log(name + " thinks it's to dark in the " + _curRoom.name);
-                Appliance lightSwitch = _curRoom.GetLightSwitch();
-                if (lightSwitch)
-                {
-                    //Debug.Log(transform.parent.name +  " found a light switch");
-                    TurnOnLight(lightSwitch);
-                    return;
-                }
+                //Light is ok
+                return;
+            }
+            else if(!wantsLight && _curRoom.lux < 1)
+            {
+                //Light is ok
+                return;
+            }
+
+            //Debug.Log(name + " thinks it's to dark in the " + _curRoom.name);
+            Appliance lightSwitch = _curRoom.GetLightSwitch();
+            if (lightSwitch == null)
+            {
                 DebugManager.LogError(name + " couldn't find a lightswitch in this room!", _curRoom, this);
+                return;
             }
-            else
-            {
-                //Debug.Log(name + " is ok with light in " + _curRoom.name);
-            }
+
+            UseLightSwitch(lightSwitch, wantsLight);
+
         }
     }
 
@@ -806,14 +887,12 @@ public class BehaviourAI : MonoBehaviour
     //}
 
     //
-    public void TurnOnLight(Appliance lightSwitch)
+    public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
     {
         DebugManager.Log("Yo! Gonna flip that lamp switch!", this);
         //Create an activity for turning on the laaajt!
         AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
-
-
 
         //Let's build relevant sessions and inject them into the activity we just created.
         AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
@@ -823,14 +902,12 @@ public class BehaviourAI : MonoBehaviour
         walkToLightSwitch.appliance = lightSwitch;
         walkToLightSwitch.currentRoom = true;
 
-        AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
-        turnOnLight.title = "Turning on light";
-        turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
-        turnOnLight.target = AvatarActivity.Target.LampSwitch; //Is this needed if we instead set appliance below? I didn't remove this, if it would mess something else up. /Martin
-        turnOnLight.appliance = lightSwitch;
-        turnOnLight.parameter = "1";
+        AvatarActivity.Session switchLight = new AvatarActivity.Session();
+        switchLight.title = turnOn ? "Turning on light" : "Turning off light";
+        switchLight.type = turnOn ? AvatarActivity.SessionType.TurnOn : AvatarActivity.SessionType.TurnOff;
+        switchLight.appliance = lightSwitch;
 
-        roomLightActivity.InsertSession(turnOnLight);
+        roomLightActivity.InsertSession(switchLight);
         roomLightActivity.InsertSession(walkToLightSwitch);
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!

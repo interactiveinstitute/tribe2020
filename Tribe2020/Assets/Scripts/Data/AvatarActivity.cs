@@ -30,7 +30,7 @@ public class AvatarActivity : ScriptableObject {
     //public ActivityState curActivityState = ActivityState.Idle;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Teleport };
+    public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
@@ -157,8 +157,15 @@ public class AvatarActivity : ScriptableObject {
 			//case SessionType.Interact:
 			//	NextSession();
 			//	break;
-			case SessionType.Teleport:
-				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
+			case SessionType.Warp:
+                if (session.appliance != null)
+                {
+                    _ai.WarpTo(session.appliance, session.avatarOwnsTarget);
+                }
+                else
+                {
+                    _ai.WarpTo(session.target, session.avatarOwnsTarget);
+                }
 				break;
 			case SessionType.SetRunlevel:
                 if(session.appliance != null)
@@ -172,6 +179,30 @@ public class AvatarActivity : ScriptableObject {
 				
 				NextSession();
 				break;
+            case SessionType.TurnOn:
+                if (session.appliance != null)
+                {
+                    _ai.TurnOn(session.appliance);
+                }
+                else
+                {
+                    _ai.TurnOn(session.target);
+                }
+
+                NextSession();
+                break;
+            case SessionType.TurnOff:
+                if (session.appliance != null)
+                {
+                    _ai.TurnOff(session.appliance);
+                }
+                else
+                {
+                    _ai.TurnOff(session.target);
+                }
+
+                NextSession();
+                break;
             default:
                 DebugManager.Log("unknown SessionType", this);
                 break;
@@ -259,7 +290,7 @@ public class AvatarActivity : ScriptableObject {
 				break;
 			case SessionType.WalkTo:
                 //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
-				_ai.TeleportTo(session.target, session.avatarOwnsTarget);
+				_ai.WarpTo(session.target, session.avatarOwnsTarget);
 				break;
 			//case SessionType.Interact:
    //             //Debug.Log("Simulating Interaction. Interacting with " + session.target);
