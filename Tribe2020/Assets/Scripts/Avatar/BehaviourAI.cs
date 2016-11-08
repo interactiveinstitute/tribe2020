@@ -920,7 +920,7 @@ public class BehaviourAI : MonoBehaviour
     //
     public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
     {
-        DebugManager.Log("Yo! Gonna flip that lamp switch!", this);
+        DebugManager.Log("Yo! Gonna flip that lamp switch to " + turnOn, lightSwitch.gameObject, this);
         //Create an activity for turning on the laaajt!
         AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
