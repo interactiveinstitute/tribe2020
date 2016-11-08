@@ -501,14 +501,6 @@ public class BehaviourAI : MonoBehaviour
         _isControlled = false;
     }
 
-    bool EfficiencyRoulette(float efficiency)
-    {
-        float rouletteValue = UnityEngine.Random.value;
-        DebugManager.Log("Efficiency roulette: " + efficiency + " vs. rolled value " + rouletteValue, this);
-        return efficiency >= rouletteValue;
-    }
-
-
     //
     //public void WalkTo(string[] args) {
     //	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
@@ -859,7 +851,7 @@ public class BehaviourAI : MonoBehaviour
         if (other.GetComponent<Room>())
         {
             _curRoom = other.GetComponent<Room>();
-            if (EfficiencyRoulette(_stats.lightingEfficieny))
+            if (_stats.TestLightningEfficiency())
             {
                 DebugManager.Log("I remembered the lights!",this);
                 CheckLighting(false);
@@ -878,12 +870,12 @@ public class BehaviourAI : MonoBehaviour
     {
         if (_curRoom)
         {
-            if (wantsLight && _curRoom.lux > 0)
+            if (wantsLight && _curRoom.IsLit())
             {
                 //Light is ok
                 return;
             }
-            else if(!wantsLight && _curRoom.lux < 1)
+            else if(!wantsLight && !_curRoom.IsLit())
             {
                 //Light is ok
                 return;

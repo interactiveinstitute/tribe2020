@@ -29,8 +29,12 @@ public class Room : MonoBehaviour {
 
 	//
 	public bool IsLit() {
-
-		return false;
+        Appliance lightSwitch = GetLightSwitch();
+        if(lightSwitch == null)
+        {
+            return false; //Presumption: no light switch -> no light
+        }
+        return GetLightSwitch().GetComponent<ElectricMeter>().GivesPower;
 	}
 
 	//
