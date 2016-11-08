@@ -23,7 +23,7 @@ public class BehaviourAI : MonoBehaviour
     private ThirdPersonCharacter _charController;
 
     //private Vector3 _curTargetPos;
-    private GameObject _curTargetObj;
+    public GameObject _curTargetObj;
     public AvatarActivity _curActivity;
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
@@ -526,14 +526,14 @@ public class BehaviourAI : MonoBehaviour
     //Let's use the reference to the appliance
     public void WalkTo(Appliance appliance, bool isOwned)
     {
-        _curTargetObj = appliance.gameObject;
-
-        if (_curTargetObj == null)
+        if (appliance == null)
         {
             DebugManager.LogError("Didn't find a WalkTo target " + appliance + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
             getRunningActivity().NextSession();
             return;
         }
+
+        _curTargetObj = appliance.gameObject;
 
         _agent.SetDestination(appliance.interactionPos);
         _curAvatarState = AvatarState.Walking;
@@ -548,9 +548,8 @@ public class BehaviourAI : MonoBehaviour
 
     public void WarpTo(Appliance appliance, bool isOwned)
     {
+        if (appliance == null) { return; }
         _curTargetObj = appliance.gameObject;
-
-        if (_curTargetObj == null) { return; }
 
         appliance.AddHarvest();
         _agent.Warp(appliance.interactionPos);
@@ -571,21 +570,28 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
-    public void SitAt(AvatarActivity.Target target)
+    public void SitAt(AvatarActivity.Target target, bool isOwned)
     {
-        Appliance appliance = _curTargetObj.GetComponent<Appliance>(); //Should we not find nearest object, as in the other "similar" functions, e.g. WalkTo?
+        Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
         SitAt(appliance);
     }
 
     public void SitAt(Appliance appliance)
     {
+        if(appliance == null)
+        {
+            DebugManager.LogError("Didn't get a SitAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
+            getRunningActivity().NextSession();
+            return;
+        }
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
 
+        //Get the child  game object with the name Sit Position
         Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, this);
         }
         else
         {
@@ -631,6 +637,9 @@ public class BehaviourAI : MonoBehaviour
 
     public void standUp()
     {
+        //TODO: Have a guarantee that we position ourselves back at the standPosition
+        //Do it by saving a standPosition as private object when sitting down! Rather than finding the interactionPos again
+
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
         DebugManager.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj, this);
         transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
@@ -658,8 +667,11 @@ public class BehaviourAI : MonoBehaviour
 
     public void SetRunLevel(Appliance appliance, string parameter)
     {
-        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
-        appliance.AddHarvest();
+        if(appliance == null)
+        {
+            DebugManager.LogError("Didn't get an Appliance object for SetRunLevel! Skipping to next session", this);
+            getRunningActivity().NextSession();
+        }
 
         _curTargetObj = appliance.gameObject; //Should current target object be set?
 
@@ -768,7 +780,7 @@ public class BehaviourAI : MonoBehaviour
 
         if (targetAppliance == null)
         {
-            DebugManager.Log(name + " could not find the affordance " + affordance.ToString(), this);
+            DebugManager.Log(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
         }
 
         return targetAppliance;

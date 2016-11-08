@@ -11,10 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34a2e631240d584a88fcab665d829b9, type: 3}
   m_Name: HelpDeskWork
   m_EditorClassIdentifier: 
+  title: 
   sessions:
   - title: Walking to help desk
     probability: 1
     type: 0
+    appliance: {fileID: 0}
     target: 2
     parameter: 
     avatarOwnsTarget: 1
@@ -25,6 +27,7 @@ MonoBehaviour:
   - title: Start help desk station
     probability: 1
     type: 4
+    appliance: {fileID: 0}
     target: 3
     parameter: 
     avatarOwnsTarget: 0
@@ -35,26 +38,13 @@ MonoBehaviour:
   - title: Do help desk work
     probability: 1
     type: 1
-    target: 0
+    appliance: {fileID: 0}
+    target: 2
     parameter: 
-    avatarOwnsTarget: 0
+    avatarOwnsTarget: 1
     currentRoom: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  SkipSession:
-    title: 
-    probability: 1
-    type: 0
-    target: 0
-    parameter: 
-    avatarOwnsTarget: 0
-    currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
-  onSkipCommand: 
-  _delay: 0
-  _duration: 0
   startTime: 0
-  endTime: 0
+  hasStartTime: 1

@@ -140,7 +140,7 @@ public class AvatarActivity : ScriptableObject {
                 _ai.Wait();
 				break;
             case SessionType.SitUntilEnd:
-                _ai.SitAtCurrentTarget();
+                _ai.SitAt(session.target, session.avatarOwnsTarget);
                 break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
