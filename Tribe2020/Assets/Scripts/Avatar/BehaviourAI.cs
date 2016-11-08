@@ -841,10 +841,10 @@ public class BehaviourAI : MonoBehaviour
             //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
             if (other.GetComponent<Room>() != _curRoom)
             {
-                DebugManager.Log(name + " exiting current room " + _curRoom, other.gameObject);
+                DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
                 OnExitCurrentRoom();
 
-                DebugManager.Log(name + " entering new room " + other.name, other.gameObject);
+                DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
                 _curRoom = other.GetComponent<Room>();
                 OnEnterNewRoom();
             }
@@ -862,12 +862,12 @@ public class BehaviourAI : MonoBehaviour
     {
         if (_stats.TestLightningEfficiency())
         {
-            DebugManager.Log("I remembered the lights!", this);
+            DebugManager.Log(name + " remembered to turn off the lights in " + _curRoom, _curRoom, this);
             CheckLighting(false);
         }
         else
         {
-            DebugManager.Log("I forgot the lights!", this);
+            DebugManager.Log(name + " forgot to turn off the lights in " + _curRoom, _curRoom, this);
         }
     }
 
