@@ -703,7 +703,7 @@ public class BehaviourAI : MonoBehaviour
         turnOnLight.parameter = "1";
 
         _curActivity.InsertSession(walkToLightSwitch);
-        _curActivity.InsertSession(turnOnLight);   
+        _curActivity.InsertSession(turnOnLight);
     }
 
     //

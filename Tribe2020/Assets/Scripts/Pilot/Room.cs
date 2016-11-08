@@ -78,8 +78,11 @@ public class Room : MonoBehaviour {
 
 	//
 	public void UpdateLighting() {
-		//Debug.Log("light was changed");
-		foreach(Appliance device in _devices) {
+        //Debug.Log("light was changed");
+
+        lux = 0;
+
+        foreach (Appliance device in _devices) {
 			if(device.avatarAffordances.Contains(AvatarActivity.Target.Lamp)) {
 				if(device.GetComponent<Lamp>().Power > 0) {
 					lux = 1;
@@ -87,8 +90,6 @@ public class Room : MonoBehaviour {
 				}
 			}
 		}
-
-		lux = 0;
 
 		if(_occupants != null) {
 			foreach(BehaviourAI person in _occupants) {
