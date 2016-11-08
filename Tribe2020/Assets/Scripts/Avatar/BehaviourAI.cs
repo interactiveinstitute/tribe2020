@@ -832,37 +832,43 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //This will get called when avatar (that have rigidbody and collider) collides with a collider. <--- wow, so many colliding words in one sentence!!!
+    //Note that OnTriggerExit of old zone could be called AFTER OnTriggerEnter for new zone, hence all checks are done when entering a new room/zone and not when exiting /Martin
     void OnTriggerEnter(Collider other)
     {
         //Did the avatar collide with a roooom?
         if (other.GetComponent<Room>())
         {
-            _curRoom = other.GetComponent<Room>();
-            CheckLighting(true);
+            //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
+            if (other.GetComponent<Room>() != _curRoom)
+            {
+                DebugManager.Log(name + " exiting current room " + _curRoom, other.gameObject);
+                OnExitCurrentRoom();
+
+                DebugManager.Log(name + " entering new room " + other.name, other.gameObject);
+                _curRoom = other.GetComponent<Room>();
+                OnEnterNewRoom();
+            }
         }
 
         //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
     }
 
-    //This will get called when avatar (that have rigidbody and collider) leaves a collider. <--- wow, so many colliding words in one sentence!!!
-    void OnTriggerExit(Collider other)
+    void OnEnterNewRoom()
     {
-        //Did the avatar collide with a roooom?
-        if (other.GetComponent<Room>())
-        {
-            _curRoom = other.GetComponent<Room>();
-            if (_stats.TestLightningEfficiency())
-            {
-                DebugManager.Log("I remembered the lights!",this);
-                CheckLighting(false);
-            }
-            else
-            {
-                DebugManager.Log("I forgot the lights!", this);
-            }
-        }
+        CheckLighting(true);
+    }
 
-        //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
+    void OnExitCurrentRoom()
+    {
+        if (_stats.TestLightningEfficiency())
+        {
+            DebugManager.Log("I remembered the lights!", this);
+            CheckLighting(false);
+        }
+        else
+        {
+            DebugManager.Log("I forgot the lights!", this);
+        }
     }
 
     //
