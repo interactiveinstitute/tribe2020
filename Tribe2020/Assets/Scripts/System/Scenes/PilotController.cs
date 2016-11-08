@@ -9,7 +9,9 @@ public class PilotController : Controller{
 	}
 	private InputState _curState = InputState.ALL;
 
-	//Access all singleton systems
+	public bool debug = false;
+
+	//Access all singleton systemss
 	private PilotView _view;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
@@ -17,6 +19,7 @@ public class PilotController : Controller{
 	private NarrationManager _narrationMgr;
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
+	private LocalisationManager _localMgr;
 
 	//Interaction props
 	private string _touchState = IDLE;
@@ -57,6 +60,7 @@ public class PilotController : Controller{
 		_narrationMgr = NarrationManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
 
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
         _saveMgr.SetAvatars(_avatars);
@@ -109,11 +113,6 @@ public class PilotController : Controller{
 	}
 
 	//
-	void OnDestroy() {
-		//_saveMgr.Save();
-	}
-
-	//
 	private void OnTouchStart(Vector3 pos){
 		//Debug.Log("OnTouchStart");
 		_touchTimer = 0;
@@ -127,9 +126,9 @@ public class PilotController : Controller{
 		_camMgr.cameraState = CameraManager.PANNED;
 		_touchTimer += Time.unscaledDeltaTime;
 
-		if(Application.platform == RuntimePlatform.Android){
-			_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
-		}
+		//if(Application.platform == RuntimePlatform.Android){
+		//	_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
+		//}
 	}
 	
 	//
@@ -212,36 +211,22 @@ public class PilotController : Controller{
 
 	//
 	public override void ControlAvatar(string id, string action, Vector3 pos) {
-        //Debug.Log("ControlAvatar called in pilotcontroller");
 		foreach(BehaviourAI avatar in _avatars) {
-			//Debug.Log("ControlAvatar." + avatar.name + " == " + id);
 			if(avatar.name == id) {
+				avatar.TakeControlOfAvatar();
 				avatar.WalkTo(pos);
 			}
 		}
-		//_avatars[0].WalkTo(pos);
 	}
 
 	//
 	public override void ControlAvatar(string id, Object action) {
 		foreach(BehaviourAI avatar in _avatars) {
 			if(avatar.name == id) {
-				//Debug.Log("ControlAvatar." + id);
-				avatar.StartActivity(action as AvatarActivity);
+				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
+				avatar.StartTemporaryActivity(newAct);
 			}
 		}
-		//_avatars[0].StartActivity(action as AvatarActivity);
-	}
-
-	//
-	public void MakeAvatarWalkTo(Vector3 target) {
-        Debug.Log("MakeAvatarWalkTo called in pilotcontroller");
-        _avatars[0].WalkTo(target);
-	}
-
-	//
-	public void MakeAvatarPerformActivity(AvatarActivity activity) {
-		_avatars[0].StartActivity(activity);
 	}
 
 	//
@@ -253,55 +238,108 @@ public class PilotController : Controller{
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 		}
+
+		PlaySound("button");
+	}
+
+	//Open inspector with details of appliance
+	public void SetCurrentUI(Appliance appliance) {
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
+
+		_view.BuildInspector(appliance);
+		SetCurrentUI(_view.inspector);
+
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, appliance.title);
+	}
+
+	//Open mail with details of narrative
+	public void SetCurrentUI(Quest quest) {
+		if(debug) { Debug.Log(name + ": SetCurrentUI(" + quest.name + ")"); }
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_QUEST) { return; }
+
+		_view.BuildMail(quest);
+		SetCurrentUI(_view.mail);
+
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
 	}
 
 	//
-	public void OnDeviceSelected(Appliance appliance) {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_SELECT) {
-			_view.ShowAppliance(appliance);
-			_audioMgr.PlaySound("button");
-			ResetTouch();
+	public override void ShowMessage(string key, string message, bool showButton) {
+		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
+		string msg = _localMgr.GetPhrase(key);
+		if(msg == "") { msg = message + "!"; }
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected);
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceSelected, appliance.title);
-		}
+		_view.ShowMessage(msg, true, showButton);
 	}
 
-	//
-	public void OnDeviceClosed() {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_APPLIANCE_DESELECT) {
-			_view.HideAppliance();
-			ResetTouch();
-
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ApplianceDeselected);
-		}
-	}
-
-	//
-	public void HideUI() {
-		_view.SetCurrentUI(null);
-	}
-
-	//
+	//Open user interface
 	public void SetCurrentUI(RectTransform ui) {
-		//Debug.Log(ui == _view.GetCurrentUI());
+		if(debug) { Debug.Log(name + ": SetCurrentUI(" + ui.name + ")"); }
+		if(_curState != InputState.ALL) {
+			if(ui == _view.energyPanel && _curState != InputState.ONLY_ENERGY) { return; }
+			if(ui == _view.comfortPanel && _curState != InputState.ONLY_COMFORT) { return; }
+		}
+
+		if(_view.GetCurrentUI() != null) {
+			if(_view.GetCurrentUI() == _view.inspector) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
+			} else if(_view.GetCurrentUI() == _view.inbox) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
+			} else if(_view.GetCurrentUI() == _view.mail) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailClosed);
+			}
+		}
+
 		if(ui == _view.GetCurrentUI()) {
 			HideUI();
 		} else {
 			_view.SetCurrentUI(ui);
-			if(ui.name == "Mail Browse") {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestListOpened);
-				_view.ShowQuestList(_narrationMgr.GetQuests());
+			if(ui == _view.inspector) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
+			} else if(ui == _view.inbox) {
+				_view.BuildInbox(_narrationMgr.GetQuests(), _narrationMgr.GetCompletedQuests());
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
+			} else if(ui == _view.mail) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
+			} else if(ui == _view.energyPanel) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
+			} else if(ui == _view.comfortPanel) {
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenComfortPanel);
 			}
 		}
 
 		ResetTouch();
 	}
 
+	//Hide any open user interface
+	public void HideUI() {
+		//if(_view.GetCurrentUI() == _view.inspector) {
+		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
+		//} else if(_view.GetCurrentUI() == _view.inbox) {
+		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
+		//} else if(_view.GetCurrentUI() == _view.mail) {
+		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailClosed);
+		//}
+
+		_view.SetCurrentUI(null);
+	}
+
+	//
+	public void OpenMail(Quest quest) {
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
+			_view.BuildMail(quest);
+			ResetTouch();
+
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+		}
+	}
+
 	//
 	public void OnQuestPressed(Quest quest) {
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-			_view.ShowQuest(quest);
+			_view.BuildMail(quest);
+			//_view.ShowQuest(quest);
 			ResetTouch();
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
@@ -327,6 +365,15 @@ public class PilotController : Controller{
 	}
 
 	//
+	public void OnLightSwitchToggled(ElectricMeter meter) {
+		if(meter.GivesPower) {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
+		} else {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOff);
+		}
+	}
+
+	//
 	public void OnPinchIn(){
 		if(_curState == InputState.ALL) {
 			_camMgr.GotoUpperView();
@@ -345,19 +392,19 @@ public class PilotController : Controller{
 	}
 
 	//
-	public void OnAction(Appliance appliance, BaseAction action, GameObject actionObj){
+	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
 		if(_curState == InputState.ALL) {
-			if(_resourceMgr.cash >= action.cashCost && _resourceMgr.comfort >= action.comfortCost) {
-				_resourceMgr.cash -= action.cashCost;
-				_resourceMgr.comfort -= action.comfortCost;
-				appliance.PerformAction(action);
+			if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
+				_resourceMgr.cash -= eem.cashCost;
+				_resourceMgr.comfort -= eem.comfortCost;
+				appliance.ApplyEEM(eem);
 
 				_resourceMgr.RefreshProduction();
 
-				actionObj.SetActive(false);
+				//actionObj.SetActive(false);
 
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, action.actionName);
+				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
 			}
 		}
 	}
@@ -366,6 +413,7 @@ public class PilotController : Controller{
 	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
 		//Debug.Log("OnAvatarReachedPosition");
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+		avatar.ReleaseControlOfAvatar();
 	}
 
 	//
@@ -375,7 +423,9 @@ public class PilotController : Controller{
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
+		Debug.Log(name + ": OnAvatarActivityOver " + activity);
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+		//avatar.ReleaseControlOfAvatar();
 	}
 
 	//
@@ -441,6 +491,11 @@ public class PilotController : Controller{
 			pos.y < Screen.height - Screen.height * 0.12f;
 
 		return !_view.IsAnyOverlayActive();
+	}
+
+	//
+	public void PlaySound(string sound) {
+		_audioMgr.PlaySound(sound);
 	}
 
 	//

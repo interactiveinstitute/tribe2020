@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class ObjectInteraction : MonoBehaviour {
+	private PilotController _controller;
+
 	public Transform panelPrefab;
 	private Transform _interactionPanel;
 
@@ -20,6 +22,8 @@ public class ObjectInteraction : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		_controller = PilotController.GetInstance();
+
 		_interactionPanel = Instantiate(panelPrefab);
 		_interactionPanel.SetParent(transform, false);
 		_interactionPanel.transform.localPosition = Vector3.forward * 0.5f;
@@ -31,7 +35,7 @@ public class ObjectInteraction : MonoBehaviour {
 
 		if(GetComponent<ElectricMeter>()) {
 			_meter = GetComponent<ElectricMeter>();
-			_powerButton.onClick.AddListener(() => _meter.Toggle());
+			_powerButton.onClick.AddListener(() => ToggleMeter());
 		}
 	}
 	
@@ -41,5 +45,11 @@ public class ObjectInteraction : MonoBehaviour {
 		_moneyButton.gameObject.SetActive(canHarvestMoney);
 		_satisfactionButton.gameObject.SetActive(canHarvestSatisfaction);
 		_measureButton.gameObject.SetActive(canPerformMeasure);
+	}
+
+	//
+	private void ToggleMeter() {
+		_meter.Toggle();
+		_controller.OnLightSwitchToggled(_meter);
 	}
 }

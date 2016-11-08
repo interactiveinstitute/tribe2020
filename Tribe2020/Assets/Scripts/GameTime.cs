@@ -29,6 +29,7 @@ public class GameTime : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_controller = PilotController.GetInstance();
+		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 
 		time = StartTime;
 	}

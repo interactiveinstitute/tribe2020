@@ -53,7 +53,7 @@ GameObject:
   - 4: {fileID: 4000010474060234}
   - 114: {fileID: 114000011413048882}
   m_Layer: 0
-  m_Name: Interaction Point
+  m_Name: Sit Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,6 +88,22 @@ GameObject:
   - 23: {fileID: 23000010084436648}
   m_Layer: 0
   m_Name: ChairBoss
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000011727192594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000011616894880}
+  - 114: {fileID: 114000010963992804}
+  m_Layer: 0
+  m_Name: Interaction Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,13 +274,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010498237918}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.638, y: 0.20000002, z: -0.26}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.006, y: 0.57, z: -0.602}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000012857595758}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!4 &4000010917240092
 Transform:
   m_ObjectHideFlags: 1
@@ -304,6 +320,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012857595758}
   m_RootOrder: 4
+--- !u!4 &4000011616894880
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011727192594}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.901, y: 0.01, z: -0.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000012857595758}
+  m_RootOrder: 6
 --- !u!4 &4000011914412092
 Transform:
   m_ObjectHideFlags: 1
@@ -323,10 +352,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011897121486}
-  m_LocalRotation: {x: 0, y: 0.99532276, z: 0, w: 0.09660581}
-  m_LocalPosition: {x: 1.571, y: -0.92004544, z: 2.878}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.86, y: 0.84, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 168.9125, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000010314322372}
   - {fileID: 4000013288841256}
@@ -334,6 +363,7 @@ Transform:
   - {fileID: 4000013874024712}
   - {fileID: 4000011378794862}
   - {fileID: 4000010917240092}
+  - {fileID: 4000011616894880}
   - {fileID: 4000010474060234}
   - {fileID: 4000013087417840}
   m_Father: {fileID: 0}
@@ -351,7 +381,7 @@ Transform:
   m_Children:
   - {fileID: 4000010208586420}
   m_Father: {fileID: 4000012857595758}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!4 &4000013288841256
 Transform:
   m_ObjectHideFlags: 1
@@ -667,6 +697,11 @@ MonoBehaviour:
   Units: []
   Columns: []
   Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -703,6 +738,17 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+--- !u!114 &114000010963992804
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011727192594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000011192645900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -717,7 +763,6 @@ MonoBehaviour:
   title: 
   description: 
   playerAffordances: []
-  playerAffordances_: []
   avatarAffordances: 
   owners: []
   performedEnergyMeasures: []
@@ -739,11 +784,12 @@ MonoBehaviour:
   title: Help Desk
   description: This is where the clients can come and get helpz
   playerAffordances:
-  - {fileID: 11400000, guid: 2205cd726035c884680716f761292f2f, type: 2}
-  playerAffordances_:
-  - {fileID: 11400000, guid: c11997c846e3f3a42bcffb2da7f2fef1, type: 2}
-  - {fileID: 11400000, guid: 98ec9a93a2f147347ad8c767a0a03fdf, type: 2}
-  - {fileID: 11400000, guid: 7c0269c1f0770be48b134f13827e5452, type: 2}
+  - {fileID: 11400000, guid: 23b35dc57bca03647845d9a866f8e2a6, type: 2}
+  - {fileID: 11400000, guid: 23f25107a4ae7ab4cbb8ec1d9839987d, type: 2}
+  - {fileID: 11400000, guid: 94e4a0249f520bb45be25f4a44698902, type: 2}
+  - {fileID: 11400000, guid: 3e99b0fbb776c1348b4cd18912e00939, type: 2}
+  - {fileID: 11400000, guid: 0292db39ee412524ca0cb9c9bddbe372, type: 2}
+  - {fileID: 11400000, guid: 838921d9fdf24a74bb83332e190f7035, type: 2}
   avatarAffordances: 02000000
   owners:
   - Bob Alison
@@ -778,6 +824,11 @@ MonoBehaviour:
   Units: []
   Columns: []
   Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -810,7 +861,6 @@ MonoBehaviour:
   title: Monitor
   description: The computer screen used on the office
   playerAffordances: []
-  playerAffordances_: []
   avatarAffordances: 03000000
   owners: []
   performedEnergyMeasures: []

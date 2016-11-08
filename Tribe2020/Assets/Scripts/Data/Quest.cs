@@ -14,10 +14,14 @@ public class Quest : ScriptableObject {
 	public enum QuestEvent {
 		EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
 		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
-		ResourceHarvested, BattleOver
+		ResourceHarvested, BattleOver, InspectorOpened, InspectorClosed, InboxOpened, InboxClosed, MailOpened, MailClosed,
+		OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn
 	};
 
 	public string title;
+	[TextArea(3, 10)]
+	public string description;
+	public string date;
 	public Quest nextQuest;
 
 	public List<Quest.QuestStep> questSteps;
@@ -31,6 +35,7 @@ public class Quest : ScriptableObject {
 		public QuestStepType type;
 		public Controller.InputState inputState;
 
+		[TextArea(2, 10)]
 		public string valueField;
 		public Object objectField;
 		public bool showAtBottom;
@@ -82,6 +87,11 @@ public class Quest : ScriptableObject {
 	//
 	public QuestStep GetCurrentStep() {
 		return questSteps[_curStep];
+	}
+
+	//
+	public int GetCurrentStepIndex() {
+		return _curStep;
 	}
 
 	//

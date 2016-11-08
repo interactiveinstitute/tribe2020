@@ -12,6 +12,7 @@ public class AudioManager : MonoBehaviour{
 
 	public AudioSource musicLoop;
 	public AudioSource button;
+	public AudioSource fireworks;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -36,6 +37,8 @@ public class AudioManager : MonoBehaviour{
 			musicLoop.Play(); break;
 		case "button":
 			button.Play(); break;
+		case "fireworks":
+			fireworks.Play(); break;
 		}
 	}
 }

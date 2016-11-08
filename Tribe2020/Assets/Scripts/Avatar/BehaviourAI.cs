@@ -8,9 +8,12 @@ using SimpleJSON; // For encoding and decoding avatar states
 [RequireComponent(typeof(ThirdPersonCharacter))]
 public class BehaviourAI : MonoBehaviour
 {
-    public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
+    //private static ILogger logger = Debug.logger;
+    //private static string logTag = "BehaviourAI";
+
+    public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
     [SerializeField]
-    private ActivityState _curActivityState = ActivityState.Idle;
+    private AvatarState _curAvatarState = AvatarState.Idle;
 
     private PilotController _controller;
     private GameTime _timeMgr;
@@ -25,13 +28,18 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
 
+    private AvatarActivity tempActivity;
+    private bool _isTemporarilyUnscheduled = false;
+
+    private bool _isControlled = false;
+
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
     private Room _curRoom;
 
     private float _startTime;
-    private bool _isSync = false;
-    private bool _isScheduleOver = false;
+    //private bool _isSync = false;
+    //private bool _isScheduleOver = false;
 
     //Definition of a schedule item
     [System.Serializable]
@@ -70,56 +78,66 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        double curTime = _timeMgr.GetTotalSeconds();
+        if (_isTemporarilyUnscheduled)
+        {
+            //Handle override actions
+            UpdateActivity(tempActivity);
+            return;
+        }
 
+        if (_isControlled)
+        {
+            //Oh snap! This avatar is controlled directly. Let's not interfere with that.
+            UpdateCharController();
+            return;
+        }
+        
         // Start activities on scheduled times.
         // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
         // the script will try to simulate the schedule until the curTime is reached.
 
         //Ok. Let's find the stamp for the next activity.
-        if (_nextActivity.startTimePassed())
+        if (_nextActivity.hasStartTime && _nextActivity.startTimePassed())
         {
-            Debug.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one");
+            DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
             _curActivity.FinishCurrentActivity();
             NextActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
 
         //same as above but backwards.
         //We are most likely not handling backwards time very well. But that's out of scope for now.
-        if (!_curActivity.startTimePassed())
+        if (_curActivity.hasStartTime && !_curActivity.startTimePassed())
         {
-            Debug.Log("Current time is before current activity's startTime. Revert the activity and start the previous one");
+            DebugManager.Log("Current time is before current activity's startTime. Revert the activity and start the previous one", this);
             _curActivity.Revert();
             PreviousActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
 
+        UpdateActivity();
+
+    }
+
+    private void UpdateActivity(AvatarActivity activity)
+    {
+
         //do delta time stuffz
-        _curActivity.Step(this);
+        activity.Step(this);
 
-        ////First disable sit flag if we're not in the sitting state
-        //if (_curActivityState != ActivityState.Sitting)
-        //{
-        //    _charController.StandUp();//Turns off a state boolean for the animator.
-        //}
-        //else
-        //{
-        //    //Debug.Log("ActivityState is Sitting");
-        //}
-
-        switch (_curActivityState)
+        //do activity stuff!
+        switch (_curAvatarState)
         {
             //Not doing anything, do something feasible in the pilot
-            case ActivityState.Idle:
+            case AvatarState.Idle:
                 _charController.Move(Vector3.zero, false, false);
-                //	_curActivity.Init(this);
-                //	Debug.Log(name + " began " + _curActivity.name + " at " + time.Hour + ":" + time.Minute);
+                //	activity.Init(this);
+                //	Debug.Log(name + " began " + activity.name + " at " + time.Hour + ":" + time.Minute);
                 break;
             // Walking towards an object, check if arrived to proceed
-            case ActivityState.OverrideWalking:
+            //case AvatarState.OverrideWalking:
             //Debug.Log("override walking!");
-            case ActivityState.Walking:
+            case AvatarState.Walking:
                 if (_agent.remainingDistance > _agent.stoppingDistance)
                 {
                     _charController.Move(_agent.desiredVelocity, false, false);
@@ -128,47 +146,70 @@ public class BehaviourAI : MonoBehaviour
                 {
                     _charController.Move(Vector3.zero, false, false);
                     //Ok. Let's notify the activity that the current session is finished
-                    _curActivity.OnDestinationReached();
-
-                    //if(_curActivityState == ActivityState.Walking) {
-                    //	_curTargetObj.GetComponent<Appliance>().AddHarvest();
-                    //	_controller.OnAvatarSessionComplete(_curActivityState.ToString());
-                    //	_curActivity.NextStep(this);
-                    //} else if(_curActivityState == ActivityState.OverrideWalking) {
-                    //if(_curActivityState == ActivityState.OverrideWalking) {
-                    //	_curActivityState = ActivityState.OverrideIdle;
-                    //} else {
+                    activity.OnDestinationReached();
+                    
                     //	_curActivityState = ActivityState.Idle;
-                    //}
                     _controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
                                                                                        //}
                 }
                 break;
-            case ActivityState.Sitting:
+            case AvatarState.Sitting:
                 //Be aware. This SitDown method is another than the one in this class.
                 //_charController.SitDown(); //Sets a boolean in the animator object
                 _charController.Move(Vector3.zero, false, false);
                 break;
             // Waiting
-            case ActivityState.Waiting:
+            case AvatarState.Waiting:
                 _charController.Move(Vector3.zero, false, false);
                 break;
-            case ActivityState.OverrideIdle:
-                _charController.Move(Vector3.zero, false, false);
-                break;
-            case ActivityState.TurningOnLight:
-                if (_agent.remainingDistance > _agent.stoppingDistance)
-                {
-                    _charController.Move(_agent.desiredVelocity, false, false);
-                }
-                else if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
-                {
-                    _charController.Move(Vector3.zero, false, false);
-                    _curTargetObj.GetComponent<ElectricMeter>().On();
-                    _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
-                    _curActivity.ResumeSession(this);
-                }
-                break;
+            //case AvatarState.OverrideIdle:
+            //    _charController.Move(Vector3.zero, false, false);
+            //    break;
+            //case AvatarState.TurningOnLight:
+            //    if (_agent.remainingDistance > _agent.stoppingDistance)
+            //    {
+            //        _charController.Move(_agent.desiredVelocity, false, false);
+            //    }
+            //    else if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+            //    {
+            //        _charController.Move(Vector3.zero, false, false);
+            //        _curTargetObj.GetComponent<ElectricMeter>().On();
+            //        _curTargetObj.GetComponentInParent<Room>().UpdateLighting();
+            //        //activity.ResumeSession(this);
+            //    }
+            //    break;
+        }
+    }
+
+    //If no activitty reference given, Update _curActivity.
+    private void UpdateActivity()
+    {
+        UpdateActivity(_curActivity);
+    }
+
+    private AvatarActivity getRunningActivity()
+    {
+        if (_isTemporarilyUnscheduled)
+        {
+            return tempActivity;
+        }else
+        {
+            return _curActivity;
+        }
+    }
+
+    private void UpdateCharController()
+    {
+        //This function shouldn't do any activity (or AvatarState) related stuff . It should only be concerned with updating the avatar's movements and notify whoever is directly controlling it.
+        if (_agent.remainingDistance > _agent.stoppingDistance)
+        {
+            _charController.Move(_agent.desiredVelocity, false, false);
+        }
+        else if (!_agent.pathPending)
+        {
+            _charController.Move(Vector3.zero, false, false);
+            
+            _controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
         }
     }
 
@@ -187,7 +228,7 @@ public class BehaviourAI : MonoBehaviour
         double curHour = curDateTime.Hour;
         double curMinute = curDateTime.Minute;
 
-        Debug.Log("starting schedule sync");
+        DebugManager.Log("starting schedule sync", this);
 
         //loop through the schedule until we get to an actvity that should happen in the future
         for (; _scheduleIndex < schedule.Length; _scheduleIndex++)
@@ -271,7 +312,7 @@ public class BehaviourAI : MonoBehaviour
 
 
 
-                Debug.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime);
+                DebugManager.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime, this);
                 return;
             }
         }
@@ -280,14 +321,14 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SetCurrentActivity(AvatarActivity activity, double startTime)
     {
-        Debug.Log("setting current activity: " + activity);
+        DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this, startTime);
     }
 
     public void SetCurrentActivity(AvatarActivity activity)
     {
-        Debug.Log("setting current activity: " + activity);
+        DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this);
     }
@@ -320,16 +361,28 @@ public class BehaviourAI : MonoBehaviour
     public void StartActivity(AvatarActivity activity)
     {
         //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
-        _curActivityState = ActivityState.Idle;
+        _curAvatarState = AvatarState.Idle;
         //activity.endTime = _timeMgr.time + 60 * 3;
         _curActivity = activity;
         _curActivity.Init(this);
     }
 
+    public void StartTemporaryActivity(AvatarActivity activity)
+    {
+        DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
+        tempActivity = activity;
+        tempActivity.Init(this);
+        _isTemporarilyUnscheduled = true;
+        tempActivity.Start();
+    }
+
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
     public void NextActivity()
     {
-        Debug.Log("Next activity called. " + _nextActivity.name);
+        //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+        double curTime = _timeMgr.GetTotalSeconds();
+
+        DebugManager.Log("Next activity called. " + _nextActivity.name, this);
         //Iterate schedule index
         //Soo. _scheduleIndex is here incremented to point on the activity we jump to.
         _scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
@@ -349,7 +402,7 @@ public class BehaviourAI : MonoBehaviour
         if (nxtItem.time != "")
         {
             //Determine startTime for nextActivity
-            double nxtStartTime = _timeMgr.ScheduleToTS(_curActivity.startTime, nxtActivityDayOffset, nxtItem.time);
+            double nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
             SetNextActivity(nxtItem.activity, nxtStartTime);
         }
         else
@@ -361,6 +414,9 @@ public class BehaviourAI : MonoBehaviour
     //
     public void PreviousActivity()
     {
+        //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+        double curTime = _timeMgr.GetTotalSeconds();
+
         int prevIndex = 0;
         if (schedule.Length > 0)
         {
@@ -388,7 +444,7 @@ public class BehaviourAI : MonoBehaviour
             //This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
             //If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
             //we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
-            double prevActivityStartTime = _timeMgr.ScheduleToTS(_prevActivity.startTime, startTimeDayOffset, prevItem.time);
+            double prevActivityStartTime = _timeMgr.ScheduleToTS(curTime, startTimeDayOffset, prevItem.time);
             SetPrevActivity(prevItem.activity, prevActivityStartTime);
         }
         else
@@ -397,39 +453,53 @@ public class BehaviourAI : MonoBehaviour
         }
     }
 
-    //
-    public void EndOverride()
-    {
-        _curActivity.ResumeSession(this);
-        //_curActivityState = ActivityState.Idle;
-    }
+    ////
+    //public void EndOverride()
+    //{
+    //    _curActivity.ResumeSession(this);
+    //    //_curActivityState = ActivityState.Idle;
+    //}
 
-    //
-    public void Interact()
-    {
-    }
+    ////
+    //public void Interact()
+    //{
+    //}
 
     //
     public void Stop()
     {
-        _curActivityState = ActivityState.Idle;
+        _curAvatarState = AvatarState.Idle;
         _charController.Move(Vector3.zero, false, false);
     }
 
     public void Wait()
     {
-        _curActivityState = ActivityState.Idle;
+        _curAvatarState = AvatarState.Idle;
         _charController.Move(Vector3.zero, false, false);
     }
 
     //This is an override walk. Should be clearer that's the case.
     public void WalkTo(Vector3 target)
     {
+        if (!_isControlled)
+        {
+            Debug.LogError("Hey! Your are trying to control an avatar without first calling TakeControlOfAvatar(). Call TakeControlOfAvatar(). Do Stuff. Then call ReleaseControlOfAvatar()", this);
+        }
         //_curTargetPos = target;
 
         _agent.SetDestination(target);
         _agent.updatePosition = true;
-        _curActivityState = ActivityState.OverrideWalking;
+        //_curAvatarState = AvatarState.OverrideWalking;
+    }
+
+    public void TakeControlOfAvatar()
+    {
+        _isControlled = true;
+    }
+
+    public void ReleaseControlOfAvatar()
+    {
+        _isControlled = false;
     }
 
     //
@@ -447,32 +517,24 @@ public class BehaviourAI : MonoBehaviour
         _curTargetObj = FindNearestDevice(target, isOwned);
         if (_curTargetObj == null)
         {
-            Debug.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name);
+            DebugManager.LogError("Didn't find a WalkTo target " + target + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
+            getRunningActivity().NextSession();
             return;
         }
 
-        _agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
-        _curActivityState = ActivityState.Walking;
+        WalkTo(_curTargetObj.GetComponent<Appliance>(), isOwned);
+
+        //_agent.SetDestination(_curTargetObj.GetComponent<Appliance>().interactionPos);
+        //_curAvatarState = AvatarState.Walking;
     }
 
     //Let's use the reference to the appliance
     public void WalkTo(Appliance appliance, bool isOwned)
     {
+        _curTargetObj = appliance.gameObject;
 
-        //GameObject _curTargetObj = appliance.gameObject;
-        //if (_curTargetObj == null)
-        //{
-        //    Debug.LogError("Didn't find a WalkTo appliance, doing activity " + _curActivity.name);
-        //    return;
-        //}
-
-        if(appliance == null)
-        {
-            Debug.LogError("Daaa fuuuck! no appliance i just got from you!");
-        }
-        
         _agent.SetDestination(appliance.interactionPos);
-        _curActivityState = ActivityState.Walking;
+        _curAvatarState = AvatarState.Walking;
     }
 
     //
@@ -500,17 +562,19 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
-    //
-    public void SitDown()
+    public void SitAt(Appliance thing)
     {
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
-        //Vector3 coord;
-        //Let's search for a gameObject called Sit Position
-        Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
+        if(thing == null)
+        {
+            DebugManager.LogError("No appliance object provided. Trying to fallback to _curTargetObject instead", this);
+            thing = _curTargetObj.GetComponent<Appliance>();
+        }
+        Transform sitPosition = thing.gameObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            Debug.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
         }
         else
         {
@@ -521,18 +585,49 @@ public class BehaviourAI : MonoBehaviour
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
-        _curActivityState = ActivityState.Sitting;
+        _curAvatarState = AvatarState.Sitting;
+        _charController.SitDown(); //Sets a boolean in the animator object
+    }
+
+    //
+    public void SitAtCurrentTarget()
+    {
+        _agent.enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        //Vector3 coord;
+        //Let's search for a gameObject called Sit Position
+        if(_curTargetObj == null)
+        {
+            DebugManager.LogError("_curTargetObject not set!", this);
+        }
+        Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
+        if (sitPosition == null)
+        {
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
+        }
+        else
+        {
+            //coord.x = sitPosition.position.x;
+            //coord.z = sitPosition.position.z;
+            //coord.y = transform.position.y;
+            transform.position = sitPosition.position;//coord;
+            transform.rotation = sitPosition.rotation;
+            Debug.Log("Setting avatar position to sitPosition from appliance object");
+        }
+        _curAvatarState = AvatarState.Sitting;
         _charController.SitDown(); //Sets a boolean in the animator object
     }
 
     public void standUp()
     {
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
-        Debug.Log("_curTargetObj is " + _curTargetObj, _curTargetObj);
+        DebugManager.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj, this);
         transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         _charController.StandUp();
+
+        //We don't set the _curAvatarState here, since standing up is performed before doing other stuffz
 
     }
 
@@ -540,18 +635,22 @@ public class BehaviourAI : MonoBehaviour
     public void Delay(float seconds)
     {
         //Debug.Log(name + ".Delay(" + seconds + ")");
-        _curActivityState = ActivityState.Waiting;
+        _curAvatarState = AvatarState.Waiting;
     }
 
     //
     public void SetRunLevel(AvatarActivity.Target target, string parameter)
     {
         GameObject device = FindNearestDevice(target, false);
+        DebugManager.Log("Setting runlevel for " + device, device, this);
         if (device == null)
         {
             Debug.LogError("Didn't find device for setting runlevel: " + target);
             return;
         }
+
+        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
+        device.GetComponent<Appliance>().AddHarvest();
 
         ElectricMeter meter = device.GetComponent<ElectricMeter>();
         if (meter == null)
@@ -566,17 +665,20 @@ public class BehaviourAI : MonoBehaviour
 
     public void SetRunLevel(Appliance appliance, string parameter)
     {
+        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
+        appliance.AddHarvest();
+        DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
         GameObject device = appliance.gameObject;
         if (device == null)
         {
-            Debug.LogError("Didn't find device for setting runlevel");
+            DebugManager.LogError("Didn't find device for setting runlevel", this);
             return;
         }
 
         ElectricMeter meter = device.GetComponent<ElectricMeter>();
         if (meter == null)
         {
-            Debug.LogError("Didn't find electric meter for setting runlevel");
+            DebugManager.LogError("Didn't find electric meter for setting runlevel", this);
             return;
         }
 
@@ -606,7 +708,7 @@ public class BehaviourAI : MonoBehaviour
 
         if (target == null)
         {
-            Debug.Log(name + " could not find the affordance " + affordance.ToString());
+            DebugManager.Log(name + " could not find the affordance " + affordance.ToString(), this);
         }
 
         return target;
@@ -615,31 +717,47 @@ public class BehaviourAI : MonoBehaviour
     //
     public void OnActivityOver()
     {
-        Debug.Log(name + "'s activity " + _curActivity.name + " is over");
-        if (_curActivityState == ActivityState.Sitting)
+        DebugManager.Log(name + "'s activity " + _curActivity.name + " is over", this);
+        if (_curAvatarState == AvatarState.Sitting)
         {
-            Debug.Log("avatar was sitting. Standing up.");
+            DebugManager.Log("avatar was sitting. Standing up.", this);
             standUp();
         }
-        _controller.OnAvatarActivityComplete(_curActivity.name);
-        _curActivityState = ActivityState.Idle;
+        _curAvatarState = AvatarState.Idle;
+
+        if (_isTemporarilyUnscheduled)
+        {
+            //Notify the gamecontroller that we finished this activity!
+            _controller.OnAvatarActivityComplete(tempActivity.title);
+
+            //Ok. so this overriding activity was finished. Return to schedule.
+            _isTemporarilyUnscheduled = false;
+
+            DebugManager.Log("Teemporary activity finished!", tempActivity, this);
+
+            //We don't want to do moar stuffz in here. Bail out!
+            return;
+        }
+
+        //Notify the gamecontroller that we finished this activity!
+        _controller.OnAvatarActivityComplete(_curActivity.title);
 
         //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
         if (!_nextActivity.hasStartTime)
         {
-            Debug.Log("Next activity have no startTime specified so let's start it immediately");
+            DebugManager.Log("Next activity have no startTime specified so let's start it immediately", this);
             NextActivity();
-            _curActivity.Run();
+            _curActivity.Start();
         }
     }
 
-    //
+    //This will get called when avatar (that have rigidbody and collider) collides with a collider. <--- wow, so many colliding words in one sentence!!!
     void OnTriggerEnter(Collider other)
     {
+        //Did the avatar collide with a roooom?
         if (other.GetComponent<Room>())
         {
-            Room room = other.GetComponent<Room>();
-            _curRoom = room;
+            _curRoom = other.GetComponent<Room>();
             CheckLighting();
         }
 
@@ -659,7 +777,9 @@ public class BehaviourAI : MonoBehaviour
                 {
                     //Debug.Log(transform.parent.name +  " found a light switch");
                     TurnOnLight(lightSwitch);
+                    return;
                 }
+                DebugManager.LogError(name + " couldn't find a lightswitch in this room!", _curRoom, this);
             }
             else
             {
@@ -669,25 +789,33 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void CheckLighting(GameObject device)
-    {
-        Room deviceRoom = device.GetComponentInParent<Room>();
-        if (deviceRoom)
-        {
-            if (deviceRoom.lux < 1)
-            {
-                Appliance lightSwitch = deviceRoom.GetLightSwitch();
-                if (lightSwitch)
-                {
-                    QuickTurnLightOn(lightSwitch);
-                }
-            }
-        }
-    }
+    //public void CheckLighting(GameObject device)
+    //{
+    //    Room deviceRoom = device.GetComponentInParent<Room>();
+    //    if (deviceRoom)
+    //    {
+    //        if (deviceRoom.lux < 1)
+    //        {
+    //            Appliance lightSwitch = deviceRoom.GetLightSwitch();
+    //            if (lightSwitch)
+    //            {
+    //                QuickTurnLightOn(lightSwitch);
+    //            }
+    //        }
+    //    }
+    //}
 
     //
     public void TurnOnLight(Appliance lightSwitch)
     {
+        DebugManager.Log("Yo! Gonna flip that lamp switch!", this);
+        //Create an activity for turning on the laaajt!
+        AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
+        roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+
+
+        //Let's build relevant sessions and inject them into the activity we just created.
         AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
         walkToLightSwitch.title = "Walking to light switch";
         walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
@@ -702,27 +830,30 @@ public class BehaviourAI : MonoBehaviour
         turnOnLight.appliance = lightSwitch;
         turnOnLight.parameter = "1";
 
-        _curActivity.InsertSession(walkToLightSwitch);
-        _curActivity.InsertSession(turnOnLight);
+        roomLightActivity.InsertSession(turnOnLight);
+        roomLightActivity.InsertSession(walkToLightSwitch);
+
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(roomLightActivity);
     }
 
-    //
-    public void QuickTurnLightOn(Appliance lightSwitch)
-    {
-        AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
-        walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-        walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
-        walkToLightSwitch.currentRoom = true;
+    ////
+    //public void QuickTurnLightOn(Appliance lightSwitch)
+    //{
+    //    AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
+    //    walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
+    //    walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
+    //    walkToLightSwitch.currentRoom = true;
 
-        AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
-        turnOnLight.title = "Turn on light";
-        turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
-        turnOnLight.target = AvatarActivity.Target.LampSwitch;
-        turnOnLight.parameter = "0";
+    //    AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
+    //    turnOnLight.title = "Turn on light";
+    //    turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
+    //    turnOnLight.target = AvatarActivity.Target.LampSwitch;
+    //    turnOnLight.parameter = "0";
 
-        _curActivity.InsertSession(turnOnLight);
-        _curActivity.InsertSession(walkToLightSwitch);
-    }
+    //    _curActivity.InsertSession(turnOnLight);
+    //    _curActivity.InsertSession(walkToLightSwitch);
+    //}
 
     // Save function
     public JSONClass Encode()

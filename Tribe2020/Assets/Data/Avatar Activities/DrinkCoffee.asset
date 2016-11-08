@@ -11,10 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34a2e631240d584a88fcab665d829b9, type: 3}
   m_Name: DrinkCoffee
   m_EditorClassIdentifier: 
+  title: DrinkCoffee
   sessions:
   - title: Walking to coffee machine
     probability: 1
     type: 0
+    appliance: {fileID: 0}
     target: 7
     parameter: 
     avatarOwnsTarget: 0
@@ -25,6 +27,7 @@ MonoBehaviour:
   - title: Getting coffee
     probability: 1
     type: 4
+    appliance: {fileID: 0}
     target: 7
     parameter: 1,30,0
     avatarOwnsTarget: 0
@@ -35,6 +38,7 @@ MonoBehaviour:
   - title: Walking to fridge
     probability: 1
     type: 0
+    appliance: {fileID: 0}
     target: 8
     parameter: 
     avatarOwnsTarget: 0
@@ -45,6 +49,7 @@ MonoBehaviour:
   - title: Getting milk
     probability: 1
     type: 4
+    appliance: {fileID: 0}
     target: 8
     parameter: 1,30,0
     avatarOwnsTarget: 0
@@ -55,6 +60,7 @@ MonoBehaviour:
   - title: Walking to nice coffee spot
     probability: 1
     type: 0
+    appliance: {fileID: 0}
     target: 4
     parameter: 
     avatarOwnsTarget: 0
@@ -65,8 +71,9 @@ MonoBehaviour:
   - title: Drinking coffee
     probability: 1
     type: 2
+    appliance: {fileID: 0}
     target: 0
-    parameter: 180
+    parameter: 60
     avatarOwnsTarget: 0
     currentRoom: 0
     relatedEfficieny: 0
@@ -75,6 +82,7 @@ MonoBehaviour:
   - title: Walking to dishwasher
     probability: 1
     type: 0
+    appliance: {fileID: 0}
     target: 6
     parameter: 
     avatarOwnsTarget: 0
@@ -85,6 +93,7 @@ MonoBehaviour:
   - title: Putting cup in dishwasher
     probability: 1
     type: 4
+    appliance: {fileID: 0}
     target: 6
     parameter: 
     avatarOwnsTarget: 0
@@ -92,29 +101,5 @@ MonoBehaviour:
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  - title: Idle until over
-    probability: 1
-    type: 2
-    target: 0
-    parameter: 
-    avatarOwnsTarget: 0
-    currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
-  SkipSession:
-    title: 
-    probability: 1
-    type: 5
-    target: 0
-    parameter: wash_dishes
-    avatarOwnsTarget: 0
-    currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
-  onSkipCommand: TeleportTo,appliance_dishwasher
-  _delay: 0
-  _duration: 0
   startTime: 0
-  endTime: 0
+  hasStartTime: 1

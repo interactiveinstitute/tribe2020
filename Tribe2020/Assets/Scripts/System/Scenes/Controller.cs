@@ -11,7 +11,7 @@ public class Controller : MonoBehaviour {
 	//
 	public enum InputState {
 		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
-		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST
+		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT
 	};
 
 	// Use this for initialization
@@ -22,6 +22,10 @@ public class Controller : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	//
+	public virtual void ShowMessage(string key, string message, bool showButton) {
 	}
 
 	//
