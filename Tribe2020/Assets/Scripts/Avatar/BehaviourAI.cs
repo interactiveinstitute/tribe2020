@@ -23,7 +23,7 @@ public class BehaviourAI : MonoBehaviour
     private ThirdPersonCharacter _charController;
 
     //private Vector3 _curTargetPos;
-    public GameObject _curTargetObj;
+    //public GameObject _curTargetObj;
     public AvatarActivity _curActivity;
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
@@ -187,7 +187,7 @@ public class BehaviourAI : MonoBehaviour
         UpdateActivity(_curActivity);
     }
 
-    private AvatarActivity getRunningActivity()
+    private AvatarActivity GetRunningActivity()
     {
         if (_isTemporarilyUnscheduled)
         {
@@ -507,6 +507,7 @@ public class BehaviourAI : MonoBehaviour
         return effeciency >= UnityEngine.Random.value;
     }
 
+
     //
     //public void WalkTo(string[] args) {
     //	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
@@ -529,11 +530,12 @@ public class BehaviourAI : MonoBehaviour
         if (appliance == null)
         {
             DebugManager.LogError("Didn't find a WalkTo target " + appliance + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
             return;
         }
 
-        _curTargetObj = appliance.gameObject;
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        //_curTargetObj = appliance.gameObject;
 
         _agent.SetDestination(appliance.interactionPos);
         _curAvatarState = AvatarState.Walking;
@@ -549,7 +551,9 @@ public class BehaviourAI : MonoBehaviour
     public void WarpTo(Appliance appliance, bool isOwned)
     {
         if (appliance == null) { return; }
-        _curTargetObj = appliance.gameObject;
+
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        //_curTargetObj = appliance.gameObject;
 
         appliance.AddHarvest();
         _agent.Warp(appliance.interactionPos);
@@ -581,7 +585,7 @@ public class BehaviourAI : MonoBehaviour
         if(appliance == null)
         {
             DebugManager.LogError("Didn't get a SitAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
             return;
         }
         _agent.enabled = false;
@@ -612,15 +616,19 @@ public class BehaviourAI : MonoBehaviour
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         //Vector3 coord;
+
+        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+
         //Let's search for a gameObject called Sit Position
-        if(_curTargetObj == null)
+        if (targetObject == null)
         {
             DebugManager.LogError("_curTargetObject not set!", this);
         }
-        Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
+
+        Transform sitPosition = targetObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + targetObject.name, this);
         }
         else
         {
@@ -641,8 +649,12 @@ public class BehaviourAI : MonoBehaviour
         //Do it by saving a standPosition as private object when sitting down! Rather than finding the interactionPos again
 
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
-        DebugManager.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj, this);
-        transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
+
+        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+
+        DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
+
+        transform.position = targetObject.GetComponent<Appliance>().interactionPos;
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         _charController.StandUp();
@@ -670,10 +682,11 @@ public class BehaviourAI : MonoBehaviour
         if(appliance == null)
         {
             DebugManager.LogError("Didn't get an Appliance object for SetRunLevel! Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
         }
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
 
@@ -705,7 +718,8 @@ public class BehaviourAI : MonoBehaviour
     {
         DebugManager.Log("Turning on " + appliance, appliance, this);
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         GameObject device = appliance.gameObject;
         if (device == null)
@@ -738,7 +752,8 @@ public class BehaviourAI : MonoBehaviour
 
         DebugManager.Log("Turning off " + appliance, appliance, this);
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        //_curTargetObj = appliance.gameObject; //Should current target object be set?
 
         GameObject device = appliance.gameObject;
         if (device == null)
@@ -809,7 +824,7 @@ public class BehaviourAI : MonoBehaviour
             _isTemporarilyUnscheduled = false;
 
             DebugManager.Log("Teemporary activity finished!", tempActivity, this);
-            DebugManager.Log("Current target object: ", _curTargetObj, this);
+            DebugManager.Log("Current target object: ", GetRunningActivity().GetCurrentTargetObject(), this);
 
             //We don't want to do moar stuffz in here. Bail out!
             return;

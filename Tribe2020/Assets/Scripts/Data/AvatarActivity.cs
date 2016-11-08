@@ -14,7 +14,9 @@ public class AvatarActivity : ScriptableObject {
 	private int _currSession;
 	private BehaviourAI _ai;
 
-	protected float _weight = 0;
+    GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
+
+    protected float _weight = 0;
 	protected string _curState = "";
 
 	private float _delay = 0;
@@ -377,4 +379,16 @@ public class AvatarActivity : ScriptableObject {
         //If we have got past the last session, the activity must be finished. Right?
         return _currSession >= sessions.Count;
     }
+
+    public GameObject GetCurrentTargetObject()
+    {
+        return _curTargetObj;
+    }
+
+    public void SetCurrentTargetObject(GameObject targetObject)
+    {
+        _curTargetObj = targetObject;
+    }
+
 }
+
