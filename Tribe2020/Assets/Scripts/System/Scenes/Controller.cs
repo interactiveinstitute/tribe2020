@@ -43,4 +43,8 @@ public class Controller : MonoBehaviour {
 	//
 	public virtual void SaveGameState() {
 	}
+
+	//
+	public virtual void LoadGameState() {
+	}
 }

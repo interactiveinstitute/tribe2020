@@ -52,7 +52,7 @@ public class MenuController : Controller {
 		int lastSlot = _saveMgr.GetLastSlot();
 		continueButton.gameObject.SetActive(lastSlot != -1);
 		continueButton.GetComponent<Button>().onClick.AddListener(() =>
-			ContinueGame(_saveMgr.GetData(lastSlot, "pilot"), lastSlot));
+			ContinueGame(_saveMgr.GetData(lastSlot, "curPilot"), lastSlot));
 	}
 	
 	// Update is called once per frame
@@ -118,7 +118,6 @@ public class MenuController : Controller {
 
 	//
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
-		//Debug.Log("InitSlotButton" + button.name + ", " + removeButton.name + ", " + slot + ", " + _saveMgr.IsSlotVacant(slot));
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
 			button.GetComponentInChildren<Text>().text = "New Game";
@@ -127,7 +126,7 @@ public class MenuController : Controller {
 			removeButton.gameObject.SetActive(false);
 		} else {
 			button.GetComponentInChildren<Text>().text = _saveMgr.GetSlotData(slot);
-			button.GetComponent<Button>().onClick.AddListener(() => ContinueGame(_saveMgr.GetData(slot, "pilot"), slot));
+			button.GetComponent<Button>().onClick.AddListener(() => ContinueGame(_saveMgr.GetData(slot, "curPilot"), slot));
 			removeButton.gameObject.SetActive(true);
 		}
 	}
@@ -139,20 +138,14 @@ public class MenuController : Controller {
 	//
 	public void NewGame(string pilot) {
 		SaveManager.currentSlot = pendingNewGameSlot;
-		//Debug.Log("NewGame: " + SaveManager.currentSlot);
-		_saveMgr.InitSlot(pendingNewGameSlot, pilot);
 		LoadScene(pilot);
 	}
 
 	//
 	public void ClearSlots() {
-		_saveMgr.Delete(0);
-		_saveMgr.Delete(1);
-		_saveMgr.Delete(2);
-
-		InitSlotButton(file1, remove1, 0);
-		InitSlotButton(file2, remove2, 1);
-		InitSlotButton(file3, remove3, 2);
+		DeleteSlot(0);
+		DeleteSlot(1);
+		DeleteSlot(2);
 	}
 
 	//

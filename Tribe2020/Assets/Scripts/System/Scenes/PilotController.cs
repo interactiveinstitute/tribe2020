@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class PilotController : Controller{
 	//Singleton features
@@ -13,6 +14,7 @@ public class PilotController : Controller{
 
 	//Access all singleton systemss
 	private PilotView _view;
+	private GameTime _timeMgr;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
 	private ResourceManager _resourceMgr;
@@ -37,7 +39,7 @@ public class PilotController : Controller{
 	public const float SWIPE_THRESH = 50;
 
 	private List<BehaviourAI> _avatars;
-	//public GameObject testObj;
+	private List<Appliance> _appliances;
 
 	private bool _isLoaded = false;
 
@@ -54,6 +56,7 @@ public class PilotController : Controller{
 	// Use this for initialization
 	void Start(){
 		_view = PilotView.GetInstance();
+		_timeMgr = GameTime.GetInstance();
 		_camMgr = CameraManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
@@ -63,14 +66,14 @@ public class PilotController : Controller{
 		_localMgr = LocalisationManager.GetInstance();
 
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
-        _saveMgr.SetAvatars(_avatars);
+		_appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
 	}
 	
 	// Update is called once per frame
 	void Update(){
 		if(!_isLoaded) {
 			_isLoaded = true;
-			_saveMgr.Load(SaveManager.currentSlot);
+			LoadGameState();
 		}
 
 		//Mobile interaction
@@ -123,7 +126,7 @@ public class PilotController : Controller{
 	
 	//
 	private void OnTouch(Vector3 pos){
-		_camMgr.cameraState = CameraManager.PANNED;
+		//_camMgr.cameraState = CameraManager.PANNED;
 		_touchTimer += Time.unscaledDeltaTime;
 
 		//if(Application.platform == RuntimePlatform.Android){
@@ -398,7 +401,9 @@ public class PilotController : Controller{
 			if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
 				_resourceMgr.cash -= eem.cashCost;
 				_resourceMgr.comfort -= eem.comfortCost;
+
 				appliance.ApplyEEM(eem);
+				_view.BuildEEMInterface(appliance);
 
 				_resourceMgr.RefreshProduction();
 
@@ -505,14 +510,94 @@ public class PilotController : Controller{
 
 	//
 	public override void SaveGameState() {
-		Debug.Log("Game Saved");
-		_saveMgr.Save(SaveManager.currentSlot);
+		if(debug) { Debug.Log("Saving game state"); }
+
+		_saveMgr.SetData("ResourceManager", _resourceMgr.SerializeAsJSON());
+		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
+		_saveMgr.SetData("LocalisationManager", _localMgr.SerializeAsJSON());
+
+		//Save avatar states
+		JSONArray avatarsJSON = new JSONArray();
+		foreach(BehaviourAI avatar in _avatars) {
+			avatarsJSON.Add(avatar.Encode());
+		}
+		_saveMgr.SetData("avatarStates", avatarsJSON);
+
+		//Save appliance states
+		JSONArray applianceJSON = new JSONArray();
+		foreach(Appliance appliance in _appliances) {
+			applianceJSON.Add(appliance.SerializeAsJSON());
+		}
+		_saveMgr.SetData("Appliances", applianceJSON);
+
+		_saveMgr.SetData("lastTime", _timeMgr.time.ToString());
+		_saveMgr.SetData("curPilot", Application.loadedLevelName);
+
+		_saveMgr.Save();
+	}
+
+	//
+	public override void LoadGameState() {
+		if(debug) { Debug.Log("Loading game state"); }
+
+		_saveMgr.Load();
+
+		_resourceMgr.DeserializeFromJSON(_saveMgr.GetClass("ResourceManager"));
+		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
+		_localMgr.DeserializeFromJSON(_saveMgr.GetClass("LocalisationManager"));
+
+		//Load avatar states
+		if(_saveMgr.GetData("avatarStates") != null) {
+			JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
+			foreach(JSONClass avatarJSON in avatarsJSON) {
+				foreach(BehaviourAI avatar in _avatars) {
+					if(avatar.name == avatarJSON["name"]) {
+						avatar.Decode(avatarJSON);
+					}
+				}
+			}
+		}
+
+		//Load appliance states
+		if(_saveMgr.GetData("Appliances") != null) {
+			JSONArray appsJSON = _saveMgr.GetData("Appliances").AsArray;
+			foreach(JSONClass appJSON in appsJSON) {
+				foreach(Appliance app in _appliances) {
+					if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
+						app.DeserializeFromJSON(appJSON);
+					}
+				}
+			}
+		}
+
+		if(_saveMgr.GetData("lastTime") != null) {
+			_timeMgr.SetTime(_saveMgr.GetData("lastTime").AsDouble);
+		}
+	}
+
+	//
+	public void GenerateUniqueIDs() {
+		List<BehaviourAI> avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
+		List<Appliance> appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
+
+		foreach(BehaviourAI avatar in avatars) {
+			if(avatar.GetComponent<UniqueId>()) {
+				Destroy(avatar.gameObject.GetComponent<UniqueId>());
+			}
+			avatar.gameObject.AddComponent<UniqueId>();
+		}
+
+		foreach(Appliance app in appliances) {
+			if(app.GetComponent<UniqueId>()) {
+				Destroy(app.gameObject.GetComponent<UniqueId>());
+			}
+			app.gameObject.AddComponent<UniqueId>();
+		}
 	}
 
 	//
 	public void LoadScene(string scene) {
 		SaveGameState();
-		//Debug.Log("LoadScene " + scene);
 		_sceneMgr.LoadScene(scene);
 	}
 }

@@ -150,7 +150,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013087417840}
   - 114: {fileID: 114000011846861906}
-  - 114: {fileID: 114000011192645900}
   m_Layer: 0
   m_Name: LCD Monitor
   m_TagString: Untagged
@@ -203,7 +202,6 @@ GameObject:
   - 33: {fileID: 33000011805149492}
   - 23: {fileID: 23000014279197124}
   - 114: {fileID: 114000010164195714}
-  - 114: {fileID: 114000013026241592}
   m_Layer: 0
   m_Name: MonitorCRT__Body
   m_TagString: Untagged
@@ -749,27 +747,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000011192645900
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013278359474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: 
-  description: 
-  playerAffordances: []
-  avatarAffordances: 
-  owners: []
-  performedEnergyMeasures: []
-  interactionPos: {x: 0, y: 0, z: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &114000011412522144
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -781,6 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueId: 8946655f-87da-4a35-8cf6-20b3f85f1cd7
   title: Help Desk
   description: This is where the clients can come and get helpz
   playerAffordances:
@@ -793,6 +771,7 @@ MonoBehaviour:
   avatarAffordances: 02000000
   owners:
   - Bob Alison
+  appliedEEMs: []
   performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
@@ -847,24 +826,3 @@ MonoBehaviour:
   runlevelOn: 0
   runlevelOff: 0
   runlevelUnpowered: 0
---- !u!114 &114000013026241592
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013708613898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Monitor
-  description: The computer screen used on the office
-  playerAffordances: []
-  avatarAffordances: 03000000
-  owners: []
-  performedEnergyMeasures: []
-  interactionPos: {x: 0, y: 0, z: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
