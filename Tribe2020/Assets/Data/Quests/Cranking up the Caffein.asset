@@ -19,7 +19,7 @@ MonoBehaviour:
   questSteps:
   - title: Prompt.Open Inbox
     type: 0
-    inputState: 0
+    inputState: 1
     valueField: 'F. Shaman: OK, let''s get started. Now where did I put my checklist...'
     objectField: {fileID: 0}
     showAtBottom: 0
@@ -34,8 +34,8 @@ MonoBehaviour:
     condition: 0
     conditionField: 
   - title: Wait until Inbox pressed
-    type: 4
-    inputState: 0
+    type: 10
+    inputState: 6
     valueField: 
     objectField: {fileID: 0}
     showAtBottom: 0
@@ -49,28 +49,43 @@ MonoBehaviour:
     showAtBottom: 0
     condition: 0
     conditionField: 
-  - title: Popup.Recall the Mail
-    type: 1
+  - title: Wait until Mail pressed
+    type: 10
     inputState: 7
-    valueField: 'F. Shaman: Right, the Inbox is where I keep track of what needs to
-      be done! Looks like I have some coffee business to attend to...'
+    valueField: 
     objectField: {fileID: 0}
     showAtBottom: 0
     condition: 20
     conditionField: 
   - title: Popup.Close Mail
-    type: 1
-    inputState: 7
+    type: 0
+    inputState: 1
     valueField: 'F. Shaman: Each task involves several sub tasks. In each respective
       mail I can see which sub tasks have been completed so far. Let''s close the
       Inbox.'
     objectField: {fileID: 0}
     showAtBottom: 0
+    condition: 1
+    conditionField: 
+  - title: Wait until Mail closed
+    type: 10
+    inputState: 14
+    valueField: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
     condition: 21
+    conditionField: 
+  - title: Control UI.Hide
+    type: 9
+    inputState: 13
+    valueField: '{id:inspector, action:hide}'
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    condition: 0
     conditionField: 
   - title: Wait until in Waiting Lounge
     type: 1
-    inputState: 0
+    inputState: 2
     valueField: 'F. Shaman: So we need to fix that coffee. First step is to find the
       room where it''s located. Swipe until you find the lobby.'
     objectField: {fileID: 0}
@@ -79,7 +94,7 @@ MonoBehaviour:
     conditionField: Waiting Lounge
   - title: Popup.Select Coffee
     type: 1
-    inputState: 0
+    inputState: 4
     valueField: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
       tap that pesky perculator.
     objectField: {fileID: 0}
@@ -96,8 +111,8 @@ MonoBehaviour:
     condition: 1
     conditionField: 
   - title: Wait until Thermal Jug Installed
-    type: 4
-    inputState: 0
+    type: 10
+    inputState: 11
     valueField: 
     objectField: {fileID: 0}
     showAtBottom: 0
@@ -121,7 +136,7 @@ MonoBehaviour:
     conditionField: 
   - title: Prompt.Present Avatar
     type: 0
-    inputState: 0
+    inputState: 1
     valueField: And here they are, and a magnificent sample at that.
     objectField: {fileID: 0}
     showAtBottom: 0
@@ -145,7 +160,7 @@ MonoBehaviour:
     conditionField: 
   - title: Popup.Present Activity
     type: 1
-    inputState: 0
+    inputState: 3
     valueField: Drinking coffee is an activity. It involves using a coffee machine,
       fridge, table and finally dishwasher.
     objectField: {fileID: 0}
@@ -162,7 +177,7 @@ MonoBehaviour:
     conditionField: 
   - title: Prompt.Present Activity Over
     type: 0
-    inputState: 0
+    inputState: 1
     valueField: Delicious! The avatars efficient usage of each device yielded some
       money savings for us.
     objectField: {fileID: 0}

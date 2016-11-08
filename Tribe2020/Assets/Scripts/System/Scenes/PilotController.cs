@@ -162,6 +162,8 @@ public class PilotController : Controller{
 	
 	//
 	private void OnTap(Vector3 pos){
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
+
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
 		//if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
 		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -282,6 +284,7 @@ public class PilotController : Controller{
 		if(_curState != InputState.ALL) {
 			if(ui == _view.energyPanel && _curState != InputState.ONLY_ENERGY) { return; }
 			if(ui == _view.comfortPanel && _curState != InputState.ONLY_COMFORT) { return; }
+			if(_view.GetCurrentUI() == _view.mail && ui == _view.inbox && _curState != InputState.ONLY_CLOSE_MAIL) { return; }
 		}
 
 		if(_view.GetCurrentUI() != null) {
@@ -317,6 +320,8 @@ public class PilotController : Controller{
 
 	//Hide any open user interface
 	public void HideUI() {
+		//if(_curState != InputState.ALL) { return; }
+
 		//if(_view.GetCurrentUI() == _view.inspector) {
 		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
 		//} else if(_view.GetCurrentUI() == _view.inbox) {
