@@ -502,7 +502,7 @@ public class BehaviourAI : MonoBehaviour
         _isControlled = false;
     }
 
-    bool EffeciencyRoulette(float effeciency)
+    bool EfficiencyRoulette(float effeciency)
     {
         return effeciency >= UnityEngine.Random.value;
     }
@@ -831,7 +831,7 @@ public class BehaviourAI : MonoBehaviour
         if (other.GetComponent<Room>())
         {
             _curRoom = other.GetComponent<Room>();
-            if (EffeciencyRoulette(_stats.energy))
+            if (EfficiencyRoulette(_stats.energy))
             {
                 CheckLighting(false);
             }
