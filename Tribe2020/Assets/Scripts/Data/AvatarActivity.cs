@@ -33,7 +33,7 @@ public class AvatarActivity : ScriptableObject {
     //public ActivityState curActivityState = ActivityState.Idle;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
+    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
@@ -142,7 +142,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 _ai.Wait();
 				break;
-            case SessionType.SitUntilEnd:
+            case SessionType.SitDown:
                 _ai.SitAt(session.target, session.avatarOwnsTarget);
                 break;
 			case SessionType.WaitUntilEnd:
@@ -233,6 +233,11 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
+            //If we are gonna be movinng somewhere, we should do that standing up!
+            if(sessions[_currSession].type == SessionType.WalkTo)
+            {
+                _ai.standUp();
+            }
             //Debug.Log("starting session" + sessions[_currSession].title);
             StartSession(sessions[_currSession]);
 		}
