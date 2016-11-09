@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "EEM", menuName = "TRIBE/EnergyEfficiencyMeasure", order = 1)]
 public class EnergyEfficiencyMeasure : ScriptableObject {
@@ -24,6 +24,9 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 
 	public string deactivateDeviceName;
 	public string activateDeviceName;
+
+	public List<EnergyEfficiencyMeasure> requires;
+	public List<EnergyEfficiencyMeasure> excludes;
 
 	//public int cashProduction;
 	//public int comfortPorduction;

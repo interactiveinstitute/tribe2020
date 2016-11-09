@@ -50,6 +50,7 @@ public class AvatarActivity : ScriptableObject {
 		public SessionType type;
         public Appliance appliance = null;
 		public Target target;
+		public Affordance requiredAffordance;
 		public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;

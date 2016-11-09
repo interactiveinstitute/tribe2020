@@ -666,7 +666,9 @@ public class BehaviourAI : MonoBehaviour
     {
         Appliance targetAppliance = FindNearestAppliance(target, false);
         SetRunLevel(targetAppliance, level);
-    }
+		//TODO: temp solution
+		targetAppliance.OnUsage(target);
+	}
 
     public void SetRunLevel(Appliance appliance, int level)
     {
@@ -701,7 +703,9 @@ public class BehaviourAI : MonoBehaviour
     {
         Appliance targetAppliance = FindNearestAppliance(target, false);
         TurnOn(targetAppliance);
-    }
+		//TODO: temp solution
+		targetAppliance.OnUsage(target);
+	}
 
     public void TurnOn(Appliance appliance)
     {
@@ -730,7 +734,9 @@ public class BehaviourAI : MonoBehaviour
     {
         Appliance targetAppliance = FindNearestAppliance(target, false);
         TurnOff(targetAppliance);
-    }
+		//TODO: temp solution
+		targetAppliance.OnUsage(target);
+	}
 
     public void TurnOff(Appliance appliance)
     {
@@ -766,7 +772,7 @@ public class BehaviourAI : MonoBehaviour
 
         foreach (Appliance device in _devices)
         {
-            List<AvatarActivity.Target> affordances = device.avatarAffordances;
+            List<AvatarActivity.Target> affordances = device.avatarAffordances_old;
             if (affordances.Contains(affordance) && (!isOwned || device.owners.Contains(_stats.avatarName)))
             {
                 float dist = Vector3.Distance(transform.position, device.transform.position);
@@ -786,8 +792,27 @@ public class BehaviourAI : MonoBehaviour
         return targetAppliance;
     }
 
-    //
-    public void OnActivityOver()
+	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
+	public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage) {
+		Appliance targetAppliance = null;
+		float minDist = float.MaxValue;
+
+		foreach(Appliance app in _devices) {
+			List<Affordance> affordances = app.avatarAffordances;
+			if(affordances.Contains(affordance) && (!userOwnage || app.owners.Contains(_stats.avatarName))) {
+				float dist = Vector3.Distance(transform.position, app.transform.position);
+				if(dist < minDist) {
+					minDist = dist;
+					targetAppliance = app;
+				}
+			}
+		}
+
+		return targetAppliance;
+	}
+
+	//
+	public void OnActivityOver()
     {
 
         string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;

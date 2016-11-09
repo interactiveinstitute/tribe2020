@@ -15,44 +15,28 @@ public class SaveManager : MonoBehaviour{
 	#region Fields
 	public static int currentSlot = 0;
 
-	private PilotController _controller;
-	private GameTime _timeMgr;
-	private ResourceManager _resourceMgr;
-	private NarrationManager _narrationMgr;
-    private PilotController _pilotController;
-
 	public bool debug = false;
+    public bool enableSaveLoad;
 
-	/*Need reference to all avatars for saving and loading their state. Maybe we should have 
-	the pilotcontroller hand over the references on init? Yeah let's try to achieve that.*/
-    private List<BehaviourAI> _avatars = new List<BehaviourAI>();
-
-    public Boolean enableSaveLoad;
 	public string fileName;
 	private string _filePath;
 	private JSONNode _dataClone = new JSONNode();
-
-	public List<GameObject> saveObjects;
 	#endregion
 
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
-		_filePath = Application.persistentDataPath + "/" + fileName + ".gd";
-		_dataClone = ReadFileAsJSON();
+		_filePath = Application.persistentDataPath + "/" + fileName;
+		//_dataClone = ReadFileAsJSON();
+		Load();
 	}
 
 	//Use this for initialization
 	void Start(){
-		_timeMgr = GameTime.GetInstance();
-		_resourceMgr = ResourceManager.GetInstance();
-		_narrationMgr = NarrationManager.GetInstance();
-
 	}
 	
 	//Update is called once per frame
 	void Update(){
-
 	}
 
 	//
@@ -61,10 +45,10 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public JSONNode GetData(int slot, string field) {
+	public JSONNode GetData(int slot, string key) {
 		if(_dataClone["instances"][slot] != null) {
-			if(_dataClone["instances"][slot][field] != null) {
-				return _dataClone["instances"][slot][field];
+			if(_dataClone["instances"][slot][key] != null) {
+				return _dataClone["instances"][slot][key];
 			} else {
 				return null;
 			}
@@ -121,16 +105,14 @@ public class SaveManager : MonoBehaviour{
 		return GetData(slot, "curPilot") == null;
 	}
 
+	//
 	public void Delete(int slot) {
-		//_dataClone["instances"][slot].Remove("curPilot");
-		//_dataClone["instances"][slot].Remove("lastTime");
 		_dataClone["instances"].Remove(slot);
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
 	public string GetSlotData(int slot) {
-		//_dataClone = ReadFileAsJSON();
 		if(debug) { Debug.Log("GetSlotData: " + slot); }
 
 		JSONNode fileData = GetData(slot, "curPilot");

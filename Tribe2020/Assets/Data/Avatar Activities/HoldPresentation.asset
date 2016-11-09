@@ -11,10 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34a2e631240d584a88fcab665d829b9, type: 3}
   m_Name: HoldPresentation
   m_EditorClassIdentifier: 
+  title: 
   sessions:
   - title: Walking to present
     probability: 1
     type: 0
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 665543bf02a3ccb46a098522e5a4bfb7,
+      type: 2}
     target: 12
     parameter: 
     avatarOwnsTarget: 0
@@ -25,6 +29,9 @@ MonoBehaviour:
   - title: Preparing presentation
     probability: 1
     type: 2
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 665543bf02a3ccb46a098522e5a4bfb7,
+      type: 2}
     target: 0
     parameter: 100
     avatarOwnsTarget: 0
@@ -35,6 +42,9 @@ MonoBehaviour:
   - title: Start presenting
     probability: 1
     type: 0
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 665543bf02a3ccb46a098522e5a4bfb7,
+      type: 2}
     target: 2
     parameter: 
     avatarOwnsTarget: 0
@@ -45,6 +55,9 @@ MonoBehaviour:
   - title: Presenting
     probability: 1
     type: 2
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 665543bf02a3ccb46a098522e5a4bfb7,
+      type: 2}
     target: 0
     parameter: 
     avatarOwnsTarget: 0
@@ -52,19 +65,5 @@ MonoBehaviour:
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  SkipSession:
-    title: 
-    probability: 1
-    type: 0
-    target: 0
-    parameter: 
-    avatarOwnsTarget: 0
-    currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
-  onSkipCommand: TeleportTo,appliance_present
-  _delay: 0
-  _duration: 0
   startTime: 0
-  endTime: 0
+  hasStartTime: 1

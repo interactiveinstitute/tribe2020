@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-
 // Manages game narration that goes outside the base game behaviour, for instance
 // showing a dialogue box, playing an overlay animation or injecting behavior into
 // some aspect of the game in order to tell the story
@@ -193,31 +192,6 @@ public class NarrationManager : MonoBehaviour {
 		return result;
 	}
 
-	// Save function
-	//public JSONClass Encode() {
-	//	JSONClass questStateJSON = new JSONClass();
-
-	//	JSONArray questsJSON = new JSONArray();
-	//	foreach(Quest quest in curQuests) {
-	//		JSONClass questJSON = new JSONClass();
-	//		questJSON.Add("index", GetQuestIndex(quest).ToString());
-	//		questJSON.Add("step", quest.Encode());
-
-	//		questsJSON.Add(questJSON);
-	//	}
-	//	questStateJSON.Add("activeQuests", questsJSON);
-
-	//	return questStateJSON;
-	//}
-
-	// Load function
-	//public void Decode(JSONClass questStateJSON) {
-	//	JSONArray quests = questStateJSON["activeQuests"].AsArray;
-	//	foreach(JSONClass quest in quests) {
-	//		AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
-	//	}
-	//}
-
 	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
@@ -227,7 +201,6 @@ public class NarrationManager : MonoBehaviour {
 			JSONClass questJSON = new JSONClass();
 			questJSON.Add("index", GetQuestIndex(quest).ToString());
 			questJSON.Add("step", quest.GetCurrentStepIndex().ToString());
-
 			questsJSON.Add(questJSON);
 		}
 		json.Add("activeQuests", questsJSON);

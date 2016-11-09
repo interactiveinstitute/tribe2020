@@ -165,10 +165,6 @@ public class PilotController : Controller{
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
-		//if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
-		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		//	RaycastHit hit;
-		//}
 	}
 
 	//
@@ -247,6 +243,11 @@ public class PilotController : Controller{
 		PlaySound("button");
 	}
 
+	//
+	public void ToggleMenu() {
+		_view.ToggleMenu();
+	}
+
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance appliance) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
@@ -256,6 +257,9 @@ public class PilotController : Controller{
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, appliance.title);
+		if(appliance.GetComponent<BehaviourAI>()) {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, appliance.title);
+		}
 	}
 
 	//Open mail with details of narrative
@@ -402,21 +406,22 @@ public class PilotController : Controller{
 	//
 	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
-		if(_curState == InputState.ALL) {
-			if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
-				_resourceMgr.cash -= eem.cashCost;
-				_resourceMgr.comfort -= eem.comfortCost;
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
-				appliance.ApplyEEM(eem);
-				_view.BuildEEMInterface(appliance);
+		if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
+			_resourceMgr.cash -= eem.cashCost;
+			_resourceMgr.comfort -= eem.comfortCost;
 
-				_resourceMgr.RefreshProduction();
+			appliance.ApplyEEM(eem);
+			_view.BuildEEMInterface(appliance);
 
-				//actionObj.SetActive(false);
+			//_resourceMgr.RefreshProduction();
 
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
-			}
+			//actionObj.SetActive(false);
+
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
 		}
+
 	}
 
 	//
@@ -433,9 +438,7 @@ public class PilotController : Controller{
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
-		Debug.Log(name + ": OnAvatarActivityOver " + activity);
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
-		//avatar.ReleaseControlOfAvatar();
 	}
 
 	//

@@ -1948,6 +1948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb33a68ed2c78dc4496f0af71a27d364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   cash: {fileID: 22406060}
   comfort: {fileID: 22475728}
   title: {fileID: 22467782}
@@ -1974,12 +1975,11 @@ MonoBehaviour:
     type: 2}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
   menus:
-  - {fileID: 224000012436051696}
   - {fileID: 224000010187616522}
   - {fileID: 224000014061956002}
   - {fileID: 22487232}
-  - {fileID: 22456438}
   - {fileID: 22468312}
+  - {fileID: 22456438}
   settingsPanel: {fileID: 224000012436051696}
   energyPanel: {fileID: 224000010187616522}
   comfortPanel: {fileID: 224000014061956002}
@@ -2571,8 +2571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   enableSaveLoad: 1
-  fileName: tribeSave
-  saveObjects: []
+  fileName: tribeSave.gd
 --- !u!114 &11437238
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3449,9 +3448,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStart: 1
-  saveProgress: 0
+  saveProgress: 1
   debug: 0
-  startQuest: {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
+  startQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
   quests:
   - {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
   - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
@@ -3641,6 +3640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraState: camera_idle
   viewPointContainer: {fileID: 0}
+  startView: {x: 1, y: 0}
   gameCamera: {fileID: 2054428}
 --- !u!114 &11491898
 MonoBehaviour:
@@ -11563,7 +11563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000013958172414
 GameObject:
   m_ObjectHideFlags: 1
@@ -13163,6 +13163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BehaviourAI: 0
+  AvatarActivity: 0
 --- !u!114 &114000010678187100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15954,11 +15955,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11424080}
-        m_MethodName: SetCurrentUI
-        m_Mode: 2
+        m_MethodName: ToggleMenu
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 224000012436051696}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.RectTransform, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -21703,10 +21704,10 @@ RectTransform:
   - {fileID: 224000013733018544}
   m_Father: {fileID: 224000010971001500}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 35, y: -25.368853}
+  m_SizeDelta: {x: 50, y: 50.737705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000010640806910
 RectTransform:
@@ -21955,10 +21956,10 @@ RectTransform:
   - {fileID: 224000013362710052}
   m_Father: {fileID: 224000013428748762}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 122.5, y: -57.13115}
+  m_SizeDelta: {x: 245, y: 55.737705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000010975922018
 RectTransform:
@@ -22756,10 +22757,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224000013428748762}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 117.5, y: -28.565575}
+  m_SizeDelta: {x: 235, y: 1.3934426}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000012142836784
 RectTransform:
@@ -23342,10 +23343,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224000013428748762}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 117.5, y: -13.934426}
+  m_SizeDelta: {x: 235, y: 27.868853}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000012721804798
 RectTransform:
@@ -23836,10 +23837,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 224000010971001500}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 72.5, y: -25.368853}
+  m_SizeDelta: {x: 25, y: 50.737705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000013291465242
 RectTransform:
@@ -23931,10 +23932,10 @@ RectTransform:
   - {fileID: 224000011300347744}
   m_Father: {fileID: 224000010971001500}
   m_RootOrder: 3
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 160, y: -25.368853}
+  m_SizeDelta: {x: 150, y: 50.737705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000013388560694
 RectTransform:
@@ -23975,10 +23976,10 @@ RectTransform:
   - {fileID: 224000010971001500}
   m_Father: {fileID: 22424928}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 117.5, y: -42.5}
+  m_SizeDelta: {x: 235, y: 85}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000013441838690
 RectTransform:

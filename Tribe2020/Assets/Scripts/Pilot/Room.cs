@@ -40,7 +40,7 @@ public class Room : MonoBehaviour {
 	//
 	public Appliance GetLightSwitch() {
 		foreach(Appliance device in _devices) {
-			if(device.avatarAffordances.Contains(AvatarActivity.Target.LampSwitch)) {
+			if(device.avatarAffordances_old.Contains(AvatarActivity.Target.LampSwitch)) {
 				return device;
 			}
 		}
@@ -81,7 +81,7 @@ public class Room : MonoBehaviour {
         lux = 0;
 
         foreach (Appliance device in _devices) {
-			if(device.avatarAffordances.Contains(AvatarActivity.Target.Lamp)) {
+			if(device.avatarAffordances_old.Contains(AvatarActivity.Target.Lamp)) {
 				if(device.GetComponent<Lamp>().Power > 0) {
 					lux = 1;
 					return;

@@ -11,7 +11,7 @@ public class PilotView : View{
 	#region Fields
 	public bool debug = false;
 
-	private PilotController _ctrlMgr;
+	private PilotController _controller;
 	private GameTime _timeMgr;
 	private MainMeter _energyMgr;
 	private ResourceManager _resourceMgr;
@@ -56,6 +56,7 @@ public class PilotView : View{
 
 	public GameObject FeedbackNumber;
 
+	private bool _showSettings;
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
@@ -70,7 +71,7 @@ public class PilotView : View{
 
 	//Use this for initialization
 	void Start(){
-		_ctrlMgr = PilotController.GetInstance();
+		_controller = PilotController.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 		_energyMgr = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
@@ -96,22 +97,35 @@ public class PilotView : View{
 			energyCounter.text = Mathf.Floor(energy) + " kWh";
 		}
 
-		foreach(RectTransform menu in menus) {
-			Vector2 origPos = menu.GetComponent<UIPanel>().originalPosition;
-			Vector2 targetPos = menu.GetComponent<UIPanel>().targetPosition;
+		if(_showSettings) {
+			Vector2 target = settingsPanel.GetComponent<UIPanel>().targetPosition;
+			if(settingsPanel.anchoredPosition.x != target.x || settingsPanel.anchoredPosition.y != target.y) {
+				float curX = target.x + (settingsPanel.anchoredPosition.x - target.x) * 0.75f;
+				float curY = target.y + (settingsPanel.anchoredPosition.y - target.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
+			}
+		} else {
+			Vector2 origin = settingsPanel.GetComponent<UIPanel>().originalPosition;
+			if(settingsPanel.anchoredPosition.x != origin.x || settingsPanel.anchoredPosition.y != origin.y) {
+				float curX = origin.x + (settingsPanel.anchoredPosition.x - origin.x) * 0.75f;
+				float curY = origin.y + (settingsPanel.anchoredPosition.y - origin.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
+			}
+		}
 
+		foreach(RectTransform menu in menus) {
 			if(menu == _curMenu) {
-				if(menu.anchoredPosition.x != targetPos.x || menu.anchoredPosition.y != targetPos.y) {
-					float curX = targetPos.x + (menu.anchoredPosition.x - targetPos.x) * 0.75f;
-					float curY = targetPos.y + (menu.anchoredPosition.y - targetPos.y) * 0.75f;
-					//curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
+				Vector2 target = menu.GetComponent<UIPanel>().targetPosition;
+				if(menu.anchoredPosition.x != target.x || menu.anchoredPosition.y != target.y) {
+					float curX = target.x + (menu.anchoredPosition.x - target.x) * 0.75f;
+					float curY = target.y + (menu.anchoredPosition.y - target.y) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
 			} else {
-				if(menu.anchoredPosition.x != origPos.x || menu.anchoredPosition.y != origPos.y) {
-					float curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
-					float curY = origPos.y + (menu.anchoredPosition.y - origPos.y) * 0.75f;
-					//curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
+				Vector2 origin = menu.GetComponent<UIPanel>().originalPosition;
+				if(menu.anchoredPosition.x != origin.x || menu.anchoredPosition.y != origin.y) {
+					float curX = origin.x + (menu.anchoredPosition.x - origin.x) * 0.75f;
+					float curY = origin.y + (menu.anchoredPosition.y - origin.y) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
 			}
@@ -170,7 +184,7 @@ public class PilotView : View{
 		bool visibility = action == "show";
 		switch(id) {
 			case "inspector":
-				_ctrlMgr.HideUI();
+				_controller.HideUI();
 				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
@@ -213,9 +227,9 @@ public class PilotView : View{
 
 			if(!app.appliedEEMs.Contains(curEEM)){
 				if(eem.callback == "") {
-					button.onClick.AddListener(() => _ctrlMgr.ApplyEEM(app, curEEM));
+					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				} else {
-					button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
 				}
 				eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
@@ -260,7 +274,7 @@ public class PilotView : View{
 		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[2].gameObject.SetActive(false);
@@ -275,7 +289,7 @@ public class PilotView : View{
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[0].color = Color.gray;
@@ -321,7 +335,7 @@ public class PilotView : View{
 	//
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
-		_ctrlMgr.PlaySound("fireworks");
+		_controller.PlaySound("fireworks");
 		victoryUI.SetActive(true);
 		victoryText.text = _localMgr.GetPhrase(text);
 	}
@@ -345,13 +359,8 @@ public class PilotView : View{
 	}
 
 	//
-	public void ShowSettings() {
-		_curMenu = settingsPanel;
-	}
-
-	//
-	public void HideSettings() {
-		_curMenu = null;
+	public void ToggleMenu() {
+		_showSettings = !_showSettings;
 	}
 
 	//

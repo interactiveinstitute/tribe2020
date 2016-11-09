@@ -48,7 +48,7 @@ public class BattleController : Controller {
 	void Update () {
 		if(!_isLoaded) {
 			_isLoaded = true;
-			_saveMgr.Load(SaveManager.currentSlot);
+			LoadGameState();
 		}
 
 		_view.foeCPNumber.text = foeCP + "/100";
@@ -79,7 +79,7 @@ public class BattleController : Controller {
 	//
 	private void OnTouchEnded(Vector3 pos) {
 		if(_isTouching && _hasWon) {
-			_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "pilot"));
+			_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
 		}
 	}
 
@@ -100,10 +100,10 @@ public class BattleController : Controller {
 			foeCP = Mathf.Max(foeCP - damage, 0);
 			if(foeCP == 0) {
 				OnWin();
+			} else {
+				_curQuiz = (_curQuiz + 1) % quizzes.Length;
+				LoadQuiz(quizzes[_curQuiz]);
 			}
-
-			_curQuiz = (_curQuiz + 1) % quizzes.Length;
-			LoadQuiz(quizzes[_curQuiz]);
 		}
 	}
 
@@ -122,7 +122,18 @@ public class BattleController : Controller {
 		_hasWon = true;
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
-		_saveMgr.Save(SaveManager.currentSlot, false);
-		//_sceneMgr.LoadScene("ga_madrid_erik");
+		SaveGameState();
+	}
+
+	//
+	public override void SaveGameState() {
+		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
+		_saveMgr.Save();
+	}
+
+	//
+	public override void LoadGameState() {
+		_saveMgr.Load();
+		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
 	}
 }
