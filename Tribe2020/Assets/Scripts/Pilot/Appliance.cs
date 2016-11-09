@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
@@ -104,5 +105,37 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	//
 	public void AddHarvest() {
 		_harvestButton.SetActive(true);
+	}
+
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
+
+		json.Add("id", GetComponent<UniqueId>().uniqueId);
+		json.Add("title", title);
+
+		JSONArray eemsJSON = new JSONArray();
+		foreach(EnergyEfficiencyMeasure eem in appliedEEMs) {
+			JSONClass eemJSON = new JSONClass();
+			eemJSON.Add("title", eem.title);
+			eemsJSON.Add(eemJSON);
+		}
+		json.Add("appliedEEMs", eemsJSON);
+
+		return json;
+	}
+
+	//
+	public void DeserializeFromJSON(JSONClass json) {
+		if(json != null) {
+			JSONArray eemsJSON = json["appliedEEMs"].AsArray;
+			foreach(JSONClass appliedEEMJSON in eemsJSON) {
+				foreach(EnergyEfficiencyMeasure eem in playerAffordances) {
+					if(eem.title.Equals(appliedEEMJSON["title"])) {
+						ApplyEEM(eem);
+					}
+				}
+			}
+		}
 	}
 }

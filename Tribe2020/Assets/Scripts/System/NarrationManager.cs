@@ -64,17 +64,7 @@ public class NarrationManager : MonoBehaviour {
 
 	//
 	public void AddQuest(int questIndex, int questStep) {
-		AddQuest(quests[questIndex], questIndex);
-		//if(debug) { Debug.Log(name + ":AddQuest " + quests[questIndex].name); }
-
-		//Quest newQuest = Object.Instantiate(quests[questIndex]) as Quest;
-		//newQuest.SetCurrentStep(questStep);
-		//newQuest.date = _timeMgr.CurrentDate;
-		//curQuests.Add(newQuest);
-
-		//if(autoStart) {
-		//	StartQuestStep(newQuest);
-		//}
+		AddQuest(quests[questIndex], questStep);
 	}
 
 	//
@@ -204,37 +194,58 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	// Save function
-	public JSONClass Encode() {
-		JSONClass questStateJSON = new JSONClass();
+	//public JSONClass Encode() {
+	//	JSONClass questStateJSON = new JSONClass();
+
+	//	JSONArray questsJSON = new JSONArray();
+	//	foreach(Quest quest in curQuests) {
+	//		JSONClass questJSON = new JSONClass();
+	//		questJSON.Add("index", GetQuestIndex(quest).ToString());
+	//		questJSON.Add("step", quest.Encode());
+
+	//		questsJSON.Add(questJSON);
+	//	}
+	//	questStateJSON.Add("activeQuests", questsJSON);
+
+	//	return questStateJSON;
+	//}
+
+	// Load function
+	//public void Decode(JSONClass questStateJSON) {
+	//	JSONArray quests = questStateJSON["activeQuests"].AsArray;
+	//	foreach(JSONClass quest in quests) {
+	//		AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
+	//	}
+	//}
+
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
 
 		JSONArray questsJSON = new JSONArray();
 		foreach(Quest quest in curQuests) {
 			JSONClass questJSON = new JSONClass();
 			questJSON.Add("index", GetQuestIndex(quest).ToString());
-			questJSON.Add("step", quest.Encode());
+			questJSON.Add("step", quest.GetCurrentStepIndex().ToString());
 
 			questsJSON.Add(questJSON);
 		}
-		questStateJSON.Add("activeQuests", questsJSON);
+		json.Add("activeQuests", questsJSON);
 
-		return questStateJSON;
-	}
-
-	// Load function
-	public void Decode(JSONClass questStateJSON) {
-		JSONArray quests = questStateJSON["activeQuests"].AsArray;
-		foreach(JSONClass quest in quests) {
-			AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
-		}
+		return json;
 	}
 
 	//
-	public bool DoSave {
-		get {
-			return saveProgress;
-		}
-		set {
-			saveProgress = value;
+	public void DeserializeFromJSON(JSONClass json) {
+		if(json != null) {
+			curQuests.Clear();
+
+			JSONArray questsJSON = json["activeQuests"].AsArray;
+			foreach(JSONClass quest in questsJSON) {
+				AddQuest(quest["index"].AsInt, quest["step"].AsInt);
+			}
+		} else {
+			SetStartState();
 		}
 	}	
 }

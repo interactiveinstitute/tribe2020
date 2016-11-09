@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class LocalisationManager : MonoBehaviour {
 	//Singleton features
@@ -56,5 +57,26 @@ public class LocalisationManager : MonoBehaviour {
 			}
 		}
 		return "";
+	}
+
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
+
+		json.Add("language", curLanguage.ToString());
+
+		return json;
+	}
+
+	//
+	public void DeserializeFromJSON(JSONClass json) {
+		if(json != null) {
+			string langString = json["language"];
+			foreach(Language language in languages) {
+				if(language.ToString() == langString) {
+					curLanguage = language;
+				}
+			}
+		}
 	}
 }

@@ -22,6 +22,7 @@ public class CameraManager : MonoBehaviour {
 	public GameObject viewPointContainer;
 
 	//Viewpoint variables
+	public Vector2 startView = Vector2.zero;
 	private Vector2 _curView = Vector2.zero;
 	private Transform _curViewpoint;
 	private Transform[][] _viewpoints;
@@ -64,7 +65,7 @@ public class CameraManager : MonoBehaviour {
 
 		//PopulateViewpoints(Object.FindObjectsOfType<Viewpoint>());
 
-		SetViewpoint(0, 0);
+		SetViewpoint((int)startView.x, (int)startView.y);
 		//UpdateVisibility();
 	}
 

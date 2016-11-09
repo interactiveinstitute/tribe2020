@@ -11,7 +11,8 @@ public class Controller : MonoBehaviour {
 	//
 	public enum InputState {
 		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
-		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT
+		ONLY_OPEN_QUEST_LIST, ONLY_OPEN_QUEST, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
+		ONLY_CLOSE_MAIL
 	};
 
 	// Use this for initialization
@@ -42,5 +43,9 @@ public class Controller : MonoBehaviour {
 
 	//
 	public virtual void SaveGameState() {
+	}
+
+	//
+	public virtual void LoadGameState() {
 	}
 }

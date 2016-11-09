@@ -7,7 +7,7 @@ public class Quest : ScriptableObject {
 	//Quest step types
 	public enum QuestStepType {
 		Prompt, Popup, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity,
-		ChangeTimeScale, QuestComplete, ControlInterface
+		ChangeTimeScale, QuestComplete, ControlInterface, Wait
 	};
 
 	//Quest events
