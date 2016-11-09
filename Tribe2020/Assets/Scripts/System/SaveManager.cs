@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour{
 	#region Fields
 	public static int currentSlot = 0;
 
+	private PilotController _controller;
 	private GameTime _timeMgr;
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
@@ -55,6 +56,11 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public JSONNode GetData(string key) {
+		return GetData(currentSlot, key);
+	}
+
+	//
 	public JSONNode GetData(int slot, string field) {
 		if(_dataClone["instances"][slot] != null) {
 			if(_dataClone["instances"][slot][field] != null) {
@@ -67,6 +73,11 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public JSONClass GetClass(string field) {
+		return GetClass(currentSlot, field);
+	}
+
+	//
 	public JSONClass GetClass(int slot, string field) {
 		if(_dataClone["instances"][slot][field] != null) {
 			return _dataClone["instances"][slot][field].AsObject;
@@ -76,8 +87,18 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public void SetData(string key, string value) {
+		SetData(currentSlot, key, value);
+	}
+
+	//
 	public void SetData(int slot, string field, string value) {
 		_dataClone["instances"][slot].Add(field, value);
+	}
+
+	//
+	public void SetData(string key, JSONClass value) {
+		SetData(currentSlot, key, value);
 	}
 
 	//
@@ -86,13 +107,24 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public void SetData(string key, JSONArray value) {
+		SetData(currentSlot, key, value);
+	}
+
+	//
+	public void SetData(int slot, string key, JSONArray value) {
+		_dataClone["instances"][slot].Add(key, value);
+	}
+
+	//
 	public bool IsSlotVacant(int slot) {
-		return GetData(slot, "pilot") == null;
+		return GetData(slot, "curPilot") == null;
 	}
 
 	public void Delete(int slot) {
-		_dataClone["instances"][slot].Remove("pilot");
-		_dataClone["instances"][slot].Remove("lastTime");
+		//_dataClone["instances"][slot].Remove("curPilot");
+		//_dataClone["instances"][slot].Remove("lastTime");
+		_dataClone["instances"].Remove(slot);
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
@@ -101,7 +133,7 @@ public class SaveManager : MonoBehaviour{
 		//_dataClone = ReadFileAsJSON();
 		if(debug) { Debug.Log("GetSlotData: " + slot); }
 
-		JSONNode fileData = GetData(slot, "pilot");
+		JSONNode fileData = GetData(slot, "curPilot");
 
 		if(fileData == null) {
 			return "New Game";
@@ -125,53 +157,23 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public void InitSlot(int slot, string pilot) {
-		//SetData(slot, "pilot", pilot);
-
-		//SetData(slot, "lastTime", "1452691843.939");
-		//SetData(slot, "money", "500");
-		//SetData(slot, "comfort", "500");
-
-		//SetData(slot, "questState", _narrationMgr.Encode());
-
-		//File.WriteAllText(_filePath, _dataClone.ToString());
-	}
-
-	//
-	public void Save() {
-		foreach(GameObject saveObj in saveObjects) {
-		}
+	public void Save(bool currentScene = true) {
+		Save(currentSlot, currentScene);
 	}
 
 	//
 	public void Save(int slot, bool currentScene = true) {
-		if(currentScene) {
-			SetData(slot, "pilot", Application.loadedLevelName);
-		}
-
-		SetData(slot, "lastTime", _timeMgr.time.ToString());
-		SetData(slot, "money", _resourceMgr.cash.ToString());
-		SetData(slot, "comfort", _resourceMgr.comfort.ToString());
-
-		//Store narration and quest progress if flagged to do so
-		if(_narrationMgr.saveProgress) { SetData(slot, "questState", _narrationMgr.Encode()); }
-
-        //Create a json node for holding avatar states
-        JSONArray avatarsJSON = new JSONArray();
-        //Fill it up with the avatars states
-        foreach(BehaviourAI avatar in _avatars)
-        {
-            avatarsJSON.Add(avatar.Encode());
-        }
-        SetData(slot, "avatarStates", avatarsJSON);//Add it to save object
-
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
+	public void Load() {
+		Load(currentSlot);
+	}
+
+	//
 	public void Load(int slot) {
-        if (!enableSaveLoad)
-        {
+        if(!enableSaveLoad) {
 			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
             return;
         }
@@ -180,18 +182,6 @@ public class SaveManager : MonoBehaviour{
 
 		_dataClone = ReadFileAsJSON();
 		_dataClone.Add("lastSlot", "" + slot);
-
-		if(GetData(slot, "lastTime") != null) {
-			_timeMgr.SetTime(GetData(slot, "lastTime").AsDouble);
-			_resourceMgr.cash = GetData(slot, "money").AsInt;
-			_resourceMgr.comfort = GetData(slot, "comfort").AsInt;
-		}
-
-		if(GetClass(slot, "questState") != null) {
-			_narrationMgr.Decode(GetClass(slot, "questState"));
-		}  else {
-			_narrationMgr.SetStartState();
-		}
 	}
 
 	//
@@ -204,10 +194,4 @@ public class SaveManager : MonoBehaviour{
 		JSONNode json = JSON.Parse(fileClone);
 		return json;
 	}
-
-    //Set the avatars so we can access them for save and load of avatar states
-    public void SetAvatars(List<BehaviourAI> avatars)
-    {
-        _avatars = avatars;
-    }
 }

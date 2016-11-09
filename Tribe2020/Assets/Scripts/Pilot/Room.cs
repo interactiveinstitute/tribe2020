@@ -29,8 +29,12 @@ public class Room : MonoBehaviour {
 
 	//
 	public bool IsLit() {
-
-		return false;
+        Appliance lightSwitch = GetLightSwitch();
+        if(lightSwitch == null)
+        {
+            return false; //Presumption: no light switch -> no light
+        }
+        return GetLightSwitch().GetComponent<ElectricMeter>().GivesPower;
 	}
 
 	//
@@ -56,9 +60,6 @@ public class Room : MonoBehaviour {
 
 	//
 	void OnTriggerEnter(Collider other) {
-
-        Debug.Log(other.name + " ENTERED " + name, gameObject);
-
 		if(other.GetComponent<BehaviourAI>()) {
 			//Debug.Log(other.name + " entered " + name);
 			_occupants.Add(other.GetComponent<BehaviourAI>());
@@ -67,9 +68,6 @@ public class Room : MonoBehaviour {
 
 	//
 	void OnTriggerExit(Collider other) {
-
-        Debug.Log(other.name + " EXITED " + gameObject.name, gameObject);
-
         if (other.GetComponent<BehaviourAI>()) {
 			//Debug.Log(other.name + " left " + name);
 			_occupants.Remove(other.GetComponent<BehaviourAI>());
@@ -93,7 +91,7 @@ public class Room : MonoBehaviour {
 
 		if(_occupants != null) {
 			foreach(BehaviourAI person in _occupants) {
-				person.CheckLighting(true);
+				person.CheckLighting(AvatarActivity.SessionType.TurnOn);
 			}
 		}
 	}

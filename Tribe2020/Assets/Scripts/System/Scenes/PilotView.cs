@@ -9,6 +9,8 @@ public class PilotView : View{
 	}
 
 	#region Fields
+	public bool debug = false;
+
 	private PilotController _ctrlMgr;
 	private GameTime _timeMgr;
 	private MainMeter _energyMgr;
@@ -172,14 +174,14 @@ public class PilotView : View{
 				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
-				Debug.Log(name + ": ControlAnimation " + visibility);
+				if(debug) { Debug.Log(name + ": ControlAnimation " + visibility); }
 				foreach(Transform t in animationUI.transform) {
 					t.gameObject.SetActive(visibility);
 				}
 				//animationUI.gameObject.SetActive(visibility);
 				break;
 			case "playAnimation":
-				Debug.Log(name + ": PlayAnimation " + animationUI.GetComponent<Animation>().GetClip(action));
+				if(debug) { Debug.Log(name + ": PlayAnimation " + animationUI.GetComponent<Animation>().GetClip(action)); }
 				animationUI.GetComponent<Animation>().Play(action);
 				break;
 		}
@@ -195,12 +197,13 @@ public class PilotView : View{
 
 		inspector.GetComponentsInChildren<Text>()[0].text = title;
 		inspector.GetComponentsInChildren<Text>()[2].text = description;
-		BuildEEMInterface(appliance, appliance.GetEEMs());
+		BuildEEMInterface(appliance);
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
-	public void BuildEEMInterface(Appliance app, List<EnergyEfficiencyMeasure> eems) {
+	public void BuildEEMInterface(Appliance app) {
 		RemoveChildren(inspectorEEMContainer);
+		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
 
 		foreach(EnergyEfficiencyMeasure eem in eems) {
 			EnergyEfficiencyMeasure curEEM = eem;
@@ -259,6 +262,9 @@ public class PilotView : View{
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
 
+			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
+			images[2].gameObject.SetActive(false);
+
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 			texts[0].text = curQuest.title;
 			texts[1].text = curQuest.date;
@@ -270,6 +276,10 @@ public class PilotView : View{
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
 			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
+
+			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
+			images[0].color = Color.gray;
+			images[1].gameObject.SetActive(false);
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 			texts[0].text = curQuest.title;

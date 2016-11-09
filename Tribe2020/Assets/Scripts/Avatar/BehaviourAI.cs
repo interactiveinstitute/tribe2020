@@ -13,7 +13,6 @@ public class BehaviourAI : MonoBehaviour
 
     public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
     [SerializeField]
-    private AvatarState _curAvatarState = AvatarState.Idle;
 
     private PilotController _controller;
     private GameTime _timeMgr;
@@ -23,7 +22,6 @@ public class BehaviourAI : MonoBehaviour
     private ThirdPersonCharacter _charController;
 
     //private Vector3 _curTargetPos;
-    public GameObject _curTargetObj;
     public AvatarActivity _curActivity;
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
@@ -126,7 +124,7 @@ public class BehaviourAI : MonoBehaviour
         activity.Step(this);
 
         //do activity stuff!
-        switch (_curAvatarState)
+        switch (GetRunningActivity().GetCurrentAvatarState())
         {
             //Not doing anything, do something feasible in the pilot
             case AvatarState.Idle:
@@ -187,7 +185,7 @@ public class BehaviourAI : MonoBehaviour
         UpdateActivity(_curActivity);
     }
 
-    private AvatarActivity getRunningActivity()
+    private AvatarActivity GetRunningActivity()
     {
         if (_isTemporarilyUnscheduled)
         {
@@ -361,10 +359,11 @@ public class BehaviourAI : MonoBehaviour
     public void StartActivity(AvatarActivity activity)
     {
         //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
-        _curAvatarState = AvatarState.Idle;
+        
         //activity.endTime = _timeMgr.time + 60 * 3;
         _curActivity = activity;
         _curActivity.Init(this);
+        _curActivity.Start();
     }
 
     public void StartTemporaryActivity(AvatarActivity activity)
@@ -468,13 +467,13 @@ public class BehaviourAI : MonoBehaviour
     //
     public void Stop()
     {
-        _curAvatarState = AvatarState.Idle;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
         _charController.Move(Vector3.zero, false, false);
     }
 
     public void Wait()
     {
-        _curAvatarState = AvatarState.Idle;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
         _charController.Move(Vector3.zero, false, false);
     }
 
@@ -502,11 +501,6 @@ public class BehaviourAI : MonoBehaviour
         _isControlled = false;
     }
 
-    bool EfficiencyRoulette(float effeciency)
-    {
-        return effeciency >= UnityEngine.Random.value;
-    }
-
     //
     //public void WalkTo(string[] args) {
     //	_curTargetObj = FindNearestDevice(args[0], args.Length > 1 && args[1] == "own");
@@ -529,14 +523,14 @@ public class BehaviourAI : MonoBehaviour
         if (appliance == null)
         {
             DebugManager.LogError("Didn't find a WalkTo target " + appliance + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
             return;
         }
 
-        _curTargetObj = appliance.gameObject;
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
         _agent.SetDestination(appliance.interactionPos);
-        _curAvatarState = AvatarState.Walking;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
     }
 
     //
@@ -549,7 +543,8 @@ public class BehaviourAI : MonoBehaviour
     public void WarpTo(Appliance appliance, bool isOwned)
     {
         if (appliance == null) { return; }
-        _curTargetObj = appliance.gameObject;
+
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
         appliance.AddHarvest();
         _agent.Warp(appliance.interactionPos);
@@ -581,7 +576,7 @@ public class BehaviourAI : MonoBehaviour
         if(appliance == null)
         {
             DebugManager.LogError("Didn't get a SitAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
             return;
         }
         _agent.enabled = false;
@@ -602,7 +597,7 @@ public class BehaviourAI : MonoBehaviour
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
-        _curAvatarState = AvatarState.Sitting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
         _charController.SitDown(); //Sets a boolean in the animator object
     }
 
@@ -612,15 +607,19 @@ public class BehaviourAI : MonoBehaviour
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
         //Vector3 coord;
+
+        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+
         //Let's search for a gameObject called Sit Position
-        if(_curTargetObj == null)
+        if (targetObject == null)
         {
             DebugManager.LogError("_curTargetObject not set!", this);
         }
-        Transform sitPosition = _curTargetObj.transform.Find("Sit Position");
+
+        Transform sitPosition = targetObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + _curTargetObj.name, this);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + targetObject.name, this);
         }
         else
         {
@@ -631,7 +630,7 @@ public class BehaviourAI : MonoBehaviour
             transform.rotation = sitPosition.rotation;
             Debug.Log("Setting avatar position to sitPosition from appliance object");
         }
-        _curAvatarState = AvatarState.Sitting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
         _charController.SitDown(); //Sets a boolean in the animator object
     }
 
@@ -641,8 +640,12 @@ public class BehaviourAI : MonoBehaviour
         //Do it by saving a standPosition as private object when sitting down! Rather than finding the interactionPos again
 
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
-        DebugManager.Log("Standing up. _curTargetObj is " + _curTargetObj, _curTargetObj, this);
-        transform.position = _curTargetObj.GetComponent<Appliance>().interactionPos;
+
+        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+
+        DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
+
+        transform.position = targetObject.GetComponent<Appliance>().interactionPos;
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         _charController.StandUp();
@@ -655,44 +658,43 @@ public class BehaviourAI : MonoBehaviour
     public void Delay(float seconds)
     {
         //Debug.Log(name + ".Delay(" + seconds + ")");
-        _curAvatarState = AvatarState.Waiting;
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Waiting);
     }
 
     //
-    public void SetRunLevel(AvatarActivity.Target target, string parameter)
+    public void SetRunLevel(AvatarActivity.Target target, int level)
     {
         Appliance targetAppliance = FindNearestAppliance(target, false);
-        SetRunLevel(targetAppliance, parameter);
+        SetRunLevel(targetAppliance, level);
     }
 
-    public void SetRunLevel(Appliance appliance, string parameter)
+    public void SetRunLevel(Appliance appliance, int level)
     {
         if(appliance == null)
         {
             DebugManager.LogError("Didn't get an Appliance object for SetRunLevel! Skipping to next session", this);
-            getRunningActivity().NextSession();
+            GetRunningActivity().NextSession();
         }
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
         DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device for setting runlevel", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
-        if (meter == null)
+        ElectricDevice device = targetObject.GetComponent<ElectricDevice>();
+        if (device == null)
         {
-            DebugManager.LogError("Didn't find electric meter for setting runlevel", this);
+            DebugManager.LogError("Didn't find electric device for setting runlevel", this);
             return;
         }
 
-        device.GetComponent<ElectricMeter>().On(); //Should this be replaced with SetRunlevel - which is only available in ElectricDevice? /Martin
-        //.SetRunlevel(int.Parse(parameter));
+        device.SetRunlevel(level);
     }
 
     public void TurnOn(AvatarActivity.Target target)
@@ -705,24 +707,23 @@ public class BehaviourAI : MonoBehaviour
     {
         DebugManager.Log("Turning on " + appliance, appliance, this);
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device to turn on", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
         if (meter == null)
         {
             DebugManager.LogError("Didn't find electric meter to turn on", this);
             return;
         }
+        meter.On();
 
-        device.GetComponent<ElectricMeter>().On();
-        //.SetRunlevel(int.Parse(parameter));
     }
 
     public void TurnOff(AvatarActivity.Target target)
@@ -738,24 +739,23 @@ public class BehaviourAI : MonoBehaviour
 
         DebugManager.Log("Turning off " + appliance, appliance, this);
 
-        _curTargetObj = appliance.gameObject; //Should current target object be set?
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device to turn off", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
         if (meter == null)
         {
             DebugManager.LogError("Didn't find electric meter to turn off", this);
             return;
         }
+        meter.Off();
 
-        device.GetComponent<ElectricMeter>().Off();
-        //.SetRunlevel(int.Parse(parameter));
     }
 
     // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
@@ -793,12 +793,13 @@ public class BehaviourAI : MonoBehaviour
         string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
-        if (_curAvatarState == AvatarState.Sitting)
+        if(GetRunningActivity().GetCurrentAvatarState() == AvatarState.Sitting)
         {
             DebugManager.Log("avatar was sitting. Standing up.", this);
             standUp();
         }
-        _curAvatarState = AvatarState.Idle;
+
+        GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
 
         if (_isTemporarilyUnscheduled)
         {
@@ -809,7 +810,7 @@ public class BehaviourAI : MonoBehaviour
             _isTemporarilyUnscheduled = false;
 
             DebugManager.Log("Teemporary activity finished!", tempActivity, this);
-            DebugManager.Log("Current target object: ", _curTargetObj, this);
+            DebugManager.Log("Current target object: ", GetRunningActivity().GetCurrentTargetObject(), this);
 
             //We don't want to do moar stuffz in here. Bail out!
             return;
@@ -828,51 +829,42 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //This will get called when avatar (that have rigidbody and collider) collides with a collider. <--- wow, so many colliding words in one sentence!!!
+    //Note that OnTriggerExit of old zone could be called AFTER OnTriggerEnter for new zone, hence all checks are done when entering a new room/zone and not when exiting /Martin
     void OnTriggerEnter(Collider other)
     {
         //Did the avatar collide with a roooom?
         if (other.GetComponent<Room>())
         {
-            _curRoom = other.GetComponent<Room>();
-            CheckLighting(true);
-        }
-
-        //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
-    }
-
-    //This will get called when avatar (that have rigidbody and collider) leaves a collider. <--- wow, so many colliding words in one sentence!!!
-    void OnTriggerExit(Collider other)
-    {
-        //Did the avatar collide with a roooom?
-        if (other.GetComponent<Room>())
-        {
-            _curRoom = other.GetComponent<Room>();
-            if (EfficiencyRoulette(_stats.lightingEfficieny))
+            //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
+            if (other.GetComponent<Room>() != _curRoom)
             {
-                CheckLighting(false);
+                //Exiting current room
+                DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
+                _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
+
+                //Entering new room
+                DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
+                _curRoom = other.GetComponent<Room>();
+                CheckLighting(AvatarActivity.SessionType.TurnOn);
             }
         }
-
-        //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
     }
 
-    //
-    public void CheckLighting(bool wantsLight)
+    public void CheckLighting(AvatarActivity.SessionType wantedAction)
     {
         if (_curRoom)
         {
-            if (wantsLight && _curRoom.lux > 0)
+            if (wantedAction == AvatarActivity.SessionType.TurnOn && _curRoom.IsLit())
             {
-                //Light is ok
+                //Light is ok: turned on
                 return;
             }
-            else if(!wantsLight && _curRoom.lux < 1)
+            else if(wantedAction == AvatarActivity.SessionType.TurnOff && !_curRoom.IsLit())
             {
-                //Light is ok
+                //Light is ok: turned off
                 return;
             }
 
-            //Debug.Log(name + " thinks it's to dark in the " + _curRoom.name);
             Appliance lightSwitch = _curRoom.GetLightSwitch();
             if (lightSwitch == null)
             {
@@ -880,7 +872,7 @@ public class BehaviourAI : MonoBehaviour
                 return;
             }
 
-            UseLightSwitch(lightSwitch, wantsLight);
+            InitApplianceTemporaryActivity(_curRoom.GetLightSwitch(), wantedAction, "", true);
 
         }
     }
@@ -903,9 +895,60 @@ public class BehaviourAI : MonoBehaviour
     //}
 
     //
-    public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
+
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
-        DebugManager.Log("Yo! Gonna flip that lamp switch!", this);
+        AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
+        activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        activity.InsertSession(session);
+
+        if (walkTo)
+        {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = appliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
+
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(activity);
+    }
+
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo)
+    {
+        DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
+
+        AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
+        activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        //Let's build relevant sessions and inject them into the activity we just created.
+        AvatarActivity.Session interactSession = new AvatarActivity.Session();
+        interactSession.title = "Interact with appliance";
+        interactSession.type = sessionType;
+        interactSession.parameter = parameter;
+        interactSession.appliance = appliance;
+        activity.InsertSession(interactSession);
+
+        if (walkTo)
+        {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = appliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
+
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(activity);
+    }
+
+    /*public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
+    {
+        DebugManager.Log("Yo! Gonna flip that lamp switch to " + turnOn, lightSwitch.gameObject, this);
         //Create an activity for turning on the laaajt!
         AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
@@ -929,7 +972,7 @@ public class BehaviourAI : MonoBehaviour
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
         StartTemporaryActivity(roomLightActivity);
-    }
+    }*/
 
     ////
     //public void QuickTurnLightOn(Appliance lightSwitch)

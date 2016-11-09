@@ -14,7 +14,10 @@ public class AvatarActivity : ScriptableObject {
 	private int _currSession;
 	private BehaviourAI _ai;
 
-	protected float _weight = 0;
+    GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
+    BehaviourAI.AvatarState _curAvatarState = BehaviourAI.AvatarState.Idle;
+
+    protected float _weight = 0;
 	protected string _curState = "";
 
 	private float _delay = 0;
@@ -170,11 +173,11 @@ public class AvatarActivity : ScriptableObject {
 			case SessionType.SetRunlevel:
                 if(session.appliance != null)
                 {
-                    _ai.SetRunLevel(session.appliance, session.parameter);
+                    _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.target, session.parameter);
+                    _ai.SetRunLevel(session.target, int.Parse(session.parameter));
                 }
 				
 				NextSession();
@@ -377,4 +380,26 @@ public class AvatarActivity : ScriptableObject {
         //If we have got past the last session, the activity must be finished. Right?
         return _currSession >= sessions.Count;
     }
+
+    public GameObject GetCurrentTargetObject()
+    {
+        return _curTargetObj;
+    }
+
+    public void SetCurrentTargetObject(GameObject targetObject)
+    {
+        _curTargetObj = targetObject;
+    }
+
+    public BehaviourAI.AvatarState GetCurrentAvatarState()
+    {
+        return _curAvatarState;
+    }
+
+    public void SetCurrentAvatarState(BehaviourAI.AvatarState avatarState)
+    {
+        _curAvatarState = avatarState;
+    }
+
 }
+

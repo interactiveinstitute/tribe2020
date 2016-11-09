@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class ResourceManager : MonoBehaviour {
 	//Singleton features
@@ -69,5 +70,23 @@ public class ResourceManager : MonoBehaviour {
 	//
 	public void RefreshProductionForAppliance(GameObject go){
 		
+	}
+
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
+
+		json.Add("money", cash.ToString());
+		json.Add("comfort", comfort.ToString());
+
+		return json;
+	}
+
+	//
+	public void DeserializeFromJSON(JSONClass json) {
+		if(json != null) {
+			cash = json["money"].AsInt;
+			comfort = json["comfort"].AsInt;
+		}
 	}
 }
