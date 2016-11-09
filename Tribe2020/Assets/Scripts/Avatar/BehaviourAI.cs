@@ -662,13 +662,13 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void SetRunLevel(AvatarActivity.Target target, string parameter)
+    public void SetRunLevel(AvatarActivity.Target target, int level)
     {
         Appliance targetAppliance = FindNearestAppliance(target, false);
-        SetRunLevel(targetAppliance, parameter);
+        SetRunLevel(targetAppliance, level);
     }
 
-    public void SetRunLevel(Appliance appliance, string parameter)
+    public void SetRunLevel(Appliance appliance, int level)
     {
         if(appliance == null)
         {
@@ -680,22 +680,21 @@ public class BehaviourAI : MonoBehaviour
 
         DebugManager.Log("Setting runlevel for " + appliance, appliance, this);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device for setting runlevel", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
-        if (meter == null)
+        ElectricDevice device = targetObject.GetComponent<ElectricDevice>();
+        if (device == null)
         {
-            DebugManager.LogError("Didn't find electric meter for setting runlevel", this);
+            DebugManager.LogError("Didn't find electric device for setting runlevel", this);
             return;
         }
 
-        device.GetComponent<ElectricMeter>().On(); //Should this be replaced with SetRunlevel - which is only available in ElectricDevice? /Martin
-        //.SetRunlevel(int.Parse(parameter));
+        device.SetRunlevel(level);
     }
 
     public void TurnOn(AvatarActivity.Target target)
@@ -710,22 +709,21 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device to turn on", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
         if (meter == null)
         {
             DebugManager.LogError("Didn't find electric meter to turn on", this);
             return;
         }
+        meter.On();
 
-        device.GetComponent<ElectricMeter>().On();
-        //.SetRunlevel(int.Parse(parameter));
     }
 
     public void TurnOff(AvatarActivity.Target target)
@@ -743,22 +741,21 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        GameObject device = appliance.gameObject;
-        if (device == null)
+        GameObject targetObject = appliance.gameObject;
+        if (targetObject == null)
         {
             DebugManager.LogError("Didn't find device to turn off", this);
             return;
         }
 
-        ElectricMeter meter = device.GetComponent<ElectricMeter>();
+        ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
         if (meter == null)
         {
             DebugManager.LogError("Didn't find electric meter to turn off", this);
             return;
         }
+        meter.Off();
 
-        device.GetComponent<ElectricMeter>().Off();
-        //.SetRunlevel(int.Parse(parameter));
     }
 
     // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership

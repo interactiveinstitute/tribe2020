@@ -173,11 +173,11 @@ public class AvatarActivity : ScriptableObject {
 			case SessionType.SetRunlevel:
                 if(session.appliance != null)
                 {
-                    _ai.SetRunLevel(session.appliance, session.parameter);
+                    _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.target, session.parameter);
+                    _ai.SetRunLevel(session.target, int.Parse(session.parameter));
                 }
 				
 				NextSession();

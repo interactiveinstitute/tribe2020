@@ -212,6 +212,7 @@ public class ElectricMeter : TimeDataObject {
 	}
 
 	//Set the meter node to powered or unpowered state. Returns true of a new stated was initiated by the call. 
+    //Martin: isn't this the same information twice (see comment below for powering function) - couldn't HasPower be a function call instead, or actually propagate the electricty down the tree structure?
 	public virtual bool powered(bool powered) {
 		if (HasPower == powered)
 			return false;
@@ -229,7 +230,11 @@ public class ElectricMeter : TimeDataObject {
 
 	}
 
-	public bool powering(bool powering) {
+
+    //Sets flag GivesPower: is the object providing power?
+    //Also tells children that they are being powered.
+    //Martin: isn't this - in a way - the same information twice? Shouldn't the electricity just propagate down in the tree structure?
+    public bool powering(bool powering) {
 
 
 		if (GivesPower == powering)
