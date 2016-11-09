@@ -838,53 +838,33 @@ public class BehaviourAI : MonoBehaviour
             //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
             if (other.GetComponent<Room>() != _curRoom)
             {
+                //Exiting current room
                 DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
-                OnExitCurrentRoom();
+                _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
 
+                //Entering new room
                 DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
                 _curRoom = other.GetComponent<Room>();
-                OnEnterNewRoom();
+                CheckLighting(AvatarActivity.SessionType.TurnOn);
             }
         }
-
-        //Debug.Log("Avatar.OnTriggerEnter: " + other.name);
     }
 
-    void OnEnterNewRoom()
-    {
-        CheckLighting(true);
-    }
-
-    void OnExitCurrentRoom()
-    {
-        if (_stats.TestLightningEfficiency())
-        {
-            DebugManager.Log(name + " remembered to turn off the lights in " + _curRoom, _curRoom, this);
-            CheckLighting(false);
-        }
-        else
-        {
-            DebugManager.Log(name + " forgot to turn off the lights in " + _curRoom, _curRoom, this);
-        }
-    }
-
-    //
-    public void CheckLighting(bool wantsLight)
+    public void CheckLighting(AvatarActivity.SessionType wantedAction)
     {
         if (_curRoom)
         {
-            if (wantsLight && _curRoom.IsLit())
+            if (wantedAction == AvatarActivity.SessionType.TurnOn && _curRoom.IsLit())
             {
-                //Light is ok
+                //Light is ok: turned on
                 return;
             }
-            else if(!wantsLight && !_curRoom.IsLit())
+            else if(wantedAction == AvatarActivity.SessionType.TurnOff && !_curRoom.IsLit())
             {
-                //Light is ok
+                //Light is ok: turned off
                 return;
             }
 
-            //Debug.Log(name + " thinks it's to dark in the " + _curRoom.name);
             Appliance lightSwitch = _curRoom.GetLightSwitch();
             if (lightSwitch == null)
             {
@@ -892,7 +872,7 @@ public class BehaviourAI : MonoBehaviour
                 return;
             }
 
-            UseLightSwitch(lightSwitch, wantsLight);
+            InitApplianceTemporaryActivity(_curRoom.GetLightSwitch(), wantedAction, "", true);
 
         }
     }
@@ -915,7 +895,58 @@ public class BehaviourAI : MonoBehaviour
     //}
 
     //
-    public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
+
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
+    {
+        AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
+        activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        activity.InsertSession(session);
+
+        if (walkTo)
+        {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = appliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
+
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(activity);
+    }
+
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo)
+    {
+        DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
+
+        AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
+        activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        //Let's build relevant sessions and inject them into the activity we just created.
+        AvatarActivity.Session interactSession = new AvatarActivity.Session();
+        interactSession.title = "Interact with appliance";
+        interactSession.type = sessionType;
+        interactSession.parameter = parameter;
+        interactSession.appliance = appliance;
+        activity.InsertSession(interactSession);
+
+        if (walkTo)
+        {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = appliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
+
+        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
+        StartTemporaryActivity(activity);
+    }
+
+    /*public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
     {
         DebugManager.Log("Yo! Gonna flip that lamp switch to " + turnOn, lightSwitch.gameObject, this);
         //Create an activity for turning on the laaajt!
@@ -941,7 +972,7 @@ public class BehaviourAI : MonoBehaviour
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
         StartTemporaryActivity(roomLightActivity);
-    }
+    }*/
 
     ////
     //public void QuickTurnLightOn(Appliance lightSwitch)

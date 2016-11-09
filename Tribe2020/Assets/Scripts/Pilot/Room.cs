@@ -91,7 +91,7 @@ public class Room : MonoBehaviour {
 
 		if(_occupants != null) {
 			foreach(BehaviourAI person in _occupants) {
-				person.CheckLighting(true);
+				person.CheckLighting(AvatarActivity.SessionType.TurnOn);
 			}
 		}
 	}
