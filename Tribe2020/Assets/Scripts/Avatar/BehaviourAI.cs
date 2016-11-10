@@ -661,8 +661,10 @@ public class BehaviourAI : MonoBehaviour
         //GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
 
         //DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
-
-        transform.position = _savedStandingPosition.position;
+        if (_savedStandingPosition != null)
+        {
+            transform.position = _savedStandingPosition.position;
+        }
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         _charController.StandUp();
