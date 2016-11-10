@@ -20,6 +20,7 @@ public class BehaviourAI : MonoBehaviour
     private AvatarStats _stats;
     private NavMeshAgent _agent;
     private ThirdPersonCharacter _charController;
+    private Transform _savedStandingPosition;
 
     //private Vector3 _curTargetPos;
     public AvatarActivity _curActivity;
@@ -588,8 +589,12 @@ public class BehaviourAI : MonoBehaviour
             GetRunningActivity().NextSession();
             return;
         }
+        //Disable stuff before custom positioning
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
+
+        //save the currentPosition for when standing up again.
+        _savedStandingPosition = transform;
 
         //Get the child  game object with the name Sit Position
         Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
@@ -613,9 +618,12 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SitAtCurrentTarget()
     {
+        //Disable stuff before custom positioning
         _agent.enabled = false;
         GetComponent<Rigidbody>().isKinematic = true;
-        //Vector3 coord;
+
+        //save the currentPosition for when standing up again.
+        _savedStandingPosition = transform;
 
         GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
 
@@ -650,11 +658,11 @@ public class BehaviourAI : MonoBehaviour
 
         //First position the avatar at the interaction point. Then turn navmeshagent back on.
 
-        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+        //GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
 
-        DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
+        //DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
 
-        transform.position = targetObject.GetComponent<Appliance>().interactionPos;
+        transform.position = _savedStandingPosition.position;
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
         _charController.StandUp();
