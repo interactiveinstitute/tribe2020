@@ -12,7 +12,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	public List<AvatarActivity.Target> avatarAffordances_old;
 	public List<Affordance> avatarAffordances;
-	public List<string> owners;
+	//public List<string> owners;
+    public List<BehaviourAI> owners;
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
@@ -75,7 +76,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	}
 
 	//
-	public void OnUsage(AvatarActivity.Target affordance) {
+	public void OnUsage(Affordance affordance) {
 		AddHarvest();
 	}
 

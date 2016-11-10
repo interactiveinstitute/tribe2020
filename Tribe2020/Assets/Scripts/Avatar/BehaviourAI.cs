@@ -511,9 +511,10 @@ public class BehaviourAI : MonoBehaviour
     //}
 
     //Makes the avatar walks towards an object by setting the navmeshagent destination.
-    public void WalkTo(AvatarActivity.Target target, bool isOwned)
+    public void WalkTo(Affordance affordance, bool isOwned)
     {
-        Appliance targetAppliance = FindNearestAppliance(target, isOwned);
+        //Appliance targetAppliance = FindNearestAppliance(target, isOwned);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, isOwned);
         WalkTo(targetAppliance, isOwned);
     }
 
@@ -534,9 +535,10 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void WarpTo(AvatarActivity.Target target, bool isOwned)
+    public void WarpTo(Affordance affordance, bool isOwned)
     {
-        Appliance appliance = FindNearestAppliance(target, isOwned);
+        //Appliance appliance = FindNearestAppliance(target, isOwned);
+        Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
         WarpTo(appliance, isOwned);
     }
 
@@ -565,9 +567,15 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
-    public void SitAt(AvatarActivity.Target target, bool isOwned)
+    public void SitAt(Affordance affordance, bool isOwned)
     {
-        Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
+        if(affordance == null)
+        {
+            DebugManager.LogError("Hey. You gave me a null affordance when trying to sit. What's up with that?! I'll skip to next session", this, this);
+            GetRunningActivity().NextSession();
+        }
+        //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
+        Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
         SitAt(appliance);
     }
 
@@ -662,12 +670,13 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void SetRunLevel(AvatarActivity.Target target, int level)
+    public void SetRunLevel(Affordance affordance, int level)
     {
-        Appliance targetAppliance = FindNearestAppliance(target, false);
+        //Appliance targetAppliance = FindNearestAppliance(target, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
         SetRunLevel(targetAppliance, level);
 		//TODO: temp solution
-		targetAppliance.OnUsage(target);
+		targetAppliance.OnUsage(affordance);
 	}
 
     public void SetRunLevel(Appliance appliance, int level)
@@ -699,12 +708,13 @@ public class BehaviourAI : MonoBehaviour
         device.SetRunlevel(level);
     }
 
-    public void TurnOn(AvatarActivity.Target target)
+    public void TurnOn(Affordance affordance)
     {
-        Appliance targetAppliance = FindNearestAppliance(target, false);
+        //Appliance targetAppliance = FindNearestAppliance(target, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
         TurnOn(targetAppliance);
 		//TODO: temp solution
-		targetAppliance.OnUsage(target);
+		targetAppliance.OnUsage(affordance);
 	}
 
     public void TurnOn(Appliance appliance)
@@ -730,12 +740,13 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
-    public void TurnOff(AvatarActivity.Target target)
+    public void TurnOff(Affordance affordance)
     {
-        Appliance targetAppliance = FindNearestAppliance(target, false);
+        //Appliance targetAppliance = FindNearestAppliance(target, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
         TurnOff(targetAppliance);
 		//TODO: temp solution
-		targetAppliance.OnUsage(target);
+		targetAppliance.OnUsage(affordance);
 	}
 
     public void TurnOff(Appliance appliance)
@@ -764,55 +775,68 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
+    //// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
+    //public Appliance FindNearestAppliance(AvatarActivity.Target affordance, bool isOwned)
+    //{
+    //    Appliance targetAppliance = null;
+    //    float minDist = float.MaxValue;
+
+    //    foreach (Appliance device in _devices)
+    //    {
+    //        List<AvatarActivity.Target> affordances = device.avatarAffordances_old;
+    //        //if (affordances.Contains(affordance) && (!isOwned || device.owners.Contains(_stats.avatarName)))
+    //        if (affordances.Contains(affordance) && (!isOwned || device.owners.Contains(this)))//Have changed owners to be actual references rather than names. Gunnar.
+    //        {
+    //            float dist = Vector3.Distance(transform.position, device.transform.position);
+    //            if (dist < minDist)
+    //            {
+    //                minDist = dist;
+    //                targetAppliance = device;
+    //            }
+    //        }
+    //    }
+
+    //    if (targetAppliance == null)
+    //    {
+    //        DebugManager.Log(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
+    //    }
+
+    //    return targetAppliance;
+    //}
+
     // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-    public Appliance FindNearestAppliance(AvatarActivity.Target affordance, bool isOwned)
+    public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage)
     {
         Appliance targetAppliance = null;
         float minDist = float.MaxValue;
 
-        foreach (Appliance device in _devices)
+        foreach (Appliance app in _devices)
         {
-            List<AvatarActivity.Target> affordances = device.avatarAffordances_old;
-            if (affordances.Contains(affordance) && (!isOwned || device.owners.Contains(_stats.avatarName)))
+            List<Affordance> affordances = app.avatarAffordances;
+            if (affordances.Contains(affordance) && (!userOwnage || app.owners.Contains(this)))
             {
-                float dist = Vector3.Distance(transform.position, device.transform.position);
+                float dist = Vector3.Distance(transform.position, app.transform.position);
                 if (dist < minDist)
                 {
                     minDist = dist;
-                    targetAppliance = device;
+                    targetAppliance = app;
                 }
             }
         }
 
         if (targetAppliance == null)
         {
-            DebugManager.Log(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
+            if(userOwnage)
+                DebugManager.LogError(name + " could not find an OWNED appliance with affordance: " + affordance.ToString(), this);
+            else
+                DebugManager.LogError(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
         }
 
         return targetAppliance;
     }
 
-	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-	public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage) {
-		Appliance targetAppliance = null;
-		float minDist = float.MaxValue;
-
-		foreach(Appliance app in _devices) {
-			List<Affordance> affordances = app.avatarAffordances;
-			if(affordances.Contains(affordance) && (!userOwnage || app.owners.Contains(_stats.avatarName))) {
-				float dist = Vector3.Distance(transform.position, app.transform.position);
-				if(dist < minDist) {
-					minDist = dist;
-					targetAppliance = app;
-				}
-			}
-		}
-
-		return targetAppliance;
-	}
-
-	//
-	public void OnActivityOver()
+    //
+    public void OnActivityOver()
     {
 
         string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;

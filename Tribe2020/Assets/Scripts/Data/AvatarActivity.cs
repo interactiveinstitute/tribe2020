@@ -49,7 +49,7 @@ public class AvatarActivity : ScriptableObject {
 		public float probability = 1f;
 		public SessionType type;
         public Appliance appliance = null;
-		public Target target;
+		//public Target target;
 		public Affordance requiredAffordance;
 		public string parameter;
 		public bool avatarOwnsTarget;
@@ -116,11 +116,11 @@ public class AvatarActivity : ScriptableObject {
         if (hasStartTime)
         {
             string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
+            DebugManager.Log(_ai.name + " starting activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
         }
         else
         {
-            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " without startTime, curTime is " + curTimeView, this);
+            DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
 
@@ -144,7 +144,7 @@ public class AvatarActivity : ScriptableObject {
                 _ai.Wait();
 				break;
             case SessionType.SitDown:
-                _ai.SitAt(session.target, session.avatarOwnsTarget);
+                _ai.SitAt(session.requiredAffordance, session.avatarOwnsTarget);
                 break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
@@ -155,7 +155,7 @@ public class AvatarActivity : ScriptableObject {
                     _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
                 }else
                 {
-                    _ai.WalkTo(session.target, session.avatarOwnsTarget);
+                    _ai.WalkTo(session.requiredAffordance, session.avatarOwnsTarget);
                 }
 				break;
 			//case SessionType.Interact:
@@ -168,7 +168,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.WarpTo(session.target, session.avatarOwnsTarget);
+                    _ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
                 }
 				break;
 			case SessionType.SetRunlevel:
@@ -178,7 +178,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.target, int.Parse(session.parameter));
+                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter));
                 }
 				
 				NextSession();
@@ -190,7 +190,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.TurnOn(session.target);
+                    _ai.TurnOn(session.requiredAffordance);
                 }
 
                 NextSession();
@@ -202,7 +202,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.TurnOff(session.target);
+                    _ai.TurnOff(session.requiredAffordance);
                 }
 
                 NextSession();
@@ -261,7 +261,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-        DebugManager.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session", this);
+        DebugManager.Log(_ai.name + " reached destination " + sessions[_currSession].requiredAffordance + ". if current SessionType is walkTo, start next session", this);
         //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		//}
@@ -299,7 +299,7 @@ public class AvatarActivity : ScriptableObject {
 				break;
 			case SessionType.WalkTo:
                 //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
-				_ai.WarpTo(session.target, session.avatarOwnsTarget);
+				_ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
 				break;
 			//case SessionType.Interact:
    //             //Debug.Log("Simulating Interaction. Interacting with " + session.target);
