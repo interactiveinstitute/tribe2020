@@ -12,10 +12,6 @@ public class PilotView : View{
 	public bool debug = false;
 
 	private PilotController _controller;
-	private GameTime _timeMgr;
-	private MainMeter _energyMgr;
-	private ResourceManager _resourceMgr;
-	private LocalisationManager _localMgr;
 
 	[Header("Header")]
 	public Transform cash;
@@ -72,10 +68,6 @@ public class PilotView : View{
 	//Use this for initialization
 	void Start(){
 		_controller = PilotController.GetInstance();
-		_timeMgr = GameTime.GetInstance();
-		_energyMgr = MainMeter.GetInstance();
-		_resourceMgr = ResourceManager.GetInstance();
-		_localMgr = LocalisationManager.GetInstance();
 
 		//Clear interface
 		_curMenu = null;
@@ -86,17 +78,6 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-		date.GetComponent<Text>().text = _timeMgr.CurrentDate;
-
-		power.GetComponent<Text>().text = Mathf.Floor(_energyMgr.Power) + " W";
-
-		float energy = (float)_energyMgr.Energy;
-		if(energy < 1) {
-			energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
-		} else {
-			energyCounter.text = Mathf.Floor(energy) + " kWh";
-		}
-
 		if(_showSettings) {
 			Vector2 target = settingsPanel.GetComponent<UIPanel>().targetPosition;
 			if(settingsPanel.anchoredPosition.x != target.x || settingsPanel.anchoredPosition.y != target.y) {
@@ -203,8 +184,8 @@ public class PilotView : View{
 
 	//Fill INSPECTOR with details and eem options for selected appliance
 	public void BuildInspector(Appliance appliance) {
-		string title = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
-		string description = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
+		string title = _controller.GetPhrase("Appliance:" + appliance.title + "_Title");
+		string description = _controller.GetPhrase("Appliance:" + appliance.title + "_Description");
 
 		if(title == "") { title = appliance.title + "!"; }
 		if(description == "") { description = appliance.description + "!"; }
@@ -236,7 +217,7 @@ public class PilotView : View{
 				button.interactable = false;
 			}
 
-			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			string eemTitle = _controller.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
 			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
 			eemProps.title.text = eemTitle;
 
@@ -337,7 +318,7 @@ public class PilotView : View{
 		ShowFireworks();
 		_controller.PlaySound("fireworks");
 		victoryUI.SetActive(true);
-		victoryText.text = _localMgr.GetPhrase(text);
+		victoryText.text = _controller.GetPhrase(text);
 	}
 
 	//

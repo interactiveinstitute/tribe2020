@@ -73,7 +73,7 @@ public class BehaviourAI : MonoBehaviour
         //Synchronise schedule to get current activity for time
         SyncSchedule();
         //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
-        _curActivity.Start();
+        //_curActivity.Start();
     }
 
     // Update is called once per frame
@@ -696,6 +696,7 @@ public class BehaviourAI : MonoBehaviour
         {
             DebugManager.LogError("Didn't get an Appliance object for SetRunLevel! Skipping to next session", this);
             GetRunningActivity().NextSession();
+			return;
         }
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);

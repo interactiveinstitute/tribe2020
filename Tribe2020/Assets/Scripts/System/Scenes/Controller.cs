@@ -30,11 +30,36 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
+	public virtual void ClearView() {
+	}
+
+	//
+	public virtual void ControlInterface(string id, string action) {
+	}
+
+	//
+	public virtual void ShowCongratualations(string text) {
+	}
+
+	//
 	public virtual void ControlAvatar(string id, string action, Vector3 pos) {
 	}
 
 	//
 	public virtual void ControlAvatar(string id, Object action) {
+	}
+
+	//
+	public virtual void PlaySound(string sound) {
+	}
+
+	//
+	public virtual void SetTimeScale(int scale) {
+	}
+
+	//
+	public virtual string GetCurrentDate() {
+		return "";
 	}
 
 	//
