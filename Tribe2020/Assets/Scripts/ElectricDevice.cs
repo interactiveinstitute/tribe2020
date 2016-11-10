@@ -158,9 +158,10 @@ public class ElectricDevice : ElectricMeter {
 			l.enabled = false;
 		}
 
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
+        //Eeeeeeh. This updateLighting function is legacy shit. Let's comment it out! Gunnar
+		//if(GetComponentInParent<Room>()) {
+		//	GetComponentInParent<Room>().UpdateLighting();
+		//}
 
 		//Sound
 		//TODO

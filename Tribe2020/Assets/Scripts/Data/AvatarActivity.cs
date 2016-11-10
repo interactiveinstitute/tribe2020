@@ -39,8 +39,8 @@ public class AvatarActivity : ScriptableObject {
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
-	public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
-		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home, Work };
+	//public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
+	//	Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home, Work };
 
 	//Definition of a quest step
 	[System.Serializable]

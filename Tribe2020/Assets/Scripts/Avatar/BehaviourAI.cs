@@ -71,6 +71,8 @@ public class BehaviourAI : MonoBehaviour
 
         //Synchronise schedule to get current activity for time
         SyncSchedule();
+        //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
+        _curActivity.Start();
     }
 
     // Update is called once per frame
@@ -94,7 +96,7 @@ public class BehaviourAI : MonoBehaviour
         // These two if statements are meant to handle jumps in time. If curTime suddenly is increased a lot
         // the script will try to simulate the schedule until the curTime is reached.
 
-        //Ok. Let's find the stamp for the next activity.
+        //Ok. Let's find the stamp for the next activity. Should we switch to it?
         if (_nextActivity.hasStartTime && _nextActivity.startTimePassed())
         {
             DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
@@ -231,7 +233,7 @@ public class BehaviourAI : MonoBehaviour
         //loop through the schedule until we get to an actvity that should happen in the future
         for (; _scheduleIndex < schedule.Length; _scheduleIndex++)
         {
-            //Handle schedule posts without time. Such activities should happen as soon as the activity before is finished.
+            //Handle schedule posts without time. Such activities should happen as soon as the activity before is finished. But since they have no startTime, we skip them.
             if (schedule[_scheduleIndex].time == null || schedule[_scheduleIndex].time == "")
             {
                 //Ok. so this schedule post has no time specified. Let's loop further.
@@ -356,15 +358,15 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void StartActivity(AvatarActivity activity)
-    {
-        //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
+    //public void StartActivity(AvatarActivity activity)
+    //{
+    //    //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
         
-        //activity.endTime = _timeMgr.time + 60 * 3;
-        _curActivity = activity;
-        _curActivity.Init(this);
-        _curActivity.Start();
-    }
+    //    //activity.endTime = _timeMgr.time + 60 * 3;
+    //    _curActivity = activity;
+    //    _curActivity.Init(this);
+    //    _curActivity.Start();
+    //}
 
     public void StartTemporaryActivity(AvatarActivity activity)
     {
