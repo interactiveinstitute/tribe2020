@@ -37,10 +37,9 @@ public class Room : MonoBehaviour {
         return GetLightSwitch().GetComponent<ElectricMeter>().GivesPower;
 	}
 
-	//Retrieve the first occasion of a light switch. Broken at this time.
+	//Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
 	public Appliance GetLightSwitch() {
         DebugManager.LogError("You are calling the GetLightSwitch method. It's currently broken. Address that before calling it.", this, this);
-        Affordance LampSwitch = ScriptableObject.CreateInstance<Affordance>();
         foreach (Appliance device in _devices) {
             foreach (Affordance aff in device.avatarAffordances)
             {

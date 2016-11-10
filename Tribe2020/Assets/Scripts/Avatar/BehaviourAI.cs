@@ -26,8 +26,8 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
 
-    private AvatarActivity tempActivity;
-    private bool _isTemporarilyUnscheduled = false;
+    private Stack<AvatarActivity> tempActivities = new Stack<AvatarActivity>();
+    //private bool _isTemporarilyUnscheduled = false;
 
     private bool _isControlled = false;
 
@@ -78,10 +78,10 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_isTemporarilyUnscheduled)
+        if (tempActivities.Count > 0)
         {
-            //Handle override actions
-            UpdateActivity(tempActivity);
+            //Handle schedule overriding activities
+            UpdateActivity(tempActivities.Peek());
             return;
         }
 
@@ -189,9 +189,9 @@ public class BehaviourAI : MonoBehaviour
 
     private AvatarActivity GetRunningActivity()
     {
-        if (_isTemporarilyUnscheduled)
+        if (tempActivities.Count > 0)
         {
-            return tempActivity;
+            return tempActivities.Peek();
         }else
         {
             return _curActivity;
@@ -371,10 +371,9 @@ public class BehaviourAI : MonoBehaviour
     public void StartTemporaryActivity(AvatarActivity activity)
     {
         DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
-        tempActivity = activity;
-        tempActivity.Init(this);
-        _isTemporarilyUnscheduled = true;
-        tempActivity.Start();
+        tempActivities.Push(activity);
+        tempActivities.Peek().Init(this);
+        tempActivities.Peek().Start();
     }
 
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
@@ -841,7 +840,7 @@ public class BehaviourAI : MonoBehaviour
     public void OnActivityOver()
     {
 
-        string activityName = _isTemporarilyUnscheduled ? tempActivity.name : _curActivity.name;
+        string activityName = GetRunningActivity().name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
         if(GetRunningActivity().GetCurrentAvatarState() == AvatarState.Sitting)
@@ -852,16 +851,16 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
 
-        if (_isTemporarilyUnscheduled)
+        if (tempActivities.Count > 0)
         {
             //Notify the gamecontroller that we finished this activity!
-            _controller.OnAvatarActivityComplete(tempActivity.title);
+            _controller.OnAvatarActivityComplete(tempActivities.Peek().title);
 
-            //Ok. so this overriding activity was finished. Return to schedule.
-            _isTemporarilyUnscheduled = false;
+            //Ok. so this overriding activity was finished. Remove it from the tempactivity stack.
+            AvatarActivity finishedAvtivity = tempActivities.Pop();
 
-            DebugManager.Log("Teemporary activity finished!", tempActivity, this);
-            DebugManager.Log("Current target object: ", GetRunningActivity().GetCurrentTargetObject(), this);
+            DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
+            DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
 
             //We don't want to do moar stuffz in here. Bail out!
             return;
