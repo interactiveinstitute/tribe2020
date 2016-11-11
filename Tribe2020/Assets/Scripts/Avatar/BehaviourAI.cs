@@ -74,7 +74,7 @@ public class BehaviourAI : MonoBehaviour
         //Synchronise schedule to get current activity for time
         SyncSchedule();
         //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
-        //_curActivity.Start();
+        _curActivity.Start();
     }
 
     // Update is called once per frame
@@ -1054,14 +1054,14 @@ public class BehaviourAI : MonoBehaviour
     {
         JSONClass json = new JSONClass();
         json.Add("name", name);
-        json.Add("transform", JsonUtility.ToJson(transform));
+        //json.Add("transform", JsonUtility.ToJson(transform));
         json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
         json.Add("scheduleIndex", _scheduleIndex.ToString());
         //json.Add("curActivity", _curActivity.Encode());
         json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
-        JsonUtility.ToJson(this);
+        //JsonUtility.ToJson(this);
 
         return json;
     }
@@ -1082,7 +1082,10 @@ public class BehaviourAI : MonoBehaviour
     public void Decode(JSONClass json)
     {
         _scheduleIndex = json["scheduleIndex"].AsInt;
-        _savedStandingPosition = json["savedStandingPosition"]
+        Transform loadedTransform = JsonUtility.FromJson<Transform>(json["transform"]);
+        transform.position = loadedTransform.position;
+        transform.rotation = loadedTransform.rotation;
+        _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
     //Should be more here!
 }

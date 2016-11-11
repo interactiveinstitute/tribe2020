@@ -12,9 +12,10 @@ public class PilotController : Controller {
 
 	#region Fields
 	public bool debug = false;
+    public bool enableSaveLoad = true;
 
-	//Access all singleton systemss
-	private PilotView _view;
+    //Access all singleton systemss
+    private PilotView _view;
 	private GameTime _timeMgr;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
@@ -44,10 +45,10 @@ public class PilotController : Controller {
 	private List<Appliance> _appliances;
 
 	private bool _isLoaded = false;
-	#endregion
+    #endregion
 
-	//Sort use instead of constructor
-	void Awake(){
+    //Sort use instead of constructor
+    void Awake(){
 		_instance = this;
 	}
 
@@ -575,10 +576,10 @@ public class PilotController : Controller {
 		foreach(BehaviourAI avatar in _avatars) {
 			avatarsJSON.Add(avatar.Encode());
 		}
-		_saveMgr.SetData("avatarStates", avatarsJSON);
+        _saveMgr.SetData("avatarStates", avatarsJSON);
 
-		//Save appliance states
-		JSONArray applianceJSON = new JSONArray();
+        //Save appliance states
+        JSONArray applianceJSON = new JSONArray();
 		foreach(Appliance appliance in _appliances) {
 			applianceJSON.Add(appliance.SerializeAsJSON());
 		}
@@ -592,7 +593,12 @@ public class PilotController : Controller {
 
 	//
 	public override void LoadGameState() {
-		if(debug) { Debug.Log("Loading game state"); }
+        if (!enableSaveLoad)
+        {
+            if (debug) { Debug.Log("save/load disabled. Will not load game data."); }
+            return;
+        }
+        if (debug) { Debug.Log("Loading game state"); }
 
 		_saveMgr.Load();
 
@@ -600,20 +606,24 @@ public class PilotController : Controller {
 		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
 		_localMgr.DeserializeFromJSON(_saveMgr.GetClass("LocalisationManager"));
 
-		//Load avatar states
-		//if(_saveMgr.GetData("avatarStates") != null) {
-		//	JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
-		//	foreach(JSONClass avatarJSON in avatarsJSON) {
-		//		foreach(BehaviourAI avatar in _avatars) {
-		//			if(avatar.name == avatarJSON["name"]) {
-		//				avatar.Decode(avatarJSON);
-		//			}
-		//		}
-		//	}
-		//}
+        //Load avatar states
+        if (_saveMgr.GetData("avatarStates") != null)
+        {
+            JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
+            foreach (JSONClass avatarJSON in avatarsJSON)
+            {
+                foreach (BehaviourAI avatar in _avatars)
+                {
+                    if (avatar.name == avatarJSON["name"])
+                    {
+                        avatar.Decode(avatarJSON);
+                    }
+                }
+            }
+        }
 
-		//Load appliance states
-		if(_saveMgr.GetData("Appliances") != null) {
+        //Load appliance states
+        if (_saveMgr.GetData("Appliances") != null) {
 			JSONArray appsJSON = _saveMgr.GetData("Appliances").AsArray;
 			foreach(JSONClass appJSON in appsJSON) {
 				foreach(Appliance app in _appliances) {

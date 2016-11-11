@@ -16,7 +16,6 @@ public class SaveManager : MonoBehaviour{
 	public static int currentSlot = 0;
 
 	public bool debug = false;
-    public bool enableSaveLoad;
 
 	public string fileName;
 	private string _filePath;
@@ -155,11 +154,6 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Load(int slot) {
-        if(!enableSaveLoad) {
-			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
-            return;
-        }
-
 		if(debug) { Debug.Log("Load: " + currentSlot); }
 
 		_dataClone = ReadFileAsJSON();
