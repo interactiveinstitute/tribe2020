@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
+using System;
 
-[CreateAssetMenu(fileName = "Behaviour", menuName = "Avatar/Behaviour", order = 1)]
+[CreateAssetMenu(fileName = "Behaviour", menuName = "Avatar/Behaviour", order = 1), Serializable]
 public class AvatarActivity : ScriptableObject {
 	private GameTime _timeMgr;
-
+    
 	public string title;
 	public List<Session> sessions;
 	//public Session SkipSession;
@@ -406,6 +408,20 @@ public class AvatarActivity : ScriptableObject {
     {
         _curAvatarState = avatarState;
     }
+
+    //public JSONClass Encode()
+    //{
+    //    //MemoryStream stream1 = new MemoryStream();
+    //    //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
+    //    //ser.WriteObject(stream1, this);
+
+    //    //SimpleJSON.JSONClass json;
+    //    //json.Serialize()
+    //    //foreach(Session session in sessions)
+    //    //{
+    //    //    session.
+    //    //}
+    //}
 
 }
 

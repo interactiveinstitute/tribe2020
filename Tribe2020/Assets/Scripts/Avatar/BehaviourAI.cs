@@ -20,7 +20,8 @@ public class BehaviourAI : MonoBehaviour
     private AvatarStats _stats;
     private NavMeshAgent _agent;
     private ThirdPersonCharacter _charController;
-    private Transform _savedStandingPosition;
+    [SerializeField]
+    private Vector3 _savedStandingPosition;
 
     //private Vector3 _curTargetPos;
     public AvatarActivity _curActivity;
@@ -73,7 +74,7 @@ public class BehaviourAI : MonoBehaviour
         //Synchronise schedule to get current activity for time
         SyncSchedule();
         //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
-        //_curActivity.Start();
+        _curActivity.Start();
     }
 
     // Update is called once per frame
@@ -594,7 +595,7 @@ public class BehaviourAI : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
 
         //save the currentPosition for when standing up again.
-        _savedStandingPosition = transform;
+        _savedStandingPosition = transform.position;
 
         //Get the child  game object with the name Sit Position
         Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
@@ -618,52 +619,47 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SitAtCurrentTarget()
     {
-        //Disable stuff before custom positioning
-        _agent.enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+        ////Disable stuff before custom positioning
+        //_agent.enabled = false;
+        //GetComponent<Rigidbody>().isKinematic = true;
 
-        //save the currentPosition for when standing up again.
-        _savedStandingPosition = transform;
+        ////save the currentPosition for when standing up again.
+        //_savedStandingPosition = transform.position;
 
         GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
 
-        //Let's search for a gameObject called Sit Position
-        if (targetObject == null)
-        {
-            DebugManager.LogError("_curTargetObject not set!", this);
-        }
+        SitAt(targetObject.GetComponent<Appliance>());
 
-        Transform sitPosition = targetObject.transform.Find("Sit Position");
-        if (sitPosition == null)
-        {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + targetObject.name, this);
-        }
-        else
-        {
-            //coord.x = sitPosition.position.x;
-            //coord.z = sitPosition.position.z;
-            //coord.y = transform.position.y;
-            transform.position = sitPosition.position;//coord;
-            transform.rotation = sitPosition.rotation;
-            Debug.Log("Setting avatar position to sitPosition from appliance object");
-        }
-        GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
-        _charController.SitDown(); //Sets a boolean in the animator object
+        ////Let's search for a gameObject called Sit Position
+        //if (targetObject == null)
+        //{
+        //    DebugManager.LogError("_curTargetObject not set!", this);
+        //}
+
+        //Transform sitPosition = targetObject.transform.Find("Sit Position");
+        //if (sitPosition == null)
+        //{
+        //    DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + targetObject.name, this);
+        //}
+        //else
+        //{
+        //    //coord.x = sitPosition.position.x;
+        //    //coord.z = sitPosition.position.z;
+        //    //coord.y = transform.position.y;
+        //    transform.position = sitPosition.position;//coord;
+        //    transform.rotation = sitPosition.rotation;
+        //    Debug.Log("Setting avatar position to sitPosition from appliance object");
+        //}
+        //GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
+        //_charController.SitDown(); //Sets a boolean in the animator object
     }
 
     public void standUp()
     {
-        //TODO: Have a guarantee that we position ourselves back at the standPosition
-        //Do it by saving a standPosition as private object when sitting down! Rather than finding the interactionPos again
-
-        //First position the avatar at the interaction point. Then turn navmeshagent back on.
-
-        //GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
-
-        //DebugManager.Log("Standing up. _curTargetObj is " + targetObject, targetObject, this);
+        DebugManager.Log("Standing up.", this, this);
         if (_savedStandingPosition != null)
         {
-            transform.position = _savedStandingPosition.position;
+            transform.position = _savedStandingPosition;
         }
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
@@ -1058,18 +1054,47 @@ public class BehaviourAI : MonoBehaviour
     {
         JSONClass json = new JSONClass();
         json.Add("name", name);
-        json.Add("transform", transform.ToString());
+        //json.Add("transform", JsonUtility.ToJson(transform));
+        json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
         json.Add("scheduleIndex", _scheduleIndex.ToString());
+        //json.Add("curActivity", _curActivity.Encode());
+        json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
+        //JsonUtility.ToJson(this);
+
         return json;
+    }
+
+    private JSONArray EncodeActivityStack()
+    {
+        SimpleJSON.JSONArray arr = new JSONArray();
+        while (tempActivities.Count > 0)
+        {
+            AvatarActivity act = tempActivities.Pop();
+            //TODO: Check whether this serialization round-trips successfully.
+            arr.Add(JsonUtility.ToJson(act));
+        }
+        return arr;
     }
 
     // Load function
     public void Decode(JSONClass json)
     {
         _scheduleIndex = json["scheduleIndex"].AsInt;
+        Transform loadedTransform = JsonUtility.FromJson<Transform>(json["transform"]);
+        transform.position = loadedTransform.position;
+        transform.rotation = loadedTransform.rotation;
+        _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
-        //Should be more here!
+    //Should be more here!
+}
+
+    private void DecodeActivityStack(JSONArray arr) {
+        for(int i = 0; i < arr.Count; i++)
+        {
+            string act = arr[i];
+            tempActivities.Push(JsonUtility.FromJson<AvatarActivity>(act));
+        }
     }
 }
