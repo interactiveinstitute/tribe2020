@@ -4,9 +4,8 @@ using System.Collections.Generic;
 
 public class BattleView : View {
 	//Singleton features
-	private static BattleView _instance;
 	public static BattleView GetInstance() {
-		return _instance;
+		return _instance as BattleView;
 	}
 
 	public GameObject RisingNumberPrefab;

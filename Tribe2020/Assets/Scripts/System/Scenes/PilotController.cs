@@ -3,13 +3,14 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
 
-public class PilotController : Controller{
+public class PilotController : Controller {
 	//Singleton features
 	public static PilotController GetInstance(){
 		return _instance as PilotController;
 	}
 	private InputState _curState = InputState.ALL;
 
+	#region Fields
 	public bool debug = false;
 
 	//Access all singleton systemss
@@ -17,6 +18,7 @@ public class PilotController : Controller{
 	private GameTime _timeMgr;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
+	private MainMeter _mainMeter;
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
 	private CustomSceneManager _sceneMgr;
@@ -42,6 +44,7 @@ public class PilotController : Controller{
 	private List<Appliance> _appliances;
 
 	private bool _isLoaded = false;
+	#endregion
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -59,6 +62,7 @@ public class PilotController : Controller{
 		_timeMgr = GameTime.GetInstance();
 		_camMgr = CameraManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
+		_mainMeter = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
 		_narrationMgr = NarrationManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
@@ -110,6 +114,15 @@ public class PilotController : Controller{
 			_touchReset = false;
 		}
 
+		_view.date.GetComponent<Text>().text = _timeMgr.CurrentDate;
+		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
+		float energy = (float)_mainMeter.Energy;
+		if(energy < 1) {
+			_view.energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
+		} else {
+			_view.energyCounter.text = Mathf.Floor(energy) + " kWh";
+		}
+
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
 		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
@@ -137,7 +150,7 @@ public class PilotController : Controller{
 	//
 	private void OnTouchEnded(Vector3 pos){
 		//Debug.Log("ontouchended");
-		_camMgr.cameraState = CameraManager.IDLE;
+		_camMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
@@ -156,8 +169,6 @@ public class PilotController : Controller{
 				OnSwipe(_startPos, pos);
 			}
 		}
-
-		
 	}
 	
 	//
@@ -507,13 +518,48 @@ public class PilotController : Controller{
 	}
 
 	//
-	public void PlaySound(string sound) {
+	public override void ClearView() {
+		_view.ClearView();
+	}
+
+	//
+	public override void ControlInterface(string id, string action) {
+		_view.ControlInterface(id, action);
+	}
+
+	//
+	public override void ShowCongratualations(string text) {
+		_view.ShowCongratualations(text);
+	}
+
+	//
+	public override void PlaySound(string sound) {
 		_audioMgr.PlaySound(sound);
 	}
 
 	//
 	public override void SetControlState(InputState state) {
 		_curState = state;
+	}
+
+	//
+	public string GetPhrase(string groupKey) {
+		return _localMgr.GetPhrase(groupKey);
+	}
+
+	//
+	public string GetPhrase(string groupKey, string key) {
+		return _localMgr.GetPhrase(groupKey, key);
+	}
+
+	//
+	public override void SetTimeScale(int timeScale) {
+		_timeMgr.TimeScale = timeScale;
+	}
+
+	//
+	public override string GetCurrentDate() {
+		return _timeMgr.CurrentDate;
 	}
 
 	//
@@ -555,16 +601,16 @@ public class PilotController : Controller{
 		_localMgr.DeserializeFromJSON(_saveMgr.GetClass("LocalisationManager"));
 
 		//Load avatar states
-		if(_saveMgr.GetData("avatarStates") != null) {
-			JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
-			foreach(JSONClass avatarJSON in avatarsJSON) {
-				foreach(BehaviourAI avatar in _avatars) {
-					if(avatar.name == avatarJSON["name"]) {
-						avatar.Decode(avatarJSON);
-					}
-				}
-			}
-		}
+		//if(_saveMgr.GetData("avatarStates") != null) {
+		//	JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
+		//	foreach(JSONClass avatarJSON in avatarsJSON) {
+		//		foreach(BehaviourAI avatar in _avatars) {
+		//			if(avatar.name == avatarJSON["name"]) {
+		//				avatar.Decode(avatarJSON);
+		//			}
+		//		}
+		//	}
+		//}
 
 		//Load appliance states
 		if(_saveMgr.GetData("Appliances") != null) {

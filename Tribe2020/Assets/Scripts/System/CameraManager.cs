@@ -10,13 +10,12 @@ public class CameraManager : MonoBehaviour {
 		return _instance;
 	}
 
+	#region Fields
+	public bool debug = false;
 	private PilotView _view;
 
-	public string cameraState = IDLE;
-	public const string IDLE = "camera_idle";
-	public const string FULL = "camera_full";
-	public const string ROOM = "camera_room";
-	public const string PANNED = "camera_panned";
+	public enum CameraState { Idle, Full, Room, Panned };
+	public CameraState cameraState = CameraState.Idle;
 
 	//public Transform pilotTransform;
 	public GameObject viewPointContainer;
@@ -33,7 +32,6 @@ public class CameraManager : MonoBehaviour {
 	private Vector3 _lastRot, _targetRot;
 
 	//Orientation interaction variables
-	//public GameObject cameraHolder;
 	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
@@ -44,6 +42,7 @@ public class CameraManager : MonoBehaviour {
 	private float journeyLength;
 
 	private float _panSpeed = 0.01f;
+	#endregion
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -54,19 +53,13 @@ public class CameraManager : MonoBehaviour {
 	void Start() {
 		_view = PilotView.GetInstance();
 
-		//Ref to camera
-		//cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-		//gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		_lastPos = _targetPos = gameCamera.transform.position;
 		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
 		//Populate collection of viewpoints
 		PopulateViewpoints();
 
-		//PopulateViewpoints(Object.FindObjectsOfType<Viewpoint>());
-
 		SetViewpoint((int)startView.x, (int)startView.y);
-		//UpdateVisibility();
 	}
 
 	// Update is called once per frame
@@ -75,7 +68,7 @@ public class CameraManager : MonoBehaviour {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
 			float fracJourney = distCovered / journeyLength;
 
-			if(cameraState == IDLE) {
+			if(cameraState == CameraManager.CameraState.Idle) {
 				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
 				gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
 			}
@@ -89,32 +82,9 @@ public class CameraManager : MonoBehaviour {
 		foreach(GameObject go in vp.hideObjects) {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
-
-		//if(vp.showFloor){
-		//	foreach(Transform floor in pilotTransform){
-		//		if(floor.name == "Floor " + vp.floor){
-		//			ShowFloor(floor);
-		//		} else{
-		//			HideFloor(floor);
-		//		}
-		//	}
-		//} else if(vp.showPilot){
-		//	foreach(Transform floor in pilotTransform){
-		//		ShowFloor(floor);
-		//	}
-		//}
-
-		//if(vp.hideNorth){
-		//	HideWall("North Wall");
-		//} else if(vp.hideEast){
-		//	HideWall("East Wall");
-		//} else if(vp.hideSouth){
-		//	HideWall("South Wall");
-		//} else if(vp.hideWest){
-		//	HideWall("West Wall");
-		//}
 	}
 
+	//
 	public void HideObstacles(Transform viewpointTrans) {
 		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
@@ -123,6 +93,7 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
 	public void UnhideObstacles(Transform viewpointTrans) {
 		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
@@ -130,27 +101,6 @@ public class CameraManager : MonoBehaviour {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
 		}
 	}
-
-	//
-	//public void HideWall(string wall){
-	//	foreach(Transform floor in pilotTransform){
-	//		foreach(Transform room in floor){
-	//			if(room.name == "Exterior"){
-	//				foreach(Transform group in room){
-	//					if(group.name == wall){
-	//						foreach(Transform mesh in group){
-	//							mesh.GetComponent<MeshRenderer>().shadowCastingMode =
-	//								UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-	//							if(mesh.GetComponent<MeshCollider>()){
-	//								mesh.GetComponent<MeshCollider>().enabled = false;
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 
 	//
 	public void HideFloor(Transform floor) {
@@ -214,7 +164,6 @@ public class CameraManager : MonoBehaviour {
 
 			_viewpoints[curY][curX] = vp.transform;
 		}
-
 	}
 
 	//

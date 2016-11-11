@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour{
 	//Singleton features
@@ -8,11 +8,16 @@ public class AudioManager : MonoBehaviour{
 		return _instance;
 	}
 
+	[System.Serializable]
+	public struct AudioWrapper {
+		public string key;
+		public AudioSource value;
+	}
 	public bool mute;
 
-	public AudioSource musicLoop;
-	public AudioSource button;
-	public AudioSource fireworks;
+	[Space(10)]
+	public List<AudioWrapper> sounds;
+	public string defaultMusic;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -21,7 +26,7 @@ public class AudioManager : MonoBehaviour{
 
 	// Use this for initialization
 	void Start(){
-		PlaySound("music");
+		PlaySound(defaultMusic);
 	}
 	
 	// Update is called once per frame
@@ -29,16 +34,12 @@ public class AudioManager : MonoBehaviour{
 	
 	}
 
-	public void PlaySound(string sound){
-		if(mute) { return; }
-
-		switch(sound){
-		case "music":
-			musicLoop.Play(); break;
-		case "button":
-			button.Play(); break;
-		case "fireworks":
-			fireworks.Play(); break;
+	//
+	public void PlaySound(string key) {
+		foreach(AudioWrapper sound in sounds) {
+			if(key == sound.key) {
+				sound.value.Play();
+			}
 		}
 	}
 }
