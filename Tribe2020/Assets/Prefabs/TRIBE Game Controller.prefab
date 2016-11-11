@@ -116,7 +116,7 @@ GameObject:
   - 114: {fileID: 11477080}
   - 114: {fileID: 114000010043234074}
   m_Layer: 0
-  m_Name: Pilot Camera
+  m_Name: Camera Manager
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -862,7 +862,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22485030}
   - 222: {fileID: 22259196}
-  - 114: {fileID: 11407748}
+  - 114: {fileID: 114000013836609574}
   m_Layer: 5
   m_Name: Viewpoint Guide
   m_TagString: Untagged
@@ -1734,26 +1734,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Swipe the screen in order to go left, right, up and down.
---- !u!114 &11407748
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 180114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -405508275, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 300
-    m_Right: 300
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
 --- !u!114 &11408626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1940,6 +1920,8 @@ MonoBehaviour:
   animationUI: {fileID: 22474118}
   fireworks: {fileID: 19803846}
   actionButtonPrefab: {fileID: 131604, guid: 0416b27305708074c8d7bb310e901652, type: 2}
+  viewGuideRowPrefab: {fileID: 1000013316688104, guid: a67829d6dcf577a4b86b4a75a39b808d,
+    type: 2}
   viewpointIconPrefab: {fileID: 116102, guid: c7a72ab6e32b78741a00240101091fe5, type: 2}
   mailButtonPrefab: {fileID: 175994, guid: 459384aa2c48e8249bc882ca3db6caf9, type: 2}
   EEMButtonPrefab: {fileID: 1000011575247888, guid: 9df48106b19751141a18505ab58d1169,
@@ -3423,7 +3405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 1
+  autoStart: 0
   saveProgress: 1
   debug: 0
   startQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
@@ -11985,8 +11967,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd61d816d1c78a44b4461097705926d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   cameraState: 0
-  viewPointContainer: {fileID: 0}
   startView: {x: 1, y: 0}
   gameCamera: {fileID: 2054428}
 --- !u!114 &114000010055558376
@@ -19455,6 +19437,26 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 10
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+--- !u!114 &114000013836609574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297475563, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
 --- !u!114 &114000013844632058

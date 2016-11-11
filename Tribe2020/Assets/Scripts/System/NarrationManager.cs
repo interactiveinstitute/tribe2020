@@ -214,5 +214,5 @@ public class NarrationManager : MonoBehaviour {
 		} else {
 			SetStartState();
 		}
-	}	
+	}
 }

@@ -38,6 +38,14 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
+	public virtual void OnNewViewpoint(string title, int viewCount, int aboveCount, int curView) {
+	}
+
+	//
+	public virtual void OnNewViewpoint(string title, Viewpoint[][] viewMatrix, Vector2 curView) {
+	}
+
+	//
 	public virtual void ShowCongratualations(string text) {
 	}
 
