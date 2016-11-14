@@ -629,7 +629,8 @@ public class PilotController : Controller {
             {
                 foreach (BehaviourAI avatar in _avatars)
                 {
-                    if (avatar.name == avatarJSON["name"])
+                    string loadedName = avatarJSON["name"];
+                    if (avatar.name == loadedName)
                     {
                         avatar.Decode(avatarJSON);
                     }

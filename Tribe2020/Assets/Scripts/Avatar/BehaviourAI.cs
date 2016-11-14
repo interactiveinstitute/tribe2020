@@ -1054,7 +1054,8 @@ public class BehaviourAI : MonoBehaviour
     {
         JSONClass json = new JSONClass();
         json.Add("name", name);
-        //json.Add("transform", JsonUtility.ToJson(transform));
+        Vector3 position = transform.position;
+        json.Add("transform", JsonUtility.ToJson(position));
         json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
         json.Add("scheduleIndex", _scheduleIndex.ToString());
         //json.Add("curActivity", _curActivity.Encode());
@@ -1082,9 +1083,9 @@ public class BehaviourAI : MonoBehaviour
     public void Decode(JSONClass json)
     {
         _scheduleIndex = json["scheduleIndex"].AsInt;
-        Transform loadedTransform = JsonUtility.FromJson<Transform>(json["transform"]);
-        transform.position = loadedTransform.position;
-        transform.rotation = loadedTransform.rotation;
+        transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
+        //transform.position = loadedTransform.position;
+        //transform.rotation = loadedTransform.rotation;
         _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
     //Should be more here!
