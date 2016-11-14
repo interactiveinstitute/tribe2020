@@ -3,18 +3,21 @@ using System.Collections;
 
 public class DebugManager : MonoBehaviour {
 
-
+    //Add two fields here for the class that should have toggleable Debug. Also add a condition check in the function called Output, below. Then call DebugManager instead of Debug in the corresponding class
     static public bool staticBehaviourAI;
     public bool BehaviourAI = true;
 
     static public bool staticAvatarActivity;
     public bool AvatarActivity = true;
 
+    static public bool staticAppliance;
+    public bool Appliance = true;
+
 
     //TODO: Make a general function for both logerror and log
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -22,6 +25,7 @@ public class DebugManager : MonoBehaviour {
 	void Update () {
         staticBehaviourAI = BehaviourAI;
         staticAvatarActivity = AvatarActivity;
+        staticAppliance = Appliance;
 	}
 
     static public void Log(string message, System.Object caller)
@@ -54,6 +58,9 @@ public class DebugManager : MonoBehaviour {
         {
             print = false;
         }else if(caller is AvatarActivity && !staticAvatarActivity)
+        {
+            print = false;
+        }else if(caller is Appliance && !staticAppliance)
         {
             print = false;
         }

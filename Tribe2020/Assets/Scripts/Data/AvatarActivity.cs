@@ -75,7 +75,7 @@ public class AvatarActivity : ScriptableObject {
         {
             return;
         }
-        if(sessions[_currSession].type == SessionType.WaitForDuration) {
+        if(GetSessionAtIndex(_currSession).type == SessionType.WaitForDuration) {
             if(_delay > 0f) {
                 _delay -= Time.deltaTime;
             } else {
@@ -126,7 +126,7 @@ public class AvatarActivity : ScriptableObject {
         }
 
 
-        StartSession(sessions[_currSession]);
+        StartSession(GetSessionAtIndex(_currSession));
 	}
 
 	//
@@ -158,19 +158,6 @@ public class AvatarActivity : ScriptableObject {
                 }else
                 {
                     _ai.WalkTo(session.requiredAffordance, session.avatarOwnsTarget);
-                }
-				break;
-			//case SessionType.Interact:
-			//	NextSession();
-			//	break;
-			case SessionType.Warp:
-                if (session.appliance != null)
-                {
-                    _ai.WarpTo(session.appliance, session.avatarOwnsTarget);
-                }
-                else
-                {
-                    _ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
                 }
 				break;
 			case SessionType.SetRunlevel:
@@ -215,6 +202,43 @@ public class AvatarActivity : ScriptableObject {
 		}
 	}
 
+    //
+    public void SimulateSession(Session session)
+    {
+        DebugManager.Log("Simulating session of type " + session.type + " with affordance " + session.requiredAffordance, this, this);
+
+        //Make case statements for the session types that differ from normal tempo. If no difference, this function defaults to run the sessions normally (by calling StartSession in the default case)
+        switch (session.type)
+        {
+            case SessionType.WaitForDuration:
+                break;
+            case SessionType.WaitUntilEnd:
+                break;
+            case SessionType.WalkTo:
+                //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
+                _ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
+                break;
+            default:
+                StartSession(session);
+                break;
+        }
+    }
+
+    private Session GetSessionAtIndex(int index)
+    {
+        if(index < sessions.Count)
+        {
+            return sessions[index];
+        }
+        DebugManager.LogError("Session index out of bound! received index was " + index + ". Falling back to return first session instead", this, this);
+        if(sessions.Count > 0)
+        {
+            return sessions[0];
+        }
+        DebugManager.LogError("Session list is empty!!!! Something is terribly wroooong!", this, this);
+        return new Session();
+    }
+
 	//
 	public void InsertSession(Session session) {
         if (session == null)
@@ -236,13 +260,13 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we are gonna be movinng somewhere, we should do that standing up!
-            if(sessions[_currSession].type == SessionType.WalkTo)
+            //If we were sitting down AND we are gonna be moving somewhere, we should do that standing up!
+            if(_curAvatarState == BehaviourAI.AvatarState.Sitting && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
             {
                 _ai.standUp();
             }
             //Debug.Log("starting session" + sessions[_currSession].title);
-            StartSession(sessions[_currSession]);
+            StartSession(GetSessionAtIndex(_currSession));
 		}
 	}
 
@@ -263,7 +287,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-        DebugManager.Log(_ai.name + " reached destination " + sessions[_currSession].requiredAffordance + ". if current SessionType is walkTo, start next session", this);
+        DebugManager.Log(_ai.name + " reached destination " + GetSessionAtIndex(_currSession).requiredAffordance + ". if current SessionType is walkTo, start next session", this);
         //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		//}
@@ -271,17 +295,19 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void FinishCurrentActivity() {
-        DebugManager.Log("Gonna finish this activity. Sessions are currently: " + sessions, this);
+        DebugManager.Log("Gonna finish this activity by simulating the remaining sessions.", this, this);
 
-        //Remove the sessions already performed
-        if (_currSession > 0) {
-			sessions.RemoveRange(0, _currSession - 1);
-		}
+        //      //Remove the sessions already performed
+        //      if (_currSession > 0) {
+        //	sessions.RemoveRange(0, _currSession - 1);
+        //}
 
-        DebugManager.Log("After deletion sessions are: " + sessions, this);
         //Simulate the sessions not yet performed
-        foreach (Session session in sessions) {
-			SimulateSession(session);
+        //First increment _currsession by one. We don't want to run the current session again.
+        _currSession++;
+        while(!IsThisActivityFinished()) {
+			SimulateSession(GetSessionAtIndex(_currSession));
+            _currSession++;
 		}
 
         //Trigger callback for finished activity
@@ -290,26 +316,6 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void Revert() {
-	}
-
-	//
-	public void SimulateSession(Session session) {
-		switch(session.type) {
-			case SessionType.WaitForDuration:
-				break;
-			case SessionType.WaitUntilEnd:
-				break;
-			case SessionType.WalkTo:
-                //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
-				_ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
-				break;
-			//case SessionType.Interact:
-   //             //Debug.Log("Simulating Interaction. Interacting with " + session.target);
-   //             _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
-			//	break;
-			default:
-                break;
-		}
 	}
 
 	public virtual void OnHasReached(BehaviourAI ai, string tag) {
