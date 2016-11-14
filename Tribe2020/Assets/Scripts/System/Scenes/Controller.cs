@@ -75,6 +75,9 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
+	public virtual void UnlockView(int x, int y) { }
+
+	//
 	public virtual void SaveGameState() {
 	}
 
