@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 using UnityStandardAssets.Characters.ThirdPerson;
 using SimpleJSON; // For encoding and decoding avatar states
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonCharacter))]
+[System.Serializable]
 public class BehaviourAI : MonoBehaviour
 {
     //private static ILogger logger = Debug.logger;
     //private static string logTag = "BehaviourAI";
 
-    public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
+    public enum AvatarState { Idle, Walking, Sitting };
 
     [SerializeField]
     private PilotController _controller;
     private GameTime _timeMgr;
 
+    [SerializeField]
     private AvatarStats _stats;
     private NavMeshAgent _agent;
     private ThirdPersonCharacter _charController;
@@ -28,16 +30,16 @@ public class BehaviourAI : MonoBehaviour
     public AvatarActivity _nextActivity;
     public AvatarActivity _prevActivity;
 
-    private Stack<AvatarActivity> tempActivities = new Stack<AvatarActivity>();
+    private Stack<AvatarActivity> _tempActivities = new Stack<AvatarActivity>();
     //private bool _isTemporarilyUnscheduled = false;
 
+    [SerializeField]
     private bool _isControlled = false;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
     private Room _curRoom;
 
-    private float _startTime;
     //private bool _isSync = false;
     //private bool _isScheduleOver = false;
 
@@ -48,8 +50,14 @@ public class BehaviourAI : MonoBehaviour
         public string time;
         public AvatarActivity activity;
     }
+
+    [SerializeField]
     public ScheduleItem[] schedule;
+    [SerializeField]
     private int _scheduleIndex = 0;
+
+    [SerializeField]
+    private GameObject prefab;
 
     // Use this for initialization
     void Start()
@@ -80,10 +88,10 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (tempActivities.Count > 0)
+        if (_tempActivities.Count > 0)
         {
             //Handle schedule overriding activities
-            UpdateActivity(tempActivities.Peek());
+            UpdateActivity(_tempActivities.Peek());
             return;
         }
 
@@ -166,13 +174,6 @@ public class BehaviourAI : MonoBehaviour
                 //_charController.SitDown(); //Sets a boolean in the animator object
                 _charController.Move(Vector3.zero, false, false);
                 break;
-            // Waiting
-            case AvatarState.Waiting:
-                _charController.Move(Vector3.zero, false, false);
-                break;
-            //case AvatarState.OverrideIdle:
-            //    _charController.Move(Vector3.zero, false, false);
-            //    break;
             //case AvatarState.TurningOnLight:
             //    if (_agent.remainingDistance > _agent.stoppingDistance)
             //    {
@@ -191,9 +192,9 @@ public class BehaviourAI : MonoBehaviour
 
     private AvatarActivity GetRunningActivity()
     {
-        if (tempActivities.Count > 0)
+        if (_tempActivities.Count > 0)
         {
-            return tempActivities.Peek();
+            return _tempActivities.Peek();
         }else
         {
             return _curActivity;
@@ -373,9 +374,9 @@ public class BehaviourAI : MonoBehaviour
     public void StartTemporaryActivity(AvatarActivity activity)
     {
         DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
-        tempActivities.Push(activity);
-        tempActivities.Peek().Init(this);
-        tempActivities.Peek().Start();
+        _tempActivities.Push(activity);
+        _tempActivities.Peek().Init(this);
+        _tempActivities.Peek().Start();
     }
 
     //Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
@@ -675,13 +676,6 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void Delay(float seconds)
-    {
-        //Debug.Log(name + ".Delay(" + seconds + ")");
-        GetRunningActivity().SetCurrentAvatarState(AvatarState.Waiting);
-    }
-
-    //
     public void SetRunLevel(Affordance affordance, int level)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
@@ -861,13 +855,13 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
 
-        if (tempActivities.Count > 0)
+        if (_tempActivities.Count > 0)
         {
             //Notify the gamecontroller that we finished this activity!
-            _controller.OnAvatarActivityComplete(tempActivities.Peek().title);
+            _controller.OnAvatarActivityComplete(_tempActivities.Peek().title);
 
             //Ok. so this overriding activity was finished. Remove it from the tempactivity stack.
-            AvatarActivity finishedAvtivity = tempActivities.Pop();
+            AvatarActivity finishedAvtivity = _tempActivities.Pop();
 
             DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
             DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
@@ -1073,9 +1067,9 @@ public class BehaviourAI : MonoBehaviour
     private JSONArray EncodeActivityStack()
     {
         SimpleJSON.JSONArray arr = new JSONArray();
-        while (tempActivities.Count > 0)
+        while (_tempActivities.Count > 0)
         {
-            AvatarActivity act = tempActivities.Pop();
+            AvatarActivity act = _tempActivities.Pop();
             //TODO: Check whether this serialization round-trips successfully.
             arr.Add(JsonUtility.ToJson(act));
         }
@@ -1088,8 +1082,6 @@ public class BehaviourAI : MonoBehaviour
         //_scheduleIndex = json["scheduleIndex"].AsInt;
         JsonUtility.FromJsonOverwrite(json["object"], this);
         transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
-        //transform.position = loadedTransform.position;
-        //transform.rotation = loadedTransform.rotation;
         _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
     //Should be more here!
@@ -1099,7 +1091,25 @@ public class BehaviourAI : MonoBehaviour
         for(int i = 0; i < arr.Count; i++)
         {
             string act = arr[i];
-            tempActivities.Push(JsonUtility.FromJson<AvatarActivity>(act));
+            _tempActivities.Push(JsonUtility.FromJson<AvatarActivity>(act));
         }
+    }
+
+    public void TestSerializationRoundTrip()
+    {
+        //Ok. First create a new avatar from the prefab for comparison
+        GameObject objectInstance = Instantiate(prefab);
+        BehaviourAI compareAI = objectInstance.GetComponent<BehaviourAI>();
+
+        JSONClass encodedAI = Encode();
+        compareAI.Decode(encodedAI);
+
+        //Now we should compare the two behavious instances and see if they're equal. If they are, that implies the serialization is all good.
+        if(compareAI._curRoom == _curRoom)
+        {
+            DebugManager.Log("Is good", this);
+        }
+
+
     }
 }
