@@ -12,8 +12,8 @@ public class BehaviourAI : MonoBehaviour
     //private static string logTag = "BehaviourAI";
 
     public enum AvatarState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
-    [SerializeField]
 
+    [SerializeField]
     private PilotController _controller;
     private GameTime _timeMgr;
 
@@ -121,6 +121,12 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
+    //If no activitty reference given, Update _curActivity.
+    private void UpdateActivity()
+    {
+        UpdateActivity(_curActivity);
+    }
+
     private void UpdateActivity(AvatarActivity activity)
     {
 
@@ -181,12 +187,6 @@ public class BehaviourAI : MonoBehaviour
             //    }
             //    break;
         }
-    }
-
-    //If no activitty reference given, Update _curActivity.
-    private void UpdateActivity()
-    {
-        UpdateActivity(_curActivity);
     }
 
     private AvatarActivity GetRunningActivity()
@@ -526,10 +526,12 @@ public class BehaviourAI : MonoBehaviour
     {
         if (appliance == null)
         {
-            DebugManager.LogError("Didn't find a WalkTo target " + appliance + ". doing activity " + _curActivity.name + ". Skipping to next session", this);
+            DebugManager.LogError("Didn't find a WalkTo target. doing activity " + _curActivity.name + ". Skipping to next session", this);
             GetRunningActivity().NextSession();
             return;
         }
+
+        DebugManager.Log("walking to appliance ", appliance, this);
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
@@ -547,11 +549,14 @@ public class BehaviourAI : MonoBehaviour
 
     public void WarpTo(Appliance appliance, bool isOwned)
     {
-        if (appliance == null) { return; }
+        if (appliance == null) {
+            DebugManager.LogError("Didn't get an appliance to warp to!", this, this);
+            return;
+        }
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        appliance.AddHarvest();
+        //appliance.AddHarvest(); // Why would we do this here!! Gunnar
         _agent.Warp(appliance.interactionPos);
     }
 
@@ -682,6 +687,7 @@ public class BehaviourAI : MonoBehaviour
         //Appliance targetAppliance = FindNearestAppliance(target, false);
         Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
         SetRunLevel(targetAppliance, level);
+
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
 	}
@@ -709,7 +715,7 @@ public class BehaviourAI : MonoBehaviour
         ElectricDevice device = targetObject.GetComponent<ElectricDevice>();
         if (device == null)
         {
-            DebugManager.LogError("Didn't find electric device for setting runlevel", this);
+            DebugManager.LogError("Couldn't set runlevel. The provided gameobject doesn't have an electric device component", this);
             return;
         }
 
@@ -759,9 +765,6 @@ public class BehaviourAI : MonoBehaviour
 
     public void TurnOff(Appliance appliance)
     {
-        ///////////TODO: Don't do this here. Harvest should not implicitly be connected to setting runlevels!
-        appliance.AddHarvest();
-
         DebugManager.Log("Turning off " + appliance, appliance, this);
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
@@ -1057,12 +1060,12 @@ public class BehaviourAI : MonoBehaviour
         Vector3 position = transform.position;
         json.Add("transform", JsonUtility.ToJson(position));
         json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
-        json.Add("scheduleIndex", _scheduleIndex.ToString());
+        //json.Add("scheduleIndex", _scheduleIndex.ToString());
         //json.Add("curActivity", _curActivity.Encode());
         json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
-        //JsonUtility.ToJson(this);
+        json.Add("object", JsonUtility.ToJson(this));
 
         return json;
     }
@@ -1082,7 +1085,8 @@ public class BehaviourAI : MonoBehaviour
     // Load function
     public void Decode(JSONClass json)
     {
-        _scheduleIndex = json["scheduleIndex"].AsInt;
+        //_scheduleIndex = json["scheduleIndex"].AsInt;
+        JsonUtility.FromJsonOverwrite(json["object"], this);
         transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
         //transform.position = loadedTransform.position;
         //transform.rotation = loadedTransform.rotation;
