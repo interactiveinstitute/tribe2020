@@ -572,6 +572,11 @@ public class PilotController : Controller {
 	}
 
 	//
+	public override void UnlockView(int x, int y) {
+		base.UnlockView(x, y);
+	}
+
+	//
 	public override void SaveGameState() {
 		if(debug) { Debug.Log("Saving game state"); }
 
