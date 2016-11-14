@@ -46,6 +46,7 @@ public class PilotView : View{
 
 	[Header("Generated UI Prefabs")]
 	public GameObject actionButtonPrefab;
+	public GameObject viewGuideRowPrefab;
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
 	public GameObject EEMButtonPrefab;
@@ -130,12 +131,41 @@ public class PilotView : View{
 	}
 
 	//
-	public void UpdateViewpointGuide(int viewCount, int viewIndex) {
-		if(viewCount != viewpointGuideUI.childCount) {
-			RemoveChildren(viewpointGuideUI);
+	public void UpdateViewpointGuide(Viewpoint[][] viewMatrix, Vector2 curView) {
+		RemoveChildren(viewpointGuideUI);
+
+		for(int y = 0; y < viewMatrix.Length; y++) {
+			GameObject viewRow = Instantiate(viewGuideRowPrefab) as GameObject;
+			viewRow.transform.SetParent(viewpointGuideUI, false);
+			for(int x = 0; x < viewMatrix[y].Length; x++) {
+				GameObject viewCell = Instantiate(viewpointIconPrefab) as GameObject;
+				viewCell.transform.SetParent(viewRow.transform, false);
+				if(curView.x == x && curView.y == y) {
+					viewCell.GetComponent<Image>().color = Color.blue;
+				} else if(viewMatrix[y][x].locked) {
+					viewCell.GetComponent<Image>().color = Color.black;
+				}
+			}
+		}
+	}
+
+	//
+	public void UpdateViewpointGuide(int aboveCount, int viewCount, int viewIndex) {
+		Transform above = viewpointGuideUI.GetChild(0).transform;
+		Transform center = viewpointGuideUI.GetChild(1).transform;
+		Transform below = viewpointGuideUI.GetChild(2).transform;
+
+		RemoveChildren(above);
+		for(int i = 0; i < aboveCount; i++) {
+			GameObject iconObj = Instantiate(viewpointIconPrefab) as GameObject;
+			iconObj.transform.SetParent(above, false);
+		}
+
+		if(viewCount != center.childCount) {
+			RemoveChildren(center);
 			for(int i = 0; i < viewCount; i++) {
 				GameObject iconObj = Instantiate(viewpointIconPrefab) as GameObject;
-				iconObj.transform.SetParent(viewpointGuideUI, false);
+				iconObj.transform.SetParent(center, false);
 
 				if(i == viewIndex) {
 					iconObj.GetComponent<Image>().color = Color.blue;
@@ -143,7 +173,7 @@ public class PilotView : View{
 			}
 		} else {
 			for(int i = 0; i < viewCount; i++) {
-				Transform curIcon = viewpointGuideUI.GetChild(i);
+				Transform curIcon = center.GetChild(i);
 				if(i == viewIndex) {
 					curIcon.GetComponent<Image>().color = Color.blue;
 				} else {
@@ -183,16 +213,13 @@ public class PilotView : View{
 	}
 
 	//Fill INSPECTOR with details and eem options for selected appliance
-	public void BuildInspector(Appliance appliance) {
-		string title = _controller.GetPhrase("Appliance:" + appliance.title + "_Title");
-		string description = _controller.GetPhrase("Appliance:" + appliance.title + "_Description");
-
-		if(title == "") { title = appliance.title + "!"; }
-		if(description == "") { description = appliance.description + "!"; }
+	public void BuildInspector(string title, string description, Appliance app) {
+		if(title == "") { title = app.title + "!"; }
+		if(description == "") { description = app.description + "!"; }
 
 		inspector.GetComponentsInChildren<Text>()[0].text = title;
 		inspector.GetComponentsInChildren<Text>()[2].text = description;
-		BuildEEMInterface(appliance);
+		BuildEEMInterface(app);
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
@@ -235,17 +262,6 @@ public class PilotView : View{
 		messageUI.GetComponentInChildren<Text>().text = message;
 
 		messageUI.transform.GetChild(1).GetChild(1).gameObject.SetActive(showOkButton);
-
-		//RectTransform messageTrans = messageUI.transform as RectTransform;
-		//if(showAtBottom) {
-		//	messageTrans.pivot = Vector2.zero;
-		//	messageTrans.anchoredPosition = Vector3.zero;
-		//	messageTrans.anchorMax = Vector2.zero;
-		//} else {
-		//	messageTrans.pivot = Vector2.up;
-		//	messageTrans.anchoredPosition = Vector3.zero;
-		//	messageTrans.anchorMax = Vector2.up;
-		//}
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
@@ -316,9 +332,8 @@ public class PilotView : View{
 	//
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
-		_controller.PlaySound("fireworks");
 		victoryUI.SetActive(true);
-		victoryText.text = _controller.GetPhrase(text);
+		victoryText.text = text;
 	}
 
 	//

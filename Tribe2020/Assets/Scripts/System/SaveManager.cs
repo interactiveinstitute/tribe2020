@@ -45,9 +45,9 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONNode GetData(int slot, string key) {
-		if(_dataClone["instances"][slot] != null) {
-			if(_dataClone["instances"][slot][key] != null) {
-				return _dataClone["instances"][slot][key];
+		if(_dataClone["slots"][slot] != null) {
+			if(_dataClone["slots"][slot][key] != null) {
+				return _dataClone["slots"][slot][key];
 			} else {
 				return null;
 			}
@@ -62,8 +62,8 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONClass GetClass(int slot, string field) {
-		if(_dataClone["instances"][slot][field] != null) {
-			return _dataClone["instances"][slot][field].AsObject;
+		if(_dataClone["slots"][slot][field] != null) {
+			return _dataClone["slots"][slot][field].AsObject;
 		} else {
 			return null;
 		}
@@ -76,7 +76,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string field, string value) {
-		_dataClone["instances"][slot].Add(field, value);
+		_dataClone["slots"][slot].Add(field, value);
 	}
 
 	//
@@ -86,7 +86,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string field, JSONClass value) {
-		_dataClone["instances"][slot].Add(field, value);
+		_dataClone["slots"][slot].Add(field, value);
 	}
 
 	//
@@ -96,7 +96,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string key, JSONArray value) {
-		_dataClone["instances"][slot].Add(key, value);
+		_dataClone["slots"][slot].Add(key, value);
 	}
 
 	//
@@ -105,8 +105,13 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public void ClearFile() {
+		File.WriteAllText(Application.persistentDataPath + "/" + fileName, "");
+	}
+
+	//
 	public void Delete(int slot) {
-		_dataClone["instances"].Remove(slot);
+		_dataClone["slots"].Remove(slot);
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
@@ -162,12 +167,25 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONNode ReadFileAsJSON() {
-		if(!File.Exists(_filePath)) {
-			File.WriteAllText(_filePath, "{\"instances\":[]}");
-		}
+		if(!File.Exists(_filePath)) { InitFile(); }
 
 		string fileClone = File.ReadAllText(_filePath);
+		if(fileClone == "") {
+			InitFile();
+			fileClone = File.ReadAllText(_filePath);
+		}
+
 		JSONNode json = JSON.Parse(fileClone);
+		if(json["slots"] == null) {
+			InitFile();
+			json = JSON.Parse(fileClone);
+		}
+
 		return json;
+	}
+
+	//
+	public void InitFile() {
+		File.WriteAllText(_filePath, "{\"slots\":[]}");
 	}
 }
