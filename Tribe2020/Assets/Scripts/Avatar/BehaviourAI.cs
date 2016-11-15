@@ -841,6 +841,10 @@ public class BehaviourAI : MonoBehaviour
                 //Exiting current room
                 DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
                 _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
+                //The above line is equivilent to the below section
+                //if (_stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting)){
+                //    CheckLighting(AvatarActivity.SessionType.TurnOff);
+                //}
 
                 //Entering new room
                 DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
