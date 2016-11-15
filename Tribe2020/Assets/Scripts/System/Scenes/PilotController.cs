@@ -79,6 +79,7 @@ public class PilotController : Controller {
 		if(!_isLoaded) {
 			_isLoaded = true;
 			LoadGameState();
+			_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentView());
 		}
 
 		//Mobile interaction
@@ -420,7 +421,10 @@ public class PilotController : Controller {
 		}
 	}
 
-	
+	//
+	public override void OnNewViewpoint(string title, Viewpoint[][] viewMatrix, Vector2 curView) {
+		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), curView);
+	}
 
 	//
 	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
@@ -457,7 +461,9 @@ public class PilotController : Controller {
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+		if(_narrationMgr != null) {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+		}
 	}
 
 	//
@@ -573,7 +579,8 @@ public class PilotController : Controller {
 
 	//
 	public override void UnlockView(int x, int y) {
-		base.UnlockView(x, y);
+		_camMgr.UnlockView(x, y);
+		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentView());
 	}
 
 	//

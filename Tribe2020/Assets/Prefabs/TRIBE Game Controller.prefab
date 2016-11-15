@@ -1911,6 +1911,9 @@ MonoBehaviour:
   mailReadUI: {fileID: 171446}
   mailCountText: {fileID: 11443542}
   viewpointGuideUI: {fileID: 22485030}
+  defaultIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  lockIcon: {fileID: 21300000, guid: 37087ab8de19ce547a8fe189fd719197, type: 3}
+  currentColor: {r: 0.121568635, g: 0.6117647, b: 0.31764707, a: 1}
   inspectorUI: {fileID: 136948}
   inspectorEEMContainer: {fileID: 22424928}
   inspectorActionList: {fileID: 22438620}
@@ -2120,6 +2123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  enableSaveLoad: 1
 --- !u!114 &11424674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2523,8 +2527,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  enableSaveLoad: 1
   fileName: tribeSave.gd
+  defaultContent: '{{"SanPablo":"True"}, {"IESAzucarera":"False"}, {"IESAzucarera":"False"},
+    {"EmmelinedePankhurst":"False"}, {"UniversidadOuezygin":"False"}, {"lastSlot":"-1"},
+    "slots":[]}'
 --- !u!114 &11437238
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3405,10 +3411,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 0
+  autoStart: 1
   saveProgress: 1
   debug: 0
-  startQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
+  startQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   quests:
   - {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
   - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
@@ -8679,9 +8685,9 @@ RectTransform:
   m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 0, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 75}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &22486018
 RectTransform:
   m_ObjectHideFlags: 1
@@ -13122,6 +13128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BehaviourAI: 0
   AvatarActivity: 0
+  Appliance: 0
 --- !u!114 &114000010678187100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19451,11 +19458,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 300
+    m_Right: 300
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
