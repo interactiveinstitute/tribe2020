@@ -35,6 +35,7 @@ public class BehaviourAI : MonoBehaviour
 
     [SerializeField]
     private bool _isControlled = false;
+    private bool _isSimulating = false;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
@@ -266,6 +267,10 @@ public class BehaviourAI : MonoBehaviour
 
                 //ok. this activity is the closest upcoming one in the future. Let's set it as the _curActivity and the adjacent activities as prev and next.
                 //To achieve that we must first calculate some timstamps and stuff...
+
+                //Hm. I change this now to instead set the next upcoming activity as _nextActivity (instead of _curActivity)!!! /Gunnar
+                //Decrement _scheduleIndex by 1 before we do all the stuffzz
+                _scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
 
                 //Setup the scheduleIndices.
                 int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
@@ -548,7 +553,7 @@ public class BehaviourAI : MonoBehaviour
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
 
         //If target is outside current room
-        if (!_curRoom.IsPointInRoom(appliance.interactionPos))
+        if (_curRoom != null && !_curRoom.IsPointInRoom(appliance.interactionPos))
         {
             DebugManager.Log("Walking to appliance in another room", appliance.gameObject, this);
             OnWalkToOtherRoom();
@@ -1104,13 +1109,13 @@ public class BehaviourAI : MonoBehaviour
     public void Decode(JSONClass json)
     {
         //_scheduleIndex = json["scheduleIndex"].AsInt;
-        JsonUtility.FromJsonOverwrite(json["object"], this);
+        //JsonUtility.FromJsonOverwrite(json["object"], this);
         transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
         _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
-        _curActivity = AvatarActivity.Decode(json["_curActivity"]);
-        _nextActivity = AvatarActivity.Decode(json["_nextActivity"]);
-        _prevActivity = AvatarActivity.Decode(json["_prevActivity"]);
+        _curActivity.Decode(json["_curActivity"]);
+        _nextActivity.Decode(json["_nextActivity"]);
+        _prevActivity.Decode(json["_prevActivity"]);
 
         //Should be more here!
     }

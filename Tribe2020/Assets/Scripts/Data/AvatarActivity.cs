@@ -430,9 +430,9 @@ public class AvatarActivity : ScriptableObject {
         //}
     }
 
-    static public AvatarActivity Decode(string json)
+    public void Decode(string json)
     {
-        return JsonUtility.FromJson<AvatarActivity>(json);
+        JsonUtility.FromJsonOverwrite(json, this);
     }
 
 }
