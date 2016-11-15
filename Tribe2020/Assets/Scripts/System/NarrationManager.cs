@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using SimpleJSON;
 
-
 // Manages game narration that goes outside the base game behaviour, for instance
 // showing a dialogue box, playing an overlay animation or injecting behavior into
 // some aspect of the game in order to tell the story
@@ -15,9 +14,6 @@ public class NarrationManager : MonoBehaviour {
 
 	#region Fields
 	private Controller _controller;
-	private View _view;
-	private AudioManager _audioMgr;
-	private GameTime _timeMgr;
 
 	//public Transform tutorialAnimation;
 	public bool autoStart = true;
@@ -38,9 +34,6 @@ public class NarrationManager : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		_controller = Controller.GetInstance();
-		_view = View.GetInstance();
-		_audioMgr = AudioManager.GetInstance();
-		_timeMgr = GameTime.GetInstance();
 	}
 
 	// Update is called once per frame
@@ -73,7 +66,8 @@ public class NarrationManager : MonoBehaviour {
 
 		Quest newQuest = Object.Instantiate(quest) as Quest;
 		newQuest.SetCurrentStep(questStep);
-		newQuest.date = _timeMgr.CurrentDate;
+		newQuest.date = _controller.GetCurrentDate();
+		//newQuest.date = _timeMgr.CurrentDate;
 		curQuests.Add(newQuest);
 
 		if(autoStart) {
@@ -89,28 +83,23 @@ public class NarrationManager : MonoBehaviour {
 		_controller.SetControlState(quest.GetCurrentInteractionLimits());
 		string id, action;
 
-		if(_view != null) {
+		//if(_view != null) {
 			switch(quest.GetCurrentStepType()) {
 				case Quest.QuestStepType.Popup:
 					if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
-					//_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom, false);
 					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, false);
 					break;
 				case Quest.QuestStepType.Prompt:
 					if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
-					//_view.ShowMessage("Narrative." + quest.title + ":" + step.title, step.showAtBottom);
 					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, true);
 					break;
-				//case Quest.QuestStepType.SendMail:
-				//	//_view.ShowMessage(quest.GetArguments().text, quest.GetArguments().showAtBottom);
-				//	break;
 				case Quest.QuestStepType.PlayAnimation:
 					//_view.ControlInterface("animation", "show");
-					_view.ControlInterface("animation", "hide");
-					_view.ControlInterface("playAnimation", step.valueField);
+					_controller.ControlInterface("animation", "hide");
+					_controller.ControlInterface("playAnimation", step.valueField);
 					break;
 				case Quest.QuestStepType.PlaySound:
-					_audioMgr.PlaySound(step.valueField);
+					_controller.PlaySound(step.valueField);
 					break;
 				case Quest.QuestStepType.ControlAvatar:
 					id = quest.ParseAsString("id");
@@ -125,16 +114,17 @@ public class NarrationManager : MonoBehaviour {
 				case Quest.QuestStepType.ControlInterface:
 					id = quest.ParseAsString("id");
 					action = quest.ParseAsString("action");
-					_view.ControlInterface(id, action);
+					_controller.ControlInterface(id, action);
 					break;
 				case Quest.QuestStepType.ChangeTimeScale:
-					_timeMgr.TimeScale = int.Parse(step.valueField);
+					_controller.SetTimeScale(int.Parse(step.valueField));
+					//_timeMgr.TimeScale = int.Parse(step.valueField);
 					break;
 				case Quest.QuestStepType.QuestComplete:
-					_view.ShowCongratualations("Narrative." + quest.title + ":Quest Complete");
+					_controller.ShowCongratualations("Narrative." + quest.title + ":Quest Complete");
 					break;
 			}
-		}
+		//}
 
 		//If there are no conditions, just step to the next quest step
 		if(quest.GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
@@ -152,9 +142,10 @@ public class NarrationManager : MonoBehaviour {
 					curQuest.GetCurrentStep().conditionField == argument) {
 					if(debug) { Debug.Log(name + ":" + curQuest.name + " was progressed by event " + questEvent); }
 
-					if(_view != null) {
-						_view.ClearView();
-					}
+					//if(_view != null) {
+						_controller.ClearView();
+						//_view.ClearView();
+					//}
 
 					curQuest.NextStep();
 					if(curQuest.IsComplete()) {
@@ -193,42 +184,18 @@ public class NarrationManager : MonoBehaviour {
 		return result;
 	}
 
-	// Save function
-	//public JSONClass Encode() {
-	//	JSONClass questStateJSON = new JSONClass();
-
-	//	JSONArray questsJSON = new JSONArray();
-	//	foreach(Quest quest in curQuests) {
-	//		JSONClass questJSON = new JSONClass();
-	//		questJSON.Add("index", GetQuestIndex(quest).ToString());
-	//		questJSON.Add("step", quest.Encode());
-
-	//		questsJSON.Add(questJSON);
-	//	}
-	//	questStateJSON.Add("activeQuests", questsJSON);
-
-	//	return questStateJSON;
-	//}
-
-	// Load function
-	//public void Decode(JSONClass questStateJSON) {
-	//	JSONArray quests = questStateJSON["activeQuests"].AsArray;
-	//	foreach(JSONClass quest in quests) {
-	//		AddQuest(quest["index"].AsInt, quest["step"]["step"].AsInt);
-	//	}
-	//}
-
 	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 
 		JSONArray questsJSON = new JSONArray();
-		foreach(Quest quest in curQuests) {
-			JSONClass questJSON = new JSONClass();
-			questJSON.Add("index", GetQuestIndex(quest).ToString());
-			questJSON.Add("step", quest.GetCurrentStepIndex().ToString());
-
-			questsJSON.Add(questJSON);
+		if(saveProgress) {
+			foreach(Quest quest in curQuests) {
+				JSONClass questJSON = new JSONClass();
+				questJSON.Add("index", GetQuestIndex(quest).ToString());
+				questJSON.Add("step", quest.GetCurrentStepIndex().ToString());
+				questsJSON.Add(questJSON);
+			}
 		}
 		json.Add("activeQuests", questsJSON);
 
@@ -247,5 +214,5 @@ public class NarrationManager : MonoBehaviour {
 		} else {
 			SetStartState();
 		}
-	}	
+	}
 }

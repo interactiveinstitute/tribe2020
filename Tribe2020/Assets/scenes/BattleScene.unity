@@ -240,7 +240,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 362920946}
+      - m_Target: {fileID: 1672030854}
         m_MethodName: OnArguePressed
         m_Mode: 3
         m_Arguments:
@@ -297,6 +297,7 @@ GameObject:
   - 223: {fileID: 160410054}
   - 114: {fileID: 160410053}
   - 114: {fileID: 160410052}
+  - 114: {fileID: 160410056}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -374,13 +375,44 @@ RectTransform:
   - {fileID: 2124091717}
   - {fileID: 1145692335}
   - {fileID: 1844203709}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 362920947}
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &160410056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 160410051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ca47c6af83ded47ac03c231b5b0c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RisingNumberPrefab: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
+  foeName: {fileID: 1641432975}
+  foeCPNumber: {fileID: 1565871926}
+  foeEPNumber: {fileID: 212220476}
+  foeCPBar: {fileID: 867352858}
+  foeEPBar: {fileID: 338344978}
+  allyCPNumber: {fileID: 806167235}
+  allyEPNumber: {fileID: 1263126251}
+  allyCPBar: {fileID: 761859683}
+  allyEPBar: {fileID: 1051795426}
+  question: {fileID: 542565245}
+  answers:
+  - {fileID: 1689381909}
+  - {fileID: 1264064004}
+  - {fileID: 1712925013}
+  - {fileID: 759615727}
+  congratsPanel: {fileID: 1844203711}
+  congratsText: {fileID: 1844203710}
+  FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
+  fireworks: {fileID: 1231599008}
 --- !u!1 &190034766
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +443,7 @@ Transform:
   - {fileID: 927390988}
   - {fileID: 1784776779}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
 --- !u!1 &212220474
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +661,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 362920947}
-  m_RootOrder: 0
+  m_RootOrder: 4
 --- !u!114 &298321129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,64 +770,13 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 362920947}
-  - 114: {fileID: 362920946}
-  - 114: {fileID: 362920945}
   m_Layer: 0
-  m_Name: System
+  m_Name: TRIBE Battle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &362920945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 362920944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03ca47c6af83ded47ac03c231b5b0c1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RisingNumberPrefab: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
-  foeName: {fileID: 1641432975}
-  foeCPNumber: {fileID: 1565871926}
-  foeEPNumber: {fileID: 212220476}
-  foeCPBar: {fileID: 867352858}
-  foeEPBar: {fileID: 338344978}
-  allyCPNumber: {fileID: 806167235}
-  allyEPNumber: {fileID: 1263126251}
-  allyCPBar: {fileID: 761859683}
-  allyEPBar: {fileID: 1051795426}
-  question: {fileID: 542565245}
-  answers:
-  - {fileID: 1689381909}
-  - {fileID: 1264064004}
-  - {fileID: 1712925013}
-  - {fileID: 759615727}
-  congratsPanel: {fileID: 1844203711}
-  congratsText: {fileID: 1844203710}
-  FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
-  fireworks: {fileID: 1231599008}
---- !u!114 &362920946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 362920944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66033c4ff4ca3644ca04f2380d31492c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  foeObject: {fileID: 927390987}
-  allyObject: {fileID: 826496413}
-  quizzes:
-  - {fileID: 11400000, guid: a1e7c9c867f5e4b418f4e6d65b75e9c7, type: 2}
-  - {fileID: 11400000, guid: 8d83fc9499d2bbc43a9b4c966be6cce6, type: 2}
-  - {fileID: 11400000, guid: 41eed73c03dc77f459033b29e32d3d73, type: 2}
-  - {fileID: 11400000, guid: 6e1fa00ead878934194b851128e6bf14, type: 2}
 --- !u!4 &362920947
 Transform:
   m_ObjectHideFlags: 0
@@ -803,19 +784,23 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 362920944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.962108, y: -9.134708, z: 1.870821}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 1672030853}
+  - {fileID: 160410055}
+  - {fileID: 1859141288}
+  - {fileID: 286331791}
   - {fileID: 298321128}
   - {fileID: 1725283758}
   - {fileID: 2005443841}
   - {fileID: 950460574}
-  - {fileID: 1373153878}
   - {fileID: 682351989}
-  - {fileID: 286331791}
+  - {fileID: 1373153878}
+  - {fileID: 847216864}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
 --- !u!1 &462507244
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,7 +912,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 440842, guid: 077e6db36907b4ee8b4745665c8100b1, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 11440258, guid: 077e6db36907b4ee8b4745665c8100b1, type: 2}
       propertyPath: StartTime
@@ -1051,11 +1036,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 491654, guid: 20331fb9d3bbc714b902d7fefa4b0412, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 127586, guid: 20331fb9d3bbc714b902d7fefa4b0412, type: 2}
       propertyPath: m_Name
       value: Narration Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 11472846, guid: 20331fb9d3bbc714b902d7fefa4b0412, type: 2}
+      propertyPath: debug
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 20331fb9d3bbc714b902d7fefa4b0412, type: 2}
@@ -1088,7 +1077,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 362920947}
-  m_RootOrder: 5
+  m_RootOrder: 8
 --- !u!114 &682351990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1473,6 +1462,49 @@ GameObject:
 Transform:
   m_PrefabParentObject: {fileID: 430866, guid: 90a6577c083db394a975623c338fc2ce, type: 2}
   m_PrefabInternal: {fileID: 1326983357}
+--- !u!1 &847216863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 847216864}
+  - 114: {fileID: 847216865}
+  m_Layer: 0
+  m_Name: Localisation Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &847216864
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 847216863}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 362920947}
+  m_RootOrder: 10
+--- !u!114 &847216865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 847216863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d61e1d21665ee4ba9d4e693cc7776b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  languages:
+  - {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
+  curLanguage: {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
 --- !u!1 &867352856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,7 +1680,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 362920947}
-  m_RootOrder: 3
+  m_RootOrder: 7
 --- !u!114 &950460575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1662,7 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   enableSaveLoad: 1
-  fileName: tribeSave
+  fileName: tribeSave.gd
 --- !u!1 &1051795424
 GameObject:
   m_ObjectHideFlags: 0
@@ -2130,7 +2162,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 362920946}
+      - m_Target: {fileID: 1672030854}
         m_MethodName: OnArguePressed
         m_Mode: 3
         m_Arguments:
@@ -2344,7 +2376,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 362920946}
+      - m_Target: {fileID: 1672030854}
         m_MethodName: OnArguePressed
         m_Mode: 3
         m_Arguments:
@@ -2526,7 +2558,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 362920946}
+      - m_Target: {fileID: 1672030854}
         m_MethodName: OnArguePressed
         m_Mode: 3
         m_Arguments:
@@ -3095,6 +3127,53 @@ MonoBehaviour:
 Transform:
   m_PrefabParentObject: {fileID: 454220, guid: 820b02a5a018a0b4085bdc5cc116f4f7, type: 2}
   m_PrefabInternal: {fileID: 1213757583}
+--- !u!1 &1672030852
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1672030853}
+  - 114: {fileID: 1672030854}
+  m_Layer: 0
+  m_Name: Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1672030853
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1672030852}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 362920947}
+  m_RootOrder: 0
+--- !u!114 &1672030854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1672030852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66033c4ff4ca3644ca04f2380d31492c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foeObject: {fileID: 927390987}
+  allyObject: {fileID: 826496413}
+  quizzes:
+  - {fileID: 11400000, guid: a1e7c9c867f5e4b418f4e6d65b75e9c7, type: 2}
+  - {fileID: 11400000, guid: 8d83fc9499d2bbc43a9b4c966be6cce6, type: 2}
+  - {fileID: 11400000, guid: 41eed73c03dc77f459033b29e32d3d73, type: 2}
+  - {fileID: 11400000, guid: 6e1fa00ead878934194b851128e6bf14, type: 2}
 --- !u!1 &1689381907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3271,7 +3350,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 362920947}
-  m_RootOrder: 1
+  m_RootOrder: 5
 --- !u!114 &1725283759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3725,14 +3804,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1859141283}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1123542288}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Father: {fileID: 362920947}
+  m_RootOrder: 2
 --- !u!1 &1916348787
 GameObject:
   m_ObjectHideFlags: 0
@@ -3836,7 +3915,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 362920947}
-  m_RootOrder: 2
+  m_RootOrder: 6
 --- !u!114 &2005443842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3849,8 +3928,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mute: 0
-  musicLoop: {fileID: 2005443843}
-  button: {fileID: 0}
+  sounds:
+  - key: Halter Top
+    value: {fileID: 2005443843}
+  defaultMusic: Halter Top
 --- !u!82 &2005443843
 AudioSource:
   m_ObjectHideFlags: 0

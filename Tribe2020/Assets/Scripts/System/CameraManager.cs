@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public class CameraManager : MonoBehaviour {
 	//Singleton features
@@ -10,22 +10,19 @@ public class CameraManager : MonoBehaviour {
 		return _instance;
 	}
 
-	private PilotView _view;
+	#region Fields
+	public bool debug = false;
+	private PilotController _controller;
 
-	public string cameraState = IDLE;
-	public const string IDLE = "camera_idle";
-	public const string FULL = "camera_full";
-	public const string ROOM = "camera_room";
-	public const string PANNED = "camera_panned";
-
-	//public Transform pilotTransform;
-	public GameObject viewPointContainer;
+	public enum CameraState { Idle, Full, Room, Panned };
+	public CameraState cameraState = CameraState.Idle;
 
 	//Viewpoint variables
 	public Vector2 startView = Vector2.zero;
 	private Vector2 _curView = Vector2.zero;
 	private Transform _curViewpoint;
 	private Transform[][] _viewpoints;
+	private Viewpoint[][] _views;
 
 	//Camera movement variables
 	private Vector3 _lastPos = Vector3.zero;
@@ -33,7 +30,6 @@ public class CameraManager : MonoBehaviour {
 	private Vector3 _lastRot, _targetRot;
 
 	//Orientation interaction variables
-	//public GameObject cameraHolder;
 	public Camera gameCamera;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
@@ -45,6 +41,9 @@ public class CameraManager : MonoBehaviour {
 
 	private float _panSpeed = 0.01f;
 
+	private bool _isInit = false;
+	#endregion
+
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
@@ -52,35 +51,32 @@ public class CameraManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		_view = PilotView.GetInstance();
+		_controller = PilotController.GetInstance();
 
-		//Ref to camera
-		//cameraHolder = GameObject.FindWithTag("camera_holder") as GameObject;
-		//gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 		_lastPos = _targetPos = gameCamera.transform.position;
 		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
 		//Populate collection of viewpoints
 		PopulateViewpoints();
-
-		//PopulateViewpoints(Object.FindObjectsOfType<Viewpoint>());
-
-		SetViewpoint((int)startView.x, (int)startView.y);
-		//UpdateVisibility();
 	}
 
 	// Update is called once per frame
 	void Update() {
+		if(!_isInit) {
+			SetViewpoint((int)startView.x, (int)startView.y, Vector2.zero);
+			_isInit = true;
+		}
+
 		if(journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
 			float fracJourney = distCovered / journeyLength;
 
-			if(cameraState == IDLE) {
+			if(cameraState == CameraManager.CameraState.Idle) {
 				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
 				gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
 			}
 		}
-	}
+	}	
 
 	//
 	public void UpdateVisibility() {
@@ -89,32 +85,9 @@ public class CameraManager : MonoBehaviour {
 		foreach(GameObject go in vp.hideObjects) {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
-
-		//if(vp.showFloor){
-		//	foreach(Transform floor in pilotTransform){
-		//		if(floor.name == "Floor " + vp.floor){
-		//			ShowFloor(floor);
-		//		} else{
-		//			HideFloor(floor);
-		//		}
-		//	}
-		//} else if(vp.showPilot){
-		//	foreach(Transform floor in pilotTransform){
-		//		ShowFloor(floor);
-		//	}
-		//}
-
-		//if(vp.hideNorth){
-		//	HideWall("North Wall");
-		//} else if(vp.hideEast){
-		//	HideWall("East Wall");
-		//} else if(vp.hideSouth){
-		//	HideWall("South Wall");
-		//} else if(vp.hideWest){
-		//	HideWall("West Wall");
-		//}
 	}
 
+	//
 	public void HideObstacles(Transform viewpointTrans) {
 		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
@@ -123,6 +96,7 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
 	public void UnhideObstacles(Transform viewpointTrans) {
 		Viewpoint vp = viewpointTrans.GetComponent<Viewpoint>();
 
@@ -130,27 +104,6 @@ public class CameraManager : MonoBehaviour {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
 		}
 	}
-
-	//
-	//public void HideWall(string wall){
-	//	foreach(Transform floor in pilotTransform){
-	//		foreach(Transform room in floor){
-	//			if(room.name == "Exterior"){
-	//				foreach(Transform group in room){
-	//					if(group.name == wall){
-	//						foreach(Transform mesh in group){
-	//							mesh.GetComponent<MeshRenderer>().shadowCastingMode =
-	//								UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-	//							if(mesh.GetComponent<MeshCollider>()){
-	//								mesh.GetComponent<MeshCollider>().enabled = false;
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 
 	//
 	public void HideFloor(Transform floor) {
@@ -192,6 +145,7 @@ public class CameraManager : MonoBehaviour {
 			if(maxY <= curY) { maxY = curY + 1; }
 		}
 		_viewpoints = new Transform[maxY][];
+		_views = new Viewpoint[maxY][];
 
 		//Find max x for each floor
 		for(int y = 0; y < maxY; y++) {
@@ -205,6 +159,14 @@ public class CameraManager : MonoBehaviour {
 			}
 
 			_viewpoints[y] = new Transform[maxX];
+			_views[y] = new Viewpoint[maxX];
+
+			int x = 0;
+			foreach(Viewpoint vp in viewPoints) {
+				if(vp.yIndex == y) {
+					_views[y][x++] = vp;
+				}
+			}
 		}
 		
 		//Add viewpoints to camera manager
@@ -214,22 +176,26 @@ public class CameraManager : MonoBehaviour {
 
 			_viewpoints[curY][curX] = vp.transform;
 		}
-
 	}
 
 	//
-	public void SetViewpoint(int x, int y) {
+	public void SetViewpoint(int x, int y, Vector2 dir) {
+		//Panned in y-axis but is out of x-index, switch to highest x-index
 		if(x >= _viewpoints[y].Length) {
-			x = 0;
+			x = _viewpoints[y].Length - 1;
 		}
 
 		_curView = new Vector2(x, y);
 
-		if(_curViewpoint != null) {
-			UnhideObstacles(_curViewpoint);
-		}
 		_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
-		HideObstacles(_curViewpoint);
+		//HideObstacles(_curViewpoint);
+		if(_viewpoints[y][x].GetComponent<Viewpoint>().locked) {
+			if(dir == Vector2.right) { GotoRightView(); }
+			if(dir == Vector2.left) { GotoLeftView(); }
+			if(dir == Vector2.up) { GotoUpperView(); }
+			if(dir == Vector2.down) { GotoLowerView(); }
+			return;
+		}
 
 		_lastPos = gameCamera.transform.position;
 		_targetPos = _curViewpoint.position;
@@ -240,11 +206,10 @@ public class CameraManager : MonoBehaviour {
 		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
-		_view.title.GetComponent<Text>().text = _curViewpoint.GetComponent<Viewpoint>().title;
+		int[] above = new int[_viewpoints[(y + 1) % _viewpoints.Length].Length];
 
-		//UpdateVisibility();
-
-		_view.UpdateViewpointGuide(_viewpoints[y].Length, x);
+		//_controller.OnNewViewpoint(_curViewpoint.GetComponent<Viewpoint>().title, _viewpoints[y].Length, above.Length, x);
+		_controller.OnNewViewpoint(_curViewpoint.GetComponent<Viewpoint>().title, _views, _curView);
 	}
 
 	//
@@ -255,25 +220,25 @@ public class CameraManager : MonoBehaviour {
 	//
 	public void GotoRightView(){
 		int floorRooms = _viewpoints[(int)_curView.y].Length;
-		SetViewpoint((int)(_curView.x + 1) % floorRooms, (int)_curView.y);
+		SetViewpoint((int)(_curView.x + 1) % floorRooms, (int)_curView.y, Vector2.right);
 	}
 
 	//
 	public void GotoLeftView(){
 		int floorRooms = _viewpoints[(int)_curView.y].Length;
-		SetViewpoint((int)(_curView.x + floorRooms - 1) % floorRooms, (int)_curView.y);
+		SetViewpoint((int)(_curView.x + floorRooms - 1) % floorRooms, (int)_curView.y, Vector2.left);
 	}
 
 	//
 	public void GotoUpperView(){
 		int floors = _viewpoints.Length;
-		SetViewpoint((int)_curView.x, (int)(_curView.y + 1) % floors);
+		SetViewpoint((int)_curView.x, (int)(_curView.y + 1) % floors, Vector2.up);
 	}
 
 	//
 	public void GotoLowerView(){ 
 		int floors = _viewpoints.Length;
-		SetViewpoint((int)_curView.x, (int)(_curView.y + floors - 1) % floors);
+		SetViewpoint((int)_curView.x, (int)(_curView.y + floors - 1) % floors, Vector2.down);
 	}
 
 	//
@@ -292,5 +257,16 @@ public class CameraManager : MonoBehaviour {
 			gameCamera.fieldOfView += deltaMagnitude * _perspectiveZoomSpeed;
 			gameCamera.fieldOfView = Mathf.Clamp(gameCamera.fieldOfView, 0.1f, 179.9f);
 		}
+	}
+
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
+
+		return json;
+	}
+
+	//
+	public void DeserializeFromJSON(JSONClass json) {
 	}
 }

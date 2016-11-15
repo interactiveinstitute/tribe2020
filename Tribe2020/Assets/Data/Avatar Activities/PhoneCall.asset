@@ -11,37 +11,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34a2e631240d584a88fcab665d829b9, type: 3}
   m_Name: PhoneCall
   m_EditorClassIdentifier: 
+  title: 
   sessions:
   - title: Walking to phone zone
     probability: 1
     type: 0
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 192846e064a4b3d43bcb5ee570d7a9e0,
+      type: 2}
     target: 2
     parameter: 
     avatarOwnsTarget: 0
+    currentRoom: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
   - title: Talking on phone
     probability: 1
     type: 2
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 192846e064a4b3d43bcb5ee570d7a9e0,
+      type: 2}
     target: 0
     parameter: 
     avatarOwnsTarget: 0
+    currentRoom: 0
     relatedEfficieny: 0
     checkType: 0
     efficienyLevel: 0
-  SkipSession:
-    title: 
-    probability: 1
-    type: 0
-    target: 0
-    parameter: 
-    avatarOwnsTarget: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
-  onSkipCommand: TeleportTo,appliance_office,own
-  _delay: 0
-  _duration: 0
   startTime: 0
-  endTime: 0
+  hasStartTime: 1

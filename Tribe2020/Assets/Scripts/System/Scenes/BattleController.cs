@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using SimpleJSON;
 
 public class BattleController : Controller {
 	//Singleton features
-	private static BattleController _instance;
 	public static BattleController GetInstance() {
-		return _instance;
+		return _instance as BattleController;
 	}
 
 	private BattleView _view;
-	private CustomSceneManager _sceneMgr;
+	private GameTime _timeMgr;
+	private AudioManager _audioMgr;
 	private NarrationManager _narrationMgr;
+	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
+	private LocalisationManager _localMgr;
 
 	private bool _isTouching = false;
 
@@ -37,9 +41,12 @@ public class BattleController : Controller {
 	// Use this for initialization
 	void Start () {
 		_view = BattleView.GetInstance();
-		_sceneMgr = CustomSceneManager.GetInstance();
+		_timeMgr = GameTime.GetInstance();
+		_audioMgr = AudioManager.GetInstance();
 		_narrationMgr = NarrationManager.GetInstance();
+		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
 
 		LoadQuiz(quizzes[_curQuiz]);
 	}
@@ -48,7 +55,7 @@ public class BattleController : Controller {
 	void Update () {
 		if(!_isLoaded) {
 			_isLoaded = true;
-			_saveMgr.Load(SaveManager.currentSlot);
+			LoadGameState();
 		}
 
 		_view.foeCPNumber.text = foeCP + "/100";
@@ -79,7 +86,7 @@ public class BattleController : Controller {
 	//
 	private void OnTouchEnded(Vector3 pos) {
 		if(_isTouching && _hasWon) {
-			_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "pilot"));
+			_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
 		}
 	}
 
@@ -100,10 +107,10 @@ public class BattleController : Controller {
 			foeCP = Mathf.Max(foeCP - damage, 0);
 			if(foeCP == 0) {
 				OnWin();
+			} else {
+				_curQuiz = (_curQuiz + 1) % quizzes.Length;
+				LoadQuiz(quizzes[_curQuiz]);
 			}
-
-			_curQuiz = (_curQuiz + 1) % quizzes.Length;
-			LoadQuiz(quizzes[_curQuiz]);
 		}
 	}
 
@@ -122,7 +129,67 @@ public class BattleController : Controller {
 		_hasWon = true;
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
-		_saveMgr.Save(SaveManager.currentSlot, false);
-		//_sceneMgr.LoadScene("ga_madrid_erik");
+		SaveGameState();
+	}
+
+	//
+	public override void ShowMessage(string key, string message, bool showButton) {
+	}
+
+	//
+	public override void ClearView() {
+		_view.ClearView();
+	}
+
+	//
+	public override void ControlInterface(string id, string action) {
+		_view.ControlInterface(id, action);
+	}
+
+	//
+	public override void ShowCongratualations(string text) {
+		_view.ShowCongratualations(text);
+	}
+
+	//
+	public override void PlaySound(string sound) {
+		_audioMgr.PlaySound(sound);
+	}
+
+	//
+	public override void SetControlState(InputState state) {
+		//_curState = state;
+	}
+
+	//
+	public string GetPhrase(string groupKey) {
+		return _localMgr.GetPhrase(groupKey);
+	}
+
+	//
+	public string GetPhrase(string groupKey, string key) {
+		return _localMgr.GetPhrase(groupKey, key);
+	}
+
+	//
+	public override void SetTimeScale(int timeScale) {
+		_timeMgr.TimeScale = timeScale;
+	}
+
+	//
+	public override string GetCurrentDate() {
+		return _timeMgr.CurrentDate;
+	}
+
+	//
+	public override void SaveGameState() {
+		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
+		_saveMgr.Save();
+	}
+
+	//
+	public override void LoadGameState() {
+		_saveMgr.Load();
+		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
 	}
 }

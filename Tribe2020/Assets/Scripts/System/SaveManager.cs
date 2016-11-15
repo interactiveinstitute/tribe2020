@@ -15,44 +15,27 @@ public class SaveManager : MonoBehaviour{
 	#region Fields
 	public static int currentSlot = 0;
 
-	private PilotController _controller;
-	private GameTime _timeMgr;
-	private ResourceManager _resourceMgr;
-	private NarrationManager _narrationMgr;
-    private PilotController _pilotController;
-
 	public bool debug = false;
 
-	/*Need reference to all avatars for saving and loading their state. Maybe we should have 
-	the pilotcontroller hand over the references on init? Yeah let's try to achieve that.*/
-    private List<BehaviourAI> _avatars = new List<BehaviourAI>();
-
-    public Boolean enableSaveLoad;
 	public string fileName;
 	private string _filePath;
 	private JSONNode _dataClone = new JSONNode();
-
-	public List<GameObject> saveObjects;
 	#endregion
 
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
-		_filePath = Application.persistentDataPath + "/" + fileName + ".gd";
-		_dataClone = ReadFileAsJSON();
+		_filePath = Application.persistentDataPath + "/" + fileName;
+		//_dataClone = ReadFileAsJSON();
+		Load();
 	}
 
 	//Use this for initialization
 	void Start(){
-		_timeMgr = GameTime.GetInstance();
-		_resourceMgr = ResourceManager.GetInstance();
-		_narrationMgr = NarrationManager.GetInstance();
-
 	}
 	
 	//Update is called once per frame
 	void Update(){
-
 	}
 
 	//
@@ -61,10 +44,10 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public JSONNode GetData(int slot, string field) {
-		if(_dataClone["instances"][slot] != null) {
-			if(_dataClone["instances"][slot][field] != null) {
-				return _dataClone["instances"][slot][field];
+	public JSONNode GetData(int slot, string key) {
+		if(_dataClone["slots"][slot] != null) {
+			if(_dataClone["slots"][slot][key] != null) {
+				return _dataClone["slots"][slot][key];
 			} else {
 				return null;
 			}
@@ -79,8 +62,8 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONClass GetClass(int slot, string field) {
-		if(_dataClone["instances"][slot][field] != null) {
-			return _dataClone["instances"][slot][field].AsObject;
+		if(_dataClone["slots"][slot][field] != null) {
+			return _dataClone["slots"][slot][field].AsObject;
 		} else {
 			return null;
 		}
@@ -93,7 +76,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string field, string value) {
-		_dataClone["instances"][slot].Add(field, value);
+		_dataClone["slots"][slot].Add(field, value);
 	}
 
 	//
@@ -103,7 +86,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string field, JSONClass value) {
-		_dataClone["instances"][slot].Add(field, value);
+		_dataClone["slots"][slot].Add(field, value);
 	}
 
 	//
@@ -113,7 +96,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SetData(int slot, string key, JSONArray value) {
-		_dataClone["instances"][slot].Add(key, value);
+		_dataClone["slots"][slot].Add(key, value);
 	}
 
 	//
@@ -121,16 +104,19 @@ public class SaveManager : MonoBehaviour{
 		return GetData(slot, "curPilot") == null;
 	}
 
+	//
+	public void ClearFile() {
+		File.WriteAllText(Application.persistentDataPath + "/" + fileName, "");
+	}
+
+	//
 	public void Delete(int slot) {
-		//_dataClone["instances"][slot].Remove("curPilot");
-		//_dataClone["instances"][slot].Remove("lastTime");
-		_dataClone["instances"].Remove(slot);
+		_dataClone["slots"].Remove(slot);
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
 	public string GetSlotData(int slot) {
-		//_dataClone = ReadFileAsJSON();
 		if(debug) { Debug.Log("GetSlotData: " + slot); }
 
 		JSONNode fileData = GetData(slot, "curPilot");
@@ -173,11 +159,6 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Load(int slot) {
-        if(!enableSaveLoad) {
-			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
-            return;
-        }
-
 		if(debug) { Debug.Log("Load: " + currentSlot); }
 
 		_dataClone = ReadFileAsJSON();
@@ -186,12 +167,25 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONNode ReadFileAsJSON() {
-		if(!File.Exists(_filePath)) {
-			File.WriteAllText(_filePath, "{\"instances\":[]}");
-		}
+		if(!File.Exists(_filePath)) { InitFile(); }
 
 		string fileClone = File.ReadAllText(_filePath);
+		if(fileClone == "") {
+			InitFile();
+			fileClone = File.ReadAllText(_filePath);
+		}
+
 		JSONNode json = JSON.Parse(fileClone);
+		if(json["slots"] == null) {
+			InitFile();
+			json = JSON.Parse(fileClone);
+		}
+
 		return json;
+	}
+
+	//
+	public void InitFile() {
+		File.WriteAllText(_filePath, "{\"slots\":[]}");
 	}
 }

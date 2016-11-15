@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
+using System;
 
-[CreateAssetMenu(fileName = "Behaviour", menuName = "Avatar/Behaviour", order = 1)]
+[CreateAssetMenu(fileName = "Behaviour", menuName = "Avatar/Behaviour", order = 1), Serializable]
 public class AvatarActivity : ScriptableObject {
 	private GameTime _timeMgr;
-
+    
 	public string title;
 	public List<Session> sessions;
 	//public Session SkipSession;
@@ -33,14 +35,14 @@ public class AvatarActivity : ScriptableObject {
     //public ActivityState curActivityState = ActivityState.Idle;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitUntilEnd, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
+    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
-	public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
-		Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home, Work };
+	//public enum Target { None, OfficeDesk, HelpDesk, Monitor, SocialSpace, LunchSpace, DishWasher, Coffee, Fridge, Toilet,
+	//	Sink, Dryer, Presentation, LampSwitch, Lamp, ThrowTrash, Microwave, Home, Work };
 
 	//Definition of a quest step
 	[System.Serializable]
@@ -49,7 +51,8 @@ public class AvatarActivity : ScriptableObject {
 		public float probability = 1f;
 		public SessionType type;
         public Appliance appliance = null;
-		public Target target;
+		//public Target target;
+		public Affordance requiredAffordance;
 		public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
@@ -72,7 +75,7 @@ public class AvatarActivity : ScriptableObject {
         {
             return;
         }
-        if(sessions[_currSession].type == SessionType.WaitForDuration) {
+        if(GetSessionAtIndex(_currSession).type == SessionType.WaitForDuration) {
             if(_delay > 0f) {
                 _delay -= Time.deltaTime;
             } else {
@@ -115,15 +118,15 @@ public class AvatarActivity : ScriptableObject {
         if (hasStartTime)
         {
             string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
+            DebugManager.Log(_ai.name + " starting activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
         }
         else
         {
-            DebugManager.Log(_ai.name + " starting (activity.run()) activity " + name + " without startTime, curTime is " + curTimeView, this);
+            DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
 
-        StartSession(sessions[_currSession]);
+        StartSession(GetSessionAtIndex(_currSession));
 	}
 
 	//
@@ -142,8 +145,8 @@ public class AvatarActivity : ScriptableObject {
                 }
                 _ai.Wait();
 				break;
-            case SessionType.SitUntilEnd:
-                _ai.SitAt(session.target, session.avatarOwnsTarget);
+            case SessionType.SitDown:
+                _ai.SitAt(session.requiredAffordance, session.avatarOwnsTarget);
                 break;
 			case SessionType.WaitUntilEnd:
 				_ai.Stop();
@@ -154,20 +157,7 @@ public class AvatarActivity : ScriptableObject {
                     _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
                 }else
                 {
-                    _ai.WalkTo(session.target, session.avatarOwnsTarget);
-                }
-				break;
-			//case SessionType.Interact:
-			//	NextSession();
-			//	break;
-			case SessionType.Warp:
-                if (session.appliance != null)
-                {
-                    _ai.WarpTo(session.appliance, session.avatarOwnsTarget);
-                }
-                else
-                {
-                    _ai.WarpTo(session.target, session.avatarOwnsTarget);
+                    _ai.WalkTo(session.requiredAffordance, session.avatarOwnsTarget);
                 }
 				break;
 			case SessionType.SetRunlevel:
@@ -177,7 +167,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.target, int.Parse(session.parameter));
+                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter));
                 }
 				
 				NextSession();
@@ -189,7 +179,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.TurnOn(session.target);
+                    _ai.TurnOn(session.requiredAffordance);
                 }
 
                 NextSession();
@@ -201,7 +191,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.TurnOff(session.target);
+                    _ai.TurnOff(session.requiredAffordance);
                 }
 
                 NextSession();
@@ -211,6 +201,43 @@ public class AvatarActivity : ScriptableObject {
                 break;
 		}
 	}
+
+    //
+    public void SimulateSession(Session session)
+    {
+        DebugManager.Log("Simulating session of type " + session.type + " with affordance " + session.requiredAffordance, this, this);
+
+        //Make case statements for the session types that differ from normal tempo. If no difference, this function defaults to run the sessions normally (by calling StartSession in the default case)
+        switch (session.type)
+        {
+            case SessionType.WaitForDuration:
+                break;
+            case SessionType.WaitUntilEnd:
+                break;
+            case SessionType.WalkTo:
+                //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
+                _ai.WarpTo(session.requiredAffordance, session.avatarOwnsTarget);
+                break;
+            default:
+                StartSession(session);
+                break;
+        }
+    }
+
+    private Session GetSessionAtIndex(int index)
+    {
+        if(index < sessions.Count)
+        {
+            return sessions[index];
+        }
+        DebugManager.LogError("Session index out of bound! received index was " + index + ". Falling back to return first session instead", this, this);
+        if(sessions.Count > 0)
+        {
+            return sessions[0];
+        }
+        DebugManager.LogError("Session list is empty!!!! Something is terribly wroooong!", this, this);
+        return new Session();
+    }
 
 	//
 	public void InsertSession(Session session) {
@@ -233,8 +260,13 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
+            //If we were sitting down AND we are gonna be moving somewhere, we should do that standing up!
+            if(_curAvatarState == BehaviourAI.AvatarState.Sitting && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
+            {
+                _ai.standUp();
+            }
             //Debug.Log("starting session" + sessions[_currSession].title);
-            StartSession(sessions[_currSession]);
+            StartSession(GetSessionAtIndex(_currSession));
 		}
 	}
 
@@ -255,7 +287,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-        DebugManager.Log(_ai.name + " reached destination " + sessions[_currSession].target + ". if current SessionType is walkTo, start next session", this);
+        DebugManager.Log(_ai.name + " reached destination " + GetSessionAtIndex(_currSession).requiredAffordance + ". if current SessionType is walkTo, start next session", this);
         //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
 			NextSession();
 		//}
@@ -263,17 +295,19 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void FinishCurrentActivity() {
-        DebugManager.Log("Gonna finish this activity. Sessions are currently: " + sessions, this);
+        DebugManager.Log("Gonna finish this activity by simulating the remaining sessions.", this, this);
 
-        //Remove the sessions already performed
-        if (_currSession > 0) {
-			sessions.RemoveRange(0, _currSession - 1);
-		}
+        //      //Remove the sessions already performed
+        //      if (_currSession > 0) {
+        //	sessions.RemoveRange(0, _currSession - 1);
+        //}
 
-        DebugManager.Log("After deletion sessions are: " + sessions, this);
         //Simulate the sessions not yet performed
-        foreach (Session session in sessions) {
-			SimulateSession(session);
+        //First increment _currsession by one. We don't want to run the current session again.
+        _currSession++;
+        while(!IsThisActivityFinished()) {
+			SimulateSession(GetSessionAtIndex(_currSession));
+            _currSession++;
 		}
 
         //Trigger callback for finished activity
@@ -282,26 +316,6 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void Revert() {
-	}
-
-	//
-	public void SimulateSession(Session session) {
-		switch(session.type) {
-			case SessionType.WaitForDuration:
-				break;
-			case SessionType.WaitUntilEnd:
-				break;
-			case SessionType.WalkTo:
-                //Debug.Log("Simulating WalkTo. Teleporting to " + session.target);
-				_ai.WarpTo(session.target, session.avatarOwnsTarget);
-				break;
-			//case SessionType.Interact:
-   //             //Debug.Log("Simulating Interaction. Interacting with " + session.target);
-   //             _ai.CheckLighting(_ai.FindNearestDevice(session.target, session.avatarOwnsTarget));
-			//	break;
-			default:
-                break;
-		}
 	}
 
 	public virtual void OnHasReached(BehaviourAI ai, string tag) {
@@ -400,6 +414,20 @@ public class AvatarActivity : ScriptableObject {
     {
         _curAvatarState = avatarState;
     }
+
+    //public JSONClass Encode()
+    //{
+    //    //MemoryStream stream1 = new MemoryStream();
+    //    //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
+    //    //ser.WriteObject(stream1, this);
+
+    //    //SimpleJSON.JSONClass json;
+    //    //json.Serialize()
+    //    //foreach(Session session in sessions)
+    //    //{
+    //    //    session.
+    //    //}
+    //}
 
 }
 

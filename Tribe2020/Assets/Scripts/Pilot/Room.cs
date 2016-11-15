@@ -37,16 +37,47 @@ public class Room : MonoBehaviour {
         return GetLightSwitch().GetComponent<ElectricMeter>().GivesPower;
 	}
 
-	//
+	//Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
 	public Appliance GetLightSwitch() {
-		foreach(Appliance device in _devices) {
-			if(device.avatarAffordances.Contains(AvatarActivity.Target.LampSwitch)) {
-				return device;
-			}
+        DebugManager.LogError("You are calling the GetLightSwitch method. It's currently broken. Address that before calling it.", this, this);
+        foreach (Appliance device in _devices) {
+            foreach (Affordance aff in device.avatarAffordances)
+            {
+                //Checking with strings should only be done in special cases!
+                //Aim for always getting an actual reference to the affordance we want to compare against rather than using strings.
+                if (aff.type == "Switch Light")
+                {
+                    return device;
+                }
+            }
 		}
 
 		return null;
 	}
+
+    //Tries to retrieve the first available appliance with the given affordance in this room
+    public Appliance GetApplianceWithAffordance(Affordance affordance)
+    {
+        foreach (Appliance device in _devices)
+        {
+            foreach(Affordance aff in device.avatarAffordances)
+            {
+                //We must check for reference equality. We only want to return if it's the same scriptableObject asset (the assets are actually different instances of the scriptableObject)
+                //Hmm. But doesn't Equals default to reference equality? So if we haven't overridden it we should be fine, no?
+                if(Object.ReferenceEquals(aff, affordance))
+                {
+                    return device;
+                }
+
+            }
+            //if (device.avatarAffordances.Contains(affordance))//Must check for being same instance
+            //{
+            //    return device;
+            //}
+        }
+
+        return null;
+    }
 
     public int GetPersonCount()
     {
@@ -74,25 +105,35 @@ public class Room : MonoBehaviour {
         }
 	}
 
-	//
-	public void UpdateLighting() {
-        //Debug.Log("light was changed");
+	////This functions assumes that the provided affordance is the light switch affordance.
+	//public void UpdateLighting(Affordance affordance) {
+ //       //Debug.Log("light was changed");
+ //       DebugManager.LogError("You are calling the UpdateLighting method. It might currently be broken from changes by Gunnar. Address that before calling it.", this, this);
+ //       lux = 0;
 
-        lux = 0;
+ //       //If at least one light is on, there is lux in the room. Simple model...
+ //       foreach (Appliance device in _devices) {
+	//		//if(device.avatarAffordances.Contains(affordance)) {
+ //           foreach(Affordance aff in device.avatarAffordances)
+ //           {
+ //               if (aff == affordance)
+ //               {
+ //                   //TODO: The lamp script is not used any longer... What's actually supposed to happen here?
+ //                   //I guess we want to check if the ligths are on, right?
+ //                   if (device.GetComponent<Lamp>().Power > 0)
+ //                   {
+ //                       lux = 1;
+ //                       return;
+ //                   }
+ //               } 
+ //           }
+	//		//}
+	//	}
 
-        foreach (Appliance device in _devices) {
-			if(device.avatarAffordances.Contains(AvatarActivity.Target.Lamp)) {
-				if(device.GetComponent<Lamp>().Power > 0) {
-					lux = 1;
-					return;
-				}
-			}
-		}
-
-		if(_occupants != null) {
-			foreach(BehaviourAI person in _occupants) {
-				person.CheckLighting(AvatarActivity.SessionType.TurnOn);
-			}
-		}
-	}
+	//	if(_occupants != null) {
+	//		foreach(BehaviourAI person in _occupants) {
+	//			person.CheckLighting(AvatarActivity.SessionType.TurnOn);
+	//		}
+	//	}
+	//}
 }

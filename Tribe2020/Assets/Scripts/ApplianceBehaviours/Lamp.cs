@@ -30,30 +30,33 @@ public class Lamp : ElectricDevice {
 	public override void SetRunlevel(int level) {
 		base.SetRunlevel(level);
 
-		if (runlevel >= runlevelOn)
-			TurnOnLights();
-		else
-			TurnOffLights();
+		//if (runlevel >= runlevelOn)
+			//TurnOnLights();
+		//else
+			//TurnOffLights();
 	}
 
 
-	private void TurnOnLights() {
-		foreach (Light l in lights) {
-			l.enabled = true;
-		}
+	//private void TurnOnLights() {
+ //       DebugManager.LogError("Warning. you are calling legacy function. No goodness guaranteed. Check out the function and verify it's good", this, this);
+	//	foreach (Light l in lights) {
+	//		l.enabled = true;
+	//	}
 
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
-	}
+ //       //Legacy
+	//	if(GetComponentInParent<Room>()) {
+	//		GetComponentInParent<Room>().UpdateLighting();
+	//	}
+	//}
 
-	private void TurnOffLights() {
-		foreach (Light l in lights) {
-			l.enabled = false;
-		}
+	//private void TurnOffLights() {
+ //       DebugManager.LogError("Warning. you are calling legacy function. No goodness guaranteed. Check out the function and verify it's good", this, this);
+ //       foreach (Light l in lights) {
+	//		l.enabled = false;
+	//	}
 
-		if(GetComponentInParent<Room>()) {
-			GetComponentInParent<Room>().UpdateLighting();
-		}
-	}
+	//	if(GetComponentInParent<Room>()) {
+	//		GetComponentInParent<Room>().UpdateLighting();
+	//	}
+	//}
 }

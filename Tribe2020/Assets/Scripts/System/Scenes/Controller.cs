@@ -30,6 +30,26 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
+	public virtual void ClearView() {
+	}
+
+	//
+	public virtual void ControlInterface(string id, string action) {
+	}
+
+	//
+	public virtual void OnNewViewpoint(string title, int viewCount, int aboveCount, int curView) {
+	}
+
+	//
+	public virtual void OnNewViewpoint(string title, Viewpoint[][] viewMatrix, Vector2 curView) {
+	}
+
+	//
+	public virtual void ShowCongratualations(string text) {
+	}
+
+	//
 	public virtual void ControlAvatar(string id, string action, Vector3 pos) {
 	}
 
@@ -38,8 +58,24 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
+	public virtual void PlaySound(string sound) {
+	}
+
+	//
+	public virtual void SetTimeScale(int scale) {
+	}
+
+	//
+	public virtual string GetCurrentDate() {
+		return "";
+	}
+
+	//
 	public virtual void SetControlState(InputState state) {
 	}
+
+	//
+	public virtual void UnlockView(int x, int y) { }
 
 	//
 	public virtual void SaveGameState() {

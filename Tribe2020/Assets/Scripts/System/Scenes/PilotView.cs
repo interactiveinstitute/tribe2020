@@ -11,11 +11,7 @@ public class PilotView : View{
 	#region Fields
 	public bool debug = false;
 
-	private PilotController _ctrlMgr;
-	private GameTime _timeMgr;
-	private MainMeter _energyMgr;
-	private ResourceManager _resourceMgr;
-	private LocalisationManager _localMgr;
+	private PilotController _controller;
 
 	[Header("Header")]
 	public Transform cash;
@@ -50,12 +46,14 @@ public class PilotView : View{
 
 	[Header("Generated UI Prefabs")]
 	public GameObject actionButtonPrefab;
+	public GameObject viewGuideRowPrefab;
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
 	public GameObject EEMButtonPrefab;
 
 	public GameObject FeedbackNumber;
 
+	private bool _showSettings;
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
@@ -70,11 +68,7 @@ public class PilotView : View{
 
 	//Use this for initialization
 	void Start(){
-		_ctrlMgr = PilotController.GetInstance();
-		_timeMgr = GameTime.GetInstance();
-		_energyMgr = MainMeter.GetInstance();
-		_resourceMgr = ResourceManager.GetInstance();
-		_localMgr = LocalisationManager.GetInstance();
+		_controller = PilotController.GetInstance();
 
 		//Clear interface
 		_curMenu = null;
@@ -85,33 +79,35 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-		date.GetComponent<Text>().text = _timeMgr.CurrentDate;
-
-		power.GetComponent<Text>().text = Mathf.Floor(_energyMgr.Power) + " W";
-
-		float energy = (float)_energyMgr.Energy;
-		if(energy < 1) {
-			energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
+		if(_showSettings) {
+			Vector2 target = settingsPanel.GetComponent<UIPanel>().targetPosition;
+			if(settingsPanel.anchoredPosition.x != target.x || settingsPanel.anchoredPosition.y != target.y) {
+				float curX = target.x + (settingsPanel.anchoredPosition.x - target.x) * 0.75f;
+				float curY = target.y + (settingsPanel.anchoredPosition.y - target.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
+			}
 		} else {
-			energyCounter.text = Mathf.Floor(energy) + " kWh";
+			Vector2 origin = settingsPanel.GetComponent<UIPanel>().originalPosition;
+			if(settingsPanel.anchoredPosition.x != origin.x || settingsPanel.anchoredPosition.y != origin.y) {
+				float curX = origin.x + (settingsPanel.anchoredPosition.x - origin.x) * 0.75f;
+				float curY = origin.y + (settingsPanel.anchoredPosition.y - origin.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
+			}
 		}
 
 		foreach(RectTransform menu in menus) {
-			Vector2 origPos = menu.GetComponent<UIPanel>().originalPosition;
-			Vector2 targetPos = menu.GetComponent<UIPanel>().targetPosition;
-
 			if(menu == _curMenu) {
-				if(menu.anchoredPosition.x != targetPos.x || menu.anchoredPosition.y != targetPos.y) {
-					float curX = targetPos.x + (menu.anchoredPosition.x - targetPos.x) * 0.75f;
-					float curY = targetPos.y + (menu.anchoredPosition.y - targetPos.y) * 0.75f;
-					//curX = 0 + (menu.anchoredPosition.x + 0) * 0.75f;
+				Vector2 target = menu.GetComponent<UIPanel>().targetPosition;
+				if(menu.anchoredPosition.x != target.x || menu.anchoredPosition.y != target.y) {
+					float curX = target.x + (menu.anchoredPosition.x - target.x) * 0.75f;
+					float curY = target.y + (menu.anchoredPosition.y - target.y) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
 			} else {
-				if(menu.anchoredPosition.x != origPos.x || menu.anchoredPosition.y != origPos.y) {
-					float curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
-					float curY = origPos.y + (menu.anchoredPosition.y - origPos.y) * 0.75f;
-					//curX = origPos.x + (menu.anchoredPosition.x - origPos.x) * 0.75f;
+				Vector2 origin = menu.GetComponent<UIPanel>().originalPosition;
+				if(menu.anchoredPosition.x != origin.x || menu.anchoredPosition.y != origin.y) {
+					float curX = origin.x + (menu.anchoredPosition.x - origin.x) * 0.75f;
+					float curY = origin.y + (menu.anchoredPosition.y - origin.y) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, curY);
 				}
 			}
@@ -135,12 +131,41 @@ public class PilotView : View{
 	}
 
 	//
-	public void UpdateViewpointGuide(int viewCount, int viewIndex) {
-		if(viewCount != viewpointGuideUI.childCount) {
-			RemoveChildren(viewpointGuideUI);
+	public void UpdateViewpointGuide(Viewpoint[][] viewMatrix, Vector2 curView) {
+		RemoveChildren(viewpointGuideUI);
+
+		for(int y = 0; y < viewMatrix.Length; y++) {
+			GameObject viewRow = Instantiate(viewGuideRowPrefab) as GameObject;
+			viewRow.transform.SetParent(viewpointGuideUI, false);
+			for(int x = 0; x < viewMatrix[y].Length; x++) {
+				GameObject viewCell = Instantiate(viewpointIconPrefab) as GameObject;
+				viewCell.transform.SetParent(viewRow.transform, false);
+				if(curView.x == x && curView.y == y) {
+					viewCell.GetComponent<Image>().color = Color.blue;
+				} else if(viewMatrix[y][x].locked) {
+					viewCell.GetComponent<Image>().color = Color.black;
+				}
+			}
+		}
+	}
+
+	//
+	public void UpdateViewpointGuide(int aboveCount, int viewCount, int viewIndex) {
+		Transform above = viewpointGuideUI.GetChild(0).transform;
+		Transform center = viewpointGuideUI.GetChild(1).transform;
+		Transform below = viewpointGuideUI.GetChild(2).transform;
+
+		RemoveChildren(above);
+		for(int i = 0; i < aboveCount; i++) {
+			GameObject iconObj = Instantiate(viewpointIconPrefab) as GameObject;
+			iconObj.transform.SetParent(above, false);
+		}
+
+		if(viewCount != center.childCount) {
+			RemoveChildren(center);
 			for(int i = 0; i < viewCount; i++) {
 				GameObject iconObj = Instantiate(viewpointIconPrefab) as GameObject;
-				iconObj.transform.SetParent(viewpointGuideUI, false);
+				iconObj.transform.SetParent(center, false);
 
 				if(i == viewIndex) {
 					iconObj.GetComponent<Image>().color = Color.blue;
@@ -148,7 +173,7 @@ public class PilotView : View{
 			}
 		} else {
 			for(int i = 0; i < viewCount; i++) {
-				Transform curIcon = viewpointGuideUI.GetChild(i);
+				Transform curIcon = center.GetChild(i);
 				if(i == viewIndex) {
 					curIcon.GetComponent<Image>().color = Color.blue;
 				} else {
@@ -170,7 +195,7 @@ public class PilotView : View{
 		bool visibility = action == "show";
 		switch(id) {
 			case "inspector":
-				_ctrlMgr.HideUI();
+				_controller.HideUI();
 				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
@@ -188,16 +213,13 @@ public class PilotView : View{
 	}
 
 	//Fill INSPECTOR with details and eem options for selected appliance
-	public void BuildInspector(Appliance appliance) {
-		string title = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Title");
-		string description = _localMgr.GetPhrase("Appliance:" + appliance.title + "_Description");
-
-		if(title == "") { title = appliance.title + "!"; }
-		if(description == "") { description = appliance.description + "!"; }
+	public void BuildInspector(string title, string description, Appliance app) {
+		if(title == "") { title = app.title + "!"; }
+		if(description == "") { description = app.description + "!"; }
 
 		inspector.GetComponentsInChildren<Text>()[0].text = title;
 		inspector.GetComponentsInChildren<Text>()[2].text = description;
-		BuildEEMInterface(appliance);
+		BuildEEMInterface(app);
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
@@ -213,16 +235,16 @@ public class PilotView : View{
 
 			if(!app.appliedEEMs.Contains(curEEM)){
 				if(eem.callback == "") {
-					button.onClick.AddListener(() => _ctrlMgr.ApplyEEM(app, curEEM));
+					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				} else {
-					button.onClick.AddListener(() => _ctrlMgr.SendMessage(eem.callback, eem.callbackArgument));
+					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
 				}
 				eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
 				button.interactable = false;
 			}
 
-			string eemTitle = _localMgr.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			string eemTitle = _controller.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
 			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
 			eemProps.title.text = eemTitle;
 
@@ -240,17 +262,6 @@ public class PilotView : View{
 		messageUI.GetComponentInChildren<Text>().text = message;
 
 		messageUI.transform.GetChild(1).GetChild(1).gameObject.SetActive(showOkButton);
-
-		//RectTransform messageTrans = messageUI.transform as RectTransform;
-		//if(showAtBottom) {
-		//	messageTrans.pivot = Vector2.zero;
-		//	messageTrans.anchoredPosition = Vector3.zero;
-		//	messageTrans.anchorMax = Vector2.zero;
-		//} else {
-		//	messageTrans.pivot = Vector2.up;
-		//	messageTrans.anchoredPosition = Vector3.zero;
-		//	messageTrans.anchorMax = Vector2.up;
-		//}
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
@@ -260,7 +271,7 @@ public class PilotView : View{
 		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[2].gameObject.SetActive(false);
@@ -275,7 +286,7 @@ public class PilotView : View{
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _ctrlMgr.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[0].color = Color.gray;
@@ -321,9 +332,8 @@ public class PilotView : View{
 	//
 	public override void ShowCongratualations(string text) {
 		ShowFireworks();
-		_ctrlMgr.PlaySound("fireworks");
 		victoryUI.SetActive(true);
-		victoryText.text = _localMgr.GetPhrase(text);
+		victoryText.text = text;
 	}
 
 	//
@@ -345,13 +355,8 @@ public class PilotView : View{
 	}
 
 	//
-	public void ShowSettings() {
-		_curMenu = settingsPanel;
-	}
-
-	//
-	public void HideSettings() {
-		_curMenu = null;
+	public void ToggleMenu() {
+		_showSettings = !_showSettings;
 	}
 
 	//

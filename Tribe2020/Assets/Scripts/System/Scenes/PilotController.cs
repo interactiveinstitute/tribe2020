@@ -3,20 +3,23 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
 
-public class PilotController : Controller{
+public class PilotController : Controller {
 	//Singleton features
 	public static PilotController GetInstance(){
 		return _instance as PilotController;
 	}
 	private InputState _curState = InputState.ALL;
 
+	#region Fields
 	public bool debug = false;
+    public bool enableSaveLoad = true;
 
-	//Access all singleton systemss
-	private PilotView _view;
+    //Access all singleton systemss
+    private PilotView _view;
 	private GameTime _timeMgr;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
+	private MainMeter _mainMeter;
 	private ResourceManager _resourceMgr;
 	private NarrationManager _narrationMgr;
 	private CustomSceneManager _sceneMgr;
@@ -42,9 +45,10 @@ public class PilotController : Controller{
 	private List<Appliance> _appliances;
 
 	private bool _isLoaded = false;
+    #endregion
 
-	//Sort use instead of constructor
-	void Awake(){
+    //Sort use instead of constructor
+    void Awake(){
 		_instance = this;
 	}
 
@@ -59,6 +63,7 @@ public class PilotController : Controller{
 		_timeMgr = GameTime.GetInstance();
 		_camMgr = CameraManager.GetInstance();
 		_audioMgr = AudioManager.GetInstance();
+		_mainMeter = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
 		_narrationMgr = NarrationManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
@@ -110,6 +115,15 @@ public class PilotController : Controller{
 			_touchReset = false;
 		}
 
+		_view.date.GetComponent<Text>().text = _timeMgr.CurrentDate;
+		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
+		float energy = (float)_mainMeter.Energy;
+		if(energy < 1) {
+			_view.energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
+		} else {
+			_view.energyCounter.text = Mathf.Floor(energy) + " kWh";
+		}
+
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
 		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
@@ -137,7 +151,7 @@ public class PilotController : Controller{
 	//
 	private void OnTouchEnded(Vector3 pos){
 		//Debug.Log("ontouchended");
-		_camMgr.cameraState = CameraManager.IDLE;
+		_camMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
@@ -156,8 +170,6 @@ public class PilotController : Controller{
 				OnSwipe(_startPos, pos);
 			}
 		}
-
-		
 	}
 	
 	//
@@ -165,10 +177,6 @@ public class PilotController : Controller{
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
-		//if(_curState == InputState.ALL || _curState == InputState.ONLY_TAP) {
-		//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		//	RaycastHit hit;
-		//}
 	}
 
 	//
@@ -202,6 +210,24 @@ public class PilotController : Controller{
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetViewPoint().title);
 		}
+	}
+
+	//
+	public void OnPinchIn() {
+		if(_curState == InputState.ALL) {
+			_camMgr.GotoUpperView();
+		}
+	}
+
+	//
+	public void OnPinchOut() {
+		if(_curState == InputState.ALL) {
+			_camMgr.GotoLowerView();
+		}
+	}
+
+	//
+	public void OnPinching(float magnitude) {
 	}
 
 	//
@@ -244,18 +270,31 @@ public class PilotController : Controller{
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 		}
 
-		PlaySound("button");
+		PlaySound("Press Button");
+	}
+
+	//
+	public void ToggleMenu() {
+		_view.ToggleMenu();
 	}
 
 	//Open inspector with details of appliance
-	public void SetCurrentUI(Appliance appliance) {
+	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
 
-		_view.BuildInspector(appliance);
+		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
+		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
+		_view.BuildInspector(title, description, app);
 		SetCurrentUI(_view.inspector);
 
+		//_view.BuildInspector(appliance);
+		//SetCurrentUI(_view.inspector);
+
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, appliance.title);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
+		if(app.GetComponent<BehaviourAI>()) {
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
+		}
 	}
 
 	//Open mail with details of narrative
@@ -381,42 +420,27 @@ public class PilotController : Controller{
 		}
 	}
 
-	//
-	public void OnPinchIn(){
-		if(_curState == InputState.ALL) {
-			_camMgr.GotoUpperView();
-		}
-	}
-
-	//
-	public void OnPinchOut(){
-		if(_curState == InputState.ALL) {
-			_camMgr.GotoLowerView();
-		}
-	}
-
-	//
-	public void OnPinching(float magnitude){
-	}
+	
 
 	//
 	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
-		if(_curState == InputState.ALL) {
-			if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
-				_resourceMgr.cash -= eem.cashCost;
-				_resourceMgr.comfort -= eem.comfortCost;
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
-				appliance.ApplyEEM(eem);
-				_view.BuildEEMInterface(appliance);
+		if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
+			_resourceMgr.cash -= eem.cashCost;
+			_resourceMgr.comfort -= eem.comfortCost;
 
-				_resourceMgr.RefreshProduction();
+			appliance.ApplyEEM(eem);
+			_view.BuildEEMInterface(appliance);
 
-				//actionObj.SetActive(false);
+			//_resourceMgr.RefreshProduction();
 
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
-			}
+			//actionObj.SetActive(false);
+
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
 		}
+
 	}
 
 	//
@@ -433,9 +457,7 @@ public class PilotController : Controller{
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
-		Debug.Log(name + ": OnAvatarActivityOver " + activity);
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
-		//avatar.ReleaseControlOfAvatar();
 	}
 
 	//
@@ -504,7 +526,23 @@ public class PilotController : Controller{
 	}
 
 	//
-	public void PlaySound(string sound) {
+	public override void ClearView() {
+		_view.ClearView();
+	}
+
+	//
+	public override void ControlInterface(string id, string action) {
+		_view.ControlInterface(id, action);
+	}
+
+	//
+	public override void ShowCongratualations(string text) {
+		_audioMgr.PlaySound("Fireworks");
+		_view.ShowCongratualations(_localMgr.GetPhrase(text));
+	}
+
+	//
+	public override void PlaySound(string sound) {
 		_audioMgr.PlaySound(sound);
 	}
 
@@ -514,22 +552,48 @@ public class PilotController : Controller{
 	}
 
 	//
+	public string GetPhrase(string groupKey) {
+		return _localMgr.GetPhrase(groupKey);
+	}
+
+	//
+	public string GetPhrase(string groupKey, string key) {
+		return _localMgr.GetPhrase(groupKey, key);
+	}
+
+	//
+	public override void SetTimeScale(int timeScale) {
+		_timeMgr.TimeScale = timeScale;
+	}
+
+	//
+	public override string GetCurrentDate() {
+		return _timeMgr.CurrentDate;
+	}
+
+	//
+	public override void UnlockView(int x, int y) {
+		base.UnlockView(x, y);
+	}
+
+	//
 	public override void SaveGameState() {
 		if(debug) { Debug.Log("Saving game state"); }
 
 		_saveMgr.SetData("ResourceManager", _resourceMgr.SerializeAsJSON());
 		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
 		_saveMgr.SetData("LocalisationManager", _localMgr.SerializeAsJSON());
+		_saveMgr.SetData("CameraManager", _camMgr.SerializeAsJSON());
 
 		//Save avatar states
 		JSONArray avatarsJSON = new JSONArray();
 		foreach(BehaviourAI avatar in _avatars) {
 			avatarsJSON.Add(avatar.Encode());
 		}
-		_saveMgr.SetData("avatarStates", avatarsJSON);
+        _saveMgr.SetData("avatarStates", avatarsJSON);
 
-		//Save appliance states
-		JSONArray applianceJSON = new JSONArray();
+        //Save appliance states
+        JSONArray applianceJSON = new JSONArray();
 		foreach(Appliance appliance in _appliances) {
 			applianceJSON.Add(appliance.SerializeAsJSON());
 		}
@@ -543,28 +607,39 @@ public class PilotController : Controller{
 
 	//
 	public override void LoadGameState() {
-		if(debug) { Debug.Log("Loading game state"); }
+        if (!enableSaveLoad)
+        {
+            if (debug) { Debug.Log("save/load disabled. Will not load game data."); }
+            return;
+        }
+        if (debug) { Debug.Log("Loading game state"); }
 
 		_saveMgr.Load();
 
 		_resourceMgr.DeserializeFromJSON(_saveMgr.GetClass("ResourceManager"));
 		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
 		_localMgr.DeserializeFromJSON(_saveMgr.GetClass("LocalisationManager"));
+		_camMgr.DeserializeFromJSON(_saveMgr.GetClass("CameraManager"));
 
 		//Load avatar states
-		if(_saveMgr.GetData("avatarStates") != null) {
-			JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
-			foreach(JSONClass avatarJSON in avatarsJSON) {
-				foreach(BehaviourAI avatar in _avatars) {
-					if(avatar.name == avatarJSON["name"]) {
-						avatar.Decode(avatarJSON);
-					}
-				}
-			}
-		}
+		if (_saveMgr.GetData("avatarStates") != null)
+        {
+            JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
+            foreach (JSONClass avatarJSON in avatarsJSON)
+            {
+                foreach (BehaviourAI avatar in _avatars)
+                {
+                    string loadedName = avatarJSON["name"];
+                    if (avatar.name == loadedName)
+                    {
+                        avatar.Decode(avatarJSON);
+                    }
+                }
+            }
+        }
 
-		//Load appliance states
-		if(_saveMgr.GetData("Appliances") != null) {
+        //Load appliance states
+        if (_saveMgr.GetData("Appliances") != null) {
 			JSONArray appsJSON = _saveMgr.GetData("Appliances").AsArray;
 			foreach(JSONClass appJSON in appsJSON) {
 				foreach(Appliance app in _appliances) {

@@ -10,17 +10,27 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public List<EnergyEfficiencyMeasure> playerAffordances;
-	public List<AvatarActivity.Target> avatarAffordances;
-	public List<string> owners;
+	//public List<AvatarActivity.Target> avatarAffordances_old;
+	public List<Affordance> avatarAffordances;
+	//public List<string> owners;
+    public List<BehaviourAI> owners;
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
-	public List<BaseAction> performedEnergyMeasures;
 	public Vector3 interactionPos;
 	public float cashProduction;
 	public float comfortPorduction;
 
+	public List<EEMMeta> possibleEEMs;
+
 	public GameObject harvestButtonRef;
 	private GameObject _harvestButton;
+
+	[System.Serializable]
+	public class EEMMeta {
+		public string title;
+		public EnergyEfficiencyMeasure eem;
+		public bool applied;
+	}
 
 	// Use this for initialization
 	void Start() {
@@ -41,7 +51,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		if(ip != null) {
 			interactionPos = ip.transform.position;
 		} else {
-            //Debug.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead");
+            DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
 			interactionPos = transform.position;
 		}
 	}
@@ -61,45 +71,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	}
 
 	//
-	public void PerformAction(BaseAction action) {
-		//if(playerAffordances.Contains(action) && !performedEnergyMeasures.Contains(action)) {
-		//	performedEnergyMeasures.Add(action);
-		//	cashProduction += action.cashProduction;
-		//	comfortPorduction += action.comfortPorduction;
-		//}
-
-		//if(action.deactivateDeviceName != "") {
-		//	foreach(Transform child in transform) {
-		//		if(child.name == action.deactivateDeviceName) {
-		//			child.gameObject.SetActive(false);
-		//		}
-		//		if(child.name == action.activateDeviceName) {
-		//			child.gameObject.SetActive(true);
-		//		}
-		//	}
-		//}
-	}
-
-	//
-	public bool IsPerformed(BaseAction action) {
-		return !performedEnergyMeasures.Contains(action);
-	}
-
-	//
-	public List<BaseAction> GetPlayerActions() {
-		//List<BaseAction> availableActions = new List<BaseAction>();
-		//foreach(BaseAction action in playerAffordances) {
-		//	if(!performedEnergyMeasures.Contains(action)) {
-		//		availableActions.Add(action);
-		//	}
-		//}
-		//return availableActions;
-		return null;
-	}
-
-	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
 		return playerAffordances;
+	}
+
+	//
+	public void OnUsage(Affordance affordance) {
+		AddHarvest();
 	}
 
 	//
