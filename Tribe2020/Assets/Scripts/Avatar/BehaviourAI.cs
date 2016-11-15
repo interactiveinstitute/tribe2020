@@ -476,6 +476,21 @@ public class BehaviourAI : MonoBehaviour
     //{
     //}
 
+    void SetAgentDestination(AvatarActivity activity)
+    {
+        SetAgentDestination(activity.GetCurrentTargetObject().GetComponent<Appliance>());
+    }
+
+    void SetAgentDestination(Appliance appliance)
+    {
+        SetAgentDestination(appliance.interactionPos);
+    }
+
+    void SetAgentDestination(Vector3 position)
+    {
+        _agent.SetDestination(position);
+    }
+
     //
     public void Stop()
     {
@@ -498,7 +513,7 @@ public class BehaviourAI : MonoBehaviour
         }
         //_curTargetPos = target;
 
-        _agent.SetDestination(target);
+        SetAgentDestination(target);
         _agent.updatePosition = true;
         //_curAvatarState = AvatarState.OverrideWalking;
     }
@@ -544,7 +559,7 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        _agent.SetDestination(appliance.interactionPos);
+        SetAgentDestination(appliance);
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
 
         //If target is outside current room
@@ -622,7 +637,7 @@ public class BehaviourAI : MonoBehaviour
         Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, this);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, appliance.gameObject, this);
         }
         else
         {
@@ -691,10 +706,10 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void SetRunLevel(Affordance affordance, int level)
+    public void SetRunLevel(Affordance affordance, int level, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
 
         if (targetAppliance == null)
         {
@@ -737,10 +752,10 @@ public class BehaviourAI : MonoBehaviour
         device.SetRunlevel(level);
     }
 
-    public void TurnOn(Affordance affordance)
+    public void TurnOn(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
         TurnOn(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -769,10 +784,10 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
-    public void TurnOff(Affordance affordance)
+    public void TurnOff(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
         TurnOff(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -888,6 +903,9 @@ public class BehaviourAI : MonoBehaviour
 
             DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
             DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
+
+            //_agent.SetDestination(GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().interactionPos);
+            SetAgentDestination(GetRunningActivity());
 
             //We don't want to do moar stuffz in here. Bail out!
             return;

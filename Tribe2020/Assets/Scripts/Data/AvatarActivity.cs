@@ -125,7 +125,6 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
-
         StartSession(GetSessionAtIndex(_currSession));
 	}
 
@@ -167,7 +166,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter));
+                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter), session.avatarOwnsTarget);
                 }
 				
 				NextSession();
