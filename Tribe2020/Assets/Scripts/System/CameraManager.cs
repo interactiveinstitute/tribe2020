@@ -206,15 +206,22 @@ public class CameraManager : MonoBehaviour {
 		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
-		int[] above = new int[_viewpoints[(y + 1) % _viewpoints.Length].Length];
-
-		//_controller.OnNewViewpoint(_curViewpoint.GetComponent<Viewpoint>().title, _viewpoints[y].Length, above.Length, x);
 		_controller.OnNewViewpoint(_curViewpoint.GetComponent<Viewpoint>().title, _views, _curView);
 	}
 
 	//
 	public Viewpoint GetViewPoint() {
 		return _curViewpoint.GetComponent<Viewpoint>();
+	}
+
+	//
+	public Viewpoint[][] GetViewpoints() {
+		return _views;
+	}
+
+	//
+	public Vector2 GetCurrentView() {
+		return _curView;
 	}
 
 	//
@@ -260,13 +267,39 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
+	public void UnlockView(int x, int y) {
+		_views[y][x].locked = false;
+	}
+
+	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
+
+		JSONArray floors = new JSONArray();
+		for(int y = 0; y < _views.Length; y++) {
+			JSONArray views = new JSONArray();
+			for(int x = 0; x < _views[y].Length; x++) {
+				JSONClass viewJSON = new JSONClass();
+				viewJSON.Add("locked", _views[y][x].locked.ToString());
+				views.Add(viewJSON);
+			}
+			floors.Add(views);
+		}
+		json.Add("views", floors);
 
 		return json;
 	}
 
 	//
 	public void DeserializeFromJSON(JSONClass json) {
+		if(json != null) {
+			JSONArray views = json["views"].AsArray;
+
+			for(int y = 0; y < _views.Length; y++) {
+				for(int x = 0; x < _views[y].Length; x++) {
+					_views[y][x].locked = views[y][x]["locked"].AsBool;
+				}
+			}
+		}
 	}
 }

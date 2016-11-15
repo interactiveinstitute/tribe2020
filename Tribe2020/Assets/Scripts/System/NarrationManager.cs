@@ -42,7 +42,38 @@ public class NarrationManager : MonoBehaviour {
 
 	//
 	public void SetStartState() {
+		_controller.ClearView();
 		AddQuest(startQuest, 0);
+	}
+
+	//
+	public void NextStep() {
+		if(curQuests.Count > 0) {
+			if(curQuests[0].IsComplete()) {
+			} else {
+				OnQuestEvent(curQuests[0].GetCurrentStep().condition, curQuests[0].GetCurrentStep().conditionField);
+				StartQuestStep(curQuests[0]);
+			}
+		}
+	}
+
+	//
+	public void PrevStep() {
+		if(curQuests.Count > 0) {
+			curQuests[0].PrevStep();
+
+			if(curQuests[0].GetCurrentStepIndex() > 0 && curQuests[0].GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
+				PrevStep();
+			}
+			StartQuestStep(curQuests[0]);
+		}
+	}
+
+	//
+	public void FinishNarrative() {
+		while(curQuests.Count > 0 && curQuests[0].GetCurrentStep().type != Quest.QuestStepType.QuestComplete) {
+			OnQuestEvent(curQuests[0].GetCurrentStep().condition, curQuests[0].GetCurrentStep().conditionField);
+		}
 	}
 
 	//
@@ -67,7 +98,6 @@ public class NarrationManager : MonoBehaviour {
 		Quest newQuest = Object.Instantiate(quest) as Quest;
 		newQuest.SetCurrentStep(questStep);
 		newQuest.date = _controller.GetCurrentDate();
-		//newQuest.date = _timeMgr.CurrentDate;
 		curQuests.Add(newQuest);
 
 		if(autoStart) {
@@ -83,48 +113,50 @@ public class NarrationManager : MonoBehaviour {
 		_controller.SetControlState(quest.GetCurrentInteractionLimits());
 		string id, action;
 
-		//if(_view != null) {
-			switch(quest.GetCurrentStepType()) {
-				case Quest.QuestStepType.Popup:
-					if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
-					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, false);
-					break;
-				case Quest.QuestStepType.Prompt:
-					if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
-					_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, true);
-					break;
-				case Quest.QuestStepType.PlayAnimation:
-					//_view.ControlInterface("animation", "show");
-					_controller.ControlInterface("animation", "hide");
-					_controller.ControlInterface("playAnimation", step.valueField);
-					break;
-				case Quest.QuestStepType.PlaySound:
-					_controller.PlaySound(step.valueField);
-					break;
-				case Quest.QuestStepType.ControlAvatar:
-					id = quest.ParseAsString("id");
-					action = quest.ParseAsString("action");
-					Vector3 pos = quest.ParseAsVector3("pos");
-					if(pos != Vector3.back) {
-						_controller.ControlAvatar(id, action, pos);
-					} else {
-						_controller.ControlAvatar(id, step.objectField);
-					}
-					break;
-				case Quest.QuestStepType.ControlInterface:
-					id = quest.ParseAsString("id");
-					action = quest.ParseAsString("action");
-					_controller.ControlInterface(id, action);
-					break;
-				case Quest.QuestStepType.ChangeTimeScale:
-					_controller.SetTimeScale(int.Parse(step.valueField));
-					//_timeMgr.TimeScale = int.Parse(step.valueField);
-					break;
-				case Quest.QuestStepType.QuestComplete:
-					_controller.ShowCongratualations("Narrative." + quest.title + ":Quest Complete");
-					break;
-			}
-		//}
+		switch(quest.GetCurrentStepType()) {
+			case Quest.QuestStepType.Popup:
+				if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
+				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, false);
+				break;
+			case Quest.QuestStepType.Prompt:
+				if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
+				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, true);
+				break;
+			case Quest.QuestStepType.PlayAnimation:
+				_controller.ControlInterface("animation", "hide");
+				_controller.ControlInterface("playAnimation", step.valueField);
+				break;
+			case Quest.QuestStepType.PlaySound:
+				_controller.PlaySound(step.valueField);
+				break;
+			case Quest.QuestStepType.ControlAvatar:
+				id = quest.ParseAsString("id");
+				action = quest.ParseAsString("action");
+				Vector3 pos = quest.ParseAsVector3("pos");
+				if(pos != Vector3.back) {
+					_controller.ControlAvatar(id, action, pos);
+				} else {
+					_controller.ControlAvatar(id, step.objectField);
+				}
+				break;
+			case Quest.QuestStepType.ControlInterface:
+				id = quest.ParseAsString("id");
+				action = quest.ParseAsString("action");
+				_controller.ControlInterface(id, action);
+				break;
+			case Quest.QuestStepType.ChangeTimeScale:
+				_controller.SetTimeScale(int.Parse(step.valueField));
+				break;
+			case Quest.QuestStepType.UnlockView:
+				Vector2 coord = quest.ParseAsVector2("coord");
+				_controller.UnlockView((int)coord.x, (int)coord.y);
+				break;
+			case Quest.QuestStepType.QuestComplete:
+				_controller.ShowCongratualations("Narrative." + quest.title + ":Quest Complete");
+				break;
+			case Quest.QuestStepType.PilotComplete:
+				break;
+		}
 
 		//If there are no conditions, just step to the next quest step
 		if(quest.GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
@@ -142,11 +174,7 @@ public class NarrationManager : MonoBehaviour {
 					curQuest.GetCurrentStep().conditionField == argument) {
 					if(debug) { Debug.Log(name + ":" + curQuest.name + " was progressed by event " + questEvent); }
 
-					//if(_view != null) {
-						_controller.ClearView();
-						//_view.ClearView();
-					//}
-
+					_controller.ClearView();
 					curQuest.NextStep();
 					if(curQuest.IsComplete()) {
 						completedQuests.Add(curQuest);
@@ -156,6 +184,7 @@ public class NarrationManager : MonoBehaviour {
 							AddQuest(curQuest.nextQuest, 0);
 						}
 
+						_controller.SetControlState(Controller.InputState.ALL);
 						_controller.SaveGameState();
 					} else {
 						StartQuestStep(curQuests[i]);

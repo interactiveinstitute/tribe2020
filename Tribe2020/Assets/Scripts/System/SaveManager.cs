@@ -13,11 +13,13 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	#region Fields
-	public static int currentSlot = 0;
+	public static int currentSlot = -1;
 
 	public bool debug = false;
 
 	public string fileName;
+	[TextArea(3, 10)]
+	public string defaultContent;
 	private string _filePath;
 	private JSONNode _dataClone = new JSONNode();
 	#endregion
@@ -186,6 +188,6 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void InitFile() {
-		File.WriteAllText(_filePath, "{\"slots\":[]}");
+		File.WriteAllText(_filePath, defaultContent);
 	}
 }
