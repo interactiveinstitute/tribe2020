@@ -1059,25 +1059,15 @@ public class BehaviourAI : MonoBehaviour
         json.Add("transform", JsonUtility.ToJson(position));
         json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
         //json.Add("scheduleIndex", _scheduleIndex.ToString());
-        //json.Add("curActivity", _curActivity.Encode());
+        json.Add("_curActivity", _curActivity.Encode());
+        json.Add("_nextActivity", _nextActivity.Encode());
+        json.Add("_prevActivity", _prevActivity.Encode());
         json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
         json.Add("object", JsonUtility.ToJson(this));
 
         return json;
-    }
-
-    private JSONArray EncodeActivityStack()
-    {
-        SimpleJSON.JSONArray arr = new JSONArray();
-        while (_tempActivities.Count > 0)
-        {
-            AvatarActivity act = _tempActivities.Pop();
-            //TODO: Check whether this serialization round-trips successfully.
-            arr.Add(JsonUtility.ToJson(act));
-        }
-        return arr;
     }
 
     // Load function
@@ -1088,8 +1078,24 @@ public class BehaviourAI : MonoBehaviour
         transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
         _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
-    //Should be more here!
-}
+        _curActivity = AvatarActivity.Decode(json["_curActivity"]);
+        _nextActivity = AvatarActivity.Decode(json["_nextActivity"]);
+        _prevActivity = AvatarActivity.Decode(json["_prevActivity"]);
+
+        //Should be more here!
+    }
+
+    private JSONArray EncodeActivityStack()
+    {
+        SimpleJSON.JSONArray arr = new JSONArray();
+        while (_tempActivities.Count > 0)
+        {
+            AvatarActivity act = _tempActivities.Pop();
+            //TODO: Check whether this serialization round-trips successfully.
+            arr.Add(act.Encode());
+        }
+        return arr;
+    }
 
     private void DecodeActivityStack(JSONArray arr) {
         for(int i = 0; i < arr.Count; i++)
