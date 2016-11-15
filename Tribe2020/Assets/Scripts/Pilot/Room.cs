@@ -10,16 +10,15 @@ public class Room : MonoBehaviour {
 	public float lux;
     private List<BehaviourAI> _occupants;
 
-	// Use this for initialization
-	void Start() {
+    public Affordance avatarAffordanceSwitchLight;
+
+    // Use this for initialization
+    void Start() {
 		_occupants = new List<BehaviourAI>();
 
 		foreach(Appliance device in GetComponentsInChildren<Appliance>()) {
 			_devices.Add(device);
 		}
-
-        
-
 	}
 	
 	// Update is called once per frame
@@ -39,13 +38,12 @@ public class Room : MonoBehaviour {
 
 	//Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
 	public Appliance GetLightSwitch() {
-        DebugManager.LogError("You are calling the GetLightSwitch method. It's currently broken. Address that before calling it.", this, this);
         foreach (Appliance device in _devices) {
             foreach (Affordance aff in device.avatarAffordances)
             {
                 //Checking with strings should only be done in special cases!
                 //Aim for always getting an actual reference to the affordance we want to compare against rather than using strings.
-                if (aff.type == "Switch Light")
+                if (aff == avatarAffordanceSwitchLight)
                 {
                     return device;
                 }
@@ -89,21 +87,31 @@ public class Room : MonoBehaviour {
         return GetPersonCount() == 0;
     }
 
-	//
-	void OnTriggerEnter(Collider other) {
-		if(other.GetComponent<BehaviourAI>()) {
-			//Debug.Log(other.name + " entered " + name);
-			_occupants.Add(other.GetComponent<BehaviourAI>());
-        }
-	}
+    public bool IsPointInRoom(Vector3 point)
+    {
 
-	//
-	void OnTriggerExit(Collider other) {
-        if (other.GetComponent<BehaviourAI>()) {
-			//Debug.Log(other.name + " left " + name);
-			_occupants.Remove(other.GetComponent<BehaviourAI>());
+        foreach (BoxCollider zone in GetComponents<BoxCollider>())
+        {
+            if (zone.bounds.Contains(point))
+            {
+                return true;
+            }
         }
-	}
+
+        return false;
+    }
+
+    public void OnAvatarEnter(BehaviourAI avatar)
+    {
+        //Debug.Log(other.name + " entered " + name);
+        _occupants.Add(avatar);
+    }
+
+    public void OnAvatarExit(BehaviourAI avatar)
+    {
+        //Debug.Log(other.name + " left " + name);
+        _occupants.Remove(avatar);
+    }
 
 	////This functions assumes that the provided affordance is the light switch affordance.
 	//public void UpdateLighting(Affordance affordance) {

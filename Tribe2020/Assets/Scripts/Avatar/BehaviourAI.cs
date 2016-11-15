@@ -35,6 +35,7 @@ public class BehaviourAI : MonoBehaviour
 
     [SerializeField]
     private bool _isControlled = false;
+    private bool _isSimulating = false;
 
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
@@ -82,7 +83,10 @@ public class BehaviourAI : MonoBehaviour
         //Synchronise schedule to get current activity for time
         SyncSchedule();
         //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
-        _curActivity.Start();
+        if (_curActivity != null)
+        {
+            _curActivity.Start();
+        }
     }
 
     // Update is called once per frame
@@ -107,7 +111,7 @@ public class BehaviourAI : MonoBehaviour
         // the script will try to simulate the schedule until the curTime is reached.
 
         //Ok. Let's find the stamp for the next activity. Should we switch to it?
-        if (_nextActivity.hasStartTime && _nextActivity.startTimePassed())
+        if (_nextActivity != null && _nextActivity.hasStartTime && _nextActivity.startTimePassed())
         {
             DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
             _curActivity.FinishCurrentActivity();
@@ -117,7 +121,7 @@ public class BehaviourAI : MonoBehaviour
 
         //same as above but backwards.
         //We are most likely not handling backwards time very well. But that's out of scope for now.
-        if (_curActivity.hasStartTime && !_curActivity.startTimePassed())
+        if (_curActivity != null && _curActivity.hasStartTime && !_curActivity.startTimePassed())
         {
             DebugManager.Log("Current time is before current activity's startTime. Revert the activity and start the previous one", this);
             _curActivity.Revert();
@@ -137,6 +141,11 @@ public class BehaviourAI : MonoBehaviour
 
     private void UpdateActivity(AvatarActivity activity)
     {
+
+        if(activity == null)
+        {
+            return;
+        }
 
         //do delta time stuffz
         activity.Step(this);
@@ -258,6 +267,10 @@ public class BehaviourAI : MonoBehaviour
 
                 //ok. this activity is the closest upcoming one in the future. Let's set it as the _curActivity and the adjacent activities as prev and next.
                 //To achieve that we must first calculate some timstamps and stuff...
+
+                //Hm. I change this now to instead set the next upcoming activity as _nextActivity (instead of _curActivity)!!! /Gunnar
+                //Decrement _scheduleIndex by 1 before we do all the stuffzz
+                _scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
 
                 //Setup the scheduleIndices.
                 int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
@@ -468,6 +481,21 @@ public class BehaviourAI : MonoBehaviour
     //{
     //}
 
+    void SetAgentDestination(AvatarActivity activity)
+    {
+        SetAgentDestination(activity.GetCurrentTargetObject().GetComponent<Appliance>());
+    }
+
+    void SetAgentDestination(Appliance appliance)
+    {
+        SetAgentDestination(appliance.interactionPos);
+    }
+
+    void SetAgentDestination(Vector3 position)
+    {
+        _agent.SetDestination(position);
+    }
+
     //
     public void Stop()
     {
@@ -490,7 +518,7 @@ public class BehaviourAI : MonoBehaviour
         }
         //_curTargetPos = target;
 
-        _agent.SetDestination(target);
+        SetAgentDestination(target);
         _agent.updatePosition = true;
         //_curAvatarState = AvatarState.OverrideWalking;
     }
@@ -536,8 +564,15 @@ public class BehaviourAI : MonoBehaviour
 
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-        _agent.SetDestination(appliance.interactionPos);
+        SetAgentDestination(appliance);
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
+
+        //If target is outside current room
+        if (_curRoom != null && !_curRoom.IsPointInRoom(appliance.interactionPos))
+        {
+            DebugManager.Log("Walking to appliance in another room", appliance.gameObject, this);
+            OnWalkToOtherRoom();
+        }
     }
 
     //
@@ -607,7 +642,7 @@ public class BehaviourAI : MonoBehaviour
         Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
         if (sitPosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, this);
+            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, appliance.gameObject, this);
         }
         else
         {
@@ -676,13 +711,19 @@ public class BehaviourAI : MonoBehaviour
     }
 
     //
-    public void SetRunLevel(Affordance affordance, int level)
+    public void SetRunLevel(Affordance affordance, int level, bool userOwnage = false)
     {
 		if(affordance == null) {
 			DebugManager.LogError("No affordance provided to the SetRunLevel function!", this, this);
 		}
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
+
+        if (targetAppliance == null)
+        {
+            return;
+        }
+
         SetRunLevel(targetAppliance, level);
 
 		//TODO: temp solution
@@ -719,10 +760,10 @@ public class BehaviourAI : MonoBehaviour
         device.SetRunlevel(level);
     }
 
-    public void TurnOn(Affordance affordance)
+    public void TurnOn(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
         TurnOn(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -751,10 +792,10 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
-    public void TurnOff(Affordance affordance)
+    public void TurnOff(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, false);
+        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
         TurnOff(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -840,6 +881,8 @@ public class BehaviourAI : MonoBehaviour
                 DebugManager.LogError(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
         }
 
+        DebugManager.Log("Min dist appliance: ", targetAppliance, this);
+
         return targetAppliance;
     }
 
@@ -869,6 +912,9 @@ public class BehaviourAI : MonoBehaviour
             DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
             DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
 
+            //_agent.SetDestination(GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().interactionPos);
+            SetAgentDestination(GetRunningActivity());
+
             //We don't want to do moar stuffz in here. Bail out!
             return;
         }
@@ -895,20 +941,25 @@ public class BehaviourAI : MonoBehaviour
             //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
             if (other.GetComponent<Room>() != _curRoom)
             {
-                //Exiting current room
-                DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
-                _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
-                //The above line is equivilent to the below section
-                //if (_stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting)){
-                //    CheckLighting(AvatarActivity.SessionType.TurnOff);
-                //}
+                if (_curRoom != null) //Is null when game starts
+                {
+                    //Exiting current room
+                    DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
+                    _curRoom.OnAvatarExit(this); //Decrease person count in room
+                }
 
                 //Entering new room
                 DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
                 _curRoom = other.GetComponent<Room>();
+                _curRoom.OnAvatarEnter(this); //Increase person count in room
                 CheckLighting(AvatarActivity.SessionType.TurnOn);
             }
         }
+    }
+
+    void OnWalkToOtherRoom()
+    {
+        _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
     }
 
     public void CheckLighting(AvatarActivity.SessionType wantedAction)
@@ -920,7 +971,7 @@ public class BehaviourAI : MonoBehaviour
                 //Light is ok: turned on
                 return;
             }
-            else if(wantedAction == AvatarActivity.SessionType.TurnOff && !_curRoom.IsLit())
+            else if(wantedAction == AvatarActivity.SessionType.TurnOff && (!_curRoom.IsLit() || _curRoom.GetPersonCount() > 1))
             {
                 //Light is ok: turned off
                 return;
@@ -937,6 +988,8 @@ public class BehaviourAI : MonoBehaviour
 
         }
     }
+
+    
 
     //
     //public void CheckLighting(GameObject device)
@@ -1062,13 +1115,30 @@ public class BehaviourAI : MonoBehaviour
         json.Add("transform", JsonUtility.ToJson(position));
         json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
         //json.Add("scheduleIndex", _scheduleIndex.ToString());
-        //json.Add("curActivity", _curActivity.Encode());
+        json.Add("_curActivity", _curActivity.Encode());
+        json.Add("_nextActivity", _nextActivity.Encode());
+        json.Add("_prevActivity", _prevActivity.Encode());
         json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
         json.Add("object", JsonUtility.ToJson(this));
 
         return json;
+    }
+
+    // Load function
+    public void Decode(JSONClass json)
+    {
+        //_scheduleIndex = json["scheduleIndex"].AsInt;
+        //JsonUtility.FromJsonOverwrite(json["object"], this);
+        transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
+        _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
+
+        _curActivity.Decode(json["_curActivity"]);
+        _nextActivity.Decode(json["_nextActivity"]);
+        _prevActivity.Decode(json["_prevActivity"]);
+
+        //Should be more here!
     }
 
     private JSONArray EncodeActivityStack()
@@ -1078,21 +1148,10 @@ public class BehaviourAI : MonoBehaviour
         {
             AvatarActivity act = _tempActivities.Pop();
             //TODO: Check whether this serialization round-trips successfully.
-            arr.Add(JsonUtility.ToJson(act));
+            arr.Add(act.Encode());
         }
         return arr;
     }
-
-    // Load function
-    public void Decode(JSONClass json)
-    {
-        //_scheduleIndex = json["scheduleIndex"].AsInt;
-        JsonUtility.FromJsonOverwrite(json["object"], this);
-        transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
-        _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
-
-    //Should be more here!
-}
 
     private void DecodeActivityStack(JSONArray arr) {
         for(int i = 0; i < arr.Count; i++)

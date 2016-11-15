@@ -6,7 +6,7 @@ public class AvatarLabel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GetComponent<Text>().text = transform.parent.parent.GetComponent<AvatarStats>().avatarName;
+        GetComponent<Text>().text = GetComponentInParent<BehaviourAI>().name;
 	}
 	
 	// Update is called once per frame

@@ -125,7 +125,6 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
-
         StartSession(GetSessionAtIndex(_currSession));
 	}
 
@@ -167,7 +166,7 @@ public class AvatarActivity : ScriptableObject {
                 }
                 else
                 {
-                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter));
+                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter), session.avatarOwnsTarget);
                 }
 				
 				NextSession();
@@ -415,19 +414,25 @@ public class AvatarActivity : ScriptableObject {
         _curAvatarState = avatarState;
     }
 
-    //public JSONClass Encode()
-    //{
-    //    //MemoryStream stream1 = new MemoryStream();
-    //    //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
-    //    //ser.WriteObject(stream1, this);
+    public string Encode()
+    {
+        return JsonUtility.ToJson(this);
+        //MemoryStream stream1 = new MemoryStream();
+        //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
+        //ser.WriteObject(stream1, this);
 
-    //    //SimpleJSON.JSONClass json;
-    //    //json.Serialize()
-    //    //foreach(Session session in sessions)
-    //    //{
-    //    //    session.
-    //    //}
-    //}
+        //SimpleJSON.JSONClass json;
+        //json.Serialize()
+        //foreach(Session session in sessions)
+        //{
+        //    session.
+        //}
+    }
+
+    public void Decode(string json)
+    {
+        JsonUtility.FromJsonOverwrite(json, this);
+    }
 
 }
 
