@@ -414,19 +414,25 @@ public class AvatarActivity : ScriptableObject {
         _curAvatarState = avatarState;
     }
 
-    //public JSONClass Encode()
-    //{
-    //    //MemoryStream stream1 = new MemoryStream();
-    //    //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
-    //    //ser.WriteObject(stream1, this);
+    public string Encode()
+    {
+        return JsonUtility.ToJson(this);
+        //MemoryStream stream1 = new MemoryStream();
+        //DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(AvatarActivity));
+        //ser.WriteObject(stream1, this);
 
-    //    //SimpleJSON.JSONClass json;
-    //    //json.Serialize()
-    //    //foreach(Session session in sessions)
-    //    //{
-    //    //    session.
-    //    //}
-    //}
+        //SimpleJSON.JSONClass json;
+        //json.Serialize()
+        //foreach(Session session in sessions)
+        //{
+        //    session.
+        //}
+    }
+
+    static public AvatarActivity Decode(string json)
+    {
+        return JsonUtility.FromJson<AvatarActivity>(json);
+    }
 
 }
 
