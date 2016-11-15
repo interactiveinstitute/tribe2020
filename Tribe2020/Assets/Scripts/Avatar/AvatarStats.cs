@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
-	public string avatarName;
 	public float conviction;
 	public float energy;
 
