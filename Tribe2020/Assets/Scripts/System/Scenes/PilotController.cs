@@ -661,17 +661,20 @@ public class PilotController : Controller {
 		List<Appliance> appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
 
 		foreach(BehaviourAI avatar in avatars) {
-			if(avatar.GetComponent<UniqueId>()) {
-				Destroy(avatar.gameObject.GetComponent<UniqueId>());
+            UniqueId[] ids = avatar.GetComponents<UniqueId>();
+            foreach (UniqueId id in ids) {
+				DestroyImmediate(id);
 			}
 			avatar.gameObject.AddComponent<UniqueId>();
 		}
 
 		foreach(Appliance app in appliances) {
-			if(app.GetComponent<UniqueId>()) {
-				Destroy(app.gameObject.GetComponent<UniqueId>());
-			}
-			app.gameObject.AddComponent<UniqueId>();
+            UniqueId[] ids = app.GetComponents<UniqueId>();
+            foreach (UniqueId id in ids)
+            {
+                DestroyImmediate(id);
+            }
+            app.gameObject.AddComponent<UniqueId>();
 		}
 	}
 
