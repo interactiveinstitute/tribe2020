@@ -10,29 +10,25 @@ public class AvatarActivity : ScriptableObject {
     
 	public string title;
 	public List<Session> sessions;
-	//public Session SkipSession;
 
-	//public string onSkipCommand;
+    [SerializeField]
 	private int _currSession;
 	private BehaviourAI _ai;
+    [SerializeField]
+    private GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
+    [Serializable]
+    public enum AvatarState { Idle, Walking, Sitting };
+    [SerializeField]
+    AvatarState _curAvatarState = AvatarState.Idle;
 
-    GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
-    BehaviourAI.AvatarState _curAvatarState = BehaviourAI.AvatarState.Idle;
-
-    protected float _weight = 0;
-	protected string _curState = "";
-
+    [SerializeField]
 	private float _delay = 0;
 	//public float _duration = 0;
 
 	public double startTime = 0;
-    [HideInInspector]
+    [SerializeField]
     public bool hasStartTime = true;
     //public double endTime = 0;
-
-    //public enum ActivityState { Idle, Walking, Sitting, Waiting, Unscheduled, OverrideIdle, OverrideWalking, TurningOnLight };
-    //[SerializeField]
-    //public ActivityState curActivityState = ActivityState.Idle;
 
     //Activity session types
     public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
@@ -115,10 +111,11 @@ public class AvatarActivity : ScriptableObject {
     //
     public void Start() {
         string curTimeView = _timeMgr.GetDateTime().ToString("HH:mm");
+        double curTimeStamp = _timeMgr.GetTotalSeconds();
         if (hasStartTime)
         {
             string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
-            DebugManager.Log(_ai.name + " starting activity " + name + " start " + startTimeView + ", currTime is " + curTimeView, this);
+            DebugManager.Log(_ai.name + " starting activity " + name + " startTime " + startTime + ", currTime is " + curTimeStamp, this);
         }
         else
         {
@@ -260,7 +257,7 @@ public class AvatarActivity : ScriptableObject {
             _ai.OnActivityOver();
 		} else {
             //If we were sitting down AND we are gonna be moving somewhere, we should do that standing up!
-            if(_curAvatarState == BehaviourAI.AvatarState.Sitting && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
+            if(_curAvatarState == AvatarState.Sitting && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
             {
                 _ai.standUp();
             }
@@ -330,7 +327,7 @@ public class AvatarActivity : ScriptableObject {
     {
         if (hasStartTime)
         {
-            return startTime < _timeMgr.GetTotalSeconds();
+            return startTime <= _timeMgr.GetTotalSeconds();
         }
         return false;
     }
@@ -404,12 +401,12 @@ public class AvatarActivity : ScriptableObject {
         _curTargetObj = targetObject;
     }
 
-    public BehaviourAI.AvatarState GetCurrentAvatarState()
+    public AvatarState GetCurrentAvatarState()
     {
         return _curAvatarState;
     }
 
-    public void SetCurrentAvatarState(BehaviourAI.AvatarState avatarState)
+    public void SetCurrentAvatarState(AvatarState avatarState)
     {
         _curAvatarState = avatarState;
     }
