@@ -500,6 +500,7 @@ public class BehaviourAI : MonoBehaviour
     public void Stop()
     {
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Idle);
+        //_agent.Stop();
         _charController.Move(Vector3.zero, false, false);
     }
 
@@ -568,7 +569,7 @@ public class BehaviourAI : MonoBehaviour
         GetRunningActivity().SetCurrentAvatarState(AvatarState.Walking);
 
         //If target is outside current room
-        if (_curRoom != null && !_curRoom.IsPointInRoom(appliance.interactionPos))
+        if (_curRoom != null && !_curRoom.IsObjectInRoom(appliance.gameObject))
         {
             DebugManager.Log("Walking to appliance in another room", appliance.gameObject, this);
             OnWalkToOtherRoom();
@@ -952,7 +953,12 @@ public class BehaviourAI : MonoBehaviour
                 DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
                 _curRoom = other.GetComponent<Room>();
                 _curRoom.OnAvatarEnter(this); //Increase person count in room
-                CheckLighting(AvatarActivity.SessionType.TurnOn);
+
+                //if (_curRoom.IsPointInRoom(GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().interactionPos))
+                if (GetRunningActivity().GetCurrentTargetObject() != null && _curRoom.IsObjectInRoom(GetRunningActivity().GetCurrentTargetObject()))
+                {
+                    CheckLighting(AvatarActivity.SessionType.TurnOn);
+                }
             }
         }
     }

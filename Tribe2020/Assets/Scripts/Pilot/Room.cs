@@ -87,18 +87,9 @@ public class Room : MonoBehaviour {
         return GetPersonCount() == 0;
     }
 
-    public bool IsPointInRoom(Vector3 point)
+    public bool IsObjectInRoom(GameObject obj)
     {
-
-        foreach (BoxCollider zone in GetComponents<BoxCollider>())
-        {
-            if (zone.bounds.Contains(point))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return this == obj.GetComponentInParent<Room>();
     }
 
     public void OnAvatarEnter(BehaviourAI avatar)
