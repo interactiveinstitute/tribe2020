@@ -33,22 +33,38 @@ public class LightManager : MonoBehaviour {
 
     void UpdateShadowSettings()
     {
-        foreach (Light light in pilotContent.GetComponentsInChildren<Light>())
+        if(pilotContent != null)
         {
-            light.shadows = lightShadows;
-            light.shadowResolution = lightShadowResolution;
+            foreach (Light light in pilotContent.GetComponentsInChildren<Light>())
+            {
+                light.shadows = lightShadows;
+                light.shadowResolution = lightShadowResolution;
+            }
+            foreach (MeshRenderer mesh in pilotContent.GetComponentsInChildren<MeshRenderer>())
+            {
+                mesh.shadowCastingMode = applianceShadows;
+            }
         }
-        foreach (MeshRenderer mesh in pilotContent.GetComponentsInChildren<MeshRenderer>())
+        
+        if(avatars != null)
         {
-            mesh.shadowCastingMode = applianceShadows;
+            foreach (SkinnedMeshRenderer mesh in avatars.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                mesh.shadowCastingMode = avatarShadows;
+            }
         }
-        foreach (SkinnedMeshRenderer mesh in avatars.GetComponentsInChildren<SkinnedMeshRenderer>())
+
+        if (pilotMesh != null)
         {
-            mesh.shadowCastingMode = avatarShadows;
+            foreach (MeshRenderer mesh in pilotMesh.GetComponentsInChildren<MeshRenderer>())
+            {
+                mesh.shadowCastingMode = meshShadows;
+            }
         }
-        foreach (MeshRenderer mesh in pilotMesh.GetComponentsInChildren<MeshRenderer>())
+
+        if(pilotContent == null || pilotMesh == null || avatars == null)
         {
-            mesh.shadowCastingMode = meshShadows;
+            DebugManager.LogError("Missing some references in light manager", this.gameObject, this);
         }
     }
 

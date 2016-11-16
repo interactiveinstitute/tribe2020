@@ -14,8 +14,10 @@ public class SaveManager : MonoBehaviour{
 
 	#region Fields
 	public static int currentSlot = -1;
+    [SerializeField]
+    private int saveSlot = -1;
 
-	public bool debug = false;
+    public bool debug = false;
 
 	public string fileName;
 	[TextArea(3, 10)]
@@ -35,6 +37,12 @@ public class SaveManager : MonoBehaviour{
 	//Use this for initialization
 	void Start(){
 	}
+
+    //Callback when interacting with component in editor
+    void OnValidate()
+    {
+        currentSlot = saveSlot;
+    }
 	
 	//Update is called once per frame
 	void Update(){

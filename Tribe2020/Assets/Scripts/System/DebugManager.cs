@@ -13,8 +13,8 @@ public class DebugManager : MonoBehaviour {
     static public bool staticAppliance;
     public bool Appliance = true;
 
-
-    //TODO: Make a general function for both logerror and log
+    static public bool staticLightManager;
+    public bool LightManager = true;
 
     // Use this for initialization
     void Start () {
@@ -22,10 +22,11 @@ public class DebugManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void OnValidate () {
         staticBehaviourAI = BehaviourAI;
         staticAvatarActivity = AvatarActivity;
         staticAppliance = Appliance;
+        staticLightManager = LightManager;
 	}
 
     static public void Log(string message, System.Object caller)
@@ -61,6 +62,9 @@ public class DebugManager : MonoBehaviour {
         {
             print = false;
         }else if(caller is Appliance && !staticAppliance)
+        {
+            print = false;
+        }else if(caller is LightManager && !staticLightManager)
         {
             print = false;
         }
