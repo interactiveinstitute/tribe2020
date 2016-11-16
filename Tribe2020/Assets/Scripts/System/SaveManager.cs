@@ -14,6 +14,7 @@ public class SaveManager : MonoBehaviour{
 
 	#region Fields
 	public static int currentSlot = -1;
+
     [SerializeField]
     private int saveSlot = -1;
 
@@ -27,7 +28,7 @@ public class SaveManager : MonoBehaviour{
 	#endregion
 
 	//Sort use instead of constructor
-	void Awake(){
+	void Awake() {
 		_instance = this;
 		_filePath = Application.persistentDataPath + "/" + fileName;
 		//_dataClone = ReadFileAsJSON();
@@ -35,17 +36,18 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//Use this for initialization
-	void Start(){
+	void Start() {
 	}
 
     //Callback when interacting with component in editor
-    void OnValidate()
-    {
-        currentSlot = saveSlot;
+    void OnValidate() {
+		if(saveSlot != -1) {
+			currentSlot = saveSlot;
+		}
     }
 	
 	//Update is called once per frame
-	void Update(){
+	void Update() {
 	}
 
 	public JSONNode GetData(string key) {
@@ -70,7 +72,7 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public JSONClass GetClass(string field) {
+	public JSONClass GetCurrentSlotClass(string field) {
 		return GetClass(currentSlot, field);
 	}
 
@@ -98,22 +100,22 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
-	public void SetData(string key, JSONClass value) {
-		SetData(currentSlot, key, value);
+	public void SetCurrentSlotClass(string key, JSONClass value) {
+		SetClass(currentSlot, key, value);
 	}
 
 	//
-	public void SetData(int slot, string field, JSONClass value) {
+	public void SetClass(int slot, string field, JSONClass value) {
 		_dataClone["slots"][slot].Add(field, value);
 	}
 
 	//
-	public void SetData(string key, JSONArray value) {
-		SetData(currentSlot, key, value);
+	public void SetCurrentSlotArray(string key, JSONArray value) {
+		SetArray(currentSlot, key, value);
 	}
 
 	//
-	public void SetData(int slot, string key, JSONArray value) {
+	public void SetArray(int slot, string key, JSONArray value) {
 		_dataClone["slots"][slot].Add(key, value);
 	}
 
@@ -124,7 +126,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void ClearFile() {
-		InitFile();
+		File.WriteAllText(Application.persistentDataPath + "/" + fileName, defaultContent);
 		Load();
 	}
 
@@ -150,21 +152,19 @@ public class SaveManager : MonoBehaviour{
 	//
 	public int GetLastSlot() {
 		if(_dataClone["lastSlot"] != null) {
-			Debug.Log("success: " + _dataClone["lastSlot"]);
 			return _dataClone["lastSlot"].AsInt;
 		}
-		Debug.Log(_dataClone["lastSlot"]);
 		return -1;
 	}
 
 	//
 	public void ResetLastSlot() {
-		_dataClone.Remove("lastSlot");
+		SetData("lastSlot", "-1");
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
 	//
-	public void Save(bool currentScene = true) {
+	public void SaveCurrentSlot(bool currentScene = true) {
 		Save(currentSlot, currentScene);
 	}
 

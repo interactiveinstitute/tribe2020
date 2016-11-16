@@ -124,7 +124,7 @@ public class MenuController : Controller {
 	//
 	public void RefreshContinue() {
 		int lastSlot = _saveMgr.GetLastSlot();
-		Debug.Log(_saveMgr.GetData("SanPablo").AsBool);
+
 		if(lastSlot != -1) {
 			continueButton.gameObject.SetActive(true);
 			continueButton.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -154,7 +154,7 @@ public class MenuController : Controller {
 	public void InitPilotButton(Transform button) {
 		if(_saveMgr.GetData(button.name) != null) {
 			bool isUnlocked = _saveMgr.GetData(button.name).AsBool;
-			Debug.Log(button.name + " is " + _saveMgr.GetData(button.name));
+			button.GetComponent<Button>().interactable = isUnlocked;
 		}
 	}
 
@@ -173,6 +173,7 @@ public class MenuController : Controller {
 	//
 	public void NewGame(string pilot) {
 		SaveManager.currentSlot = pendingNewGameSlot;
+		_saveMgr.SetData("lastSlot", pendingNewGameSlot.ToString());
 		LoadScene(pilot);
 	}
 

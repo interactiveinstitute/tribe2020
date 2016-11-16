@@ -587,58 +587,53 @@ public class PilotController : Controller {
 	public override void SaveGameState() {
 		if(debug) { Debug.Log("Saving game state"); }
 
-		_saveMgr.SetData("ResourceManager", _resourceMgr.SerializeAsJSON());
-		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
-		_saveMgr.SetData("LocalisationManager", _localMgr.SerializeAsJSON());
-		_saveMgr.SetData("CameraManager", _camMgr.SerializeAsJSON());
+		_saveMgr.SetCurrentSlotClass("ResourceManager", _resourceMgr.SerializeAsJSON());
+		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
+		_saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
+		_saveMgr.SetCurrentSlotClass("CameraManager", _camMgr.SerializeAsJSON());
 
 		//Save avatar states
 		JSONArray avatarsJSON = new JSONArray();
 		foreach(BehaviourAI avatar in _avatars) {
 			avatarsJSON.Add(avatar.Encode());
 		}
-        _saveMgr.SetData("avatarStates", avatarsJSON);
+        _saveMgr.SetCurrentSlotArray("avatarStates", avatarsJSON);
 
         //Save appliance states
         JSONArray applianceJSON = new JSONArray();
 		foreach(Appliance appliance in _appliances) {
 			applianceJSON.Add(appliance.SerializeAsJSON());
 		}
-		_saveMgr.SetData("Appliances", applianceJSON);
+		_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
 
-		_saveMgr.SetData("lastTime", _timeMgr.time.ToString());
-		_saveMgr.SetData("curPilot", Application.loadedLevelName);
+		_saveMgr.SetCurrentSlotData("lastTime", _timeMgr.time.ToString());
+		_saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
 
-		_saveMgr.Save();
+		_saveMgr.SaveCurrentSlot();
 	}
 
 	//
 	public override void LoadGameState() {
-        if (!enableSaveLoad)
-        {
+        if (!enableSaveLoad) {
             if (debug) { Debug.Log("save/load disabled. Will not load game data."); }
             return;
         }
         if (debug) { Debug.Log("Loading game state"); }
 
-		_saveMgr.Load();
+		_saveMgr.LoadCurrentSlot();
 
-		_resourceMgr.DeserializeFromJSON(_saveMgr.GetClass("ResourceManager"));
-		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
-		_localMgr.DeserializeFromJSON(_saveMgr.GetClass("LocalisationManager"));
-		_camMgr.DeserializeFromJSON(_saveMgr.GetClass("CameraManager"));
+		_resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
+		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
+		_localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
+		_camMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 
 		//Load avatar states
-		if (_saveMgr.GetData("avatarStates") != null)
-        {
-            JSONArray avatarsJSON = _saveMgr.GetData("avatarStates").AsArray;
-            foreach (JSONClass avatarJSON in avatarsJSON)
-            {
-                foreach (BehaviourAI avatar in _avatars)
-                {
+		if (_saveMgr.GetCurrentSlotData("avatarStates") != null) {
+            JSONArray avatarsJSON = _saveMgr.GetCurrentSlotData("avatarStates").AsArray;
+            foreach (JSONClass avatarJSON in avatarsJSON) {
+                foreach (BehaviourAI avatar in _avatars) {
                     string loadedName = avatarJSON["name"];
-                    if (avatar.name == loadedName)
-                    {
+                    if (avatar.name == loadedName) {
                         avatar.Decode(avatarJSON);
                     }
                 }
@@ -646,8 +641,8 @@ public class PilotController : Controller {
         }
 
         //Load appliance states
-        if (_saveMgr.GetData("Appliances") != null) {
-			JSONArray appsJSON = _saveMgr.GetData("Appliances").AsArray;
+        if (_saveMgr.GetCurrentSlotData("Appliances") != null) {
+			JSONArray appsJSON = _saveMgr.GetCurrentSlotData("Appliances").AsArray;
 			foreach(JSONClass appJSON in appsJSON) {
 				foreach(Appliance app in _appliances) {
 					if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
@@ -657,8 +652,8 @@ public class PilotController : Controller {
 			}
 		}
 
-		if(_saveMgr.GetData("lastTime") != null) {
-			_timeMgr.SetTime(_saveMgr.GetData("lastTime").AsDouble);
+		if(_saveMgr.GetCurrentSlotData("lastTime") != null) {
+			_timeMgr.SetTime(_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
 		}
 	}
 

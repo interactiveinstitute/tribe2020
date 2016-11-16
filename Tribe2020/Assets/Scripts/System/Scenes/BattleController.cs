@@ -183,13 +183,13 @@ public class BattleController : Controller {
 
 	//
 	public override void SaveGameState() {
-		_saveMgr.SetData("NarrationManager", _narrationMgr.SerializeAsJSON());
-		_saveMgr.Save();
+		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
+		_saveMgr.SaveCurrentSlot();
 	}
 
 	//
 	public override void LoadGameState() {
-		_saveMgr.Load();
-		_narrationMgr.DeserializeFromJSON(_saveMgr.GetClass("NarrationManager"));
+		_saveMgr.LoadCurrentSlot();
+		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 	}
 }
