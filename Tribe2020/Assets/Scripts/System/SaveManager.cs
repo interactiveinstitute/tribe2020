@@ -40,8 +40,12 @@ public class SaveManager : MonoBehaviour{
 	void Update(){
 	}
 
-	//
 	public JSONNode GetData(string key) {
+		return _dataClone[key];
+	}
+
+	//
+	public JSONNode GetCurrentSlotData(string key) {
 		return GetData(currentSlot, key);
 	}
 
@@ -71,8 +75,12 @@ public class SaveManager : MonoBehaviour{
 		}
 	}
 
-	//
 	public void SetData(string key, string value) {
+		_dataClone.Add(key, value);
+	}
+
+	//
+	public void SetCurrentSlotData(string key, string value) {
 		SetData(currentSlot, key, value);
 	}
 
@@ -108,12 +116,13 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void ClearFile() {
-		File.WriteAllText(Application.persistentDataPath + "/" + fileName, "");
+		InitFile();
+		Load();
 	}
 
 	//
 	public void Delete(int slot) {
-		_dataClone["slots"].Remove(slot);
+		_dataClone["slots"][slot] = new JSONClass();
 		File.WriteAllText(_filePath, _dataClone.ToString());
 	}
 
@@ -133,8 +142,10 @@ public class SaveManager : MonoBehaviour{
 	//
 	public int GetLastSlot() {
 		if(_dataClone["lastSlot"] != null) {
+			Debug.Log("success: " + _dataClone["lastSlot"]);
 			return _dataClone["lastSlot"].AsInt;
 		}
+		Debug.Log(_dataClone["lastSlot"]);
 		return -1;
 	}
 
@@ -156,6 +167,11 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Load() {
+		_dataClone = ReadFileAsJSON();
+	}
+
+	//
+	public void LoadCurrentSlot() {
 		Load(currentSlot);
 	}
 
@@ -164,7 +180,7 @@ public class SaveManager : MonoBehaviour{
 		if(debug) { Debug.Log("Load: " + currentSlot); }
 
 		_dataClone = ReadFileAsJSON();
-		_dataClone.Add("lastSlot", "" + slot);
+		SetData("lastSlot", slot.ToString());
 	}
 
 	//
