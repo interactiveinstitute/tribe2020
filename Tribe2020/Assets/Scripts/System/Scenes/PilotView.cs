@@ -31,6 +31,9 @@ public class PilotView : View{
 
 	[Header("View Guide")]
 	public Transform viewpointGuideUI;
+	public Sprite defaultIcon;
+	public Sprite lockIcon;
+	public Color currentColor;
 
 	[Header("Overlay")]
 	public GameObject inspectorUI;
@@ -134,16 +137,19 @@ public class PilotView : View{
 	public void UpdateViewpointGuide(Viewpoint[][] viewMatrix, Vector2 curView) {
 		RemoveChildren(viewpointGuideUI);
 
-		for(int y = 0; y < viewMatrix.Length; y++) {
+		for(int y = viewMatrix.Length - 1; y >= 0; y--) {
 			GameObject viewRow = Instantiate(viewGuideRowPrefab) as GameObject;
 			viewRow.transform.SetParent(viewpointGuideUI, false);
 			for(int x = 0; x < viewMatrix[y].Length; x++) {
 				GameObject viewCell = Instantiate(viewpointIconPrefab) as GameObject;
 				viewCell.transform.SetParent(viewRow.transform, false);
 				if(curView.x == x && curView.y == y) {
-					viewCell.GetComponent<Image>().color = Color.blue;
+					viewCell.GetComponent<Image>().color = currentColor;
+					viewCell.GetComponent<Image>().sprite = defaultIcon;
 				} else if(viewMatrix[y][x].locked) {
-					viewCell.GetComponent<Image>().color = Color.black;
+					viewCell.GetComponent<Image>().sprite = lockIcon;
+				} else {
+					viewCell.GetComponent<Image>().sprite = defaultIcon;
 				}
 			}
 		}

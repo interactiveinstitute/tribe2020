@@ -9,7 +9,9 @@ public class MenuController : Controller {
 
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
+	private LocalisationManager _localMgr;
 
+	[Header("UI Panels")]
 	public RectTransform mainMenu;
 	public RectTransform fileMenu;
 	public RectTransform pilotMenu;
@@ -21,6 +23,7 @@ public class MenuController : Controller {
 
 	public Transform continueButton;
 
+	[Header("Save Slot Buttons")]
 	public Transform file1;
 	public Transform remove1;
 	public Transform file2;
@@ -28,14 +31,23 @@ public class MenuController : Controller {
 	public Transform file3;
 	public Transform remove3;
 	int pendingNewGameSlot = 0;
+
+	[Header("Pilot Buttons")]
+	public Transform pilotSanPablo;
+	public Transform pilotIESAzucarera;
+	public Transform pilotCIRCEHQ;
+	public Transform pilotEmmelinedePankhurst;
+	public Transform pilotUniversidadOuezygin;
 	//private bool _isLoaded = false;
 
+	[Header("Settings")]
 	public Transform languageDropdown;
 
 	// Use this for initialization
 	void Start () {
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
 
 		_curMenu = mainMenu;
 		menus = new List<Transform>();
@@ -45,30 +57,23 @@ public class MenuController : Controller {
 		menus.Add(settingsMenu);
 		menus.Add(aboutMenu);
 
+		RefreshContinue();
+
 		InitSlotButton(file1, remove1, 0);
 		InitSlotButton(file2, remove2, 1);
 		InitSlotButton(file3, remove3, 2);
 
-		int lastSlot = _saveMgr.GetLastSlot();
-		continueButton.gameObject.SetActive(lastSlot != -1);
-		continueButton.GetComponent<Button>().onClick.AddListener(() =>
-			ContinueGame(_saveMgr.GetData(lastSlot, "curPilot"), lastSlot));
+		InitPilotButton(pilotSanPablo);
+		InitPilotButton(pilotIESAzucarera);
+		InitPilotButton(pilotCIRCEHQ);
+		InitPilotButton(pilotEmmelinedePankhurst);
+		InitPilotButton(pilotUniversidadOuezygin);
+
+		InitLocalisation();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//if(!_isLoaded) {
-		//	_isLoaded = true;
-		//	_saveMgr.Load();
-
-
-		//}
-
-		//Animator anim = animatedCharacter.GetComponent<Animator>();
-		//anim.SetFloat("Speed", 100);
-
-		//animatedPilot.Rotate(Vector3.up * Time.deltaTime);
-
 		if(animatedLogo.anchoredPosition.x < 166) {
 			float curX = animatedLogo.anchoredPosition.x;
 			curX = 166 + (curX - 166) * 0.75f;
@@ -117,6 +122,20 @@ public class MenuController : Controller {
 	}
 
 	//
+	public void RefreshContinue() {
+		int lastSlot = _saveMgr.GetLastSlot();
+		Debug.Log(_saveMgr.GetData("SanPablo").AsBool);
+		if(lastSlot != -1) {
+			continueButton.gameObject.SetActive(true);
+			continueButton.GetComponent<Button>().onClick.RemoveAllListeners();
+			continueButton.GetComponent<Button>().onClick.AddListener(() =>
+				ContinueGame(_saveMgr.GetData(lastSlot, "curPilot"), lastSlot));
+		} else {
+			continueButton.gameObject.SetActive(false);
+		}
+	}
+
+	//
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
@@ -133,6 +152,22 @@ public class MenuController : Controller {
 
 	//
 	public void InitPilotButton(Transform button) {
+		if(_saveMgr.GetData(button.name) != null) {
+			bool isUnlocked = _saveMgr.GetData(button.name).AsBool;
+			Debug.Log(button.name + " is " + _saveMgr.GetData(button.name));
+		}
+	}
+
+	//
+	public void InitLocalisation() {
+		Dropdown dropdown = languageDropdown.GetComponent<Dropdown>();
+		List<string> langStrings = new List<string>();
+
+		foreach(Language lang in _localMgr.languages) {
+			langStrings.Add(lang.name);
+		}
+
+		dropdown.AddOptions(langStrings);
 	}
 
 	//
@@ -175,9 +210,10 @@ public class MenuController : Controller {
 
 		int lastSlot = _saveMgr.GetLastSlot();
 		if(lastSlot == slot) {
-			continueButton.gameObject.SetActive(false);
 			_saveMgr.ResetLastSlot();
 		}
+
+		RefreshContinue();
 	}
 
 	//

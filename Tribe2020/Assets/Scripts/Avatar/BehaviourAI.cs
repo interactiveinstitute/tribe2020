@@ -750,6 +750,9 @@ public class BehaviourAI : MonoBehaviour
     //
     public void SetRunLevel(Affordance affordance, int level, bool userOwnage = false)
     {
+		if(affordance == null) {
+			DebugManager.LogError("No affordance provided to the SetRunLevel function!", this, this);
+		}
         //Appliance targetAppliance = FindNearestAppliance(target, false);
         Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
 

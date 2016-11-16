@@ -1254,7 +1254,6 @@ Transform:
   - {fileID: 406964}
   - {fileID: 4000011974079096}
   - {fileID: 4000014173581918}
-  - {fileID: 4000011892200982}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &437640
@@ -1912,6 +1911,9 @@ MonoBehaviour:
   mailReadUI: {fileID: 171446}
   mailCountText: {fileID: 11443542}
   viewpointGuideUI: {fileID: 22485030}
+  defaultIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  lockIcon: {fileID: 21300000, guid: 37087ab8de19ce547a8fe189fd719197, type: 3}
+  currentColor: {r: 0.121568635, g: 0.6117647, b: 0.31764707, a: 1}
   inspectorUI: {fileID: 136948}
   inspectorEEMContainer: {fileID: 22424928}
   inspectorActionList: {fileID: 22438620}
@@ -2121,7 +2123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  enableSaveLoad: 0
+  enableSaveLoad: 1
 --- !u!114 &11424674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2526,6 +2528,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   fileName: tribeSave.gd
+  defaultContent: '{{"SanPablo":"True"}, {"IESAzucarera":"False"}, {"IESAzucarera":"False"},
+    {"EmmelinedePankhurst":"False"}, {"UniversidadOuezygin":"False"}, {"lastSlot":"-1"},
+    "slots":[]}'
 --- !u!114 &11437238
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3115,7 +3120,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11436760}
   m_HandleRect: {fileID: 22448772}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3347,7 +3352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EventMask:
     serializedVersion: 2
-    m_Bits: 4294967039
+    m_Bits: 4294967035
 --- !u!114 &11478492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3409,7 +3414,7 @@ MonoBehaviour:
   autoStart: 1
   saveProgress: 1
   debug: 0
-  startQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
+  startQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
   quests:
   - {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
   - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
@@ -8680,9 +8685,9 @@ RectTransform:
   m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 0, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 75}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &22486018
 RectTransform:
   m_ObjectHideFlags: 1
@@ -9423,22 +9428,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!1 &1000010751814358
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 4000011892200982}
-  - 114: {fileID: 114000012941309318}
-  m_Layer: 0
-  m_Name: Light Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1000010761949688
 GameObject:
   m_ObjectHideFlags: 1
@@ -11853,19 +11842,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4000011892200982
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010751814358}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 421594}
-  m_RootOrder: 12
 --- !u!4 &4000011974079096
 Transform:
   m_ObjectHideFlags: 1
@@ -13150,9 +13126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dcc2e072e2307342a5922be2c01ca03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BehaviourAI: 1
-  AvatarActivity: 1
-  Appliance: 1
+  BehaviourAI: 0
+  AvatarActivity: 0
+  Appliance: 0
 --- !u!114 &114000010678187100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17820,25 +17796,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114000012941309318
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010751814358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d73aa93e137b274c8983cc1e9ca0096, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lightShadows: 1
-  lightShadowResolution: 0
-  pilotMesh: {fileID: 0}
-  meshShadows: 1
-  pilotContent: {fileID: 0}
-  applianceShadows: 0
-  avatars: {fileID: 0}
-  avatarShadows: 0
 --- !u!114 &114000012942280714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19501,11 +19458,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 300
+    m_Right: 300
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1

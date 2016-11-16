@@ -7,7 +7,8 @@ public class Quest : ScriptableObject {
 	//Quest step types
 	public enum QuestStepType {
 		Prompt, Popup, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity,
-		ChangeTimeScale, QuestComplete, ControlInterface, Wait
+		ChangeTimeScale, QuestComplete, ControlInterface, Wait, UnlockView, PilotComplete,
+		PilotFailed
 	};
 
 	//Quest events
@@ -18,15 +19,25 @@ public class Quest : ScriptableObject {
 		OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn, AvatarSelected
 	};
 
+	
+
 	public string title;
 	[TextArea(3, 10)]
 	public string description;
 	public string date;
+	public List<Quest.NarrativeCheck> checkList;
 	public Quest nextQuest;
 
 	public List<Quest.QuestStep> questSteps;
 
 	private int _curStep = 0;
+
+	//
+	[System.Serializable]
+	public struct NarrativeCheck {
+		public string description;
+		public bool done;
+	}
 
 	//Definition of a quest step
 	[System.Serializable]
@@ -153,6 +164,13 @@ public class Quest : ScriptableObject {
 	}
 
 	//
+	public void PrevStep() {
+		if(_curStep > 0) {
+			_curStep--;
+		}
+	}
+
+	//
 	public bool IsComplete() {
 		return (_curStep >= questSteps.Count);
 	}
@@ -167,6 +185,18 @@ public class Quest : ScriptableObject {
 	public string ParseAsString(string key) {
 		return JSON.Parse(GetCurrentStep().valueField)[key].Value;
 		//return "";
+	}
+
+	//
+	public Vector2 ParseAsVector2(string key) {
+		if(JSON.Parse(GetCurrentStep().valueField)[key] != null) {
+			float x = JSON.Parse(GetCurrentStep().valueField)[key][0].AsFloat;
+			float y = JSON.Parse(GetCurrentStep().valueField)[key][1].AsFloat;
+
+			return new Vector2(x, y);
+		}
+
+		return Vector2.zero;
 	}
 
 	//
