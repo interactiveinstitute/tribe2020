@@ -537,6 +537,7 @@ public class BehaviourAI : MonoBehaviour
     public void Stop()
     {
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        _agent.SetDestination(transform.position);
         _charController.Move(Vector3.zero, false, false);
     }
 
@@ -1158,7 +1159,7 @@ public class BehaviourAI : MonoBehaviour
         json.Add("tempActivities", EncodeActivityStack());
         //Should be mooore here!
 
-        json.Add("object", JsonUtility.ToJson(this));
+        //json.Add("object", JsonUtility.ToJson(this));
 
         return json;
     }
