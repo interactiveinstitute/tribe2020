@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour{
 	#region Fields
 	public static int currentSlot = -1;
 
+	public bool overrideSlot = false;
     [SerializeField]
     private int saveSlot = -1;
 
@@ -41,7 +42,7 @@ public class SaveManager : MonoBehaviour{
 
     //Callback when interacting with component in editor
     void OnValidate() {
-		if(saveSlot != -1) {
+		if(overrideSlot) {
 			currentSlot = saveSlot;
 		}
     }
@@ -170,7 +171,9 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Save(int slot, bool currentScene = true) {
-		File.WriteAllText(_filePath, _dataClone.ToString());
+		if(currentSlot != -1) {
+			File.WriteAllText(_filePath, _dataClone.ToString());
+		}
 	}
 
 	//
