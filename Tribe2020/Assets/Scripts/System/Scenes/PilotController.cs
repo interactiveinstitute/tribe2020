@@ -568,6 +568,11 @@ public class PilotController : Controller {
 	}
 
 	//
+	public string GetPhrase(string groupKey, string key, int index) {
+		return _localMgr.GetPhrase(groupKey, key, index);
+	}
+
+	//
 	public override void SetTimeScale(int timeScale) {
 		_timeMgr.TimeScale = timeScale;
 	}

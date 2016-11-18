@@ -250,7 +250,7 @@ public class PilotView : View{
 				button.interactable = false;
 			}
 
-			string eemTitle = _controller.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
 			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
 			eemProps.title.text = eemTitle;
 
