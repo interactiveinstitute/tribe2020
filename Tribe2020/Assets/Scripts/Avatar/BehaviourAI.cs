@@ -174,7 +174,7 @@ public class BehaviourAI : MonoBehaviour
                                                                                        //}
                 }
                 break;
-            case AvatarActivity.AvatarState.Sitting:
+            case AvatarActivity.AvatarState.Posing:
                 //Be aware. This SitDown method is another than the one in this class.
                 //_charController.SitDown(); //Sets a boolean in the animator object
                 _charController.Move(Vector3.zero, false, false);
@@ -530,20 +530,23 @@ public class BehaviourAI : MonoBehaviour
 
     void SetAgentDestination(Vector3 position)
     {
-        _agent.SetDestination(position);
+        if (_agent.isActiveAndEnabled)
+        {
+            _agent.SetDestination(position);
+        }
     }
 
     //
     public void Stop()
     {
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
-        _agent.SetDestination(transform.position);
-        _charController.Move(Vector3.zero, false, false);
+        SetAgentDestination(transform.position);
+        //_charController.Move(Vector3.zero, false, false);
     }
 
     public void Wait()
     {
-        GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
         _charController.Move(Vector3.zero, false, false);
     }
 
@@ -649,23 +652,42 @@ public class BehaviourAI : MonoBehaviour
         _agent.Warp(_agent.destination);
     }
 
-    public void SitAt(Affordance affordance, bool isOwned)
+    public void changePoseTo(string pose)
     {
-        if(affordance == null)
+        //Just in case
+        _charController.TurnOffAllBools();
+
+        //save the currentPosition for when standing up again.
+        _savedStandingPosition = transform.position;
+
+        _charController.SetPose(pose);
+    }
+
+    //
+    public void PoseAtCurrentTarget(string pose)
+    {
+        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
+
+        ChangePoseAt(pose, targetObject.GetComponent<Appliance>());
+    }
+
+    public void ChangePoseAt(string pose, Affordance affordance, bool isOwned)
+    {
+        if (affordance == null)
         {
-            DebugManager.LogError("Hey. You gave me a null affordance when trying to sit. What's up with that?! I'll skip to next session", this, this);
+            DebugManager.LogError("Hey. You gave me a null affordance when trying to pose. What's up with that?! I'll skip to next session", this, this);
             GetRunningActivity().NextSession();
         }
         //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
         Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
-        SitAt(appliance);
+        ChangePoseAt(pose, appliance);
     }
 
-    public void SitAt(Appliance appliance)
+    public void ChangePoseAt(string pose, Appliance appliance)
     {
-        if(appliance == null)
+        if (appliance == null)
         {
-            DebugManager.LogError("Didn't get a SitAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
+            DebugManager.LogError("Didn't get a PoseAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
             GetRunningActivity().NextSession();
             return;
         }
@@ -677,72 +699,91 @@ public class BehaviourAI : MonoBehaviour
         _savedStandingPosition = transform.position;
 
         //Get the child  game object with the name Sit Position
-        Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
-        if (sitPosition == null)
+        Transform posePosition = appliance.gameObject.transform.Find("Pose Position");
+        if (posePosition == null)
         {
-            DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, appliance.gameObject, this);
+            DebugManager.LogError("Didn't find a gameobject called Pose Position inside " + appliance.name, appliance.gameObject, this);
         }
         else
         {
             //coord.x = sitPosition.position.x;
             //coord.z = sitPosition.position.z;
             //coord.y = transform.position.y;
-            transform.position = sitPosition.position;//coord;
-            transform.rotation = sitPosition.rotation;
-            Debug.Log("Setting avatar position to sitPosition from appliance object");
+            transform.position = posePosition.position;//coord;
+            transform.rotation = posePosition.rotation;
+            Debug.Log("Setting avatar position to posePosition from appliance object");
         }
-        GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Sitting);
-        _charController.SitDown(); //Sets a boolean in the animator object
-    }
+        GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
 
-    //
-    public void SitAtCurrentTarget()
-    {
-        ////Disable stuff before custom positioning
-        //_agent.enabled = false;
-        //GetComponent<Rigidbody>().isKinematic = true;
 
-        ////save the currentPosition for when standing up again.
-        //_savedStandingPosition = transform.position;
-
-        GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
-
-        SitAt(targetObject.GetComponent<Appliance>());
-
-        ////Let's search for a gameObject called Sit Position
-        //if (targetObject == null)
-        //{
-        //    DebugManager.LogError("_curTargetObject not set!", this);
-        //}
-
-        //Transform sitPosition = targetObject.transform.Find("Sit Position");
-        //if (sitPosition == null)
-        //{
-        //    DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + targetObject.name, this);
-        //}
-        //else
-        //{
-        //    //coord.x = sitPosition.position.x;
-        //    //coord.z = sitPosition.position.z;
-        //    //coord.y = transform.position.y;
-        //    transform.position = sitPosition.position;//coord;
-        //    transform.rotation = sitPosition.rotation;
-        //    Debug.Log("Setting avatar position to sitPosition from appliance object");
-        //}
-        //GetRunningActivity().SetCurrentAvatarState(AvatarState.Sitting);
         //_charController.SitDown(); //Sets a boolean in the animator object
+        changePoseTo(pose);
+        //_charController.SetPose("Sit");
     }
 
-    public void standUp()
+    //public void SitAt(Affordance affordance, bool isOwned)
+    //{
+    //    if(affordance == null)
+    //    {
+    //        DebugManager.LogError("Hey. You gave me a null affordance when trying to sit. What's up with that?! I'll skip to next session", this, this);
+    //        GetRunningActivity().NextSession();
+    //    }
+    //    //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
+    //    Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
+    //    SitAt(appliance);
+    //}
+
+    //public void SitAt(Appliance appliance)
+    //{
+    //    if(appliance == null)
+    //    {
+    //        DebugManager.LogError("Didn't get a SitAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
+    //        GetRunningActivity().NextSession();
+    //        return;
+    //    }
+    //    //Disable stuff before custom positioning
+    //    _agent.enabled = false;
+    //    GetComponent<Rigidbody>().isKinematic = true;
+
+    //    //save the currentPosition for when standing up again.
+    //    _savedStandingPosition = transform.position;
+
+    //    //Get the child  game object with the name Sit Position
+    //    Transform sitPosition = appliance.gameObject.transform.Find("Sit Position");
+    //    if (sitPosition == null)
+    //    {
+    //        DebugManager.LogError("Didn't find a gameobject called Sit Position inside " + appliance.name, appliance.gameObject, this);
+    //    }
+    //    else
+    //    {
+    //        //coord.x = sitPosition.position.x;
+    //        //coord.z = sitPosition.position.z;
+    //        //coord.y = transform.position.y;
+    //        transform.position = sitPosition.position;//coord;
+    //        transform.rotation = sitPosition.rotation;
+    //        Debug.Log("Setting avatar position to sitPosition from appliance object");
+    //    }
+    //    GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Sitting);
+
+
+    //    //_charController.SitDown(); //Sets a boolean in the animator object
+    //    changePoseTo("Sit");
+    //    //_charController.SetPose("Sit");
+    //}
+
+    public void ReturnToIdlePose()
     {
-        DebugManager.Log("Standing up.", this, this);
+        DebugManager.Log("Returning to normal pose.", this, this);
         if (_savedStandingPosition != null)
         {
             transform.position = _savedStandingPosition;
         }
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
-        _charController.StandUp();
+
+        //_charController.TurnOffAllBools();
+        //_charController.StandUp();
+        changePoseTo("Idle");
 
         //We don't set the _curAvatarState here, since standing up is performed before doing other stuffz
 
@@ -931,10 +972,11 @@ public class BehaviourAI : MonoBehaviour
         string activityName = GetRunningActivity().name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
-        if(GetRunningActivity().GetCurrentAvatarState() == AvatarActivity.AvatarState.Sitting)
+        AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
+        if(state == AvatarActivity.AvatarState.Posing)
         {
-            DebugManager.Log("avatar was sitting. Standing up.", this);
-            standUp();
+            DebugManager.Log("avatar was posing. Returning to idle pose.", this);
+            ReturnToIdlePose();
         }
 
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);

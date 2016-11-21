@@ -17,7 +17,7 @@ public class AvatarActivity : ScriptableObject {
     [SerializeField]
     private GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
     [Serializable]
-    public enum AvatarState { Idle, Walking, Sitting };
+    public enum AvatarState { Idle, Walking, Posing };
     [SerializeField]
     AvatarState _curAvatarState = AvatarState.Idle;
 
@@ -31,7 +31,7 @@ public class AvatarActivity : ScriptableObject {
     //public double endTime = 0;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff };
+    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
@@ -141,11 +141,11 @@ public class AvatarActivity : ScriptableObject {
                 }
                 _ai.Wait();
 				break;
-            case SessionType.SitDown:
-                _ai.SitAt(session.requiredAffordance, session.avatarOwnsTarget);
-                break;
+            //case SessionType.SitDown:
+            //    _ai.SitAt(session.requiredAffordance, session.avatarOwnsTarget);
+            //    break;
 			case SessionType.WaitUntilEnd:
-				_ai.Stop();
+				_ai.Wait();
 				break;
 			case SessionType.WalkTo:
                 if(session.appliance != null)
@@ -189,6 +189,24 @@ public class AvatarActivity : ScriptableObject {
                 {
                     _ai.TurnOff(session.requiredAffordance);
                 }
+
+                NextSession();
+                break;
+            case SessionType.ChangePose:
+                if(session.parameter == null || session.parameter == "")
+                {
+                    DebugManager.LogError("No parameter supplied for setting pose", this, this);
+                }
+                _ai.changePoseTo(session.parameter);
+
+                NextSession();
+                break;
+            case SessionType.ChangePoseAt:
+                if (session.parameter == null || session.parameter == "")
+                {
+                    DebugManager.LogError("No parameter supplied for setting pose", this, this);
+                }
+                _ai.ChangePoseAt(session.parameter, session.requiredAffordance, false);
 
                 NextSession();
                 break;
@@ -256,10 +274,10 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we were sitting down AND we are gonna be moving somewhere, we should do that standing up!
-            if(_curAvatarState == AvatarState.Sitting && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
+            //If we were posing down AND we are gonna be moving somewhere, we should do that standing up!
+            if(_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
             {
-                _ai.standUp();
+                _ai.ReturnToIdlePose();
             }
             //Debug.Log("starting session" + sessions[_currSession].title);
             StartSession(GetSessionAtIndex(_currSession));

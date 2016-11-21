@@ -43,15 +43,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
 		}
 
-        public void SetSitState(bool sit)
-        {
-            m_Sitting = sit;
-        }
+        //public void SetSitState(bool sit)
+        //{
+        //    m_Sitting = sit;
+        //}
 
-        public void SitDown()
-        {
-            m_Sitting = true;
-        }
+        //public void SitDown()
+        //{
+        //    m_Sitting = true;
+        //}
 
         public void StandUp()
         {
@@ -84,51 +84,75 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				HandleAirborneMovement();
 			}
 
-			ScaleCapsuleForCrouching(crouch);
-			PreventStandingInLowHeadroom();
+			//ScaleCapsuleForCrouching(crouch);
+			//PreventStandingInLowHeadroom();
 
 			// send input and other state parameters to the animator
 			UpdateAnimator(move);
 		}
 
 
-		void ScaleCapsuleForCrouching(bool crouch)
-		{
-			if (m_IsGrounded && crouch)
-			{
-				if (m_Crouching) return;
-				m_Capsule.height = m_Capsule.height / 2f;
-				m_Capsule.center = m_Capsule.center / 2f;
-				m_Crouching = true;
-			}
-			else
-			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
-				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-				{
-					m_Crouching = true;
-					return;
-				}
-				m_Capsule.height = m_CapsuleHeight;
-				m_Capsule.center = m_CapsuleCenter;
-				m_Crouching = false;
-			}
-		}
+		//void ScaleCapsuleForCrouching(bool crouch)
+		//{
+		//	if (m_IsGrounded && crouch)
+		//	{
+		//		if (m_Crouching) return;
+		//		m_Capsule.height = m_Capsule.height / 2f;
+		//		m_Capsule.center = m_Capsule.center / 2f;
+		//		m_Crouching = true;
+		//	}
+		//	else
+		//	{
+		//		Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+		//		float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
+		//		if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+		//		{
+		//			m_Crouching = true;
+		//			return;
+		//		}
+		//		m_Capsule.height = m_CapsuleHeight;
+		//		m_Capsule.center = m_CapsuleCenter;
+		//		m_Crouching = false;
+		//	}
+		//}
 
-		void PreventStandingInLowHeadroom()
-		{
-			// prevent standing up in crouch-only zones
-			if (!m_Crouching)
-			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
-				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-				{
-					m_Crouching = true;
-				}
-			}
-		}
+		//void PreventStandingInLowHeadroom()
+		//{
+		//	// prevent standing up in crouch-only zones
+		//	if (!m_Crouching)
+		//	{
+		//		Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+		//		float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
+		//		if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+		//		{
+		//			m_Crouching = true;
+		//		}
+		//	}
+		//}
+
+        public void SetPose(string pose)
+        {
+            //If we want to set no pose, we just deactivate all bools.
+            if (pose == "" || pose == "Stand" || pose == "Idle")
+            {
+                TurnOffAllBools();
+                return;//Bail out!
+            }
+            int poseHash = Animator.StringToHash(pose);
+            m_Animator.SetBool(poseHash, true);
+        }
+
+        public void TurnOffAllBools()
+        {
+            int sit = Animator.StringToHash("Sit");
+            m_Animator.SetBool(sit, false);
+            int chill = Animator.StringToHash("ChillOut");
+            m_Animator.SetBool(chill, false);
+            int computer = Animator.StringToHash("WorkComputer");
+            m_Animator.SetBool(computer, false);
+            int coffee = Animator.StringToHash("DrinkCoffee");
+            m_Animator.SetBool(coffee, false);
+        }
 
 
 		void UpdateAnimator(Vector3 move)
@@ -136,8 +160,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// update the animator parameters
 			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
-			m_Animator.SetBool("Crouch", m_Crouching);
-            m_Animator.SetBool("Sit", m_Sitting);
+			//m_Animator.SetBool("Crouch", m_Crouching);
+            //m_Animator.SetBool("Sit", m_Sitting);
 			m_Animator.SetBool("OnGround", m_IsGrounded);
 			if (!m_IsGrounded)
 			{
