@@ -11,6 +11,7 @@ public class Language : ScriptableObject {
 	public struct KeyValue {
 		public string key;
 		public string value;
+		public List<string> values;
 	}
 
 	//Definition of a quest step

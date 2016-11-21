@@ -60,6 +60,20 @@ public class LocalisationManager : MonoBehaviour {
 	}
 
 	//
+	public string GetPhrase(string group, string key, int index) {
+		foreach(Language.ValueGroup g in curLanguage.groups) {
+			if(g.title == group) {
+				foreach(Language.KeyValue keyValue in g.values) {
+					if(key == keyValue.key) {
+						return keyValue.values[index];
+					}
+				}
+			}
+		}
+		return "";
+	}
+
+	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 

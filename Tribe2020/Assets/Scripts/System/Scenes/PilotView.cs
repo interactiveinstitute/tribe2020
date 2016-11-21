@@ -250,7 +250,7 @@ public class PilotView : View{
 				button.interactable = false;
 			}
 
-			string eemTitle = _controller.GetPhrase("EEM." + eem.category + ":" + curEEM.name + "_Title");
+			string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
 			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
 			eemProps.title.text = eemTitle;
 
@@ -267,7 +267,7 @@ public class PilotView : View{
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
 
-		messageUI.transform.GetChild(1).GetChild(1).gameObject.SetActive(showOkButton);
+		messageUI.transform.GetChild(2).gameObject.SetActive(showOkButton);
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
