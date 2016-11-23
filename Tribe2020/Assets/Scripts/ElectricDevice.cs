@@ -40,6 +40,10 @@ public class ElectricDevice : ElectricMeter {
 	[Tooltip("For backward compability with ElectricMeter.")]
 	public int runlevelUnpowered = 0;
 
+    //public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
+    [Tooltip("What kind of avatar energyefficiency is this device relates to")]
+    public AvatarStats.Efficiencies relatedEfficiency;
+
     //[Header("Sound")]
     private AudioSource noisesource;
     private Material[] default_materials;

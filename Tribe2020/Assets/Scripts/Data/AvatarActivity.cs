@@ -46,7 +46,7 @@ public class AvatarActivity : ScriptableObject {
 	[System.Serializable]
 	public class Session {
 		public string title;
-		public float probability = 1f;
+		//public float probability = 1f;
 		public SessionType type;
         public Appliance appliance = null;
 		//public Target target;
@@ -54,9 +54,9 @@ public class AvatarActivity : ScriptableObject {
 		public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
-		public EfficiencyType relatedEfficieny;
-		public CheckType checkType;
-		public float efficienyLevel;
+		//public EfficiencyType relatedEfficieny;
+		//public CheckType checkType;
+		//public float efficienyLevel;
 	}
 
 	//public virtual void Init(BehaviourAI ai) {

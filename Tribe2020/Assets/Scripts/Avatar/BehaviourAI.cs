@@ -961,7 +961,14 @@ public class BehaviourAI : MonoBehaviour
         //Check if we should turn off stuff when ending this activity.
         foreach(ElectricDevice device in GetRunningActivity().turnedOnDevices)
         {
-            device.SetRunlevel(0);
+            AvatarStats.Efficiencies relatedEfficiency = device.relatedEfficiency;
+            if(_stats.TestEnergyEfficiency(relatedEfficiency)){
+                DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
+                device.SetRunlevel(0);
+            }else
+            {
+                DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
+            }
             DebugManager.Log("Turning off device", device, this);
         }
 
