@@ -53,7 +53,7 @@ GameObject:
   - 4: {fileID: 4000010474060234}
   - 114: {fileID: 114000011413048882}
   m_Layer: 0
-  m_Name: Sit Position
+  m_Name: Pose Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,6 +134,8 @@ GameObject:
   - 4: {fileID: 4000012857595758}
   - 65: {fileID: 65000011655945576}
   - 114: {fileID: 114000011412522144}
+  - 208: {fileID: 208000012551910284}
+  - 114: {fileID: 114000010596342838}
   m_Layer: 0
   m_Name: Help Desk
   m_TagString: Untagged
@@ -202,6 +204,8 @@ GameObject:
   - 33: {fileID: 33000011805149492}
   - 23: {fileID: 23000014279197124}
   - 114: {fileID: 114000010164195714}
+  - 114: {fileID: 114000014064388960}
+  - 114: {fileID: 114000011425202566}
   m_Layer: 0
   m_Name: MonitorCRT__Body
   m_TagString: Untagged
@@ -273,7 +277,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010498237918}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.006, y: 0.57, z: -0.602}
+  m_LocalPosition: {x: 0.023, y: 0, z: -0.454}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -325,7 +329,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011727192594}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.901, y: 0.01, z: -0.26}
+  m_LocalPosition: {x: 1.452, y: 0.01, z: -0.364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -350,8 +354,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011897121486}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.86, y: 0.84, z: 0}
+  m_LocalRotation: {x: -0, y: 0.99532276, z: -0, w: 0.09660581}
+  m_LocalPosition: {x: -2.9929545, y: 0, z: 5.3466415}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -701,7 +705,7 @@ MonoBehaviour:
     Values: []
     Texts: []
   PowerSource: {fileID: 0}
-  AutomaticallyFindSource: 0
+  AutomaticallyFindSource: 1
   AlwaysPowered: 0
   GivesPower: 1
   Powering: []
@@ -736,6 +740,18 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+--- !u!114 &114000010596342838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011897121486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: b5e70204-f46f-4577-94ea-3dc2070acfcb
 --- !u!114 &114000010963992804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -768,7 +784,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0292db39ee412524ca0cb9c9bddbe372, type: 2}
   - {fileID: 11400000, guid: 838921d9fdf24a74bb83332e190f7035, type: 2}
   avatarAffordances:
-  - {fileID: 11400000, guid: 2b674d384f0bae645832a8a43aab1549, type: 2}
+  - {fileID: 11400000, guid: e1e99a2f4148b894a99f36aa9602c8da, type: 2}
   - {fileID: 11400000, guid: 73ee974ce2ca8b645aee4d4aaf2ddf09, type: 2}
   - {fileID: 11400000, guid: 27b4fe04e6657834493997b45069f59a, type: 2}
   owners:
@@ -790,6 +806,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000011425202566
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013708613898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: e90b9980-bbfc-43f9-afb8-5da3fa884501
 --- !u!114 &114000011846861906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -828,3 +856,41 @@ MonoBehaviour:
   runlevelOn: 0
   runlevelOff: 0
   runlevelUnpowered: 0
+--- !u!114 &114000014064388960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013708613898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 
+  description: 
+  playerAffordances: []
+  avatarAffordances:
+  - {fileID: 11400000, guid: 746f09dfe276fdb4eb9ca243a0f50469, type: 2}
+  owners: []
+  appliedEEMs: []
+  interactionPos: {x: 0, y: 0, z: 0}
+  cashProduction: 0
+  comfortPorduction: 0
+  possibleEEMs: []
+  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+--- !u!208 &208000012551910284
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011897121486}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

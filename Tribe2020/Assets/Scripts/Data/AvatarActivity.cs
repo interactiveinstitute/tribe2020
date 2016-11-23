@@ -20,6 +20,8 @@ public class AvatarActivity : ScriptableObject {
     public enum AvatarState { Idle, Walking, Posing };
     [SerializeField]
     AvatarState _curAvatarState = AvatarState.Idle;
+    [SerializeField]
+    public List<ElectricDevice> turnedOnDevices;
 
     [SerializeField]
 	private float _delay = 0;
@@ -274,7 +276,7 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we were posing down AND we are gonna be moving somewhere, we should do that standing up!
+            //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
             if(_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
             {
                 _ai.ReturnToIdlePose();

@@ -27,8 +27,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float m_CapsuleHeight;
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
-		bool m_Crouching;
-        bool m_Sitting;
+		//bool m_Crouching;
+  //      bool m_Sitting;
 
 
 		void Start()
@@ -53,10 +53,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         //    m_Sitting = true;
         //}
 
-        public void StandUp()
-        {
-            m_Sitting = false;
-        }
+        //public void StandUp()
+        //{
+        //    m_Sitting = false;
+        //}
 
 
 		public void Move(Vector3 move, bool crouch, bool jump)

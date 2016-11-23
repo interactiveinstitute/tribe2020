@@ -97,7 +97,7 @@ public class BehaviourAI : MonoBehaviour
 
         if (_isControlled)
         {
-            //Oh snap! This avatar is controlled directly. Let's not interfere with that.
+            //Oh snap! This avatar is controlled directly. Let's not care about activities for now then.
             UpdateCharController();
             return;
         }
@@ -221,14 +221,7 @@ public class BehaviourAI : MonoBehaviour
         }
     }
 
-    //Erik claims that this part might be related to have the avatar behave correctly when making jumps in time.
-    //I'm not convinced though... It seems to run only once when initiating an avatar, 
-    //so the only chance it might relate to jumps in time is if _scheduleIndex is somehow
-    //set from save on startup (now it's always 0 when entering the function, no?).
-    //And my understanding is that the schedule is not part of save?
-    //I'm now changing it to always find the closest upcoming activity in the schedule and choose it as _curActivity...
-
-    //Soooo. What this function is doing now is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
+    //Soooo. What this function is doing is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
     public void SyncSchedule()
     {
         double curTime = _timeMgr.GetTotalSeconds();
@@ -293,12 +286,6 @@ public class BehaviourAI : MonoBehaviour
                 curActivityDayOffset = -1;
                 nxtActivityDayOffset = 0;
             }
-            //ok. We now have the current index picked. Let's set it as the _curActivity and the adjacent activities as prev and next.
-            //To achieve that we must first calculate some timstamps and stuff...
-
-            ////Hm. I change this now to instead set the next upcoming activity as _nextActivity (instead of _curActivity)!!! /Gunnar
-            ////Decrement _scheduleIndex by 1 before we do all the stuffzz
-            //_scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
 
             //Setup the scheduleIndices.
             int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
@@ -307,24 +294,6 @@ public class BehaviourAI : MonoBehaviour
             ScheduleItem prevItem = schedule[prevIndex];
             ScheduleItem curItem = schedule[_scheduleIndex];
             ScheduleItem nxtItem = schedule[nxtIndex];
-
-            //Set dayoffsets
-            //Will be set to 1 if the current activity is the last in schedule.
-            //If that's the case we want to set the startTime for next activity to be on the next day
-            //int nxtActivityDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);//OLD version
-
-            //// set day offset for current activity. If it's the last index that means the curactivity is actually from yesterday. And nxt activity is today. This is because we compare start times.
-            //int curActivityDayOffset = 0;
-            //if (_scheduleIndex + 1 == schedule.Length)
-            //{
-            //    curActivityDayOffset = -1;
-            //}
-            //int nxtActivityDayOffset = 0;
-
-            ////If current is at index 0 or curactivity has dayoffset than previous is the day before.
-            //int prevActivityDayOffset = 0;
-            ////Is the prevActivity started the previous day?
-            //if (_scheduleIndex == 0) { prevActivityDayOffset = -1; }
 
             //Determine startTime for prevActivity
             double prevStartTime = 0;
@@ -364,8 +333,7 @@ public class BehaviourAI : MonoBehaviour
             {
                 SetNextActivity(nxtItem.activity);
             }
-
-            //DebugManager.Log("startActivity set for " + name + ". It's " + curItem.activity + " with startTimeStamp " + startTime, this);
+            
             DebugManager.Log("syncSchedule finished. timestamp is: " + _timeMgr.GetTotalSeconds(), this.gameObject, this);
             return;
         }
@@ -409,17 +377,6 @@ public class BehaviourAI : MonoBehaviour
         _prevActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _prevActivity.Init(this);
     }
-
-    //
-    //public void StartActivity(AvatarActivity activity)
-    //{
-    //    //Debug.Log(name + ".StartActivity(" + activity + ") with end time " + _timeMgr.time + " + " + (60 * 3));
-        
-    //    //activity.endTime = _timeMgr.time + 60 * 3;
-    //    _curActivity = activity;
-    //    _curActivity.Init(this);
-    //    _curActivity.Start();
-    //}
 
     public void StartTemporaryActivity(AvatarActivity activity)
     {
@@ -837,6 +794,8 @@ public class BehaviourAI : MonoBehaviour
         }
 
         device.SetRunlevel(level);
+        //Add this to the list of devices that the avatar turned on.
+        GetRunningActivity().turnedOnDevices.Add(device);
     }
 
     public void TurnOn(Affordance affordance, bool userOwnage = false)
@@ -999,6 +958,15 @@ public class BehaviourAI : MonoBehaviour
             return;
         }
 
+        //Check if we should turn off stuff when ending this activity.
+        foreach(ElectricDevice device in GetRunningActivity().turnedOnDevices)
+        {
+            device.SetRunlevel(0);
+            DebugManager.Log("Turning off device", device, this);
+        }
+
+        //Check if we should turn off stuff before we leave.
+
         //Notify the gamecontroller that we finished this activity!
         _controller.OnAvatarActivityComplete(_curActivity.title);
 
@@ -1010,6 +978,8 @@ public class BehaviourAI : MonoBehaviour
             _curActivity.Start();
         }
     }
+
+    //This will get called when activity is about to get finished. We want to check if the avatar is ernegy efficient enough to turn off the things that are turned on.
 
     //This will get called when avatar (that have rigidbody and collider) collides with a collider. <--- wow, so many colliding words in one sentence!!!
     //Note that OnTriggerExit of old zone could be called AFTER OnTriggerEnter for new zone, hence all checks are done when entering a new room/zone and not when exiting /Martin
@@ -1097,7 +1067,7 @@ public class BehaviourAI : MonoBehaviour
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
         AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
-        activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+        activity.Init(this);//Make sure _curSession is 0 before we start injecting sessions into the activity
 
         activity.InsertSession(session);
 
