@@ -9,6 +9,7 @@ public class AvatarActivity : ScriptableObject {
 	private GameTime _timeMgr;
     
 	public string title;
+    //[HideInInspector] Apparently can't do that here, since it'll also affect the custom editor. Instead we're manually excluding this in the editor script (AvatarActivityEditor).
 	public List<Session> sessions;
 
     [SerializeField]
