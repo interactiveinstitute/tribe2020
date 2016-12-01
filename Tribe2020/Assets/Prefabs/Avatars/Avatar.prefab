@@ -62,6 +62,7 @@ GameObject:
   - 114: {fileID: 11482754}
   - 114: {fileID: 11496632}
   - 114: {fileID: 114000011139800278}
+  - 114: {fileID: 114000011668452736}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Avatar
@@ -815,10 +816,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108742}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.45, y: -0.87, z: 10.967}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.231, y: -0.87, z: -3.652}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
   m_Children:
   - {fileID: 463484}
   - {fileID: 224000012183497944}
@@ -1220,18 +1221,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b4dd0f9b1f2d04992c232b1863e3ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _curActivityState: 0
+  _controller: {fileID: 0}
+  _stats: {fileID: 0}
+  _savedStandingPosition: {x: 0, y: 0, z: 0}
+  _curActivity: {fileID: 0}
+  _nextActivity: {fileID: 0}
+  _prevActivity: {fileID: 0}
+  _isControlled: 0
+  _isSimulating: 0
   schedule:
-  - time: 08:30
-    activity: {fileID: 11400000, guid: 06b1be30471c43a46b052cf354aca41d, type: 2}
-  - time: 09:30
+  - time: 07:00
+    activity: {fileID: 11400000, guid: 4edaa14fc7ce8484ebb47c318e4c6e50, type: 2}
+  - time: 07:01
     activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
-  - time: 09:45
-    activity: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5, type: 2}
-  - time: 09:50
-    activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
-  - time: 16:00
-    activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
+  _scheduleIndex: 0
+  prefab: {fileID: 0}
 --- !u!114 &11493526
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1243,13 +1247,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e424426b3183249802db809d698863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarName: Bob Alison
   conviction: 100
   energy: 60
-  lightingEfficieny: 1
-  warmingEfficieny: 1
-  coolingEfficieny: 1
-  deviceEfficieny: 1
+  maxEfficiencyValue: 1
+  lightingEfficiency: 0.9
+  warmingEfficiency: 1
+  coolingEfficiency: 1
+  deviceEfficiency: 1
   attitudes: []
 --- !u!114 &11496632
 MonoBehaviour:
@@ -1262,17 +1266,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Bob Alison
+  title: No-Walkie Talkie
   description: Anton is passion for energy issues is only matched by his love for
     tinkering in his "man cave".
   playerAffordances:
-  - {fileID: 11400000, guid: dc02b731afc6747488f8f1e589578827, type: 2}
-  avatarAffordances: 
+  - {fileID: 0}
+  avatarAffordances: []
   owners: []
-  performedActions: []
+  appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   cashProduction: 0
   comfortPorduction: 0
+  possibleEEMs: []
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!137 &13706756
 SkinnedMeshRenderer:
@@ -1281,7 +1286,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129768}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1353,7 +1358,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 114810}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1425,7 +1430,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 192742}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1497,7 +1502,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144674}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1569,7 +1574,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 156110}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1641,7 +1646,7 @@ SkinnedMeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 137590}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -1868,6 +1873,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 1
+--- !u!114 &114000011668452736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f55173da3b516a4a901882709f085cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  greetings: []
+  reactions: []
+  topics: []
+  attitudes: []
 --- !u!114 &114000012352551280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1958,8 +1978,8 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108742}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
+  m_IsTrigger: 1
+  m_Enabled: 1
   m_Radius: 0.3
   m_Height: 1.6
   m_Direction: 1

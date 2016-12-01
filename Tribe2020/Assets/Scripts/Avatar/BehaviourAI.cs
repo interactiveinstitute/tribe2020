@@ -862,6 +862,21 @@ public class BehaviourAI : MonoBehaviour
 
     }
 
+    public void InteractWithAvatar(Affordance affordance)
+    {
+        //Appliance targetAppliance = FindNearestAppliance(target, false);
+        BehaviourAI targetAvatar = GetAvatarForAffordance(affordance);
+        InteractWithAvatar(targetAvatar);
+	}
+
+    public void InteractWithAvatar(BehaviourAI targetAvatar)
+    {
+        if (targetAvatar != null)
+        {
+            TalkToOtherAvatar(targetAvatar); //Should perhaps check if type is Discuss
+        }
+    }
+
     //// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
     //public Appliance FindNearestAppliance(AvatarActivity.Target affordance, bool isOwned)
     //{
@@ -923,6 +938,39 @@ public class BehaviourAI : MonoBehaviour
 
         return targetAppliance;
     }
+
+    public BehaviourAI GetAvatarForAffordance(Affordance affordance)
+    {
+        BehaviourAI targetAvatar = null;
+        float minDist = float.MaxValue;
+
+        foreach (GameObject avatar in GameObject.FindGameObjectsWithTag("Avatar"))
+        {
+            if (avatar != gameObject) //Ignore yourself - find another avatar
+            {
+                List<Affordance> affordances = avatar.GetComponent<Appliance>().avatarAffordances;
+                if (affordances.Contains(affordance))
+                {
+                    float dist = Vector3.Distance(transform.position, avatar.transform.position);
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        targetAvatar = avatar.GetComponent<BehaviourAI>();
+                    }
+                }
+            }
+        }
+
+        if (targetAvatar == null)
+        {
+            DebugManager.LogError(name + " could not find an avatar with affordance: " + affordance.ToString(), this);
+        }
+
+        DebugManager.Log("Min dist avatar: ", targetAvatar, this);
+
+        return targetAvatar;
+    }
+
 
     //
     public void OnActivityOver()
@@ -998,22 +1046,10 @@ public class BehaviourAI : MonoBehaviour
             //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
             if (other.GetComponent<Room>() != _curRoom)
             {
-                if (_curRoom != null) //Is null when game starts
-                {
-                    //Exiting current room
-                    DebugManager.Log(name + " exited current room " + _curRoom, other.gameObject, this);
-                    _curRoom.OnAvatarExit(this); //Decrease person count in room
-                }
 
-                //Entering new room
-                DebugManager.Log(name + " entered new room " + other.name, other.gameObject, this);
-                _curRoom = other.GetComponent<Room>();
-                _curRoom.OnAvatarEnter(this); //Increase person count in room
-
-                if (GetRunningActivity().GetCurrentTargetObject() != null && _curRoom.IsObjectInRoom(GetRunningActivity().GetCurrentTargetObject()))
-                {
-                    CheckLighting(AvatarActivity.SessionType.TurnOn);
-                }
+                OnExitCurrentRoom();
+                OnEnterNewRoom(other.GetComponent<Room>());
+                
             }
         }
     }
@@ -1021,6 +1057,29 @@ public class BehaviourAI : MonoBehaviour
     void OnWalkToOtherRoom()
     {
         _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
+    }
+
+    void OnEnterNewRoom(Room room)
+    {
+        //Entering new room
+        DebugManager.Log(name + " entered new room " + room.name, room.gameObject, this);
+        _curRoom = room;
+        _curRoom.OnAvatarEnter(this); //Increase person count in room
+
+        if (GetRunningActivity().GetCurrentTargetObject() != null && _curRoom.IsObjectInRoom(GetRunningActivity().GetCurrentTargetObject()))
+        {
+            CheckLighting(AvatarActivity.SessionType.TurnOn);
+        }
+    }
+
+    void OnExitCurrentRoom()
+    {
+        if (_curRoom != null) //Is null when game starts
+        {
+            //Exiting current room
+            DebugManager.Log(name + " exited current room " + _curRoom, _curRoom.gameObject, this);
+            _curRoom.OnAvatarExit(this); //Decrease person count in room
+        }
     }
 
     public void CheckLighting(AvatarActivity.SessionType wantedAction)
@@ -1050,26 +1109,66 @@ public class BehaviourAI : MonoBehaviour
         }
     }
 
-    
+    void TalkToOtherAvatar(BehaviourAI other, AvatarSpeech.speechType speechType = AvatarSpeech.speechType.greeting, int count = 0)
+    {
+        DebugManager.Log(name + ": " + GetComponent<AvatarSpeech>().GetLine(speechType), gameObject, this);
+        StartCoroutine(other.ListenToOtherAvatar(this, speechType, ++count));
+    }
 
-    //
-    //public void CheckLighting(GameObject device)
-    //{
-    //    Room deviceRoom = device.GetComponentInParent<Room>();
-    //    if (deviceRoom)
-    //    {
-    //        if (deviceRoom.lux < 1)
-    //        {
-    //            Appliance lightSwitch = deviceRoom.GetLightSwitch();
-    //            if (lightSwitch)
-    //            {
-    //                QuickTurnLightOn(lightSwitch);
-    //            }
-    //        }
-    //    }
-    //}
+    public System.Collections.IEnumerator ListenToOtherAvatar(BehaviourAI other, AvatarSpeech.speechType speechType, int count)
+    {
+        bool continueTalking = false;
+        AvatarSpeech.speechType newSpeechType = speechType;
+        int r;
 
-    //
+        switch (speechType)
+        {
+            case AvatarSpeech.speechType.greeting:
+                if (count >= 2)
+                {
+                    newSpeechType = AvatarSpeech.speechType.topic;
+                }
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.topic:
+                newSpeechType = AvatarSpeech.speechType.reaction;
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.reaction:
+                r = UnityEngine.Random.Range(0, 2);
+                newSpeechType = r == 0 ? AvatarSpeech.speechType.topic : AvatarSpeech.speechType.question;
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.question:
+                newSpeechType = AvatarSpeech.speechType.answer;
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.answer:
+                r = UnityEngine.Random.Range(0, 2);
+                newSpeechType = r == 0 ? AvatarSpeech.speechType.topic : AvatarSpeech.speechType.question;
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.goodbye:
+                newSpeechType = AvatarSpeech.speechType.goodbyeFinal;
+                continueTalking = true;
+                break;
+            case AvatarSpeech.speechType.goodbyeFinal:
+                continueTalking = false;
+                break;
+        }
+
+        //Should I say goodbye
+        if(count > 10 && UnityEngine.Random.value > 0.75f)
+        {
+            newSpeechType = AvatarSpeech.speechType.goodbye;
+        }
+
+        if (continueTalking)
+        {
+            yield return new WaitForSeconds(2);
+            TalkToOtherAvatar(other, newSpeechType, count);
+        }
+    }
 
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
