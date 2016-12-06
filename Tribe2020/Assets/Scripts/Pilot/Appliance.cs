@@ -37,8 +37,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_ctrlMgr = PilotController.GetInstance();
 
 		_harvestButton = Instantiate(harvestButtonRef) as GameObject;
-		_harvestButton.transform.position = transform.position + Vector3.up * 1.5f;
-		_harvestButton.transform.SetParent(transform);
+		_harvestButton.transform.SetParent(transform, false);
+		_harvestButton.transform.localPosition = Vector3.up * 0.5f;
 
 		_harvestButton.GetComponentInChildren<Button>().
 				onClick.AddListener(() => _ctrlMgr.OnHarvestTap(_harvestButton));
