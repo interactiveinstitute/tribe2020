@@ -22,183 +22,420 @@ MonoBehaviour:
   - description: Perform your first measure
     done: 0
   nextQuest: {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
-  questSteps:
-  - title: Prompt.So this is San Pablo
+  steps:
+  - title: 'Prompt.So this is the San Pablo '
     type: 0
-    inputState: 1
-    valueField: 'F. Shaman: So this is the San Pablo office building. Looks great,
-      I wonder if it''s energy efficient as well.'
+    message: So this is the San Pablo office building. Looks great, I wonder if it's
+      energy efficient as well. Well!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Play Animation.Swipe
+    inputState: 1
+  - title: PlayAnimation.Swipe
     type: 3
-    inputState: 0
-    valueField: Swipe
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "\x1A\x02"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Popup.Move around
+    inputState: 13
+  - title: Popup.Let's have a look around.
     type: 1
-    inputState: 2
-    valueField: 'F. Shaman: Let''s have a look around. Swipe the screen to move to
-      another view.'
+    message: Let's have a look around. Swipe the screen to move to another view.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "E\x02"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 2
     conditionField: 
-  - title: Animation.MarkViewTitle
+    inputState: 2
+  - title: PlayAnimation.HideAll
     type: 3
-    inputState: 0
-    valueField: MarkViewTitle
+    message: Let's have a look around. Swipe the screen to move to another view.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "E\x02"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Prompt.ViewTitle
+    inputState: 13
+  - title: Prompt.To view the whole buildin
     type: 0
-    inputState: 1
-    valueField: F. Shaman. I see, how charming! The name of the current view can be
-      seen in the center top of the screen.
+    message: To view the whole building, press the "pilot button"
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkPilot
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "p\x02"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Animation.MarkTime
+    inputState: 1
+  - title: PlayAnimation.MarkPilot
     type: 3
-    inputState: 0
-    valueField: Tutorial_MarkTime
+    message: 'F. Shaman: Let''s have a look around. Swipe the screen to move to another
+      view.'
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkPilot
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "p\x02"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
+    condition: 29
+    conditionField: 
+    inputState: 15
+  - title: PlayAnimation.MarkViewTitle
+    type: 3
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkViewTitle
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Prompt.MarkTime
+    inputState: 13
+  - title: 'Prompt.I see, how charming! The '
     type: 0
-    inputState: 1
-    valueField: 'F. Shaman: There is nobody around at the moment. I suppose it''s
-      a bit early still. People should start dropping in around 8:00.'
+    message: I see, how charming! The name of the current view can be seen in the
+      center top of the screen.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Animation.Mark Energy Panel
+    inputState: 1
+  - title: PlayAnimation.Tutorial_MarkTime
     type: 3
-    inputState: 0
-    valueField: MarkEnergyPanel
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Tutorial_MarkTime
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "\x1C\x03"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Prompt.EnergyPanel
+    inputState: 13
+  - title: Prompt.There is nobody around at
+    type: 0
+    message: There is nobody around at the moment. I suppose it's a bit early still.
+      People should start dropping in around 8:00.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "G\x03"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: PlayAnimation.MarkEnergyPanel
+    type: 3
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkEnergyPanel
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "r\x03"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: 'Popup.Let''s have a look at the '
     type: 1
-    inputState: 8
-    valueField: 'F. Shaman: Let''s have a look at the energy status of this view.'
+    message: Let's have a look at the energy status of this view.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 22
     conditionField: 
-  - title: Animation.Hide
+    inputState: 8
+  - title: PlayAnimation.HideAll
     type: 3
-    inputState: 0
-    valueField: HideAll
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Prompt.EnergyPanel
+    inputState: 13
+  - title: Prompt.This is a nifty tool I us
     type: 0
-    inputState: 1
-    valueField: 'F. Shaman: This is a nifty tool I use to see how energy efficient
-      a certain area is.'
+    message: This is a nifty tool I use to see how much energy and gas is being consumed
+      in this area.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Prompt.EnergyGraph
-    type: 0
     inputState: 1
-    valueField: 'F. Shaman: The top graph shows the energy consumption in the current
-      view...'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 1
-    conditionField: 
-  - title: Prompt.GasGraph
-    type: 0
-    inputState: 1
-    valueField: 'F. Shaman: The center graph shows the gas consumption in relation
-      to where I''m looking...'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 1
-    conditionField: 
-  - title: Prompt.CO2Graph
-    type: 0
-    inputState: 1
-    valueField: 'F. Shaman: Finally, the bottom graph shows how much CO2 emissions
-      this place have managed to reduce.'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 1
-    conditionField: 
-  - title: Prompt.CO2Emissions
-    type: 0
-    inputState: 1
-    valueField: 'F. Shaman: CO2 is an important factor. I need to reduce the emission
-      by 20 percent until year 2020, or else...'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 1
-    conditionField: 
-  - title: Prompt.LetsNotThink
-    type: 0
-    inputState: 1
-    valueField: 'F. Shaman: Well, let''s not think about that. :)'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 1
-    conditionField: 
-  - title: Control Interface.Hide Inspector
+  - title: ControlInterface.{id:inspector, action:hid
     type: 9
-    inputState: 0
-    valueField: '{id:inspector, action:hide}'
+    message: This is a nifty tool I use to see how much energy and gas is being consumed
+      in this area.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
     condition: 0
     conditionField: 
-  - title: Prompt.Shock
+    inputState: 13
+  - title: Prompt.Let's head back inside
     type: 0
-    inputState: 1
-    valueField: '...!'
+    message: Let's head back inside
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkGridView
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Popup.TurnOffLight
-    type: 1
-    inputState: 10
-    valueField: 'F. Shaman: Oh my! Someone left the light on over the night. What
-      a waste! Let''s switch it off.'
+    inputState: 1
+  - title: PlayAnimation.MarkGridView
+    type: 3
+    message: This is a nifty tool I use to see how much energy and gas is being consumed
+      in this area.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkGridView
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
+    condition: 30
+    conditionField: 
+    inputState: 16
+  - title: PlayAnimation.HideAll
+    type: 3
+    message: Let's head back inside
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Prompt.What's this!? Someone for
+    type: 0
+    message: What's this!? Someone forgot to turn off the light! Let's switch it off.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "I\x04"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: Wait
+    type: 10
+    message: Let's switch it off.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "t\x04"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
     condition: 26
     conditionField: 
-  - title: Prompt.TurningOffLights
-    type: 0
-    inputState: 1
-    valueField: 'F. Shaman: If I am to make this place more efficient I will have
-      to teach the occupants to turn off the lights after themselves.'
+    inputState: 10
+  - title: CreateHarvest.{type:money, location:current}
+    type: 14
+    message: 'F. Shaman: Let''s switch it off.'
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: '{type:money, location:current}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Popup.Saving energy means savin
+    type: 1
+    message: Saving energy means saving money. Money is collected by tapping it.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 14
+    conditionField: 
+    inputState: 12
+  - title: Prompt.If I am to make this plac
+    type: 0
+    message: If I am to make this place more efficient I will have to teach the occupants
+      to turn off the lights after themselves.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Quest Complete
+    inputState: 1
+  - title: QuestComplete.You have learned the basi
     type: 8
-    inputState: 3
-    valueField: You have learned the basic way of interaction!
+    message: You have learned the basic way of interaction!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: Swipe
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: " \x05"
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 3
     conditionField: 
+    inputState: 3

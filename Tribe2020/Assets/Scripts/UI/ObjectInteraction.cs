@@ -37,6 +37,8 @@ public class ObjectInteraction : MonoBehaviour {
 			_meter = GetComponent<ElectricMeter>();
 			_powerButton.onClick.AddListener(() => ToggleMeter());
 		}
+
+		//_moneyButton.onClick.AddListener(() => _controller.OnHarvestTap(gameObject));
 	}
 	
 	// Update is called once per frame

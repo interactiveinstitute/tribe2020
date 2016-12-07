@@ -31,6 +31,7 @@ public class PilotView : View{
 
 	[Header("View Guide")]
 	public Transform viewpointGuideUI;
+	public Image overviewIcon;
 	public Sprite defaultIcon;
 	public Sprite lockIcon;
 	public Color currentColor;
@@ -41,6 +42,7 @@ public class PilotView : View{
 	public Transform inspectorActionList;
 
 	public GameObject messageUI;
+	public GameObject messageButton;
 	public GameObject victoryUI;
 	public Text victoryText;
 
@@ -134,7 +136,12 @@ public class PilotView : View{
 	}
 
 	//
-	public void UpdateViewpointGuide(Viewpoint[][] viewMatrix, Vector2 curView) {
+	public void UpdateViewpointTitle(string viewTitle) {
+		title.GetComponent<Text>().text = viewTitle;
+	}
+
+	//
+	public void UpdateViewpointGuide(Viewpoint[][] viewMatrix, Viewpoint curView, bool overview = false) {
 		RemoveChildren(viewpointGuideUI);
 
 		for(int y = viewMatrix.Length - 1; y >= 0; y--) {
@@ -143,7 +150,7 @@ public class PilotView : View{
 			for(int x = 0; x < viewMatrix[y].Length; x++) {
 				GameObject viewCell = Instantiate(viewpointIconPrefab) as GameObject;
 				viewCell.transform.SetParent(viewRow.transform, false);
-				if(curView.x == x && curView.y == y) {
+				if(curView.coordinates.x == x && curView.coordinates.y == y) {
 					viewCell.GetComponent<Image>().color = currentColor;
 					viewCell.GetComponent<Image>().sprite = defaultIcon;
 				} else if(viewMatrix[y][x].locked) {
@@ -152,6 +159,12 @@ public class PilotView : View{
 					viewCell.GetComponent<Image>().sprite = defaultIcon;
 				}
 			}
+		}
+
+		if(overview) {
+			overviewIcon.color = currentColor;
+		} else {
+			overviewIcon.color = Color.white;
 		}
 	}
 
@@ -267,7 +280,7 @@ public class PilotView : View{
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
 
-		messageUI.transform.GetChild(2).gameObject.SetActive(showOkButton);
+		messageButton.SetActive(showOkButton);
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
@@ -277,7 +290,8 @@ public class PilotView : View{
 		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
+			//mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mailButtonObj, curQuest, 0));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[2].gameObject.SetActive(false);
@@ -292,7 +306,8 @@ public class PilotView : View{
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
-			mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
+			//mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mailButtonObj, curQuest, 0));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[0].color = Color.gray;
@@ -305,6 +320,26 @@ public class PilotView : View{
 		}
 	}
 
+	//
+	public void BuildMail(GameObject mailObj, Quest quest, int index) {
+		Text title = mailObj.GetComponentsInChildren<Text>()[0];
+		Text description = mailObj.GetComponentsInChildren<Text>()[2];
+		Text steps = mailObj.GetComponentsInChildren<Text>()[4];
+
+		title.text = quest.title;
+		description.text = quest.description;
+
+		string stepConcat = "";
+		foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
+			stepConcat += checkStep.description + "\n";
+		}
+		steps.text = stepConcat;
+
+		mailObj.SetActive(true);
+
+		//mailObj.transform.SetParent(inboxList, false);
+	}
+
 	//Full MAIL with quest data including quest steps and whether they have been completed or not
 	public void BuildMail(Quest quest) {
 		Text title = mailReadUI.GetComponentsInChildren<Text>()[0];
@@ -315,17 +350,23 @@ public class PilotView : View{
 		description.text = quest.description;
 
 		string stepConcat = "";
-		for(int i = 0; i < quest.questSteps.Count; i++) {
-			if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
-				if(i < quest.GetCurrentStepIndex()) {
-					stepConcat += " --";
-				} else {
-					stepConcat += "¤ ";
-				}
-				stepConcat += quest.questSteps[i].title + "\n";
-			}
+		foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
+			stepConcat += checkStep.description + "\n";
 		}
 		steps.text = stepConcat;
+
+		//string stepConcat = "";
+		//for(int i = 0; i < quest.questSteps.Count; i++) {
+		//	if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
+		//		if(i < quest.GetCurrentStepIndex()) {
+		//			stepConcat += " --";
+		//		} else {
+		//			stepConcat += "¤ ";
+		//		}
+		//		stepConcat += quest.questSteps[i].title + "\n";
+		//	}
+		//}
+		//steps.text = stepConcat;
 
 		mailReadUI.SetActive(true);
 	}

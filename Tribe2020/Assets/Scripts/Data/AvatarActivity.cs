@@ -34,7 +34,7 @@ public class AvatarActivity : ScriptableObject {
     //public double endTime = 0;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt };
+    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt, InteractWithAvatar };
 	//Energy efficieny check types
 	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
@@ -52,7 +52,8 @@ public class AvatarActivity : ScriptableObject {
         public Appliance appliance = null;
 		//public Target target;
 		public Affordance requiredAffordance;
-		public string parameter;
+        public List<Affordance> tempAvatarAffordances;
+        public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
 		//public EfficiencyType relatedEfficieny;
@@ -131,6 +132,17 @@ public class AvatarActivity : ScriptableObject {
 	//
 	public void StartSession(Session session) {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
+
+        //Add (temporary) avatar affordance for this session
+        if (session.tempAvatarAffordances != null)
+        {
+            foreach (Affordance affordance in session.tempAvatarAffordances)
+            {
+                DebugManager.Log(affordance.name, this);
+                _ai.gameObject.GetComponent<Appliance>().avatarAffordances.Add(affordance);
+            }
+        }
+
         switch (session.type) {
 			case SessionType.WaitForDuration:
                 if (session.parameter == "")
@@ -211,6 +223,10 @@ public class AvatarActivity : ScriptableObject {
                 }
                 _ai.ChangePoseAt(session.parameter, session.requiredAffordance, false);
 
+                NextSession();
+                break;
+            case SessionType.InteractWithAvatar:
+                _ai.InteractWithAvatar(session.requiredAffordance);
                 NextSession();
                 break;
             default:

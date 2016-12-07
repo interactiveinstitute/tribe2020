@@ -18,70 +18,110 @@ MonoBehaviour:
   - description: Make an Avatar join the TRIBE
     done: 0
   nextQuest: {fileID: 0}
-  questSteps:
-  - title: Prompt.Leading a TRIBE
+  steps:
+  - title: 'Prompt.Leading a small Tribe is '
     type: 0
-    inputState: 0
-    valueField: Leading a small Tribe is fine, but if we really want to make a difference
+    message: Leading a small Tribe is fine, but if we really want to make a difference
       with must also nurture it and make it grow.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 1
     conditionField: 
-  - title: Popup.Find Avatar
+    inputState: 1
+  - title: 'Popup.Let''s start with finding '
     type: 1
-    inputState: 0
-    valueField: Let's start with finding an Avatar and selecting it.
+    message: Let's start with finding an Avatar and selecting it.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
     condition: 28
     conditionField: 
-  - title: Popup.Start Battle
-    type: 1
     inputState: 0
-    valueField: This avatar is a lost soul, walking aimlessly without a TRIBE. You
-      should convince them to join! Hit the conviction button.
+  - title: Prompt.This avatar is a lost sou
+    type: 0
+    message: This avatar is a lost soul, walking aimlessly without a TRIBE. You should
+      convince them to join! Hit the conviction button.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: PlayAnimation.MarkThermalJugs
+    type: 3
+    message: This avatar is a lost soul, walking aimlessly without a TRIBE. You should
+      convince them to join! Hit the conviction button.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkThermalJugs
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
     condition: 15
     conditionField: 
-  - title: Quest Complete
-    type: 8
     inputState: 0
-    valueField: The battler, the better!
+  - title: PlayAnimation.HideAll
+    type: 3
+    message: This avatar is a lost soul, walking aimlessly without a TRIBE. You should
+      convince them to join! Hit the conviction button.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
     objectField: {fileID: 0}
     showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: QuestComplete.The Battler, the Better!
+    type: 8
+    message: The Battler, the Better!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
     condition: 3
     conditionField: 
-  - title: Unlock Meeting Room
-    type: 11
-    inputState: 13
-    valueField: '{"coord":["0", "1"]}'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 0
-    conditionField: 
-  - title: Unlock Open Offices
-    type: 11
-    inputState: 13
-    valueField: '{"coord":["1", "1"]}'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 0
-    conditionField: 
-  - title: Unlock Printing Corner
-    type: 11
-    inputState: 13
-    valueField: '{"coord":["2", "1"]}'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 0
-    conditionField: 
-  - title: Unlock Pentry
-    type: 11
-    inputState: 13
-    valueField: '{"coord":["3", "1"]}'
-    objectField: {fileID: 0}
-    showAtBottom: 0
-    condition: 0
-    conditionField: 
+    inputState: 3

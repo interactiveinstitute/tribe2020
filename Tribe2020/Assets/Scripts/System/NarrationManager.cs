@@ -107,7 +107,8 @@ public class NarrationManager : MonoBehaviour {
 
 	// Initializes a step of a quest depending on its type
 	public void StartQuestStep(Quest quest) {
-		Quest.QuestStep step = quest.GetCurrentStep();
+		Quest.Step step = quest.GetCurrentStep();
+		if(debug) { Debug.Log(name + ": " + quest.title + " -> " + quest.GetCurrentStepType()); }
 
 		// Limit user interaction
 		_controller.SetControlState(quest.GetCurrentInteractionLimits());
@@ -115,19 +116,22 @@ public class NarrationManager : MonoBehaviour {
 
 		switch(quest.GetCurrentStepType()) {
 			case Quest.QuestStepType.Popup:
-				if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
-				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, false);
+				//if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
+				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.message, false);
 				break;
 			case Quest.QuestStepType.Prompt:
-				if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
-				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.valueField, true);
+				//if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
+				_controller.ShowMessage("Narrative." + quest.title + ":" + step.title, step.message, true);
 				break;
 			case Quest.QuestStepType.PlayAnimation:
 				_controller.ControlInterface("animation", "hide");
-				_controller.ControlInterface("playAnimation", step.valueField);
+				_controller.ControlInterface("playAnimation", step.animation);
 				break;
 			case Quest.QuestStepType.PlaySound:
-				_controller.PlaySound(step.valueField);
+				_controller.PlaySound(step.sound);
+				break;
+			case Quest.QuestStepType.CreateHarvest:
+				_controller.SendMessage(step.type.ToString(), step.commandJSON);
 				break;
 			case Quest.QuestStepType.ControlAvatar:
 				id = quest.ParseAsString("id");
@@ -136,7 +140,7 @@ public class NarrationManager : MonoBehaviour {
 				if(pos != Vector3.back) {
 					_controller.ControlAvatar(id, action, pos);
 				} else {
-					_controller.ControlAvatar(id, step.objectField);
+					_controller.ControlAvatar(id, step.activity);
 				}
 				break;
 			case Quest.QuestStepType.ControlInterface:
@@ -145,7 +149,8 @@ public class NarrationManager : MonoBehaviour {
 				_controller.ControlInterface(id, action);
 				break;
 			case Quest.QuestStepType.ChangeTimeScale:
-				_controller.SetTimeScale(int.Parse(step.valueField));
+				_controller.SendMessage("SetTimeScale", step.timeScale);
+				//_controller.SetTimeScale(step.timeScale);
 				break;
 			case Quest.QuestStepType.UnlockView:
 				Vector2 coord = quest.ParseAsVector2("coord");
@@ -159,20 +164,23 @@ public class NarrationManager : MonoBehaviour {
 		}
 
 		//If there are no conditions, just step to the next quest step
-		if(quest.GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
+		if(!quest.GetCurrentStep().conditionalProgress) {
 			OnQuestEvent(Quest.QuestEvent.EMPTY);
+		} else if(quest.GetCurrentStep().condition == Quest.QuestEvent.FindView) {
+			_controller.SendMessage("RequestCurrentView");
 		}
 	}
 
 	// Called to send quest related event to all active quest. Progresses related quests
 	// and starts next quest if quest fully progressed
 	public void OnQuestEvent(Quest.QuestEvent questEvent, string argument = "") {
+		if(debug) { Debug.Log(name + ": Received event " + questEvent + "(" + argument + ")"); }
 		for(int i = curQuests.Count - 1; i >= 0; i--) {
 			Quest curQuest = curQuests[i];
 			if(curQuest.GetCurrentStep().condition == questEvent) {
 				if(curQuest.GetCurrentStep().conditionField == "" ||
 					curQuest.GetCurrentStep().conditionField == argument) {
-					if(debug) { Debug.Log(name + ":" + curQuest.name + " was progressed by event " + questEvent); }
+					if(debug) { Debug.Log(name + ":" + curQuest.name + " progressed"); }
 
 					_controller.ClearView();
 					curQuest.NextStep();
