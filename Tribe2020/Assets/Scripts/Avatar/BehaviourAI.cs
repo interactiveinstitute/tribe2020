@@ -166,6 +166,9 @@ public class BehaviourAI : MonoBehaviour
                 else if (!_agent.pathPending)
                 {
                     _charController.Move(Vector3.zero, false, false);
+                    //We don't want to come back in here after we reached the destination. So let's change state to idle.
+                    GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+
                     //Ok. Let's notify the activity that the current session is finished
                     activity.OnDestinationReached();
                     
@@ -645,6 +648,7 @@ public class BehaviourAI : MonoBehaviour
         if (appliance == null)
         {
             DebugManager.LogError("Didn't get a PoseAt target appliance. doing activity " + _curActivity.name + ". Skipping to next session", this);
+            GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
             GetRunningActivity().NextSession();
             return;
         }
@@ -684,7 +688,10 @@ public class BehaviourAI : MonoBehaviour
             //Enable stuff before return
             _agent.enabled = true;
             GetComponent<Rigidbody>().isKinematic = false;
+            //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
             DebugManager.Log("no free pose slots in/at the appliance!", appliance, this);
+            //Set avatarState accordingly!!!!
+            GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
             //Bail out!
             return;
         }

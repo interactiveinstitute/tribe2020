@@ -15,7 +15,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 
-    
+    [System.Serializable]
     public class PoseSlot
     {
         public Vector3 position;
@@ -25,7 +25,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
-    public List<PoseSlot> posePositions;
+    public List<PoseSlot> posePositions = new List<PoseSlot>();
     public float cashProduction;
 	public float comfortPorduction;
 
@@ -66,10 +66,14 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
         //Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
         PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
-        foreach(PosePoint point in poseArray)
+        //if (posePositions == null)
+        //{
+        //    posePositions = new List<PoseSlot>();
+        //}
+        foreach (PosePoint point in poseArray)
         {
             PoseSlot item = new PoseSlot();
-            item.position= point.transform.position;
+            item.position = point.transform.position;
             item.rotation = point.transform.rotation;
             posePositions.Add(item);
         }
