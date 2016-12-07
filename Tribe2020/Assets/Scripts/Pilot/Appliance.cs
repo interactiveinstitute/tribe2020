@@ -15,9 +15,18 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 
+    
+    public class PoseSlot
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+        public BehaviourAI occupant;
+    }
+
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
-	public float cashProduction;
+    public List<PoseSlot> posePositions;
+    public float cashProduction;
 	public float comfortPorduction;
 
 	public List<EEMMeta> possibleEEMs;
@@ -54,6 +63,16 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
             DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
 			interactionPos = transform.position;
 		}
+
+        //Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
+        PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
+        foreach(PosePoint point in poseArray)
+        {
+            PoseSlot item = new PoseSlot();
+            item.position= point.transform.position;
+            item.rotation = point.transform.rotation;
+            posePositions.Add(item);
+        }
 	}
 	
 	// Update is called once per frame
@@ -84,6 +103,18 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void AddHarvest() {
 		_harvestButton.SetActive(true);
 	}
+
+    //Releases all pose slots that are currently occupied by the supplied occupant
+    public void ReleasePoseSlot(BehaviourAI occupant)
+    {
+        foreach(PoseSlot slot in posePositions)
+        {
+            if(slot.occupant == occupant)
+            {
+                slot.occupant = null;
+            }
+        }
+    }
 
 	//
 	public JSONClass SerializeAsJSON() {

@@ -18,7 +18,7 @@ public class BehaviourAI : MonoBehaviour
     private NavMeshAgent _agent;
     private ThirdPersonCharacter _charController;
     [SerializeField]
-    private Vector3 _savedStandingPosition;
+    private Vector3 _savedIdlePosition;
 
     //private Vector3 _curTargetPos;
     public AvatarActivity _curActivity;
@@ -615,7 +615,7 @@ public class BehaviourAI : MonoBehaviour
         _charController.TurnOffAllBools();
 
         //save the currentPosition for when standing up again.
-        _savedStandingPosition = transform.position;
+        _savedIdlePosition = transform.position;
 
         _charController.SetPose(pose);
     }
@@ -653,23 +653,49 @@ public class BehaviourAI : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
 
         //save the currentPosition for when standing up again.
-        _savedStandingPosition = transform.position;
+        _savedIdlePosition = transform.position;
 
         //Get the child  game object with the name Sit Position
-        Transform posePosition = appliance.gameObject.transform.Find("Pose Position");
-        if (posePosition == null)
+        //Transform posePosition = appliance.gameObject.transform.Find("Pose Position");
+        //if (posePosition == null)
+        //{
+        //    DebugManager.LogError("Didn't find a gameobject called Pose Position inside " + appliance.name, appliance.gameObject, this);
+        //}
+        //else
+        //{
+        //    //coord.x = sitPosition.position.x;
+        //    //coord.z = sitPosition.position.z;
+        //    //coord.y = transform.position.y;
+        //    transform.position = posePosition.position;//coord;
+        //    transform.rotation = posePosition.rotation;
+        //    Debug.Log("Setting avatar position to posePosition from appliance object");
+        //}
+        Appliance.PoseSlot emptySlot = null;
+        foreach(Appliance.PoseSlot slot in appliance.posePositions)
         {
-            DebugManager.LogError("Didn't find a gameobject called Pose Position inside " + appliance.name, appliance.gameObject, this);
+            if(slot.occupant == null)//Is it a free slot with no occupant?
+            {
+                emptySlot = slot;
+            }
         }
-        else
+        if(emptySlot == null)
         {
-            //coord.x = sitPosition.position.x;
-            //coord.z = sitPosition.position.z;
-            //coord.y = transform.position.y;
-            transform.position = posePosition.position;//coord;
-            transform.rotation = posePosition.rotation;
-            Debug.Log("Setting avatar position to posePosition from appliance object");
+            //No available position for posing
+            //Enable stuff before return
+            _agent.enabled = true;
+            GetComponent<Rigidbody>().isKinematic = false;
+            DebugManager.Log("no free pose slots in/at the appliance!", appliance, this);
+            //Bail out!
+            return;
         }
+        else {//We found a slot. Hurray!
+            emptySlot.occupant = this;
+            transform.position = emptySlot.position;//coord;
+            transform.rotation = emptySlot.rotation;
+        }
+
+
+        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
 
 
@@ -731,12 +757,14 @@ public class BehaviourAI : MonoBehaviour
     public void ReturnToIdlePose()
     {
         DebugManager.Log("Returning to normal pose.", this, this);
-        if (_savedStandingPosition != null)
+        if (_savedIdlePosition != null)
         {
-            transform.position = _savedStandingPosition;
+            transform.position = _savedIdlePosition;
         }
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
+
+        GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().ReleasePoseSlot(this);
 
         //_charController.TurnOffAllBools();
         //_charController.StandUp();
@@ -1174,7 +1202,7 @@ public class BehaviourAI : MonoBehaviour
         json.Add("name", name);
         Vector3 position = transform.position;
         json.Add("transform", JsonUtility.ToJson(position));
-        json.Add("savedStandingPosition", JsonUtility.ToJson(_savedStandingPosition));
+        json.Add("savedStandingPosition", JsonUtility.ToJson(_savedIdlePosition));
         //json.Add("scheduleIndex", _scheduleIndex.ToString());
         json.Add("_curActivity", _curActivity.Encode());
         json.Add("_nextActivity", _nextActivity.Encode());
@@ -1193,7 +1221,7 @@ public class BehaviourAI : MonoBehaviour
         //_scheduleIndex = json["scheduleIndex"].AsInt;
         //JsonUtility.FromJsonOverwrite(json["object"], this);
         transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
-        _savedStandingPosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
+        _savedIdlePosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
         _curActivity.Decode(json["_curActivity"]);
         _nextActivity.Decode(json["_nextActivity"]);
