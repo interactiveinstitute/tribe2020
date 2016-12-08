@@ -47,7 +47,7 @@ public class CameraManager : MonoBehaviour {
 
 	private float _panSpeed = 0.01f;
 
-	private bool _isInit = false;
+	private bool _firstLoop = true;
 	#endregion
 
 	//Sort use instead of constructor
@@ -64,15 +64,14 @@ public class CameraManager : MonoBehaviour {
 
 		//Populate collection of viewpoints
 		PopulateViewpoints();
-		SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
 	}
 
 	// Update is called once per frame
 	void Update() {
-		//if(!_isInit) {
-		//	SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
-		//	_isInit = true;
-		//}
+		if(_firstLoop) {
+			SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
+			_firstLoop = false;
+		}
 
 		if(journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;

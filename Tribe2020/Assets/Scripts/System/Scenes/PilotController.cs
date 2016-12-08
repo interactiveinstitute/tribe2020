@@ -14,6 +14,10 @@ public class PilotController : Controller {
 	public bool debug = false;
     public bool enableSaveLoad = true;
 
+	public double startTime;
+	public double endTime;
+	public double playPeriod;
+
     //Access all singleton systemss
     private PilotView _view;
 	private GameTime _timeMgr;
@@ -73,6 +77,8 @@ public class PilotController : Controller {
 
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
 		_appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
+
+		playPeriod = endTime - startTime;
 	}
 	
 	// Update is called once per frame
@@ -80,7 +86,7 @@ public class PilotController : Controller {
 		if(!_firstUpdate) {
 			_firstUpdate = true;
 			LoadGameState();
-			_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
+			//_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 		}
 
 		//Mobile interaction
@@ -122,13 +128,22 @@ public class PilotController : Controller {
 		float energy = (float)_mainMeter.Energy;
 		if(energy < 1) {
 			_view.energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
-		} else {
+		} else if(energy < 1000) {
 			_view.energyCounter.text = Mathf.Floor(energy) + " kWh";
+		} else if(energy < 1000000) {
+			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " MWh";
+		} else {
+			_view.energyCounter.text = Mathf.Floor(energy / 1000000) + " GWh";
 		}
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
 		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
+
+		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
+		if(_timeMgr.time > endTime) {
+			LoadScene("MenuScene");
+		}
 	}
 
 	//
@@ -413,16 +428,6 @@ public class PilotController : Controller {
 	}
 
 	//
-	//public void OpenMail(Quest quest) {
-	//	if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-	//		_view.BuildMail(quest);
-	//		ResetTouch();
-
-	//		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-	//	}
-	//}
-
-	//
 	public void SelectGridView() {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_GRIDVIEW) { return; }
 
@@ -582,6 +587,11 @@ public class PilotController : Controller {
 	//
 	public void SetTimeScale(float timeScale) {
 		_timeMgr.TimeScale = timeScale;
+	}
+
+	//
+	public void StepTimeForward(int days) {
+		_timeMgr.Offset(86400 * days);
 	}
 
 	//

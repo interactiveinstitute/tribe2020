@@ -36,6 +36,8 @@ public class AudioManager : MonoBehaviour{
 
 	//
 	public void PlaySound(string key) {
+		if(mute) { return; }
+
 		foreach(AudioWrapper sound in sounds) {
 			if(key == sound.key) {
 				sound.value.Play();

@@ -22,6 +22,7 @@ public class PilotView : View{
 	[Header("Energy")]
 	public Transform power;
 	public Text energyCounter;
+	public RectTransform timeBar;
 
 	[Header("Quest UI")]
 	public GameObject inboxUI;
@@ -79,7 +80,7 @@ public class PilotView : View{
 		_curMenu = null;
 
 		//Clear inbox
-		RemoveChildren(inboxList);
+		//RemoveChildren(inboxList);
 	}
 	
 	//Update is called once per frame
@@ -163,7 +164,7 @@ public class PilotView : View{
 
 		if(overview) {
 			overviewIcon.color = currentColor;
-		} else {
+		} else {          
 			overviewIcon.color = Color.white;
 		}
 	}
@@ -205,6 +206,15 @@ public class PilotView : View{
 	//
 	public void UpdateQuestCount(int questCount) {
 		mailCountText.text = "" + questCount;
+	}
+
+	//
+	public void UpdateTime(float timeFraction) {
+		//Debug.Log(timeFraction);
+		//float scaledValue = value / (maxValue - minValue) * GetComponent<RectTransform>().rect.height;
+
+		//timeBar.sizeDelta = new Vector2(276 * timeFraction, 0);
+		timeBar.offsetMax = new Vector2(-307 + 307 * timeFraction, 0);
 	}
 
 	//
@@ -290,8 +300,12 @@ public class PilotView : View{
 		foreach(Quest quest in currentQuests) {
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-			//mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mailButtonObj, curQuest, 0));
+
+			Mail mail = mailButtonObj.GetComponent<Mail>();
+			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
+			mail.content.SetActive(false);
+
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, curQuest, 0));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[2].gameObject.SetActive(false);
@@ -306,12 +320,15 @@ public class PilotView : View{
 			Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
-			//mailButtonObj.GetComponent<Button>().onClick.AddListener(() => _controller.SetCurrentUI(curQuest));
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mailButtonObj, curQuest, 0));
+			Mail mail = mailButtonObj.GetComponent<Mail>();
+			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
+			mail.content.SetActive(false);
+
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, curQuest, 0));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
-			images[0].color = Color.gray;
-			images[1].gameObject.SetActive(false);
+			images[1].color = Color.gray;
+			images[2].gameObject.SetActive(false);
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 			texts[0].text = curQuest.title;
@@ -321,10 +338,11 @@ public class PilotView : View{
 	}
 
 	//
-	public void BuildMail(GameObject mailObj, Quest quest, int index) {
-		Text title = mailObj.GetComponentsInChildren<Text>()[0];
-		Text description = mailObj.GetComponentsInChildren<Text>()[2];
-		Text steps = mailObj.GetComponentsInChildren<Text>()[4];
+	public void BuildMail(Mail mail, Quest quest, int index) {
+		Transform contentTrans = mail.transform.GetChild(1);
+		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
+		Text description = contentTrans.GetComponentsInChildren<Text>()[1];
+		Text steps = contentTrans.GetComponentsInChildren<Text>()[2];
 
 		title.text = quest.title;
 		description.text = quest.description;
@@ -335,7 +353,7 @@ public class PilotView : View{
 		}
 		steps.text = stepConcat;
 
-		mailObj.SetActive(true);
+		mail.content.SetActive(!mail.content.activeSelf);
 
 		//mailObj.transform.SetParent(inboxList, false);
 	}
