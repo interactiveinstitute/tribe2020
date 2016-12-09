@@ -31,5 +31,11 @@ public class GameTimeEditor : Editor
 		{
 			myScript.Offset(-86400);	
 		}
+
+
+		if(GUILayout.Button("Sort keypoints",GUILayout.Width(200) ))
+		{
+			myScript.KeyActions.Sort(new GameTime.CompareKeyAction() );	
+		}
 	}
 }
