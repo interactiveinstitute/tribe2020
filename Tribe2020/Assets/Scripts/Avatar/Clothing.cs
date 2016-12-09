@@ -4,7 +4,9 @@ using System;
 
 public class Clothing : MonoBehaviour {
 
+    //List<Material> clothingmaterials
 
+    
 
 	// Use this for initialization
 	void Start () {

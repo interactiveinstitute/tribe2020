@@ -146,7 +146,7 @@ public class ElectricDevice : ElectricMeter {
                     runlevel_materials[f] = runlevels[rl].materials[f];
             }
 
-            //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
+            //what the fuck? We were updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
             //Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
             //runlevels [rl].Target.sharedMaterials = runlevel_materials;
             rend.materials = runlevel_materials;

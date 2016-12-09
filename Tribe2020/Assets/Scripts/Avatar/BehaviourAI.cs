@@ -54,7 +54,13 @@ public class BehaviourAI : MonoBehaviour
     private int _scheduleIndex = 0;
 
     [SerializeField]
-    private GameObject prefab;
+    private List<GameObject> thingsInHands;
+    [SerializeField]
+    public bool showCoffeeCup = false;
+
+
+    //[SerializeField]
+    //private GameObject prefab;
 
     // Use this for initialization
     void Start()
@@ -88,6 +94,8 @@ public class BehaviourAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateCoffeeCup();
+
         if (_tempActivities.Count > 0)
         {
             //Handle schedule overriding activities
@@ -709,6 +717,43 @@ public class BehaviourAI : MonoBehaviour
         //_charController.SitDown(); //Sets a boolean in the animator object
         changePoseTo(pose);
         //_charController.SetPose("Sit");
+    }
+
+    void ShowCoffeeCup()
+    {
+        GameObject cup = thingsInHands[0];
+        if (cup) {
+            cup.SetActive(true);
+            return;
+        }
+        DebugManager.LogError("din't find the Cup in the avatars game object hierarchy", this, this);
+    }
+
+    void HideCoffeeCup()
+    {
+        if(thingsInHands.Count == 0)
+        {
+            DebugManager.LogError("thingsInHands has 0 in length", this, this);
+            return;
+        }
+        GameObject cup = thingsInHands[0];
+        if (cup)
+        {
+            cup.SetActive(false);
+            return;
+        }
+        DebugManager.LogError("din't find the Cup in the avatars game object hierarchy", this, this);
+    }
+
+    void UpdateCoffeeCup()
+    {
+        if (showCoffeeCup)
+        {
+            ShowCoffeeCup();
+        }else
+        {
+            HideCoffeeCup();
+        }
     }
 
     //public void SitAt(Affordance affordance, bool isOwned)
