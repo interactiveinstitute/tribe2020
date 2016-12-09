@@ -216,6 +216,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010513443900}
+  - 114: {fileID: 114000011068377168}
   - 95: {fileID: 95000012823670536}
   - 54: {fileID: 54000013091506732}
   - 195: {fileID: 195000012182224446}
@@ -918,8 +919,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011262242068}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.95, y: 1.8332334e-16, z: -16.39}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.74, y: 0, z: 3.7955356}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1568,7 +1569,7 @@ Animator:
   m_GameObject: {fileID: 1000011262242068}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4424e67bf55053f4ba3863d59bb0496d, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7a403a4e03f0064399a7f6c9628598f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1594,10 +1595,11 @@ MonoBehaviour:
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []
-  harvestButtonRef: {fileID: 0}
+  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &114000010909788958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1617,6 +1619,17 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 2
+--- !u!114 &114000011068377168
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011262242068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51bf12969684fc14bb449434cc0cbe13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000012038547090
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1630,7 +1643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _controller: {fileID: 0}
   _stats: {fileID: 0}
-  _savedStandingPosition: {x: 0, y: 0, z: 0}
+  _savedIdlePosition: {x: 0, y: 0, z: 0}
   _curActivity: {fileID: 0}
   _nextActivity: {fileID: 0}
   _prevActivity: {fileID: 0}

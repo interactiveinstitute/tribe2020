@@ -41,6 +41,20 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		public bool applied;
 	}
 
+    void Awake()
+    {
+        InteractionPoint ip = GetComponentInChildren<InteractionPoint>();
+        if (ip != null)
+        {
+            interactionPos = ip.transform.position;
+        }
+        else
+        {
+            DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
+            interactionPos = transform.position;
+        }
+    }
+
 	// Use this for initialization
 	void Start() {
 		_ctrlMgr = PilotController.GetInstance();
@@ -55,14 +69,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		harvestButtonRef.SetActive(false);
 
 		appliedEEMs = new List<EnergyEfficiencyMeasure>();
-
-		InteractionPoint ip = GetComponentInChildren<InteractionPoint>();
-		if(ip != null) {
-			interactionPos = ip.transform.position;
-		} else {
-            DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
-			interactionPos = transform.position;
-		}
 
         //Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
         PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
