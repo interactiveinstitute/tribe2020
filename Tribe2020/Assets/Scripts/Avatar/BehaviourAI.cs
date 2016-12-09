@@ -625,8 +625,8 @@ public class BehaviourAI : MonoBehaviour
         //Just in case
         _charController.TurnOffAllBools();
 
-        //save the currentPosition for when standing up again.
-        _savedIdlePosition = transform.position;
+        ////save the currentPosition for when standing up again.
+        //_savedIdlePosition = transform.position;
 
         _charController.SetPose(pose);
     }
@@ -645,6 +645,7 @@ public class BehaviourAI : MonoBehaviour
         {
             DebugManager.LogError("Hey. You gave me a null affordance when trying to pose. What's up with that?! I'll skip to next session", this, this);
             GetRunningActivity().NextSession();
+            return;
         }
         //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
         Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
@@ -698,7 +699,7 @@ public class BehaviourAI : MonoBehaviour
             GetComponent<Rigidbody>().isKinematic = false;
             //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
             DebugManager.Log("no free pose slots in/at the appliance!", appliance, this);
-            //Set avatarState accordingly!!!!
+            //Set avatarState accordingly!!!! We never posed so set to idle.
             GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
             //Bail out!
             return;
@@ -707,15 +708,16 @@ public class BehaviourAI : MonoBehaviour
             emptySlot.occupant = this;
             transform.position = emptySlot.position;//coord;
             transform.rotation = emptySlot.rotation;
+
+            GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+
+            changePoseTo(pose);
+
+            GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
         }
 
 
-        GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
-        GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
-
-
-        //_charController.SitDown(); //Sets a boolean in the animator object
-        changePoseTo(pose);
+        
         //_charController.SetPose("Sit");
     }
 
