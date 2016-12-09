@@ -11,36 +11,81 @@ public class GameTime : MonoBehaviour {
 		return _instance;
 	}
 
-	private PilotController _controller;
+	[Serializable]
+	public class KeyAction:Event
+	{
+		public GameObject target;
+	}
 
+	public class CompareKeyAction : IComparer<KeyAction>
+	{
+		static IComparer<KeyAction> comparer = new CompareKeyAction();
+
+		public int Compare(KeyAction x, KeyAction y)
+		{
+			if (x == y)    return 0;
+			if (x == null) return -1;
+			if (y == null) return 1;
+			if (x.Timestamp > y.Timestamp)
+				return 1;
+			if (x.Timestamp < y.Timestamp)
+				return -1;
+
+			return 0;
+		}
+	}
+
+	private PilotController _controller;
 	public double StartTime;
+	public double offset;
 	public double time;
+	public double VisualTime;
 	public string CurrentDate;
-	public List<double> Keypoints = new List<double>();
+	double lastupdate=0;
+	public List<KeyAction> KeyActions = new List<KeyAction>();
 
 	[Range(0.0f, 100.0f)]
-	public float TimeScale = 1.0f;
+	public float VisualTimeScale = 1.0f;
+
+	[Range(0.0f, 100.0f)]
+	public float SimulationTimeScaleFactor = 1.0f;
+
+	public bool LockScales;
+	private float prevVisualTimeScale,prevSimulationTimeScale;
+
 
 	void Awake () {
-		time = StartTime;
+		time = StartTime + offset;
 		_instance = this;
+
+		prevVisualTimeScale = VisualTimeScale;
+		prevSimulationTimeScale = SimulationTimeScaleFactor;
+
 	}
 
 	// Use this for initialization
 	void Start () {
+
+		lastupdate = Time.time;
+
 		_controller = PilotController.GetInstance();
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 
-		time = StartTime;
+		time = StartTime + offset;
 	}
 
-	public bool AddKeypoint(double keypoint)
+	public bool AddKeypoint(double TimeStamp,GameObject target)
 	{
-		if (Keypoints.Contains(keypoint))
+		if (TimeStamp < time)
 			return false;
+
+		KeyAction keypoint = new KeyAction ();
+
+		keypoint.Timestamp = TimeStamp;
+		keypoint.target = target;
 		
-		Keypoints.Add (keypoint);
-		Keypoints.Sort ();
+		KeyActions.Add (keypoint);
+		KeyActions.Sort (new CompareKeyAction() );
 
 		return true;
 	}
@@ -50,15 +95,42 @@ public class GameTime : MonoBehaviour {
 
 		//Delete expired keypoints.
 
-		//See if day shift happened
-		//if(TimestampToDateTime(time).Day != TimestampToDateTime(StartTime + Time.time).Day) {
-		//	_controller.OnNextDay();
-		//}
+		//Did scales change? 
+		if (prevVisualTimeScale != VisualTimeScale && LockScales)
+			SimulationTimeScaleFactor = VisualTimeScale;
+		else if (prevSimulationTimeScale != SimulationTimeScaleFactor && LockScales)
+			VisualTimeScale = SimulationTimeScaleFactor;
 
-		//Calculate deltatime.
-		time = StartTime + Time.time;
+		prevVisualTimeScale = VisualTimeScale;
+		prevSimulationTimeScale = SimulationTimeScaleFactor;
+
+
+		//Calculate difference between simulation and visual timescales and apply to offset.
+		double now = Time.time;
+		VisualTime = now;
+		double delta = now - lastupdate;
+
+		Time.timeScale = VisualTimeScale;
+
+		offset = offset + (delta/VisualTimeScale * (SimulationTimeScaleFactor - VisualTimeScale));
+
+
+		double new_time = StartTime + offset + Time.time;
+
+		//Do all key actions requiered until the new time
+		DoKeyActions(new_time);
+
+
+		time = new_time;
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
-		Time.timeScale = TimeScale;
+
+		lastupdate = now;
+
+	}
+
+	private int DoKeyActions(double newtime) { 
+
+		return 0;
 	}
 
 	private double DateTimeToTimestamp(DateTime value)
@@ -129,13 +201,13 @@ public class GameTime : MonoBehaviour {
 
 	//
 	public double GetTotalSeconds() {
-		time = StartTime + Time.time;
+		time = offset + Time.time;
 		return (double)time;
 	}
 
 	//
 	public string GetViewTime() {
-		time = StartTime + Time.time;
+		time = offset + Time.time;
 		return TimestampToDateTime(time).ToString("HH:mm");
 	}
 
@@ -146,15 +218,15 @@ public class GameTime : MonoBehaviour {
 
 	public void Offset(float delta)
 	{
-		StartTime = StartTime + delta;
+		offset = offset + delta;
 	}
 
 	public void SetStartTime(double NewTime) {
-		StartTime = NewTime;
+		offset = NewTime;
 	}
 
 	public void SetTime(double NewTime) {
-		StartTime = NewTime - Time.time;
+		offset = NewTime - Time.time;
 	}
 
 	//

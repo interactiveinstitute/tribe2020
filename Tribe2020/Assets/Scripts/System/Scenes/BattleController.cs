@@ -173,7 +173,7 @@ public class BattleController : Controller {
 
 	//
 	public override void SetTimeScale(int timeScale) {
-		_timeMgr.TimeScale = timeScale;
+		_timeMgr.VisualTimeScale = timeScale;
 	}
 
 	//

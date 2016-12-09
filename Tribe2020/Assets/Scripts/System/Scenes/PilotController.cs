@@ -581,12 +581,12 @@ public class PilotController : Controller {
 
 	//
 	public override void SetTimeScale(int timeScale) {
-		_timeMgr.TimeScale = timeScale;
+		_timeMgr.VisualTimeScale = timeScale;
 	}
 
 	//
 	public void SetTimeScale(float timeScale) {
-		_timeMgr.TimeScale = timeScale;
+		_timeMgr.VisualTimeScale = timeScale;
 	}
 
 	//
