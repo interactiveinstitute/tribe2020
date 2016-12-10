@@ -14,7 +14,7 @@ public class GameTime : MonoBehaviour {
 	[Serializable]
 	public class KeyAction:Event
 	{
-		public GameObject target;
+		public SimulationObject target;
 	}
 
 	public class CompareKeyAction : IComparer<KeyAction>
@@ -34,11 +34,10 @@ public class GameTime : MonoBehaviour {
 			return 0;
 		}
 	}
-
-	private PilotController _controller;
+		
 	public double StartTime;
 	public double offset;
-	public double time;
+	public double time = Double.NaN;
 	public double VisualTime;
 	public string CurrentDate;
 	double lastupdate=0;
@@ -47,11 +46,12 @@ public class GameTime : MonoBehaviour {
 	[Range(0.0f, 100.0f)]
 	public float VisualTimeScale = 1.0f;
 
-	[Range(0.0f, 100.0f)]
+	[Range(0.0f, 10000.0f)]
 	public float SimulationTimeScaleFactor = 1.0f;
 
 	public bool LockScales;
 	private float prevVisualTimeScale,prevSimulationTimeScale;
+
 
 
 	void Awake () {
@@ -60,21 +60,20 @@ public class GameTime : MonoBehaviour {
 
 		prevVisualTimeScale = VisualTimeScale;
 		prevSimulationTimeScale = SimulationTimeScaleFactor;
-
+		lastupdate = Time.time;
 	}
 
 	// Use this for initialization
 	void Start () {
 
-		lastupdate = Time.time;
 
-		_controller = PilotController.GetInstance();
+
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 
-		time = StartTime + offset;
+
 	}
 
-	public bool AddKeypoint(double TimeStamp,GameObject target)
+	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
 		if (TimeStamp < time)
 			return false;
@@ -129,6 +128,31 @@ public class GameTime : MonoBehaviour {
 	}
 
 	private int DoKeyActions(double newtime) { 
+
+
+		int i = 0;
+		KeyAction ka = null;
+
+		while (KeyActions.Count > 0 ) {
+			//All remaning are in the future (assuming that the list is sorted). 
+			if (KeyActions [0].Timestamp > newtime)
+				return i;
+			 
+
+			i += 1;
+			ka = KeyActions [0];
+
+			time = ka.Timestamp;
+
+			//Execute the event. 
+			ka.target.UpdateSim(time);
+
+
+
+			//Remove
+			KeyActions.Remove (ka);
+
+		}
 
 		return 0;
 	}
@@ -201,13 +225,13 @@ public class GameTime : MonoBehaviour {
 
 	//
 	public double GetTotalSeconds() {
-		time = offset + Time.time;
+
 		return (double)time;
 	}
 
 	//
 	public string GetViewTime() {
-		time = offset + Time.time;
+
 		return TimestampToDateTime(time).ToString("HH:mm");
 	}
 

@@ -70,7 +70,7 @@ public class TimeSeries : DataModifier {
 	// Use this for initialization
 	void Start () {
 
-		CurrentIndex = -1;
+		CurrentIndex = -2;
 
 		//Auto set if not set allready.
 		//if (Server == null)
@@ -84,25 +84,30 @@ public class TimeSeries : DataModifier {
 	
 	// Update is called once per frame
 	void Update () {
+		UpdateSim (TTime.time);
+	}
+
+	override public bool UpdateSim(double time) {
 		if ( Enabled == true ) {
 			int index = CurrentIndex;
 
-			CurrentIndex = GetIndex (TTime.time);
+			CurrentIndex = GetIndex (time);
 
 			if (CurrentIndex == index)
-				return;
-				
+				return false;
+
 
 			CurrentValue = GetCurrentValue ();
 
 
+			if (TTime != null && DataPoints.Count - 1 > CurrentIndex )
+				TTime.AddKeypoint(DataPoints[CurrentIndex+1].Timestamp,this);
+
 			if (CurrentIndex == -1 ) {
 				CurrentTimestamp = double.NaN;
 				CurrentDate = "Out of range";
-				return;
+				return false;
 
-			
-			
 			}
 
 			CurrentTimestamp = DataPoints [CurrentIndex].Timestamp;
@@ -115,9 +120,9 @@ public class TimeSeries : DataModifier {
 			base.UpdateAllTargets (Data);
 
 		}
+
+		return true;
 	}
-
-
 
 	override public void UpdateAllTargets(DataPoint Data) {
 

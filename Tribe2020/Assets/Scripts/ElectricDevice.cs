@@ -54,7 +54,7 @@ public class ElectricDevice : ElectricMeter {
     //public List<Tuple<long, float>> Pattern;
 
     // Use this for initialization
-    public override void Start () {
+    void Start () {
 
         //This is used for replacing a material
         //We initially save the gameobjects materials to the side in order to be able to switch back to them.
@@ -82,7 +82,7 @@ public class ElectricDevice : ElectricMeter {
         }
 
         base.Start ();
-		lastupdate = _timeMgr.time;
+		//lastupdate = _timeMgr.time;
 
 		//Set initial runlevel.
 		SetRunlevel(runlevel);

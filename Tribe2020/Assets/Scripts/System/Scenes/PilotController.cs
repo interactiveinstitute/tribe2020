@@ -126,14 +126,14 @@ public class PilotController : Controller {
 		_view.date.GetComponent<Text>().text = _timeMgr.CurrentDate;
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
-		if(energy < 1) {
-			_view.energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
-		} else if(energy < 1000) {
-			_view.energyCounter.text = Mathf.Floor(energy) + " kWh";
+		if(energy < 1000) {
+			_view.energyCounter.text = Mathf.Floor(energy ) + " Wh";
 		} else if(energy < 1000000) {
-			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " MWh";
+			_view.energyCounter.text = Mathf.Floor(energy/10)/100 + " kWh";
+		} else if(energy < 100000000000) {
+			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " kWh";
 		} else {
-			_view.energyCounter.text = Mathf.Floor(energy / 1000000) + " GWh";
+			_view.energyCounter.text = Mathf.Floor(energy / 1000000) + " MWh";
 		}
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
