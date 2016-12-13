@@ -12,7 +12,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	//public List<AvatarActivity.Target> avatarAffordances_old;
 	public List<Affordance> avatarAffordances;
-	//public List<string> owners;
+    List<Affordance> temporaryAvatarAffordances;
+    //public List<string> owners;
     public List<BehaviourAI> owners;
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
@@ -85,8 +86,23 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_harvestButton.SetActive(true);
 	}
 
-	//
-	public JSONClass SerializeAsJSON() {
+    public List<Affordance> GetTemporaryAvatarAffordances()
+    {
+        return temporaryAvatarAffordances;
+    }
+
+    public void SetTemporaryAvatarAffordances(List<Affordance> affordances)
+    {
+        temporaryAvatarAffordances = affordances;
+    }
+
+    public void ClearTemporaryAvatarAffordances()
+    {
+        temporaryAvatarAffordances.Clear();
+    }
+
+    //
+    public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 
 		json.Add("id", GetComponent<UniqueId>().uniqueId);

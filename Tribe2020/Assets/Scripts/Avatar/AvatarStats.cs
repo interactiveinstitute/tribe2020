@@ -15,12 +15,14 @@ public class AvatarStats : MonoBehaviour {
 
     public enum Efficiencies { Lighting, Warming, Cooling, Device}
 
-	public List<AvatarAttitude> attitudes;
+    //public List<AvatarAttitude> attitudes;
+    public AvatarAttitude attitude;
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+        Debug.Log(attitude.preferedMood + " " + attitude.responsivenessMood);
+        attitude.Init();
+    }
 	
 	// Update is called once per frame
 	void Update () {
