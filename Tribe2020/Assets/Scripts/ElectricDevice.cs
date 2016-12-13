@@ -54,7 +54,7 @@ public class ElectricDevice : ElectricMeter {
     //public List<Tuple<long, float>> Pattern;
 
     // Use this for initialization
-    public override void Start () {
+    void Start () {
 
         //This is used for replacing a material
         //We initially save the gameobjects materials to the side in order to be able to switch back to them.
@@ -82,7 +82,7 @@ public class ElectricDevice : ElectricMeter {
         }
 
         base.Start ();
-		lastupdate = _timeMgr.time;
+		//lastupdate = _timeMgr.time;
 
 		//Set initial runlevel.
 		SetRunlevel(runlevel);
@@ -146,7 +146,7 @@ public class ElectricDevice : ElectricMeter {
                     runlevel_materials[f] = runlevels[rl].materials[f];
             }
 
-            //what the fuck? We are updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
+            //what the fuck? We were updating sharedMaterials, which affects all objects using this material. I don't think that is what we want to do....
             //Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
             //runlevels [rl].Target.sharedMaterials = runlevel_materials;
             rend.materials = runlevel_materials;

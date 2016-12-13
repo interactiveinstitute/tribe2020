@@ -14,6 +14,10 @@ public class PilotController : Controller {
 	public bool debug = false;
     public bool enableSaveLoad = true;
 
+	public double startTime;
+	public double endTime;
+	public double playPeriod;
+
     //Access all singleton systemss
     private PilotView _view;
 	private GameTime _timeMgr;
@@ -27,6 +31,7 @@ public class PilotController : Controller {
 	private LocalisationManager _localMgr;
 
 	//Interaction props
+	[SerializeField]
 	private string _touchState = IDLE;
 	private float _touchTimer = 0;
 	private float _doubleTimer = 0;
@@ -44,7 +49,7 @@ public class PilotController : Controller {
 	private List<BehaviourAI> _avatars;
 	private List<Appliance> _appliances;
 
-	private bool _isLoaded = false;
+	private bool _firstUpdate = false;
     #endregion
 
     //Sort use instead of constructor
@@ -72,14 +77,16 @@ public class PilotController : Controller {
 
 		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
 		_appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
+
+		playPeriod = endTime - startTime;
 	}
 	
 	// Update is called once per frame
 	void Update(){
-		if(!_isLoaded) {
-			_isLoaded = true;
+		if(!_firstUpdate) {
+			_firstUpdate = true;
 			LoadGameState();
-			_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentView());
+			//_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 		}
 
 		//Mobile interaction
@@ -119,15 +126,24 @@ public class PilotController : Controller {
 		_view.date.GetComponent<Text>().text = _timeMgr.CurrentDate;
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
-		if(energy < 1) {
-			_view.energyCounter.text = Mathf.Floor(energy * 1000) + " Wh";
+		if(energy < 1000) {
+			_view.energyCounter.text = Mathf.Floor(energy ) + " Wh";
+		} else if(energy < 1000000) {
+			_view.energyCounter.text = Mathf.Floor(energy/10)/100 + " kWh";
+		} else if(energy < 100000000000) {
+			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " kWh";
 		} else {
-			_view.energyCounter.text = Mathf.Floor(energy) + " kWh";
+			_view.energyCounter.text = Mathf.Floor(energy / 1000000) + " MWh";
 		}
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
 		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
+
+		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
+		if(_timeMgr.time > endTime) {
+			LoadScene("MenuScene");
+		}
 	}
 
 	//
@@ -209,7 +225,7 @@ public class PilotController : Controller {
 			}
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetViewPoint().title);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetCurrentViewpoint().title);
 		}
 	}
 
@@ -242,9 +258,57 @@ public class PilotController : Controller {
 	}
 
 	//
+	public void UpdatePinch() {
+		if(Input.touchCount == 2) {
+			_isPinching = true;
+
+			// Store both touches.
+			Touch touchZero = Input.GetTouch(0);
+			Touch touchOne = Input.GetTouch(1);
+
+			// Find the position in the previous frame of each touch.
+			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+			// Find the magnitude of the distance between the touches in each frame.
+			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+			// Find the difference in the distances between each frame.
+			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+			OnPinching(deltaMagnitudeDiff);
+		} else if(_isPinching) {
+			_isPinching = false;
+
+			// Store both touches.
+			Touch touchZero = Input.GetTouch(0);
+			Touch touchOne = Input.GetTouch(1);
+
+			// Find the position in the previous frame of each touch.
+			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+			// Find the magnitude of the distance between the touches in each frame.
+			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+			// Find the difference in the distances between each frame.
+			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+			if(deltaMagnitudeDiff > 0) {
+				OnPinchOut();
+			} else {
+				OnPinchIn();
+			}
+		}
+	}
+
+	//
 	public override void ControlAvatar(string id, string action, Vector3 pos) {
+		Debug.Log("Searching for avatar " + id);
 		foreach(BehaviourAI avatar in _avatars) {
 			if(avatar.name == id) {
+				Debug.Log("Found matching avatar");
 				avatar.TakeControlOfAvatar();
 				avatar.WalkTo(pos);
 			}
@@ -301,10 +365,10 @@ public class PilotController : Controller {
 	//Open mail with details of narrative
 	public void SetCurrentUI(Quest quest) {
 		if(debug) { Debug.Log(name + ": SetCurrentUI(" + quest.name + ")"); }
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_QUEST) { return; }
+		//if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_QUEST) { return; }
 
-		_view.BuildMail(quest);
-		SetCurrentUI(_view.mail);
+		//_view.BuildMail(quest);
+		//SetCurrentUI(_view.mail);
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
 	}
@@ -324,7 +388,7 @@ public class PilotController : Controller {
 		if(_curState != InputState.ALL) {
 			if(ui == _view.energyPanel && _curState != InputState.ONLY_ENERGY) { return; }
 			if(ui == _view.comfortPanel && _curState != InputState.ONLY_COMFORT) { return; }
-			if(_view.GetCurrentUI() == _view.mail && ui == _view.inbox && _curState != InputState.ONLY_CLOSE_MAIL) { return; }
+			if(ui == _view.inbox && _curState != InputState.ONLY_OPEN_INBOX) { return; }
 		}
 
 		if(_view.GetCurrentUI() != null) {
@@ -360,38 +424,40 @@ public class PilotController : Controller {
 
 	//Hide any open user interface
 	public void HideUI() {
-		//if(_curState != InputState.ALL) { return; }
-
-		//if(_view.GetCurrentUI() == _view.inspector) {
-		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
-		//} else if(_view.GetCurrentUI() == _view.inbox) {
-		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
-		//} else if(_view.GetCurrentUI() == _view.mail) {
-		//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailClosed);
-		//}
-
 		_view.SetCurrentUI(null);
 	}
 
 	//
-	public void OpenMail(Quest quest) {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-			_view.BuildMail(quest);
-			ResetTouch();
+	public void SelectGridView() {
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_GRIDVIEW) { return; }
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-		}
+		_camMgr.GoToGridView();
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedGridView);
+	}
+
+	//
+	public void SelectOverview() {
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_OVERVIEW) { return; }
+
+		_camMgr.GoToOverview();
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
+	}
+
+	//Request narration event for current view
+	public void RequestCurrentView() {
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetCurrentViewpoint().title);
 	}
 
 	//
 	public void OnQuestPressed(Quest quest) {
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-			_view.BuildMail(quest);
-			//_view.ShowQuest(quest);
-			ResetTouch();
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_INBOX) { return; }
+			//if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
+		_view.BuildMail(quest);
+		//_view.ShowQuest(quest);
+		ResetTouch();
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-		}
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+		//}
 	}
 	
 	//
@@ -402,14 +468,27 @@ public class PilotController : Controller {
 
 	//
 	public void OnHarvestTap(GameObject go) {
-		if(_curState == InputState.ALL) {
-			_resourceMgr.cash += 10;
-			_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
-			go.SetActive(false);
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
 
-			ResetTouch();
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
+		_resourceMgr.cash += 10;
+		_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
+		go.SetActive(false);
+
+		ResetTouch();
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
+	}
+
+	//
+	public void CreateHarvest(string command) {
+		JSONNode json = JSON.Parse(command);
+		string currency = json["type"];
+		string location = json["location"];
+
+		if(location.Equals("current")) {
+			_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
 		}
+
+		//Debug.Log(name + " create " + currency + " in " + location);
 	}
 
 	//
@@ -422,8 +501,11 @@ public class PilotController : Controller {
 	}
 
 	//
-	public override void OnNewViewpoint(string title, Viewpoint[][] viewMatrix, Vector2 curView) {
-		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), curView);
+	public override void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
+		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), curView, overview);
+		_view.UpdateViewpointTitle(curView.title);
+
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
 	}
 
 	//
@@ -467,71 +549,6 @@ public class PilotController : Controller {
 	}
 
 	//
-	public void UpdatePinch(){
-		if(Input.touchCount == 2){
-			_isPinching = true;
-
-			// Store both touches.
-			Touch touchZero = Input.GetTouch(0);
-			Touch touchOne = Input.GetTouch(1);
-			
-			// Find the position in the previous frame of each touch.
-			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-			
-			// Find the magnitude of the distance between the touches in each frame.
-			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-			
-			// Find the difference in the distances between each frame.
-			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-			OnPinching(deltaMagnitudeDiff);
-		} else if(_isPinching){
-			_isPinching = false;
-
-			// Store both touches.
-			Touch touchZero = Input.GetTouch(0);
-			Touch touchOne = Input.GetTouch(1);
-
-			// Find the position in the previous frame of each touch.
-			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-			
-			// Find the magnitude of the distance between the touches in each frame.
-			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-			
-			// Find the difference in the distances between each frame.
-			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-			if(deltaMagnitudeDiff > 0){
-				OnPinchOut();
-			} else {
-				OnPinchIn();
-			}
-		}
-	}
-
-	//
-	public bool IsOutsideUI(Vector3 pos){
-		bool outsideInspector = true;
-		bool outsideMailButton = true;
-		if(_view.inspectorUI.activeSelf) {
-			outsideInspector =
-				pos.x > Screen.width * 0.2f ||
-				pos.x < Screen.width - Screen.width * 0.2f ||
-				pos.y > Screen.height * 0.12f ||
-				pos.y < Screen.height - Screen.height * 0.12f;
-		}
-		outsideInspector = !_view.inspectorUI.activeSelf;
-		outsideMailButton =
-			pos.x < Screen.width - Screen.width * 0.2f ||
-			pos.y < Screen.height - Screen.height * 0.12f;
-
-		return !_view.IsAnyOverlayActive();
-	}
-
-	//
 	public override void ClearView() {
 		_view.ClearView();
 	}
@@ -558,23 +575,23 @@ public class PilotController : Controller {
 	}
 
 	//
-	public string GetPhrase(string groupKey) {
-		return _localMgr.GetPhrase(groupKey);
-	}
-
-	//
-	public string GetPhrase(string groupKey, string key) {
-		return _localMgr.GetPhrase(groupKey, key);
-	}
-
-	//
 	public string GetPhrase(string groupKey, string key, int index) {
 		return _localMgr.GetPhrase(groupKey, key, index);
 	}
 
 	//
 	public override void SetTimeScale(int timeScale) {
-		_timeMgr.TimeScale = timeScale;
+		_timeMgr.VisualTimeScale = timeScale;
+	}
+
+	//
+	public void SetTimeScale(float timeScale) {
+		_timeMgr.VisualTimeScale = timeScale;
+	}
+
+	//
+	public void StepTimeForward(int days) {
+		_timeMgr.Offset(86400 * days);
 	}
 
 	//
@@ -585,7 +602,7 @@ public class PilotController : Controller {
 	//
 	public override void UnlockView(int x, int y) {
 		_camMgr.UnlockView(x, y);
-		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentView());
+		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 	}
 
 	//

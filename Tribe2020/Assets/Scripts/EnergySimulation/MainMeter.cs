@@ -8,6 +8,7 @@ public class MainMeter : ElectricMeter {
 	void Awake() {
 		_instance = this;
 		continous_updates = true;
+		base.Awake ();
 	}
 
 	public static MainMeter GetInstance() {

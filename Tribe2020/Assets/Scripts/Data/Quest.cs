@@ -8,7 +8,7 @@ public class Quest : ScriptableObject {
 	public enum QuestStepType {
 		Prompt, Popup, SendMail, PlayAnimation, PlaySound, ControlAvatar, StartAvatarActivity,
 		ChangeTimeScale, QuestComplete, ControlInterface, Wait, UnlockView, PilotComplete,
-		PilotFailed
+		PilotFailed, CreateHarvest
 	};
 
 	//Quest events
@@ -16,7 +16,8 @@ public class Quest : ScriptableObject {
 		EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
 		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
 		ResourceHarvested, BattleOver, InspectorOpened, InspectorClosed, InboxOpened, InboxClosed, MailOpened, MailClosed,
-		OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn, AvatarSelected
+		OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn, AvatarSelected,
+		SelectedOverview, SelectedGridView
 	};
 
 	
@@ -28,7 +29,11 @@ public class Quest : ScriptableObject {
 	public List<Quest.NarrativeCheck> checkList;
 	public Quest nextQuest;
 
-	public List<Quest.QuestStep> questSteps;
+	//public List<Quest.QuestStep> questSteps;
+
+	public List<Quest.Step> steps;
+
+	//public List<NarrationStep> nSteps;
 
 	private int _curStep = 0;
 
@@ -43,8 +48,8 @@ public class Quest : ScriptableObject {
 	[System.Serializable]
 	public class QuestStep {
 		public string title;
-		public QuestStepType type;
 		public Controller.InputState inputState;
+		public QuestStepType type;
 
 		[TextArea(2, 10)]
 		public string valueField;
@@ -53,6 +58,57 @@ public class Quest : ScriptableObject {
 
 		public QuestEvent condition;
 		public string conditionField;
+
+		//public Argument arguments;
+		//public List<QuestCondition> conditions;
+	}
+
+	//Definition of a quest step
+	[System.Serializable]
+	public class Step {
+		public string title;
+		public QuestStepType type;
+
+		//[TextArea(2, 10)]
+		[NarrationStep("Prompt,Popup,QuestComplete", true)]
+		public string message;
+		[NarrationStep("Prompt,Popup")]
+		public Sprite portrait;
+
+		//[TextArea(2, 10)]
+		[HideInInspector]
+		public string valueField;
+
+		[NarrationStep("UnlockView", true)]
+		public Viewpoint viewpoint;
+
+		[NarrationStep("PlayAnimation", true)]
+		public string animation;
+
+		[NarrationStep("ControlAvatar,ControlInterface,CreateHarvest", true)]
+		public string commandJSON;
+
+		[NarrationStep("ControlAvatar")]
+		public AvatarActivity activity;
+
+		[NarrationStep("ChangeTimeScale", true)]
+		public float timeScale;
+
+		[NarrationStep("PlaySound", true)]
+		public string sound;
+
+		[HideInInspector]
+		public Object objectField;
+		[HideInInspector]
+		public bool showAtBottom;
+
+		public bool conditionalProgress;
+		[NarrationCondition]
+		public QuestEvent condition;
+		[NarrationCondition("ApplianceSelected")]
+		public string conditionField;
+
+		public Controller.InputState inputState;
 
 		//public Argument arguments;
 		//public List<QuestCondition> conditions;
@@ -96,8 +152,8 @@ public class Quest : ScriptableObject {
 	}
 
 	//
-	public QuestStep GetCurrentStep() {
-		return questSteps[_curStep];
+	public Step GetCurrentStep() {
+		return steps[_curStep];
 	}
 
 	//
@@ -107,7 +163,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public QuestStepType GetCurrentStepType() {
-		return questSteps[_curStep].type;
+		return steps[_curStep].type;
 	}
 
 	////
@@ -122,7 +178,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public Controller.InputState GetCurrentInteractionLimits() {
-		return questSteps[_curStep].inputState;
+		return steps[_curStep].inputState;
 	}
 
 	//
@@ -143,7 +199,7 @@ public class Quest : ScriptableObject {
 		//	return true;
 		//}
 
-		return _curStep >= questSteps.Count;
+		return _curStep >= steps.Count;
 
 		//bool result = true;
 
@@ -158,7 +214,7 @@ public class Quest : ScriptableObject {
 
 	//
 	public void NextStep() {
-		if(_curStep < questSteps.Count) {
+		if(_curStep < steps.Count) {
 			_curStep++;
 		}
 	}
@@ -172,26 +228,26 @@ public class Quest : ScriptableObject {
 
 	//
 	public bool IsComplete() {
-		return (_curStep >= questSteps.Count);
+		return (_curStep >= steps.Count);
 	}
 
 	//
 	public int ParseAsInt(string key) {
-		return JSON.Parse(GetCurrentStep().valueField)[key].AsInt;
+		return JSON.Parse(GetCurrentStep().commandJSON)[key].AsInt;
 		//return 0;
 	}
 
 	//
 	public string ParseAsString(string key) {
-		return JSON.Parse(GetCurrentStep().valueField)[key].Value;
+		return JSON.Parse(GetCurrentStep().commandJSON)[key].Value;
 		//return "";
 	}
 
 	//
 	public Vector2 ParseAsVector2(string key) {
-		if(JSON.Parse(GetCurrentStep().valueField)[key] != null) {
-			float x = JSON.Parse(GetCurrentStep().valueField)[key][0].AsFloat;
-			float y = JSON.Parse(GetCurrentStep().valueField)[key][1].AsFloat;
+		if(JSON.Parse(GetCurrentStep().commandJSON)[key] != null) {
+			float x = JSON.Parse(GetCurrentStep().commandJSON)[key][0].AsFloat;
+			float y = JSON.Parse(GetCurrentStep().commandJSON)[key][1].AsFloat;
 
 			return new Vector2(x, y);
 		}
@@ -201,10 +257,10 @@ public class Quest : ScriptableObject {
 
 	//
 	public Vector3 ParseAsVector3(string key) {
-		if(JSON.Parse(GetCurrentStep().valueField)[key] != null) {
-			float x = JSON.Parse(GetCurrentStep().valueField)[key][0].AsFloat;
-			float y = JSON.Parse(GetCurrentStep().valueField)[key][1].AsFloat;
-			float z = JSON.Parse(GetCurrentStep().valueField)[key][2].AsFloat;
+		if(JSON.Parse(GetCurrentStep().commandJSON)[key] != null) {
+			float x = JSON.Parse(GetCurrentStep().commandJSON)[key][0].AsFloat;
+			float y = JSON.Parse(GetCurrentStep().commandJSON)[key][1].AsFloat;
+			float z = JSON.Parse(GetCurrentStep().commandJSON)[key][2].AsFloat;
 			return new Vector3(x, y, z);
 		}
 

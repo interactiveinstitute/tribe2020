@@ -12,13 +12,21 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	//public List<AvatarActivity.Target> avatarAffordances_old;
 	public List<Affordance> avatarAffordances;
-    List<Affordance> temporaryAvatarAffordances;
-    //public List<string> owners;
+	//public List<string> owners;
     public List<BehaviourAI> owners;
+
+    [System.Serializable]
+    public class PoseSlot
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+        public BehaviourAI occupant;
+    }
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
-	public float cashProduction;
+    public List<PoseSlot> posePositions = new List<PoseSlot>();
+    public float cashProduction;
 	public float comfortPorduction;
 
 	public List<EEMMeta> possibleEEMs;
@@ -33,13 +41,27 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		public bool applied;
 	}
 
+    void Awake()
+    {
+        InteractionPoint ip = GetComponentInChildren<InteractionPoint>();
+        if (ip != null)
+        {
+            interactionPos = ip.transform.position;
+        }
+        else
+        {
+            DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
+            interactionPos = transform.position;
+        }
+    }
+
 	// Use this for initialization
 	void Start() {
 		_ctrlMgr = PilotController.GetInstance();
 
 		_harvestButton = Instantiate(harvestButtonRef) as GameObject;
-		_harvestButton.transform.position = transform.position + Vector3.up * 1.5f;
-		_harvestButton.transform.SetParent(transform);
+		_harvestButton.transform.SetParent(transform, false);
+		_harvestButton.transform.localPosition = Vector3.up * 0.5f;
 
 		_harvestButton.GetComponentInChildren<Button>().
 				onClick.AddListener(() => _ctrlMgr.OnHarvestTap(_harvestButton));
@@ -48,13 +70,19 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		appliedEEMs = new List<EnergyEfficiencyMeasure>();
 
-		InteractionPoint ip = GetComponentInChildren<InteractionPoint>();
-		if(ip != null) {
-			interactionPos = ip.transform.position;
-		} else {
-            DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
-			interactionPos = transform.position;
-		}
+        //Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
+        PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
+        //if (posePositions == null)
+        //{
+        //    posePositions = new List<PoseSlot>();
+        //}
+        foreach (PosePoint point in poseArray)
+        {
+            PoseSlot item = new PoseSlot();
+            item.position = point.transform.position;
+            item.rotation = point.transform.rotation;
+            posePositions.Add(item);
+        }
 	}
 	
 	// Update is called once per frame
@@ -86,23 +114,20 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_harvestButton.SetActive(true);
 	}
 
-    public List<Affordance> GetTemporaryAvatarAffordances()
+    //Releases all pose slots that are currently occupied by the supplied occupant
+    public void ReleasePoseSlot(BehaviourAI occupant)
     {
-        return temporaryAvatarAffordances;
+        foreach(PoseSlot slot in posePositions)
+        {
+            if(slot.occupant == occupant)
+            {
+                slot.occupant = null;
+            }
+        }
     }
 
-    public void SetTemporaryAvatarAffordances(List<Affordance> affordances)
-    {
-        temporaryAvatarAffordances = affordances;
-    }
-
-    public void ClearTemporaryAvatarAffordances()
-    {
-        temporaryAvatarAffordances.Clear();
-    }
-
-    //
-    public JSONClass SerializeAsJSON() {
+	//
+	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 
 		json.Add("id", GetComponent<UniqueId>().uniqueId);

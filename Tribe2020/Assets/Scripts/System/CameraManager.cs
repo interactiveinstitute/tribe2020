@@ -12,17 +12,23 @@ public class CameraManager : MonoBehaviour {
 
 	#region Fields
 	public bool debug = false;
+	public bool xWrap = false;
+	public bool yWrap = false;
 	private PilotController _controller;
 
 	public enum CameraState { Idle, Full, Room, Panned };
 	public CameraState cameraState = CameraState.Idle;
 
 	//Viewpoint variables
-	public Vector2 startView = Vector2.zero;
-	private Vector2 _curView = Vector2.zero;
-	private Transform _curViewpoint;
-	private Transform[][] _viewpoints;
+	public Vector2 startCoordinates = Vector2.zero;
+	public Vector2 currentCoordinates = Vector2.zero;
+	//private Transform _curViewpoint;
+	private Viewpoint _curView;
+	//private Transform[][] _viewpoints;
 	private Viewpoint[][] _views;
+	private Viewpoint _overview;
+	[SerializeField]
+	private bool _inOverview;
 
 	//Camera movement variables
 	private Vector3 _lastPos = Vector3.zero;
@@ -41,7 +47,7 @@ public class CameraManager : MonoBehaviour {
 
 	private float _panSpeed = 0.01f;
 
-	private bool _isInit = false;
+	private bool _firstLoop = true;
 	#endregion
 
 	//Sort use instead of constructor
@@ -62,9 +68,9 @@ public class CameraManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(!_isInit) {
-			SetViewpoint((int)startView.x, (int)startView.y, Vector2.zero);
-			_isInit = true;
+		if(_firstLoop) {
+			SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
+			_firstLoop = false;
 		}
 
 		if(journeyLength > 0) {
@@ -80,9 +86,9 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void UpdateVisibility() {
-		Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
+		//Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
 
-		foreach(GameObject go in vp.hideObjects) {
+		foreach(GameObject go in _curView.hideObjects) {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
 	}
@@ -141,10 +147,14 @@ public class CameraManager : MonoBehaviour {
 
 		//Find max y
 		foreach(Viewpoint vp in viewPoints) {
-			int curY = vp.yIndex;
-			if(maxY <= curY) { maxY = curY + 1; }
+			if(vp.overview) {
+				_overview = vp;
+			} else {
+				int curY = vp.yIndex;
+				if(maxY <= curY) { maxY = curY + 1; }
+			}
 		}
-		_viewpoints = new Transform[maxY][];
+		//_viewpoints = new Transform[maxY][];
 		_views = new Viewpoint[maxY][];
 
 		//Find max x for each floor
@@ -152,18 +162,18 @@ public class CameraManager : MonoBehaviour {
 			int maxX = 0;
 
 			foreach(Viewpoint vp in viewPoints) {
-				if(vp.yIndex == y) {
+				if(!vp.overview && vp.yIndex == y) {
 					int curX = vp.xIndex;
 					if(maxX <= curX) { maxX = curX + 1; }
 				}
 			}
 
-			_viewpoints[y] = new Transform[maxX];
+			//_viewpoints[y] = new Transform[maxX];
 			_views[y] = new Viewpoint[maxX];
 
 			int x = 0;
 			foreach(Viewpoint vp in viewPoints) {
-				if(vp.yIndex == y) {
+				if(!vp.overview && vp.yIndex == y) {
 					_views[y][x++] = vp;
 				}
 			}
@@ -171,47 +181,82 @@ public class CameraManager : MonoBehaviour {
 		
 		//Add viewpoints to camera manager
 		foreach(Viewpoint vp in viewPoints) {
-			int curX = vp.xIndex;
-			int curY = vp.yIndex;
+			if(!vp.overview) {
+				int curX = vp.xIndex;
+				int curY = vp.yIndex;
 
-			_viewpoints[curY][curX] = vp.transform;
+				//_viewpoints[curY][curX] = vp.transform;
+				_views[curY][curX] = vp;
+			}
 		}
 	}
 
 	//
-	public void SetViewpoint(int x, int y, Vector2 dir) {
-		//Panned in y-axis but is out of x-index, switch to highest x-index
-		if(x >= _viewpoints[y].Length) {
-			x = _viewpoints[y].Length - 1;
-		}
-
-		_curView = new Vector2(x, y);
-
-		_curViewpoint = _viewpoints[(int)_curView.y][(int)_curView.x];
-		//HideObstacles(_curViewpoint);
-		if(_viewpoints[y][x].GetComponent<Viewpoint>().locked) {
-			if(dir == Vector2.right) { GotoRightView(); }
-			if(dir == Vector2.left) { GotoLeftView(); }
-			if(dir == Vector2.up) { GotoUpperView(); }
-			if(dir == Vector2.down) { GotoLowerView(); }
-			return;
-		}
+	public void GoToOverview() {
+		_inOverview = true;
+		_curView = _overview;
 
 		_lastPos = gameCamera.transform.position;
-		_targetPos = _curViewpoint.position;
+		_targetPos = _curView.transform.position;
 
 		_lastRot = gameCamera.transform.eulerAngles;
-		_targetRot = _curViewpoint.eulerAngles;
+		_targetRot = _curView.transform.eulerAngles;
 
 		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
-		_controller.OnNewViewpoint(_curViewpoint.GetComponent<Viewpoint>().title, _views, _curView);
+		_controller.OnNewViewpoint(_curView, _views, _inOverview);
 	}
 
 	//
-	public Viewpoint GetViewPoint() {
-		return _curViewpoint.GetComponent<Viewpoint>();
+	public void GoToGridView() {
+		_inOverview = false;
+
+		SetViewpoint((int)currentCoordinates.x, (int)currentCoordinates.y, Vector2.zero);
+	}
+
+	//
+	public void SetViewpoint(int x, int y, Vector2 dir) {
+		//Out of bounds
+		if(y > _views.Length - 1 || y < 0) { return; }
+
+		//Panned in y-axis but is out of x-index, switch to highest x-index
+		if(x >= _views[y].Length) {
+			x = _views[y].Length - 1;
+		}
+
+		Vector2 targetCoordinates = new Vector2(x, y);
+
+		//HideObstacles(_curViewpoint);
+		if(_views[y][x].locked) {
+			if(dir == Vector2.right) { GotoRightView(targetCoordinates); }
+			if(dir == Vector2.left) { GotoLeftView(targetCoordinates); }
+			if(dir == Vector2.up) { GotoUpperView(targetCoordinates); }
+			if(dir == Vector2.down) { GotoLowerView(targetCoordinates); }
+			return;
+		} else {
+			//Update view state
+			currentCoordinates = targetCoordinates;
+			_curView = _views[(int)currentCoordinates.y][(int)currentCoordinates.x];
+
+			//Prepare interpolated transition
+			_lastPos = gameCamera.transform.position;
+			_targetPos = _curView.transform.position;
+
+			_lastRot = gameCamera.transform.eulerAngles;
+			_targetRot = _curView.transform.eulerAngles;
+
+			startTime = Time.unscaledTime;
+			journeyLength = Vector3.Distance(_lastPos, _targetPos);
+
+			//Controller callback
+			_controller.OnNewViewpoint(_curView, _views, _inOverview);
+		}
+	}
+
+	//
+	public Viewpoint GetViewpoint(int x, int y) {
+		return _views[y][x];
 	}
 
 	//
@@ -220,32 +265,81 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
-	public Vector2 GetCurrentView() {
+	public Vector2 GetCurrentCoordinates() {
+		return currentCoordinates;
+	}
+
+	//
+	public Viewpoint GetCurrentViewpoint() {
 		return _curView;
 	}
 
 	//
-	public void GotoRightView(){
-		int floorRooms = _viewpoints[(int)_curView.y].Length;
-		SetViewpoint((int)(_curView.x + 1) % floorRooms, (int)_curView.y, Vector2.right);
+	public void GotoRightView() {
+		GotoRightView(currentCoordinates);
 	}
 
 	//
-	public void GotoLeftView(){
-		int floorRooms = _viewpoints[(int)_curView.y].Length;
-		SetViewpoint((int)(_curView.x + floorRooms - 1) % floorRooms, (int)_curView.y, Vector2.left);
+	public void GotoLeftView() {
+		GotoLeftView(currentCoordinates);
 	}
 
 	//
-	public void GotoUpperView(){
-		int floors = _viewpoints.Length;
-		SetViewpoint((int)_curView.x, (int)(_curView.y + 1) % floors, Vector2.up);
+	public void GotoUpperView() {
+		GotoUpperView(currentCoordinates);
 	}
 
 	//
-	public void GotoLowerView(){ 
-		int floors = _viewpoints.Length;
-		SetViewpoint((int)_curView.x, (int)(_curView.y + floors - 1) % floors, Vector2.down);
+	public void GotoLowerView() {
+		GotoLowerView(currentCoordinates);
+	}
+
+	//
+	public void GotoRightView(Vector2 target) {
+		if(_inOverview) { return; }
+
+		int floorRooms = _views[(int)target.y].Length;
+		if(xWrap) {
+			SetViewpoint((int)(target.x + 1) % floorRooms, (int)target.y, Vector2.right);
+		} else if(target.x < floorRooms - 1)  {
+			SetViewpoint((int)(target.x + 1), (int)target.y, Vector2.right);
+		}
+	}
+
+	//
+	public void GotoLeftView(Vector2 target) {
+		if(_inOverview) { return; }
+
+		int floorRooms = _views[(int)target.y].Length;
+		if(xWrap) {
+			SetViewpoint((int)(target.x + floorRooms - 1) % floorRooms, (int)target.y, Vector2.left);
+		} else if(target.x > 0)  {
+            SetViewpoint((int)(target.x - 1), (int)target.y, Vector2.left);
+		}
+	}
+
+	//
+	public void GotoUpperView(Vector2 target) {
+		if(_inOverview) { return; }
+
+		int floors = _views.Length;
+		if(yWrap) {
+			SetViewpoint((int)target.x, (int)(target.y + 1) % floors, Vector2.up);
+		} else if(target.y < floors - 1) {
+			SetViewpoint((int)target.x, (int)(target.y + 1), Vector2.up);
+		}
+	}
+
+	//
+	public void GotoLowerView(Vector2 target) {
+		if(_inOverview) { return; }
+
+		int floors = _views.Length;
+		if(yWrap) {
+			SetViewpoint((int)target.x, (int)(target.y + floors - 1) % floors, Vector2.down);
+		} else if(target.y > 0) {
+			SetViewpoint((int)target.x, (int)(target.y - 1), Vector2.down);
+		}
 	}
 
 	//

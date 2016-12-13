@@ -318,10 +318,12 @@ public class AvatarActivity : ScriptableObject {
 	//
 	public void OnDestinationReached() {
         DebugManager.Log(_ai.name + " reached destination " + GetSessionAtIndex(_currSession).requiredAffordance + ". if current SessionType is walkTo, start next session", this);
-        //if (sessions[_currSession].type == SessionType.WalkTo) {//Why do we perform this check? I don't know. Gunnar.
-			NextSession();
-		//}
-	}
+        //if (sessions[_currSession].type == SessionType.WalkTo)//We do this check. In case the character
+        //{
+            NextSession();
+        //}
+        //SetCurrentAvatarState(AvatarState.Idle);
+    }
 
 	//
 	public void FinishCurrentActivity() {

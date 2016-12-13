@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
+
 
 public class ElectricMeter : TimeDataObject {
 	[Header("Electric upward connection")]
@@ -30,10 +32,15 @@ public class ElectricMeter : TimeDataObject {
 	[ShowOnly] public bool HasPower = false;
 	[ShowOnly] public float Power = 0;
 	[ShowOnly] public double Energy = 0;
-	[ShowOnly] public double lastupdate;
+	[ShowOnly] public double lastupdate = Double.NaN;
 
 	[Header("Debug tools")]
 	public bool continous_updates = false;
+
+	void Awake() {
+		continous_updates = false;
+
+	}
 
 	// Use this for initialization
 	public virtual void Start () {
@@ -158,6 +165,9 @@ public class ElectricMeter : TimeDataObject {
 	public void update_energy(double now) {
 		//Calculate energy for the period
 		double delta;
+
+		if (Double.IsNaN(lastupdate) )
+			return;
 
 		delta = now - lastupdate;
 		Energy = Energy + ((Power * delta)/3600);
