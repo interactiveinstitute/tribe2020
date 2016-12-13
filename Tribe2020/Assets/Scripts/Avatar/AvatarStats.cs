@@ -20,7 +20,6 @@ public class AvatarStats : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Debug.Log(attitude.preferedMood + " " + attitude.responsivenessMood);
         attitude.Init();
     }
 	

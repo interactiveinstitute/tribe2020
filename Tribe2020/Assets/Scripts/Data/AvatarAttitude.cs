@@ -42,7 +42,7 @@ public class AvatarAttitude {
         markovMood.SetProbability(Mood.happy, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.happy), standardDeviation }, true);
         markovMood.SetProbability(Mood.euphoric, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.euphoric), standardDeviation }, true);
 
-        markovMood.LogProbabilities();
+        //markovMood.LogProbabilities();
 
         markovMood.SetCurrentState(preferedMood);
 
