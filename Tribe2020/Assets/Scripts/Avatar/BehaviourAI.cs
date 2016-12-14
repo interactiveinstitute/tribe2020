@@ -112,8 +112,7 @@ public class BehaviourAI : SimulationObject
         //Correct activity should now be available with getCurrent()
         GetRunningActivity().Start();
         //Find the next scheduled activity and set it as key point
-        AddNextKeyPoint();
-
+        _timeMgr.AddKeypoint(TimeStampForNextScheduledActivity(), this);
         return true;
     }
 
@@ -135,13 +134,31 @@ public class BehaviourAI : SimulationObject
         NextActivity();//Change to next activity (sets it as _curActivity)
     }
 
-    private void AddNextKeyPoint()
+    private double TimeStampForNextScheduledActivity()
     {
+        //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+        double curTime = _timeMgr.GetTotalSeconds();
+        int nxtIndex = _scheduleIndex;
+        //get offset in days
+        int nxtActivityDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
 
-        ////We must now find the next scheduled activity with startTime and set it as key point.
-        //foreach () { }
-        //_timeMgr.AddKeypoint(activity.startTime, this);
+        //Loop through schedule until we find an activity with startTime
+        //Also, let's limit the loop to the length of the schedule. If no activity with a startTime is found that means there is no activity with startTime in the schedule.
+        for (int i = 0; i < schedule.Length; i++)
+        {
+            //Get next schedule index
+            nxtIndex = (nxtIndex + 1) % schedule.Length;
+            if(schedule[nxtIndex].time == "")
+            {
+                //This activity has no scheduled startTime
+                continue;
+            }
+            //Determine startTime for nextActivity
+            return _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, schedule[nxtIndex].time);
+        }
 
+        DebugManager.LogError("Couldn't find an activity with startTime in schedule. Double check the schedule of the avatar", this, this);
+        return 0;
     }
 
     // Update is called once per frame
@@ -527,18 +544,6 @@ public class BehaviourAI : SimulationObject
             SetPrevActivity(prevItem.activity);
         }
     }
-
-    ////
-    //public void EndOverride()
-    //{
-    //    _curActivity.ResumeSession(this);
-    //    //_curActivityState = ActivityState.Idle;
-    //}
-
-    ////
-    //public void Interact()
-    //{
-    //}
 
     void SetAgentDestination(AvatarActivity activity)
     {
