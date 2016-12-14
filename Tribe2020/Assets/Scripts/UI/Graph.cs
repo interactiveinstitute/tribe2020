@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Graph : TimeDataObject {
+public class Graph : DataNode {
 
 	[Header("Parameters")]
 	public double StartTime;
@@ -13,7 +13,7 @@ public class Graph : TimeDataObject {
 
 
 	[Header("Source")]
-	public TimeSeries Source;
+	public DataSeries Source;
 	public  int ValueIndex = 0;
 
 	[Header("Design")]

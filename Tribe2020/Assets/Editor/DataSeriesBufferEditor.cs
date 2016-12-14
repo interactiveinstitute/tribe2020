@@ -2,14 +2,14 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(TimeSeries))]
-public class TimeSeriesEditor : Editor
+[CustomEditor(typeof(DataSeriesBuffer))]
+public class DataSeriesBufferEditor : Editor
 {
 	public override void OnInspectorGUI()
 	{
 		DrawDefaultInspector();
 
-		TimeSeries myScript = (TimeSeries)target;
+		DataSeriesBuffer myScript = (DataSeriesBuffer)target;
 
 
 		if(GUILayout.Button("Load all",GUILayout.Width(100) ))

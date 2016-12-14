@@ -8,7 +8,7 @@ public class Shape : MonoBehaviour {
 
 	[Header("Source")]
 	public List<float> values;
-	public TimeSeries timeSeries;
+	public DataSeriesBuffer timeSeries;
 
 	//Use this for initialization
 	void Start() {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DataText : TimeDataObject {
+public class DataText : DataNode {
 
 	public TextMesh textMesh = null;
 	public string Subproperty = null;

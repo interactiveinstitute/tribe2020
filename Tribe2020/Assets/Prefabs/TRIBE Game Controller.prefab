@@ -2266,7 +2266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overrideSlot: 0
-  saveSlot: 1
+  saveSlot: 0
   debug: 0
   fileName: tribeSave.gd
   defaultContent: '{"San Pablo":"True", "IES Azucarera":"False", "CIRCE HQ":"False",
@@ -2302,10 +2302,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartTime: 1010127600
+  offset: 0
   time: 1010127600
+  VisualTime: 0
   CurrentDate: 
-  Keypoints: []
-  TimeScale: 1
+  KeyActions: []
+  VisualTimeScale: 1
+  SimulationTimeScaleFactor: 1
+  LockScales: 0
 --- !u!114 &11441302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7519,8 +7523,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 755.625, y: -180}
-  m_SizeDelta: {x: 48.75, y: 360}
+  m_AnchoredPosition: {x: 645, y: -160}
+  m_SizeDelta: {x: 10, y: 320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22435482
 RectTransform:
@@ -7574,7 +7578,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: -116.99997}
+  m_AnchoredPosition: {x: 125, y: -0.000022888184}
   m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22439936
@@ -7855,7 +7859,7 @@ RectTransform:
   m_Father: {fileID: 22443386}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.99999994}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8064,8 +8068,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 365.625, y: -180}
-  m_SizeDelta: {x: 731.25, y: 360}
+  m_AnchoredPosition: {x: 320, y: -160}
+  m_SizeDelta: {x: 640, y: 320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22497236
 RectTransform:
@@ -8399,6 +8403,24 @@ GameObject:
   - 114: {fileID: 114000012968763298}
   m_Layer: 5
   m_Name: Effects Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000010236857708
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000011592869540}
+  - 222: {fileID: 222000011379034220}
+  - 114: {fileID: 114000012441394376}
+  - 114: {fileID: 114000013317951634}
+  m_Layer: 5
+  m_Name: Baseline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9579,6 +9601,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000011364184244
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000013263727058}
+  - 222: {fileID: 222000011833248820}
+  - 114: {fileID: 114000012604367074}
+  - 114: {fileID: 114000011704036548}
+  - 114: {fileID: 114000013845177840}
+  m_Layer: 5
+  m_Name: Graphs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000011367497194
 GameObject:
   m_ObjectHideFlags: 1
@@ -10262,7 +10303,7 @@ GameObject:
   - 114: {fileID: 114000013387591132}
   - 114: {fileID: 114000012222434450}
   m_Layer: 5
-  m_Name: Outcome
+  m_Name: Gas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10740,7 +10781,7 @@ GameObject:
   - 114: {fileID: 114000010212613266}
   - 114: {fileID: 114000011266746598}
   m_Layer: 5
-  m_Name: Baseline
+  m_Name: Electricity + Gas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10952,6 +10993,24 @@ GameObject:
   - 114: {fileID: 114000011488405210}
   m_Layer: 5
   m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000012867527542
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 224000010888004608}
+  - 222: {fileID: 222000011544270700}
+  - 114: {fileID: 114000013587432816}
+  - 114: {fileID: 114000011495200864}
+  m_Layer: 5
+  m_Name: Outcome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11838,27 +11897,6 @@ GameObject:
   - 114: {fileID: 114000011902561372}
   m_Layer: 5
   m_Name: Power Value
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1000013928634732
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 224000012479878168}
-  - 222: {fileID: 222000012710531230}
-  - 114: {fileID: 114000011528038194}
-  - 114: {fileID: 114000010921665170}
-  - 114: {fileID: 114000013711205148}
-  - 114: {fileID: 114000013947780176}
-  - 114: {fileID: 114000011625997936}
-  m_Layer: 5
-  m_Name: Line Graph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12992,6 +13030,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   StartTime: -43200
   StopTime: 43200
   Max: 15000
@@ -13009,141 +13050,225 @@ MonoBehaviour:
     - 838.732
     - 888110.342
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010095200
     Values:
     - 838.732
     - 888949.074
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010098800
     Values:
     - 838.732
     - 889787.806
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010102400
     Values:
     - 838.732
     - 890626.538
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010106000
     Values:
     - 838.732
     - 891465.27
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010109600
     Values:
     - 838.732
     - 892304.002
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010113200
     Values:
     - 838.732
     - 893142.734
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010116800
     Values:
     - 838.732
     - 893981.466
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010120400
     Values:
     - 838.732
     - 894820.198
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010124000
     Values:
     - 838.732
     - 895658.93
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010127600
     Values:
     - 838.732
     - 896497.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010131200
     Values:
     - 853.76
     - 897336.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010134800
     Values:
     - 53498.26
     - 898190.154
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010138400
     Values:
     - 54157.33
     - 951688.414
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010142000
     Values:
     - 53686.56
     - 1005845.744
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010145600
     Values:
     - 53288.36
     - 1059532.304
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010149200
     Values:
     - 52926.31
     - 1112820.664
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010152800
     Values:
     - 52924.45
     - 1165746.974
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010156400
     Values:
     - 52919.61
     - 1218671.424
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010160000
     Values:
     - 22483.96
     - 1271591.034
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010163600
     Values:
     - 21955.96
     - 1294074.994
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010167200
     Values:
     - 8039.721
     - 1316030.954
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010170800
     Values:
     - 2732.987
     - 1324070.675
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010174400
     Values:
     - 838.732
     - 1326803.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010178000
     Values:
     - 838.732
     - 1327642.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010181600
     Values:
     - 838.732
     - 1328481.126
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010185200
     Values:
     - 838.732
     - 1329319.858
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010188800
     Values:
     - 838.732
     - 1330158.59
     Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000010289189796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14460,45 +14585,6 @@ MonoBehaviour:
   m_PreferredHeight: 25
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &114000010921665170
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38315fe932d452441b645ce18a329c2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
-  color: {r: 0.63529414, g: 1, b: 0.3882353, a: 1}
-  maxValue: 100
-  minValue: 0
-  sampleStep: 1
-  values:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  electricMeter: {fileID: 0}
-  timeSeries: {fileID: 114000013711205148}
 --- !u!114 &114000010924631662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15365,9 +15451,12 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   StartTime: -43200
   StopTime: 43200
-  Max: 60000
+  Max: 80000
   Min: 0
   Relative: 1
   Source: {fileID: 0}
@@ -15375,148 +15464,266 @@ MonoBehaviour:
   color: {r: 0.3241372, g: 0.32358348, b: 0.33088237, a: 0.78431374}
   _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
-  Debug: []
+  Debug:
+  - {x: 0, y: -1}
+  - {x: 0, y: 0.9407146}
+  - {x: 11.208849, y: 0.9407146}
+  - {x: 24.698433, y: 0.9407146}
+  - {x: 38.188015, y: 0.9407146}
+  - {x: 51.6776, y: 0.9407146}
+  - {x: 65.16718, y: 0.9407146}
+  - {x: 78.65677, y: 0.9407146}
+  - {x: 92.14635, y: 0.9407146}
+  - {x: 105.63593, y: 0.9407146}
+  - {x: 119.12552, y: 0.9407146}
+  - {x: 132.6151, y: 0.9407146}
+  - {x: 132.6151, y: 0.9575699}
+  - {x: 146.10469, y: 0.9575699}
+  - {x: 146.10469, y: 60.00319}
+  - {x: 159.59427, y: 60.00319}
+  - {x: 159.59427, y: 60.742397}
+  - {x: 173.08385, y: 60.742397}
+  - {x: 173.08385, y: 60.214386}
+  - {x: 186.57344, y: 60.214386}
+  - {x: 186.57344, y: 59.76777}
+  - {x: 200.06302, y: 59.76777}
+  - {x: 200.06302, y: 59.361694}
+  - {x: 213.5526, y: 59.361694}
+  - {x: 213.5526, y: 59.359608}
+  - {x: 227.04219, y: 59.359608}
+  - {x: 227.04219, y: 59.35418}
+  - {x: 240.53177, y: 59.35418}
+  - {x: 240.53177, y: 25.217817}
+  - {x: 254.02135, y: 25.217817}
+  - {x: 254.02135, y: 24.625616}
+  - {x: 267.51093, y: 24.625616}
+  - {x: 267.51093, y: 9.0172825}
+  - {x: 281.00052, y: 9.0172825}
+  - {x: 281.00052, y: 3.0652947}
+  - {x: 294.4901, y: 3.0652947}
+  - {x: 294.4901, y: 0.9407146}
+  - {x: 307.97968, y: 0.9407146}
+  - {x: 321.46927, y: 0.9407146}
+  - {x: 323.75, y: 0.9407146}
+  - {x: 323.75, y: 0.9407146}
+  - {x: 323.75, y: -1}
   Data:
   - Timestamp: 1010091600
     Values:
     - 838.732
     - 888110.342
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010095200
     Values:
     - 838.732
     - 888949.074
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010098800
     Values:
     - 838.732
     - 889787.806
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010102400
     Values:
     - 838.732
     - 890626.538
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010106000
     Values:
     - 838.732
     - 891465.27
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010109600
     Values:
     - 838.732
     - 892304.002
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010113200
     Values:
     - 838.732
     - 893142.734
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010116800
     Values:
     - 838.732
     - 893981.466
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010120400
     Values:
     - 838.732
     - 894820.198
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010124000
     Values:
     - 838.732
     - 895658.93
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010127600
     Values:
     - 838.732
     - 896497.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010131200
     Values:
     - 853.76
     - 897336.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010134800
     Values:
     - 53498.26
     - 898190.154
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010138400
     Values:
     - 54157.33
     - 951688.414
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010142000
     Values:
     - 53686.56
     - 1005845.744
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010145600
     Values:
     - 53288.36
     - 1059532.304
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010149200
     Values:
     - 52926.31
     - 1112820.664
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010152800
     Values:
     - 52924.45
     - 1165746.974
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010156400
     Values:
     - 52919.61
     - 1218671.424
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010160000
     Values:
     - 22483.96
     - 1271591.034
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010163600
     Values:
     - 21955.96
     - 1294074.994
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010167200
     Values:
     - 8039.721
     - 1316030.954
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010170800
     Values:
     - 2732.987
     - 1324070.675
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010174400
     Values:
     - 838.732
     - 1326803.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010178000
     Values:
     - 838.732
     - 1327642.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010181600
     Values:
     - 838.732
     - 1328481.126
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010185200
     Values:
     - 838.732
     - 1329319.858
     Texts: []
-  - Timestamp: 1010188800
-    Values:
-    - 838.732
-    - 1330158.59
-    Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000011274256312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15997,6 +16204,265 @@ MonoBehaviour:
   m_PreferredHeight: 20
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &114000011495200864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012867527542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc668fbcf3728a47a1ba49c539793e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  StartTime: -43200
+  StopTime: 43200
+  Max: 70000
+  Min: 0
+  Relative: 1
+  Source: {fileID: 0}
+  ValueIndex: 0
+  color: {r: 0.3446691, g: 0.7289539, b: 0.9191176, a: 0.5882353}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  Staircase: 1
+  Debug: []
+  Data:
+  - Timestamp: 1010091600
+    Values:
+    - 838.732
+    - 888110.342
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010095200
+    Values:
+    - 838.732
+    - 888949.074
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010098800
+    Values:
+    - 838.732
+    - 889787.806
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010102400
+    Values:
+    - 838.732
+    - 890626.538
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010106000
+    Values:
+    - 838.732
+    - 891465.27
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010109600
+    Values:
+    - 838.732
+    - 892304.002
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010113200
+    Values:
+    - 838.732
+    - 893142.734
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010116800
+    Values:
+    - 838.732
+    - 893981.466
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010120400
+    Values:
+    - 838.732
+    - 894820.198
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010124000
+    Values:
+    - 838.732
+    - 895658.93
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010127600
+    Values:
+    - 838.732
+    - 896497.662
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010131200
+    Values:
+    - 853.76
+    - 897336.394
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010134800
+    Values:
+    - 53498.26
+    - 898190.154
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010138400
+    Values:
+    - 54157.33
+    - 951688.414
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010142000
+    Values:
+    - 53686.56
+    - 1005845.744
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010145600
+    Values:
+    - 53288.36
+    - 1059532.304
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010149200
+    Values:
+    - 52926.31
+    - 1112820.664
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010152800
+    Values:
+    - 52924.45
+    - 1165746.974
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010156400
+    Values:
+    - 52919.61
+    - 1218671.424
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010160000
+    Values:
+    - 22483.96
+    - 1271591.034
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010163600
+    Values:
+    - 21955.96
+    - 1294074.994
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010167200
+    Values:
+    - 8039.721
+    - 1316030.954
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010170800
+    Values:
+    - 2732.987
+    - 1324070.675
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010174400
+    Values:
+    - 838.732
+    - 1326803.662
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010178000
+    Values:
+    - 838.732
+    - 1327642.394
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010181600
+    Values:
+    - 838.732
+    - 1328481.126
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010185200
+    Values:
+    - 838.732
+    - 1329319.858
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010188800
+    Values:
+    - 838.732
+    - 1330158.59
+    Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000011510617722
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16042,33 +16508,6 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &114000011528038194
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.74509805}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
 --- !u!114 &114000011547502080
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16122,6 +16561,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   StartTime: -43200
   StopTime: 43200
   Max: 15000
@@ -16139,141 +16581,225 @@ MonoBehaviour:
     - 838.732
     - 888110.342
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010095200
     Values:
     - 838.732
     - 888949.074
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010098800
     Values:
     - 838.732
     - 889787.806
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010102400
     Values:
     - 838.732
     - 890626.538
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010106000
     Values:
     - 838.732
     - 891465.27
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010109600
     Values:
     - 838.732
     - 892304.002
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010113200
     Values:
     - 838.732
     - 893142.734
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010116800
     Values:
     - 838.732
     - 893981.466
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010120400
     Values:
     - 838.732
     - 894820.198
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010124000
     Values:
     - 838.732
     - 895658.93
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010127600
     Values:
     - 838.732
     - 896497.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010131200
     Values:
     - 853.76
     - 897336.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010134800
     Values:
     - 53498.26
     - 898190.154
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010138400
     Values:
     - 54157.33
     - 951688.414
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010142000
     Values:
     - 53686.56
     - 1005845.744
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010145600
     Values:
     - 53288.36
     - 1059532.304
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010149200
     Values:
     - 52926.31
     - 1112820.664
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010152800
     Values:
     - 52924.45
     - 1165746.974
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010156400
     Values:
     - 52919.61
     - 1218671.424
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010160000
     Values:
     - 22483.96
     - 1271591.034
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010163600
     Values:
     - 21955.96
     - 1294074.994
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010167200
     Values:
     - 8039.721
     - 1316030.954
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010170800
     Values:
     - 2732.987
     - 1324070.675
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010174400
     Values:
     - 838.732
     - 1326803.662
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010178000
     Values:
     - 838.732
     - 1327642.394
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010181600
     Values:
     - 838.732
     - 1328481.126
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010185200
     Values:
     - 838.732
     - 1329319.858
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010188800
     Values:
     - 838.732
     - 1330158.59
     Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000011576617126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16364,6 +16890,7 @@ MonoBehaviour:
     Values: []
     Texts: []
   File: {fileID: 0}
+  TTime: {fileID: 0}
 --- !u!114 &114000011620613978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16391,20 +16918,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114000011625997936
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 1
 --- !u!114 &114000011644838574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -16505,6 +17018,24 @@ MonoBehaviour:
   m_MinHeight: -1
   m_PreferredWidth: 25
   m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+--- !u!114 &114000011704036548
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011364184244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 350
+  m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
 --- !u!114 &114000011708964400
@@ -17955,158 +18486,100 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   StartTime: -43200
   StopTime: 43200
-  Max: 70000
+  Max: 80000
   Min: 0
   Relative: 1
   Source: {fileID: 0}
   ValueIndex: 0
-  color: {r: 0.3446691, g: 0.7289539, b: 0.9191176, a: 0.5882353}
+  color: {r: 0.000054065848, g: 0.0049367477, b: 0.007352948, a: 0.5882353}
   _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
-  Debug: []
+  Debug:
+  - {x: 119.12552, y: -1}
+  - {x: 119.12552, y: 3.88387}
+  - {x: 132.6151, y: 3.88387}
+  - {x: 132.6151, y: 3.8980284}
+  - {x: 146.10469, y: 3.8980284}
+  - {x: 146.10469, y: 53.496346}
+  - {x: 146.13454, y: 53.496346}
+  - {x: 146.13474, y: 53.496346}
+  - {x: 146.13484, y: 53.496346}
+  - {x: 159.59427, y: 53.496346}
+  - {x: 159.59427, y: 54.117283}
+  - {x: 159.6248, y: 54.117283}
+  - {x: 159.6248, y: 54.119205}
+  - {x: 161.875, y: 54.119205}
+  - {x: 161.875, y: -1}
   Data:
-  - Timestamp: 1010091600
-    Values:
-    - 838.732
-    - 888110.342
-    Texts: []
-  - Timestamp: 1010095200
-    Values:
-    - 838.732
-    - 888949.074
-    Texts: []
-  - Timestamp: 1010098800
-    Values:
-    - 838.732
-    - 889787.806
-    Texts: []
-  - Timestamp: 1010102400
-    Values:
-    - 838.732
-    - 890626.538
-    Texts: []
-  - Timestamp: 1010106000
-    Values:
-    - 838.732
-    - 891465.27
-    Texts: []
-  - Timestamp: 1010109600
-    Values:
-    - 838.732
-    - 892304.002
-    Texts: []
-  - Timestamp: 1010113200
-    Values:
-    - 838.732
-    - 893142.734
-    Texts: []
-  - Timestamp: 1010116800
-    Values:
-    - 838.732
-    - 893981.466
-    Texts: []
-  - Timestamp: 1010120400
-    Values:
-    - 838.732
-    - 894820.198
-    Texts: []
-  - Timestamp: 1010124000
-    Values:
-    - 838.732
-    - 895658.93
-    Texts: []
   - Timestamp: 1010127600
     Values:
-    - 838.732
-    - 896497.662
+    - 4039.957275390625
+    - 0
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010131200
     Values:
-    - 853.76
-    - 897336.394
+    - 4054.684814453125
+    - 2430.957275390625
     Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010134800
     Values:
-    - 53498.26
-    - 898190.154
+    - 55646.29296875
+    - 4876.64208984375
     Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010134807.9687176
+    Values:
+    - 55646.29296875
+    - 8217.816976723681
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010134808.0197124
+    Values:
+    - 55646.29296875
+    - 8218.605219958536
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010134808.0502357
+    Values:
+    - 55646.29296875
+    - 8219.077027876225
+    Texts: []
+    origin:
+      Data: []
+      index: 0
   - Timestamp: 1010138400
     Values:
-    - 54157.33
-    - 951688.414
+    - 56292.18359375
+    - 62135.53306673792
     Texts: []
-  - Timestamp: 1010142000
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010138408.1493683
     Values:
-    - 53686.56
-    - 1005845.744
+    - 56294.18359375
+    - 63868.36442963155
     Texts: []
-  - Timestamp: 1010145600
-    Values:
-    - 53288.36
-    - 1059532.304
-    Texts: []
-  - Timestamp: 1010149200
-    Values:
-    - 52926.31
-    - 1112820.664
-    Texts: []
-  - Timestamp: 1010152800
-    Values:
-    - 52924.45
-    - 1165746.974
-    Texts: []
-  - Timestamp: 1010156400
-    Values:
-    - 52919.61
-    - 1218671.424
-    Texts: []
-  - Timestamp: 1010160000
-    Values:
-    - 22483.96
-    - 1271591.034
-    Texts: []
-  - Timestamp: 1010163600
-    Values:
-    - 21955.96
-    - 1294074.994
-    Texts: []
-  - Timestamp: 1010167200
-    Values:
-    - 8039.721
-    - 1316030.954
-    Texts: []
-  - Timestamp: 1010170800
-    Values:
-    - 2732.987
-    - 1324070.675
-    Texts: []
-  - Timestamp: 1010174400
-    Values:
-    - 838.732
-    - 1326803.662
-    Texts: []
-  - Timestamp: 1010178000
-    Values:
-    - 838.732
-    - 1327642.394
-    Texts: []
-  - Timestamp: 1010181600
-    Values:
-    - 838.732
-    - 1328481.126
-    Texts: []
-  - Timestamp: 1010185200
-    Values:
-    - 838.732
-    - 1329319.858
-    Texts: []
-  - Timestamp: 1010188800
-    Values:
-    - 838.732
-    - 1330158.59
-    Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000012228397444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18770,6 +19243,33 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &114000012441394376
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010236857708}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &114000012466592076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19272,6 +19772,33 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &114000012604367074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011364184244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.74509805}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &114000012609020948
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19839,6 +20366,7 @@ MonoBehaviour:
   CurrentSize: 0
   DataPoints: []
   File: {fileID: 0}
+  TTime: {fileID: 0}
 --- !u!114 &114000012801654626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21105,6 +21633,265 @@ MonoBehaviour:
   m_PreferredHeight: 400
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &114000013317951634
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010236857708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc668fbcf3728a47a1ba49c539793e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Units: []
+  Columns: []
+  Targets: []
+  Sources: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  StartTime: -43200
+  StopTime: 43200
+  Max: 60000
+  Min: 0
+  Relative: 1
+  Source: {fileID: 0}
+  ValueIndex: 0
+  color: {r: 0.3241372, g: 0.32358348, b: 0.33088237, a: 0.78431374}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  Staircase: 1
+  Debug: []
+  Data:
+  - Timestamp: 1010091600
+    Values:
+    - 838.732
+    - 888110.342
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010095200
+    Values:
+    - 838.732
+    - 888949.074
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010098800
+    Values:
+    - 838.732
+    - 889787.806
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010102400
+    Values:
+    - 838.732
+    - 890626.538
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010106000
+    Values:
+    - 838.732
+    - 891465.27
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010109600
+    Values:
+    - 838.732
+    - 892304.002
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010113200
+    Values:
+    - 838.732
+    - 893142.734
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010116800
+    Values:
+    - 838.732
+    - 893981.466
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010120400
+    Values:
+    - 838.732
+    - 894820.198
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010124000
+    Values:
+    - 838.732
+    - 895658.93
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010127600
+    Values:
+    - 838.732
+    - 896497.662
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010131200
+    Values:
+    - 853.76
+    - 897336.394
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010134800
+    Values:
+    - 53498.26
+    - 898190.154
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010138400
+    Values:
+    - 54157.33
+    - 951688.414
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010142000
+    Values:
+    - 53686.56
+    - 1005845.744
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010145600
+    Values:
+    - 53288.36
+    - 1059532.304
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010149200
+    Values:
+    - 52926.31
+    - 1112820.664
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010152800
+    Values:
+    - 52924.45
+    - 1165746.974
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010156400
+    Values:
+    - 52919.61
+    - 1218671.424
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010160000
+    Values:
+    - 22483.96
+    - 1271591.034
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010163600
+    Values:
+    - 21955.96
+    - 1294074.994
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010167200
+    Values:
+    - 8039.721
+    - 1316030.954
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010170800
+    Values:
+    - 2732.987
+    - 1324070.675
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010174400
+    Values:
+    - 838.732
+    - 1326803.662
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010178000
+    Values:
+    - 838.732
+    - 1327642.394
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010181600
+    Values:
+    - 838.732
+    - 1328481.126
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010185200
+    Values:
+    - 838.732
+    - 1329319.858
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  - Timestamp: 1010188800
+    Values:
+    - 838.732
+    - 1330158.59
+    Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114000013320061614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21800,6 +22587,33 @@ MonoBehaviour:
   m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
+--- !u!114 &114000013587432816
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012867527542}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &114000013597286202
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -21932,51 +22746,6 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
---- !u!114 &114000013711205148
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 733aef1ed889343a5840459197447602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Name: 
-  Units: []
-  Columns: []
-  Targets: []
-  Sources: []
-  LastData:
-    Timestamp: 0
-    Values: []
-    Texts: []
-  TimeOffset: 0
-  Rescales: []
-  Offsets: []
-  ScaleWithTimeSeries: {fileID: 0}
-  OffsetWithTimeSeries: {fileID: 0}
-  StartTime: 0
-  StopTime: 0
-  Relative: 0
-  BufferMaxSize: 0
-  isAsync: 0
-  hasIntegral: 0
-  isTextSeries: 0
-  ReloadLimit: 0
-  Enabled: 0
-  Record: 0
-  BufferValid: 0
-  CurrentIndex: 0
-  CurrentTimestamp: 0
-  CurrentDate: 
-  CurrentValue: 0
-  CurrentIntegral: 0
-  CurrentText: 
-  CurrentSize: 0
-  DataPoints: []
-  File: {fileID: 0}
 --- !u!114 &114000013736806476
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22436,6 +23205,20 @@ MonoBehaviour:
   originalPosition: {x: 800, y: 0}
   targetPosition: {x: 400, y: 0}
   toggleButton: {fileID: 224000013445320102}
+--- !u!114 &114000013845177840
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011364184244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 0
 --- !u!114 &114000013845811904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22499,6 +23282,7 @@ MonoBehaviour:
   CurrentSize: 0
   DataPoints: []
   File: {fileID: 0}
+  TTime: {fileID: 0}
 --- !u!114 &114000013847403272
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22862,24 +23646,6 @@ MonoBehaviour:
   m_MinHeight: -1
   m_PreferredWidth: 300
   m_PreferredHeight: 100
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
---- !u!114 &114000013947780176
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: 350
-  m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
 --- !u!114 &114000013951797958
@@ -24107,6 +24873,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012881078460}
+--- !u!222 &222000011379034220
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010236857708}
 --- !u!222 &222000011382655642
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -24179,6 +24951,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010132652538}
+--- !u!222 &222000011544270700
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012867527542}
 --- !u!222 &222000011557826658
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -24227,6 +25005,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011646186632}
+--- !u!222 &222000011833248820
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011364184244}
 --- !u!222 &222000011846487872
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -24521,12 +25305,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012024030310}
---- !u!222 &222000012710531230
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
 --- !u!222 &222000012712876792
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -25714,14 +26492,14 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014120307938}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000012874474524}
   - {fileID: 224000012456962114}
-  m_Father: {fileID: 224000012819558740}
+  m_Father: {fileID: 224000011894148908}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -25785,6 +26563,24 @@ RectTransform:
   m_AnchoredPosition: {x: 120, y: -220}
   m_SizeDelta: {x: 120, y: 220}
   m_Pivot: {x: 1, y: 0}
+--- !u!224 &224000010888004608
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012867527542}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 224000013263727058}
+  m_RootOrder: 1
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!224 &224000010894007788
 RectTransform:
   m_ObjectHideFlags: 1
@@ -25821,8 +26617,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 228.125, y: -143.46153}
-  m_SizeDelta: {x: 323.75, y: 266.92307}
+  m_AnchoredPosition: {x: 228.125, y: -129.40982}
+  m_SizeDelta: {x: 323.75, y: 238.81964}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000010923896020
 RectTransform:
@@ -26512,6 +27308,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224000011592869540
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010236857708}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 224000013263727058}
+  m_RootOrder: 0
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!224 &224000011602639066
 RectTransform:
   m_ObjectHideFlags: 1
@@ -26856,7 +27670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000012271475850}
-  - {fileID: 224000012479878168}
+  - {fileID: 224000010841492310}
   m_Father: {fileID: 224000012534620468}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -27213,8 +28027,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 33.125, y: -143.46153}
-  m_SizeDelta: {x: 46.25, y: 266.92307}
+  m_AnchoredPosition: {x: 33.125, y: -129.40982}
+  m_SizeDelta: {x: 46.25, y: 238.81964}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000012202852174
 RectTransform:
@@ -27282,7 +28096,7 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014277425190}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27612,8 +28426,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -220}
-  m_SizeDelta: {x: 120, y: 220}
+  m_AnchoredPosition: {x: 185, y: -220}
+  m_SizeDelta: {x: 185, y: 220}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &224000012456962114
 RectTransform:
@@ -27669,24 +28483,6 @@ RectTransform:
   m_AnchoredPosition: {x: 117.5, y: -13.934426}
   m_SizeDelta: {x: 235, y: 27.868853}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &224000012479878168
-RectTransform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013928634732}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 224000011894148908}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
 --- !u!224 &224000012487654970
 RectTransform:
   m_ObjectHideFlags: 1
@@ -27822,8 +28618,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -220}
-  m_SizeDelta: {x: 120, y: 220}
+  m_AnchoredPosition: {x: 185, y: -220}
+  m_SizeDelta: {x: 185, y: 220}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &224000012689788230
 RectTransform:
@@ -27991,7 +28787,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000013016782680}
-  - {fileID: 224000010841492310}
+  - {fileID: 224000013263727058}
   m_Father: {fileID: 224000012534620468}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
@@ -28451,6 +29247,26 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 107.5, y: -12.868853}
   m_SizeDelta: {x: 60, y: 20}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224000013263727058
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011364184244}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 224000011592869540}
+  - {fileID: 224000010888004608}
+  m_Father: {fileID: 224000012819558740}
+  m_RootOrder: 1
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224000013270576976
 RectTransform:

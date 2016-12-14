@@ -14,7 +14,7 @@ public class LineGraph : MonoBehaviour {
 	public List<float> values;
 
 	public ElectricMeter electricMeter;
-	public TimeSeries timeSeries;
+	public DataSeriesBuffer timeSeries;
 
 	private List<GameObject> _lines;
 
