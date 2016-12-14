@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InjectNode : TimeDataObject {
+public class InjectNode : DataNode {
 
 	public DataPoint Data;
 	//public string Text;
@@ -21,7 +21,7 @@ public class InjectNode : TimeDataObject {
 	}
 
 	public void Inject() {
-		foreach (TimeDataObject.Connection Sub in Targets) {
+		foreach (DataNode.Connection Sub in Targets) {
 			Debug.Log("Injecting!");
 			DataPoint Data2 = Data.Clone ();
 

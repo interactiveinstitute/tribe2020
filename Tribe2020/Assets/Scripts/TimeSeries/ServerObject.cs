@@ -34,12 +34,12 @@ public class ServerObject : MonoBehaviour {
 		return "TODO";
 	}
 
-	public int Subscribe(TimeSeries ts,string Name,double StartTime,bool Absolute,int BufferSize) {
+	public int Subscribe(DataSeriesBuffer ts,string Name,double StartTime,bool Absolute,int BufferSize) {
 		return -1;
 	}
 
 	//MQTT subscribe to the last incomming message. 
-	public int Subscribe(TimeSeries ts,string Name) {
+	public int Subscribe(DataSeriesBuffer ts,string Name) {
 		return Subscribe( ts, Name, 0, false, 1);
 	}
 

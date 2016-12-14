@@ -21,7 +21,7 @@ public class CompareDataPoint : IComparer<DataPoint>
 	}
 }
 
-public class TimeSeries : DataModifier {
+public class DataSeriesBuffer : DataSeries {
 	[Header("Timeseries properties")]
 	public double StartTime;
 	public double StopTime;
@@ -53,7 +53,7 @@ public class TimeSeries : DataModifier {
 //	public int Pointer = 0;
 //	private int lastPointer = -1;
 //	public List<DataPoint> Viewer = null;
-	public List<DataPoint> DataPoints = new List<DataPoint>();
+	public List<DataPoint> Data = new List<DataPoint>();
 
 
 	[Header("CSV file")]
@@ -79,7 +79,7 @@ public class TimeSeries : DataModifier {
 		RequestData ();
 
 
-		//DataPoints [0] = new DataPoint ();
+		//List<DataPoint> [0] = new DataPoint ();
 	}
 	
 	// Update is called once per frame
@@ -100,8 +100,8 @@ public class TimeSeries : DataModifier {
 			CurrentValue = GetCurrentValue ();
 
 
-			if (TTime != null && DataPoints.Count - 1 > CurrentIndex )
-				TTime.AddKeypoint(DataPoints[CurrentIndex+1].Timestamp,this);
+			if (TTime != null && Data.Count - 1 > CurrentIndex )
+				TTime.AddKeypoint(Data[CurrentIndex+1].Timestamp,this);
 
 			if (CurrentIndex == -1 ) {
 				CurrentTimestamp = double.NaN;
@@ -110,14 +110,14 @@ public class TimeSeries : DataModifier {
 
 			}
 
-			CurrentTimestamp = DataPoints [CurrentIndex].Timestamp;
+			CurrentTimestamp = Data [CurrentIndex].Timestamp;
 			CurrentDate = TTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
 
-			DataPoint Data = DataPoints [CurrentIndex].Clone ();
-			Data.Timestamp += TimeOffset;
+			DataPoint Point = Data [CurrentIndex].Clone ();
+			Point.Timestamp += TimeOffset;
 
 			//if (!Record)
-			base.UpdateAllTargets (Data);
+			base.UpdateAllTargets (Point);
 
 		}
 
@@ -136,18 +136,18 @@ public class TimeSeries : DataModifier {
 		
 	}
 
-	void AddPoint(DataPoint Data) {
+	void AddPoint(DataPoint NewData) {
 		int index;
 
 		//Skip if not inside buffer. 
-		if (Data.Timestamp < this.getStartTime () || Data.Timestamp > this.getStopTime ()) {
+		if (NewData.Timestamp < this.getStartTime () || NewData.Timestamp > this.getStopTime ()) {
 			//If limits are both zero we assume its not usex
 			if (StartTime != 0 && StopTime != 0)
 				return;
 
 		}
 
-		index = DataPoints.BinarySearch (Data, new CompareDataPoint() );
+		index = Data.BinarySearch (NewData, new CompareDataPoint() );
 		//Debug.Log ("Binary search: " + index.ToString ());
 
 		//Insert
@@ -155,24 +155,24 @@ public class TimeSeries : DataModifier {
 		{
 			index = ~index;
 
-			//if (index > DataPoints.Count)
-			//	index = DataPoints.Count;
+			//if (index > List<DataPoint>.Count)
+			//	index = List<DataPoint>.Count;
 			
 			//Debug.Log("INSERT DATA AT:" +  (index).ToString() );
-			DataPoints.Insert(index, Data);
+			Data.Insert(index, NewData);
 		}
 		//Replace
 		else if (index >= 0)
 		{
-			DataPoints.RemoveAt(index);
-			DataPoints.Insert(index, Data);
+			Data.RemoveAt(index);
+			Data.Insert(index, NewData);
 			//Debug.Log("REPLACE DATA");
 
 		}
 
 		//Maintain size limitation. 
-		if (BufferMaxSize != 0 && DataPoints.Count > BufferMaxSize)
-			DataPoints.RemoveRange (BufferMaxSize, BufferMaxSize - DataPoints.Count);
+		if (BufferMaxSize != 0 && Data.Count > BufferMaxSize)
+			Data.RemoveRange (BufferMaxSize, BufferMaxSize - Data.Count);
 
 	}
 
@@ -217,11 +217,11 @@ public class TimeSeries : DataModifier {
 	//Get index based on a timestamp
 	public int GetIndex(double ts) {
 
-		for (int i = DataPoints.Count - 1; i >= 0 ; i--)
+		for (int i = Data.Count - 1; i >= 0 ; i--)
 		{
 			//print(TimeStamps [i].ToString ("F4") + " > " + ts.ToString ("F4"));
 
-			if ((DataPoints[i].Timestamp + TimeOffset) <= ts )
+			if ((Data[i].Timestamp + TimeOffset) <= ts )
 			{
 				return i;
 			}
@@ -239,7 +239,7 @@ public class TimeSeries : DataModifier {
 		if (i == -1)
 			return double.NaN;
 
-		return ApplyModifiers(DataPoints[i]).Values[0];
+		return ApplyModifiers(Data[i]).Values[0];
 	}
 
 	public double[] GetCurrentValues () {
@@ -250,7 +250,7 @@ public class TimeSeries : DataModifier {
 		if (i == -1)
 			return null;
 
-		return ApplyModifiers(DataPoints[i]).Values;
+		return ApplyModifiers(Data[i]).Values;
 	}
 
 
@@ -258,7 +258,7 @@ public class TimeSeries : DataModifier {
 	public double InterpolateCurrentValue() {
 		double now = (double)TTime.time;
 
-		return DataPoints[GetIndex(now)].Values[0];
+		return Data[GetIndex(now)].Values[0];
 	}
 
 
@@ -282,17 +282,17 @@ public class TimeSeries : DataModifier {
 		//	return;
 
 		//Reload everything. 
-		DataPoints.Clear ();
+		Data.Clear ();
 		double tsmin = double.PositiveInfinity, tsmax=0;
 
 		for (int i = 2; i < lines.Length; i++) {
 			string[] Values = (lines[i].Trim()).Split(","[0]);
-			DataPoint data = new DataPoint();
-			data.Timestamp = double.Parse( Values[0]) ;
+			DataPoint NewData = new DataPoint();
+			NewData.Timestamp = double.Parse( Values[0]) ;
 
 
 
-			data.Values = new double[Values.Length-1]; 
+			NewData.Values = new double[Values.Length-1]; 
 
 			for (int c = 1; c < Values.Length; c++) {
 				
@@ -300,16 +300,16 @@ public class TimeSeries : DataModifier {
 //				Debug.Log (data.Values[c]);
 //				Debug.Log (Values [c]);
 
-				data.Values[c-1] = double.Parse (Values [c]);
+				NewData.Values[c-1] = double.Parse (Values [c]);
 			}
 
-			DataPoints.Add (data);
+			Data.Add (NewData);
 
 			//Save min and max. 
-			if (data.Timestamp > tsmax)
-				tsmax = data.Timestamp;
-			if (data.Timestamp < tsmin)
-				tsmin = data.Timestamp;
+			if (NewData.Timestamp > tsmax)
+				tsmax = NewData.Timestamp;
+			if (NewData.Timestamp < tsmin)
+				tsmin = NewData.Timestamp;
 		}
 
 		StartTime = tsmin;
@@ -346,14 +346,14 @@ public class TimeSeries : DataModifier {
 		if (BufferMaxSize < 1)
 			return;
 
-		excess = DataPoints.Count - BufferMaxSize;
+		excess = Data.Count - BufferMaxSize;
 
 		if (excess > 0)
-			DataPoints.RemoveRange (0, excess);
+			Data.RemoveRange (0, excess);
 	}
 		
 
-	public List<DataPoint> GetPeriod(double From, double To) {
+	override public List<DataPoint> GetPeriod(double From, double To) {
 		int iFrom, iTo;
 
 		iFrom = GetIndex (From) -1;
@@ -373,35 +373,31 @@ public class TimeSeries : DataModifier {
 
 		List<DataPoint> rawdata, newdata;
 
-		if (index >= DataPoints.Count)
-			index = DataPoints.Count-1;
+		if (index >= Data.Count)
+			index = Data.Count-1;
 
-		if ((count + index ) > DataPoints.Count)
-			count = DataPoints.Count - index;
+		if ((count + index ) > Data.Count)
+			count = Data.Count - index;
 
 		if (index < 0)
-			return new List<DataPoint>(0);
+			return new List<DataPoint>();
 
 
 		//Debug.Log ("I: " + index.ToString());
 		//Debug.Log ("C: " + count.ToString());
 
-		rawdata = DataPoints.GetRange(index,count);
-		newdata = new List<DataPoint>(rawdata.Count);
-
-		//if (TimeOffset == 0)
-		//	return rawdata;
-
-		foreach (DataPoint point in rawdata) {
-			newdata.Add (ApplyModifiers(point));
-		}
+		rawdata = Data.GetRange(index,count);
+		newdata = ApplyModifiers (rawdata);
 
 		return newdata;
 
 	}
 
+
+
+
 	public void Clear() {
-		DataPoints.Clear ();
+		Data.Clear ();
 	}
 		
 		

@@ -12,7 +12,7 @@ public class BarGraph : MonoBehaviour {
 	private float _targetValue;
 
 	public ElectricMeter electricMeter;
-	public TimeSeries timeSeries;
+	public DataSeriesBuffer timeSeries;
 
 	private GameObject _line;
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class OutdoorTemperature : TimeSeries {
+public class OutdoorTemperature : DataSeriesBuffer {
 
 	//Singleton functionality 
 	private static OutdoorTemperature _instance;

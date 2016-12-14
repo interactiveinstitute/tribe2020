@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DataModifier : TimeDataObject {
+public class DataModifier : DataNode {
 
-	[Header("Modifiers")]
+	[Header("Data Modifier properties")]
 
 	public double TimeOffset=0;
 	public double[] Rescales;
 	public double[] Offsets;
 
-	public TimeSeries ScaleWithTimeSeries;
-	public TimeSeries OffsetWithTimeSeries;
+	public DataSeriesBuffer ScaleWithTimeSeries;
+	public DataSeriesBuffer OffsetWithTimeSeries;
 
 	override public void UpdateAllTargets(DataPoint Data) {
 
