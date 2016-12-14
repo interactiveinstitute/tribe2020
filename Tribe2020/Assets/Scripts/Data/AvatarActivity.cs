@@ -336,7 +336,7 @@ public class AvatarActivity : ScriptableObject {
     }
 
 	//
-	public void FinishCurrentActivity() {
+	public void SimulateToEnd() {
         DebugManager.Log("Gonna finish this activity by simulating the remaining sessions.", this, this);
 
         //      //Remove the sessions already performed
@@ -353,6 +353,7 @@ public class AvatarActivity : ScriptableObject {
 		}
 
         //Trigger callback for finished activity
+        //Be aware that this callback will also move to and start next activity in schedule if it has no startime.
 		_ai.OnActivityOver();
 	}
 

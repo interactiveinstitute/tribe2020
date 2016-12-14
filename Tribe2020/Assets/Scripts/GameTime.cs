@@ -76,8 +76,12 @@ public class GameTime : MonoBehaviour {
     //Add a reference to an object that implements simulationObject. The UpdateSim function of the passed object will be called when provided timestamp is passed. If provided timestamp is in history, the updatesim will get called immmeditely (kind of).
 	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
-		if (TimeStamp < time)
-			return false;
+        //If trying to add a key action that should already have ben run, then run it immediately instead and return
+        if (TimeStamp < time)
+        {
+            target.UpdateSim(TimeStamp);
+            return false;
+        }
 
 		KeyAction keypoint = new KeyAction ();
 
@@ -143,6 +147,7 @@ public class GameTime : MonoBehaviour {
 			i += 1;
 			ka = KeyActions [0];
 
+            //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
 			time = ka.Timestamp;
 
 			//Execute the event. 

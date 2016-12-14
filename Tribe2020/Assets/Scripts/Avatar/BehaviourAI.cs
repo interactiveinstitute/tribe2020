@@ -84,40 +84,64 @@ public class BehaviourAI : SimulationObject
 
         //Synchronise schedule to get current activity for time
         SyncSchedule();
-        //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
-        if (_curActivity != null)
+        _curActivity.Start(); //Start this activity.
+
+        if (_nextActivity!= null)
         {
-            //_curActivity.Start();
-            if(_timeMgr.AddKeypoint(_curActivity.startTime, this))
+            //Add key point for _nextActivity.
+            if(_timeMgr.AddKeypoint(_nextActivity.startTime, this))
             {
                 DebugManager.Log("added key action point", this, this);
             }else
             {
-                DebugManager.LogError("Failed to add keyactionpoint", this, this);
+                DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
             }
+        }else
+        {
+            DebugManager.LogError("_nextActivity is null!!", this, this);
         }
     }
 
     //Update simulation
     override public bool UpdateSim(double time)
     {
+        //TODO: Try to only use the provided timestamp instead of referencing gametime
         DebugManager.Log("UpdateSim: calling keyaction registered by BehaviourAI", this, this);
-        if (_nextActivity != null && _nextActivity.hasStartTime)
-        {
-            //This should do nothing if the activity is already finished. If it's not it'll simulate thee remaining sessions.
-            _curActivity.FinishCurrentActivity();
-            //TODO: Make sure that are no discrepencies between behaviour accessing gametime and getting a timestamp handed over through the parameter.
-            NextActivity();
-            _curActivity.Start();
-        }else
-        {
-            DebugManager.LogError("No nextActivity or no startTime for nextActivity", this, this);
-        }
+        //Run everything that should be finished until now
+        SimulateUntilNextScheduledActivity();
+        //Correct activity should now be available with getCurrent()
+        GetRunningActivity().Start();
+        //Find the next scheduled activity and set it as key point
+        AddNextKeyPoint();
 
-        //_curActivity.Simulate();
-        //NextActivity();
-        //_timeMgr.AddKeypoint(_curActivity.startTime, this);
         return true;
+    }
+
+    private void SimulateUntilNextScheduledActivity()
+    {
+        //First. Simulate current activity to end
+        GetRunningActivity().SimulateToEnd();
+        //Simulate activities until we reach one with startTime
+        while (!GetRunningActivity().hasStartTime)
+        {
+            //This should do nothing if the activity is already finished. If it's not finished it'll simulate the remaining sessions.
+            //If it's a tempactivity it will remove itself from the tempstack and getrunning will refer to a new one (next in stack or _cur)
+            //If the next activity doesn't have starttime it will also be set as getrunning. Hence we can run this while loop with getrunning() referring to a new one each iteration.
+            GetRunningActivity().SimulateToEnd();
+        }
+        //When it reaches a scheduled activity with startTime, though, that one will NOT get started and become GetRunning().
+        
+        //Thus, at this point, the above code should have simulated activities that are temporary or doesn't have starttime.
+        NextActivity();//Change to next activity (sets it as _curActivity)
+    }
+
+    private void AddNextKeyPoint()
+    {
+
+        ////We must now find the next scheduled activity with startTime and set it as key point.
+        //foreach () { }
+        //_timeMgr.AddKeypoint(activity.startTime, this);
+
     }
 
     // Update is called once per frame
@@ -263,7 +287,7 @@ public class BehaviourAI : SimulationObject
     }
 
     //Soooo. What this function is doing is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
-    public void SyncSchedule()
+    private void SyncSchedule()
     {
         double curTime = _timeMgr.GetTotalSeconds();
         DateTime curDateTime = _timeMgr.GetDateTime();
@@ -381,39 +405,39 @@ public class BehaviourAI : SimulationObject
     }
 
     //
-    public void SetCurrentActivity(AvatarActivity activity, double startTime)
+    private void SetCurrentActivity(AvatarActivity activity, double startTime)
     {
         DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this, startTime);
     }
 
-    public void SetCurrentActivity(AvatarActivity activity)
+    private void SetCurrentActivity(AvatarActivity activity)
     {
         DebugManager.Log("setting current activity: " + activity, this);
         _curActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _curActivity.Init(this);
     }
 
-    public void SetNextActivity(AvatarActivity activity, double startTime)
+    private void SetNextActivity(AvatarActivity activity, double startTime)
     {
         _nextActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _nextActivity.Init(this, startTime);
     }
 
-    public void SetNextActivity(AvatarActivity activity)
+    private void SetNextActivity(AvatarActivity activity)
     {
         _nextActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _nextActivity.Init(this);
     }
 
-    public void SetPrevActivity(AvatarActivity activity, double startTime)
+    private void SetPrevActivity(AvatarActivity activity, double startTime)
     {
         _prevActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _prevActivity.Init(this, startTime);
     }
 
-    public void SetPrevActivity(AvatarActivity activity)
+    private void SetPrevActivity(AvatarActivity activity)
     {
         _prevActivity = UnityEngine.Object.Instantiate(activity) as AvatarActivity;
         _prevActivity.Init(this);
@@ -1093,7 +1117,8 @@ public class BehaviourAI : SimulationObject
         return false;
     }
 
-    //
+    //This function should handle all logic related to the avatar when an activity is finished.
+    //It also starts the next activity if it has no starttime.
     public void OnActivityOver()
     {
 
@@ -1107,44 +1132,47 @@ public class BehaviourAI : SimulationObject
             ReturnToIdlePose();
         }
 
+        //Also set state to idle. Maybe not necessary but just in case so we have a clean slate before starting next activity.
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
 
-        if (_tempActivities.Count > 0)
-        {
-            //Notify the gamecontroller that we finished this activity!
-            _controller.OnAvatarActivityComplete(_tempActivities.Peek().title);
-
-            //Ok. so this overriding activity was finished. Remove it from the tempactivity stack.
-            AvatarActivity finishedAvtivity = _tempActivities.Pop();
-
-            DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
-            DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
-            
-            //We must make the avatar continue to walk towards the "previous" target, since the tempactivity might have changed the agentdestination, creating a mismatch between curTarget and agentdestination. 
-            SetAgentDestination(GetRunningActivity());
-
-            //We don't want to do moar stuffz in here. Bail out!
-            return;
-        }
-
         //Check if we should turn off stuff when ending this activity.
-        foreach(ElectricDevice device in GetRunningActivity().turnedOnDevices)
+        foreach (ElectricDevice device in GetRunningActivity().turnedOnDevices)
         {
             AvatarStats.Efficiencies relatedEfficiency = device.relatedEfficiency;
-            if(_stats.TestEnergyEfficiency(relatedEfficiency)){
+            if (_stats.TestEnergyEfficiency(relatedEfficiency))
+            {
                 DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
                 device.SetRunlevel(0);
-            }else
+            }
+            else
             {
                 DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
             }
             DebugManager.Log("Turning off device", device, this);
         }
 
-        //Check if we should turn off stuff before we leave.
-
         //Notify the gamecontroller that we finished this activity!
-        _controller.OnAvatarActivityComplete(_curActivity.title);
+        _controller.OnAvatarActivityComplete(GetRunningActivity().title);
+
+        //Are we in a tempactivity?
+        if (_tempActivities.Count > 0)
+        {
+            //Ok. so this temporary activity was finished. Remove it from the tempactivity stack.
+            AvatarActivity finishedActivity = _tempActivities.Pop();
+
+            DebugManager.Log("Temporary activity finished!", finishedActivity, this);
+            DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
+            
+            //We must make the avatar continue to walk towards the "previous" target, since the tempactivity might have changed the agentdestination, creating a mismatch between curTarget and agentdestination. 
+            SetAgentDestination(GetRunningActivity());
+
+            ////We don't want to do moar stuffz in here. Bail out!
+            //return;
+        }
+
+
+
+
 
         //Ok. If the next activity doesn't have a startTime we can go ahead and launch it immediately
         if (!_nextActivity.hasStartTime)
