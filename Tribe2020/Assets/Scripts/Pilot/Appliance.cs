@@ -12,7 +12,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	//public List<AvatarActivity.Target> avatarAffordances_old;
 	public List<Affordance> avatarAffordances;
-    List<Affordance> temporaryAvatarAffordances;
+    public List<Affordance> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 

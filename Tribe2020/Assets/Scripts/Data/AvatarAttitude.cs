@@ -119,7 +119,7 @@ public class AvatarAttitude : MonoBehaviour {
     }
 
     public void ReleaseSatisfactionGem() {
-        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.0f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
+        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.5f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
     }
 
 }
