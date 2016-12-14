@@ -303,6 +303,16 @@ public class AvatarActivity : ScriptableObject {
 		}
 	}
 
+    public void Simulate()
+    {
+        //DebugManager.Log("Simulating activity " + name, this, this);
+        //foreach(Session session in sessions)
+        //{
+        //    SimulateSession(session);
+        //}
+
+    }
+
 	//
 	public virtual void Update() {
 		//_duration += Time.deltaTime;

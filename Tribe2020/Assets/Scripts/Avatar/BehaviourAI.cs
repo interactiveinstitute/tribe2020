@@ -7,7 +7,7 @@ using System;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonCharacter))]
 [System.Serializable]
-public class BehaviourAI : MonoBehaviour
+public class BehaviourAI : SimulationObject
 {
     [SerializeField]
     private PilotController _controller;
@@ -87,8 +87,37 @@ public class BehaviourAI : MonoBehaviour
         //Hmm. I think we actually should jump one back before we start. Since we've set _curActivity to the next upcoming one...
         if (_curActivity != null)
         {
-            _curActivity.Start();
+            //_curActivity.Start();
+            if(_timeMgr.AddKeypoint(_curActivity.startTime, this))
+            {
+                DebugManager.Log("added key action point", this, this);
+            }else
+            {
+                DebugManager.LogError("Failed to add keyactionpoint", this, this);
+            }
         }
+    }
+
+    //Update simulation
+    override public bool UpdateSim(double time)
+    {
+        DebugManager.Log("UpdateSim: calling keyaction registered by BehaviourAI", this, this);
+        if (_nextActivity != null && _nextActivity.hasStartTime)
+        {
+            //This should do nothing if the activity is already finished. If it's not it'll simulate thee remaining sessions.
+            _curActivity.FinishCurrentActivity();
+            //TODO: Make sure that are no discrepencies between behaviour accessing gametime and getting a timestamp handed over through the parameter.
+            NextActivity();
+            _curActivity.Start();
+        }else
+        {
+            DebugManager.LogError("No nextActivity or no startTime for nextActivity", this, this);
+        }
+
+        //_curActivity.Simulate();
+        //NextActivity();
+        //_timeMgr.AddKeypoint(_curActivity.startTime, this);
+        return true;
     }
 
     // Update is called once per frame
@@ -115,23 +144,24 @@ public class BehaviourAI : MonoBehaviour
         // the script will try to simulate the schedule until the curTime is reached.
 
         //Ok. Let's find the stamp for the next activity. Should we switch to it?
-        if (_nextActivity != null && _nextActivity.hasStartTime && _nextActivity.startTimePassed())
-        {
-            DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
-            _curActivity.FinishCurrentActivity();
-            NextActivity();
-            _curActivity.Start();
-        }
+        //This logic should now be handled by gametime through simulationobject callbacks
+        //if (_nextActivity != null && _nextActivity.hasStartTime && _nextActivity.startTimePassed())
+        //{
+        //    DebugManager.Log("Next activity's startTime (" + _nextActivity.startTime + ") passed. Finish current one and start the next one", this);
+        //    _curActivity.FinishCurrentActivity();
+        //    NextActivity();
+        //    _curActivity.Start();
+        //}
 
         //same as above but backwards.
         //We are most likely not handling backwards time very well. But that's out of scope for now.
-        if (_curActivity != null && _curActivity.hasStartTime && !_curActivity.startTimePassed())
-        {
-            DebugManager.Log("Current time " + _timeMgr.GetTotalSeconds() + " is before current activity's startTime " + _curActivity.startTime + ". Revert the activity and start the previous one", this);
-            _curActivity.Revert();
-            PreviousActivity();
-            _curActivity.Start();
-        }
+        //if (_curActivity != null && _curActivity.hasStartTime && !_curActivity.startTimePassed())
+        //{
+        //    DebugManager.Log("Current time " + _timeMgr.GetTotalSeconds() + " is before current activity's startTime " + _curActivity.startTime + ". Revert the activity and start the previous one", this);
+        //    _curActivity.Revert();
+        //    PreviousActivity();
+        //    _curActivity.Start();
+        //}
 
         UpdateActivity();
 
@@ -1080,8 +1110,8 @@ public class BehaviourAI : MonoBehaviour
 
             DebugManager.Log("Teemporary activity finished!", finishedAvtivity, this);
             DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
-
-            //_agent.SetDestination(GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().interactionPos);
+            
+            //We must make the avatar continue to walk towards the "previous" target, since the tempactivity might have changed the agentdestination, creating a mismatch between curTarget and agentdestination. 
             SetAgentDestination(GetRunningActivity());
 
             //We don't want to do moar stuffz in here. Bail out!
