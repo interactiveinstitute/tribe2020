@@ -12,6 +12,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	//public List<AvatarActivity.Target> avatarAffordances_old;
 	public List<Affordance> avatarAffordances;
+    List<Affordance> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 
@@ -113,6 +114,21 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void AddHarvest() {
 		_harvestButton.SetActive(true);
 	}
+
+    public List<Affordance> GetTemporaryAvatarAffordances()
+    {
+        return temporaryAvatarAffordances;
+    }
+
+    public void SetTemporaryAvatarAffordances(List<Affordance> affordances)
+    {
+        temporaryAvatarAffordances = affordances;
+    }
+
+    public void ClearTemporaryAvatarAffordances()
+    {
+        temporaryAvatarAffordances.Clear();
+    }
 
     //Releases all pose slots that are currently occupied by the supplied occupant
     public void ReleasePoseSlot(BehaviourAI occupant)

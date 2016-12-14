@@ -133,15 +133,7 @@ public class AvatarActivity : ScriptableObject {
 	public void StartSession(Session session) {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
 
-        //Add (temporary) avatar affordance for this session
-        if (session.tempAvatarAffordances != null)
-        {
-            foreach (Affordance affordance in session.tempAvatarAffordances)
-            {
-                DebugManager.Log(affordance.name, this);
-                _ai.gameObject.GetComponent<Appliance>().avatarAffordances.Add(affordance);
-            }
-        }
+        _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
 
         switch (session.type) {
 			case SessionType.WaitForDuration:
@@ -234,6 +226,11 @@ public class AvatarActivity : ScriptableObject {
                 break;
 		}
 	}
+
+    public Session GetCurrentSession()
+    {
+        return sessions.Count > 0 ? sessions[_currSession] : null;
+    }
 
     //
     public void SimulateSession(Session session)

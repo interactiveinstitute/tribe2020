@@ -87,7 +87,7 @@ public class MQTT : ServerObject {
 			MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, false);
 	}
 
-	public void Request(TimeSeries ts,string Name,double StartTime,bool Absolute,int BufferSize)
+	public void Request(DataSeriesBuffer ts,string Name,double StartTime,bool Absolute,int BufferSize)
 	{
 		//Add to query list. 
 

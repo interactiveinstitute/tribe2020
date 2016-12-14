@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 
 
-public class ElectricMeter : TimeDataObject {
+public class ElectricMeter : DataNode {
 	[Header("Electric upward connection")]
 	[Space(10)]
 	[Tooltip("The object from where the meterpoint gets its power.")]

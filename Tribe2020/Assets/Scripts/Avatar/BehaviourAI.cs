@@ -976,16 +976,21 @@ public class BehaviourAI : SimulationObject
 
     public void InteractWithAvatar(Affordance affordance)
     {
-        //Appliance targetAppliance = FindNearestAppliance(target, false);
         BehaviourAI targetAvatar = GetAvatarForAffordance(affordance);
-        InteractWithAvatar(targetAvatar);
+        InteractWithAvatar(targetAvatar, affordance);
 	}
 
-    public void InteractWithAvatar(BehaviourAI targetAvatar)
+    public void InteractWithAvatar(BehaviourAI targetAvatar, Affordance affordance)
     {
         if (targetAvatar != null)
         {
-            TalkToOtherAvatar(targetAvatar); //Should perhaps check if type is Discuss
+            //Only interact with new avatar if you, and the other other avatar, are not already busy interacting.
+            if (!GetComponent<AvatarStats>().attitude.IsInteracting() && !targetAvatar.GetComponent<AvatarStats>().attitude.IsInteracting())
+            {
+                GetComponent<AvatarStats>().attitude.StartNewInteraction(affordance);
+                targetAvatar.GetComponent<AvatarStats>().attitude.StartNewInteraction(affordance);
+                TalkToOtherAvatarEmoji(targetAvatar);
+            }
         }
     }
 
@@ -1060,7 +1065,8 @@ public class BehaviourAI : SimulationObject
         {
             if (avatar != gameObject) //Ignore yourself - find another avatar
             {
-                List<Affordance> affordances = avatar.GetComponent<Appliance>().avatarAffordances;
+                List<Affordance> affordances = new List<Affordance>(avatar.GetComponent<Appliance>().avatarAffordances);
+                affordances.AddRange(avatar.GetComponent<Appliance>().GetTemporaryAvatarAffordances());
                 if (affordances.Contains(affordance))
                 {
                     float dist = Vector3.Distance(transform.position, avatar.transform.position);
@@ -1073,16 +1079,19 @@ public class BehaviourAI : SimulationObject
             }
         }
 
-        if (targetAvatar == null)
-        {
-            DebugManager.LogError(name + " could not find an avatar with affordance: " + affordance.ToString(), this);
-        }
-
-        DebugManager.Log("Min dist avatar: ", targetAvatar, this);
-
         return targetAvatar;
     }
 
+    public bool HasAffordance(Affordance affordance)
+    {
+        List<Affordance> affordances = new List<Affordance>(GetComponent<Appliance>().avatarAffordances);
+        affordances.AddRange(GetComponent<Appliance>().GetTemporaryAvatarAffordances());
+        if (affordances.Contains(affordance))
+        {
+            return true;
+        }
+        return false;
+    }
 
     //
     public void OnActivityOver()
@@ -1221,50 +1230,93 @@ public class BehaviourAI : SimulationObject
         }
     }
 
-    void TalkToOtherAvatar(BehaviourAI other, AvatarSpeech.speechType speechType = AvatarSpeech.speechType.greeting, int count = 0)
+    void TalkToOtherAvatarEmoji(BehaviourAI other)
     {
-        DebugManager.Log(name + ": " + GetComponent<AvatarSpeech>().GetLine(speechType), gameObject, this);
+        AvatarAttitude.Mood mood = GetComponent<AvatarStats>().attitude.GetCurrentMood();
+        AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
+
+        //DebugManager.Log(name + " talks " + mood +" to " + other.name, this, this);
+        
+        AvatarConversation.EmojiLine line = GameObject.Find("AvatarManager").GetComponent<AvatarConversation>().GenerateEmojiLine(environmentLevel, mood);
+        transform.FindChild("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
+        StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
+    }
+
+    public System.Collections.IEnumerator ListenToOtherAvatarEmoji(BehaviourAI other, AvatarConversation.EnvironmentLevel environmentLevel, AvatarAttitude.Mood moodInput)
+    {
+        AvatarConversation.EnvironmentLevel environmentLevelNew = environmentLevel;
+        
+        transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
+
+        bool continueTalking = HasAffordance(GetComponent<AvatarStats>().attitude.GetCurrentInteractionAffordance());
+
+        if (continueTalking)
+        {
+            //Be polite, be quiet when other creatures are talking
+            transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
+
+            yield return new WaitForSeconds(2);
+            AvatarAttitude.Mood moodNew = GetComponent<AvatarStats>().attitude.TryChangeMood(moodInput);
+            TalkToOtherAvatarEmoji(other);
+        }
+        else
+        {
+            AvatarAttitude.Mood moodNew = GetComponent<AvatarStats>().attitude.TryChangeMood(moodInput);
+            EndTalkToOtherAvatar();
+            other.EndTalkToOtherAvatar();
+        }
+    }
+
+    public void EndTalkToOtherAvatar()
+    {
+        transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
+        GetComponent<AvatarStats>().attitude.EndInteraction();
+    }
+
+    /*void TalkToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType = AvatarConversation.speechType.greeting, int count = 0)
+    {
+        DebugManager.Log(name + ": " + GetComponent<AvatarConversation>().GetLine(speechType), gameObject, this);
         StartCoroutine(other.ListenToOtherAvatar(this, speechType, ++count));
     }
 
-    public System.Collections.IEnumerator ListenToOtherAvatar(BehaviourAI other, AvatarSpeech.speechType speechType, int count)
+    public System.Collections.IEnumerator ListenToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType, int count)
     {
         bool continueTalking = false;
-        AvatarSpeech.speechType newSpeechType = speechType;
+        AvatarConversation.speechType newSpeechType = speechType;
         int r;
 
         switch (speechType)
         {
-            case AvatarSpeech.speechType.greeting:
+            case AvatarConversation.speechType.greeting:
                 if (count >= 2)
                 {
-                    newSpeechType = AvatarSpeech.speechType.topic;
+                    newSpeechType = AvatarConversation.speechType.topic;
                 }
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.topic:
-                newSpeechType = AvatarSpeech.speechType.reaction;
+            case AvatarConversation.speechType.topic:
+                newSpeechType = AvatarConversation.speechType.reaction;
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.reaction:
+            case AvatarConversation.speechType.reaction:
                 r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarSpeech.speechType.topic : AvatarSpeech.speechType.question;
+                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.question:
-                newSpeechType = AvatarSpeech.speechType.answer;
+            case AvatarConversation.speechType.question:
+                newSpeechType = AvatarConversation.speechType.answer;
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.answer:
+            case AvatarConversation.speechType.answer:
                 r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarSpeech.speechType.topic : AvatarSpeech.speechType.question;
+                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.goodbye:
-                newSpeechType = AvatarSpeech.speechType.goodbyeFinal;
+            case AvatarConversation.speechType.goodbye:
+                newSpeechType = AvatarConversation.speechType.goodbyeFinal;
                 continueTalking = true;
                 break;
-            case AvatarSpeech.speechType.goodbyeFinal:
+            case AvatarConversation.speechType.goodbyeFinal:
                 continueTalking = false;
                 break;
         }
@@ -1272,7 +1324,7 @@ public class BehaviourAI : SimulationObject
         //Should I say goodbye
         if(count > 10 && UnityEngine.Random.value > 0.75f)
         {
-            newSpeechType = AvatarSpeech.speechType.goodbye;
+            newSpeechType = AvatarConversation.speechType.goodbye;
         }
 
         if (continueTalking)
@@ -1280,7 +1332,7 @@ public class BehaviourAI : SimulationObject
             yield return new WaitForSeconds(2);
             TalkToOtherAvatar(other, newSpeechType, count);
         }
-    }
+    }*/
 
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
