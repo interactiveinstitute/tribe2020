@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
-	public float conviction;
+
+    public float conviction;
 	public float energy;
 
     public float maxEfficiencyValue;
@@ -15,17 +16,12 @@ public class AvatarStats : MonoBehaviour {
 
     public enum Efficiencies { Lighting, Warming, Cooling, Device}
 
-    //public List<AvatarAttitude> attitudes;
-    public AvatarAttitude attitude;
-
-	// Use this for initialization
-	void Start () {
-        attitude.Init();
+    // Use this for initialization
+    void Start() {
     }
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
     private bool RunEfficiencyTest(float value)

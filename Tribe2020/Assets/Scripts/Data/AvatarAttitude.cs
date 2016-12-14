@@ -2,9 +2,13 @@
 using UnityEngine;
 
 [System.Serializable]
-public class AvatarAttitude {
+public class AvatarAttitude : MonoBehaviour {
 
-    public enum Mood { angry, sad, tired, neutral_neg, neutral_pos, surprised, happy, euphoric };
+    GameTime _timeMgr;
+
+    AvatarMood _avatarMood;
+    //GameObject _avatarManager;
+    Gems _gems;
 
     //public float food;
     //public float transport;
@@ -12,35 +16,40 @@ public class AvatarAttitude {
     public float responsivenessEnvironment;
     public float responsivenessMood;
 
+    double _timeLastHappinessRelease;
+
     private Affordance currentInteractionAffordance = null;
 
-    public Mood preferedMood;
-    Markov<Mood> markovMood = new Markov<Mood>();
+    public AvatarMood.Mood preferedMood;
+    Markov<AvatarMood.Mood> markovMood = new Markov<AvatarMood.Mood>();
     Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
 
     //Constructor
-    public void Init()
+    void Start()
     {
-        List<Mood> markovStates = new List<Mood>();
-        markovStates.Add(Mood.angry);
-        markovStates.Add(Mood.sad);
+        _timeMgr = GameTime.GetInstance();
+        _gems = Gems.GetInstance();
+
+        List<AvatarMood.Mood> markovStates = new List<AvatarMood.Mood>();
+        markovStates.Add(AvatarMood.Mood.angry);
+        markovStates.Add(AvatarMood.Mood.sad);
         //markovStates.Add(Mood.tired);
-        markovStates.Add(Mood.neutral_neg);
-        markovStates.Add(Mood.neutral_pos);
-        markovStates.Add(Mood.surprised);
-        markovStates.Add(Mood.happy);
-        markovStates.Add(Mood.euphoric);
+        markovStates.Add(AvatarMood.Mood.neutral_neg);
+        markovStates.Add(AvatarMood.Mood.neutral_pos);
+        markovStates.Add(AvatarMood.Mood.surprised);
+        markovStates.Add(AvatarMood.Mood.happy);
+        markovStates.Add(AvatarMood.Mood.euphoric);
         markovMood.InsertStates(markovStates);
 
         float standardDeviation = 0.25f;
-        markovMood.SetProbability(Mood.angry, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.angry), standardDeviation }, true);
-        markovMood.SetProbability(Mood.sad, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.sad), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.angry, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.angry), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.sad, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.sad), standardDeviation }, true);
         //markovMood.SetProbability(Mood.tired, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.tired), standardDeviation }, true);
-        markovMood.SetProbability(Mood.neutral_neg, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.neutral_neg), standardDeviation }, true);
-        markovMood.SetProbability(Mood.neutral_pos, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.neutral_pos), standardDeviation }, true);
-        markovMood.SetProbability(Mood.surprised, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.surprised), standardDeviation }, true);
-        markovMood.SetProbability(Mood.happy, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.happy), standardDeviation }, true);
-        markovMood.SetProbability(Mood.euphoric, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(Mood.euphoric), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.neutral_neg, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.neutral_neg), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.neutral_pos, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.neutral_pos), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.surprised, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.surprised), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.happy, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.happy), standardDeviation }, true);
+        markovMood.SetProbability(AvatarMood.Mood.euphoric, ProbabilityFunctions.gaussian, new float[2] { markovMood.GetT(AvatarMood.Mood.euphoric), standardDeviation }, true);
 
         //markovMood.LogProbabilities();
 
@@ -49,12 +58,16 @@ public class AvatarAttitude {
         //markovMood.Restart(preferedMood);
     }
 
-    public Mood TryChangeMood(Mood moodInput)
-    {
-        return markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[]{ 1.0f - responsivenessMood, responsivenessMood});
+    void Update() {
+        TryReleaseSatisfactionGem(_timeMgr.time);
     }
 
-    public Mood GetCurrentMood()
+    public AvatarMood.Mood TryChangeMood(AvatarMood.Mood moodInput)
+    {
+        return markovMood.SetToNextState(new AvatarMood.Mood[] { markovMood.GetCurrentState(), moodInput }, new float[]{ 1.0f - responsivenessMood, responsivenessMood});
+    }
+
+    public AvatarMood.Mood GetCurrentMood()
     {
         return markovMood.GetCurrentState();
     }
@@ -80,6 +93,33 @@ public class AvatarAttitude {
     public Affordance GetCurrentInteractionAffordance()
     {
         return currentInteractionAffordance;
+    }
+
+    public void TryReleaseSatisfactionGem(double time) {
+
+        AvatarMood.Mood mood = GetCurrentMood();
+        if (mood == AvatarMood.Mood.happy || mood == AvatarMood.Mood.euphoric) {
+
+            double timeBetweenReleases = 10.0f;
+            switch (mood){
+                case AvatarMood.Mood.happy:
+                    timeBetweenReleases = 10.0f;
+                break;
+                case AvatarMood.Mood.euphoric:
+                    timeBetweenReleases = 5.0f;
+                break;
+            }
+
+            if (time > _timeLastHappinessRelease + timeBetweenReleases) {
+                _timeLastHappinessRelease = time;
+                ReleaseSatisfactionGem();
+            }
+
+        }   
+    }
+
+    public void ReleaseSatisfactionGem() {
+        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.0f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
     }
 
 }
