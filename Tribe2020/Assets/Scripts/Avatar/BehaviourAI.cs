@@ -735,7 +735,7 @@ public class BehaviourAI : MonoBehaviour
     {
         if(thingsInHands.Count == 0)
         {
-            DebugManager.LogError("thingsInHands has 0 in length", this, this);
+            //DebugManager.LogError("thingsInHands has 0 in length", this, this);
             return;
         }
         GameObject cup = thingsInHands[0];
@@ -955,10 +955,10 @@ public class BehaviourAI : MonoBehaviour
         if (targetAvatar != null)
         {
             //Only interact with new avatar if you, and the other other avatar, are not already busy interacting.
-            if (!GetComponent<AvatarStats>().attitude.IsInteracting() && !targetAvatar.GetComponent<AvatarStats>().attitude.IsInteracting())
+            if (!GetComponent<AvatarAttitude>().IsInteracting() && !targetAvatar.GetComponent<AvatarAttitude>().IsInteracting())
             {
-                GetComponent<AvatarStats>().attitude.StartNewInteraction(affordance);
-                targetAvatar.GetComponent<AvatarStats>().attitude.StartNewInteraction(affordance);
+                GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
+                targetAvatar.GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
                 TalkToOtherAvatarEmoji(targetAvatar);
             }
         }
@@ -1202,7 +1202,7 @@ public class BehaviourAI : MonoBehaviour
 
     void TalkToOtherAvatarEmoji(BehaviourAI other)
     {
-        AvatarAttitude.Mood mood = GetComponent<AvatarStats>().attitude.GetCurrentMood();
+        AvatarMood.Mood mood = GetComponent<AvatarAttitude>().GetCurrentMood();
         AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
 
         //DebugManager.Log(name + " talks " + mood +" to " + other.name, this, this);
@@ -1212,13 +1212,13 @@ public class BehaviourAI : MonoBehaviour
         StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
     }
 
-    public System.Collections.IEnumerator ListenToOtherAvatarEmoji(BehaviourAI other, AvatarConversation.EnvironmentLevel environmentLevel, AvatarAttitude.Mood moodInput)
+    public System.Collections.IEnumerator ListenToOtherAvatarEmoji(BehaviourAI other, AvatarConversation.EnvironmentLevel environmentLevel, AvatarMood.Mood moodInput)
     {
         AvatarConversation.EnvironmentLevel environmentLevelNew = environmentLevel;
         
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
-        bool continueTalking = HasAffordance(GetComponent<AvatarStats>().attitude.GetCurrentInteractionAffordance());
+        bool continueTalking = HasAffordance(GetComponent<AvatarAttitude>().GetCurrentInteractionAffordance());
 
         if (continueTalking)
         {
@@ -1226,12 +1226,12 @@ public class BehaviourAI : MonoBehaviour
             transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
             yield return new WaitForSeconds(2);
-            AvatarAttitude.Mood moodNew = GetComponent<AvatarStats>().attitude.TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
             TalkToOtherAvatarEmoji(other);
         }
         else
         {
-            AvatarAttitude.Mood moodNew = GetComponent<AvatarStats>().attitude.TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
             EndTalkToOtherAvatar();
             other.EndTalkToOtherAvatar();
         }
@@ -1240,7 +1240,7 @@ public class BehaviourAI : MonoBehaviour
     public void EndTalkToOtherAvatar()
     {
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
-        GetComponent<AvatarStats>().attitude.EndInteraction();
+        GetComponent<AvatarAttitude>().EndInteraction();
     }
 
     /*void TalkToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType = AvatarConversation.speechType.greeting, int count = 0)

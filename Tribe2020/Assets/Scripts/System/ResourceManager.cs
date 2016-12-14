@@ -67,8 +67,16 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 
-	//
-	public void RefreshProductionForAppliance(GameObject go){
+    public void AddComfort(int value) {
+        comfort += value;
+    }
+
+    public void AddComfort(Gem gem) {
+        comfort += gem.value;
+    }
+
+    //
+    public void RefreshProductionForAppliance(GameObject go){
 		
 	}
 

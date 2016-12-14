@@ -1,0 +1,53 @@
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Collections;
+using System;
+
+public class Gem : MonoBehaviour, IPointerClickHandler {
+
+    float _yPivot;
+    public int value = 1;
+    float _scaleFactor = 0.1f;
+
+    Action<Gem> onTapCallback = null;
+
+	// Use this for initialization
+	void Start () {
+        _yPivot = transform.position.y;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        //Animate transform
+        transform.Rotate(Vector3.up, Time.deltaTime * 50.0f);
+        Vector3 position = transform.position;
+        position.y = _yPivot + 0.1f * Mathf.Sin(Time.time * 2.0f);
+        transform.position = position;
+	}
+
+    public void SetValue(int v) {
+        value = v;
+        float scale = 1.0f + _scaleFactor * (value - 1.0f);
+        transform.localScale = new Vector3(scale, scale, scale);
+    }
+
+    public void AddValue(int v) {
+        SetValue(value + v);
+    }
+
+    public void SetScaleFactor(float value) {
+        _scaleFactor = value;
+    }
+
+    public void SetOnTapCallback(Action<Gem> callback) {
+        onTapCallback = callback;
+    }
+
+    public void OnPointerClick(PointerEventData data) {
+        if (onTapCallback != null) {
+            onTapCallback(this);
+        }
+        Destroy(gameObject);
+    }
+
+}
