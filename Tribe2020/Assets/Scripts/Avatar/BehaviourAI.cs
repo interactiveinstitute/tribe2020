@@ -1153,7 +1153,7 @@ public class BehaviourAI : SimulationObject
             {
                 DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
             }
-            DebugManager.Log("Turning off device", device, this);
+            //DebugManager.Log("Turning off device", device, this);
         }
 
         //Notify the gamecontroller that we finished this activity!
