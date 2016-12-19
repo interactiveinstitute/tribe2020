@@ -273,6 +273,11 @@ public class GameTime : MonoBehaviour {
 	public int GetDay() {
 		return GetDateTime().Day;
 	}
+
+	//
+	public string GetTimeWithFormat(string format) {
+		return TimestampToDateTime(time).ToString(format);
+	}
 }
 
 	

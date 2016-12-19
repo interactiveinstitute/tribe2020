@@ -10,10 +10,12 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
     float _scaleFactor = 0.1f;
 
     Action<Gem> onTapCallback = null;
+	private ResourceManager _resourceMgr;
 
 	// Use this for initialization
 	void Start () {
         _yPivot = transform.position.y;
+		_resourceMgr = ResourceManager.GetInstance();
 	}
 	
 	// Update is called once per frame
@@ -48,6 +50,7 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
             onTapCallback(this);
         }
         Destroy(gameObject);
+		_resourceMgr.comfortHarvestCount--;
     }
 
 }

@@ -15,6 +15,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
     public List<Affordance> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
+	private Room _zone;
 
     [System.Serializable]
     public class PoseSlot
@@ -66,6 +67,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		_harvestButton.GetComponentInChildren<Button>().
 				onClick.AddListener(() => _ctrlMgr.OnHarvestTap(_harvestButton));
+
+		_zone = GetComponentInParent<Room>();
 
 		harvestButtonRef.SetActive(false);
 
@@ -141,6 +144,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
             }
         }
     }
+
+	//Get the zone where the appliance iz @
+	public Room GetZone() {
+		return _zone;
+	}
 
 	//
 	public JSONClass SerializeAsJSON() {

@@ -23,11 +23,13 @@ public class PilotView : View{
 	public Transform power;
 	public Text energyCounter;
 	public RectTransform timeBar;
+	public RectTransform apocalypsePointer;
+	public Text apocalypsePercent;
 
 	[Header("Quest UI")]
 	public GameObject inboxUI;
 	public Transform inboxList;
-	public GameObject mailReadUI;
+	//public GameObject mailReadUI;
 	public Text mailCountText;
 
 	[Header("View Guide")]
@@ -63,7 +65,7 @@ public class PilotView : View{
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
-	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, mail, inspector;
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer;
 	private bool _settingsIsVisible = false;
 	#endregion
 
@@ -78,6 +80,9 @@ public class PilotView : View{
 
 		//Clear interface
 		_curMenu = null;
+
+		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
+		apocalypsePercent.text = "0 %";
 
 		//Clear inbox
 		//RemoveChildren(inboxList);
@@ -358,40 +363,65 @@ public class PilotView : View{
 		//mailObj.transform.SetParent(inboxList, false);
 	}
 
-	//Full MAIL with quest data including quest steps and whether they have been completed or not
-	public void BuildMail(Quest quest) {
-		Text title = mailReadUI.GetComponentsInChildren<Text>()[0];
-		Text description = mailReadUI.GetComponentsInChildren<Text>()[2];
-		Text steps = mailReadUI.GetComponentsInChildren<Text>()[4];
+	////Full MAIL with quest data including quest steps and whether they have been completed or not
+	//public void BuildMail(Quest quest) {
+	//	Text title = mailReadUI.GetComponentsInChildren<Text>()[0];
+	//	Text description = mailReadUI.GetComponentsInChildren<Text>()[2];
+	//	Text steps = mailReadUI.GetComponentsInChildren<Text>()[4];
 
-		title.text = quest.title;
-		description.text = quest.description;
+	//	title.text = quest.title;
+	//	description.text = quest.description;
 
-		string stepConcat = "";
-		foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
-			stepConcat += checkStep.description + "\n";
-		}
-		steps.text = stepConcat;
+	//	string stepConcat = "";
+	//	foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
+	//		stepConcat += checkStep.description + "\n";
+	//	}
+	//	steps.text = stepConcat;
 
-		//string stepConcat = "";
-		//for(int i = 0; i < quest.questSteps.Count; i++) {
-		//	if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
-		//		if(i < quest.GetCurrentStepIndex()) {
-		//			stepConcat += " --";
-		//		} else {
-		//			stepConcat += "¤ ";
-		//		}
-		//		stepConcat += quest.questSteps[i].title + "\n";
-		//	}
-		//}
-		//steps.text = stepConcat;
+	//	//string stepConcat = "";
+	//	//for(int i = 0; i < quest.questSteps.Count; i++) {
+	//	//	if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
+	//	//		if(i < quest.GetCurrentStepIndex()) {
+	//	//			stepConcat += " --";
+	//	//		} else {
+	//	//			stepConcat += "¤ ";
+	//	//		}
+	//	//		stepConcat += quest.questSteps[i].title + "\n";
+	//	//	}
+	//	//}
+	//	//steps.text = stepConcat;
 
-		mailReadUI.SetActive(true);
+	//	mailReadUI.SetActive(true);
+	//}
+
+	//
+	public void EnableEnergyPanel() {
+		energyPanel.gameObject.SetActive(true);
 	}
 
-	public void HideQuestList() {
-		mailReadUI.SetActive(false);
-		_curMenu = null;
+	//
+	public void EnableComfortPanel() {
+		comfortPanel.gameObject.SetActive(true);
+	}
+
+	//
+	public void DisableEnergyPanel() {
+		energyPanel.gameObject.SetActive(false);
+	}
+
+	//
+	public void DisableComfortPanel() {
+		comfortPanel.gameObject.SetActive(false);
+	}
+
+	//
+	public void ShowApocalypsometer() {
+		SetCurrentUI(apocalypsometer);
+	}
+
+	//
+	public void HideApocalypsometer() {
+		SetCurrentUI(null);
 	}
 
 	//
@@ -412,12 +442,12 @@ public class PilotView : View{
 		victoryUI.SetActive(false);
 	}
 
-	//
-	public void HideQuest() {
+	////
+	//public void HideQuest() {
 		
-		mailReadUI.SetActive(false);
-		inboxUI.SetActive(true);
-	}
+	//	mailReadUI.SetActive(false);
+	//	inboxUI.SetActive(true);
+	//}
 
 	//
 	public void ToggleMenu() {

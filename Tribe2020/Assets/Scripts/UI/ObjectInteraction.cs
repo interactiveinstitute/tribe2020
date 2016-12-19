@@ -8,6 +8,8 @@ public class ObjectInteraction : MonoBehaviour {
 	public Transform panelPrefab;
 	private Transform _interactionPanel;
 
+	private Appliance _appliance;
+
 	private ElectricMeter _meter;
 
 	private Button _powerButton;
@@ -38,6 +40,8 @@ public class ObjectInteraction : MonoBehaviour {
 			_powerButton.onClick.AddListener(() => ToggleMeter());
 		}
 
+		_appliance = GetComponent<Appliance>();
+
 		//_moneyButton.onClick.AddListener(() => _controller.OnHarvestTap(gameObject));
 	}
 	
@@ -52,6 +56,6 @@ public class ObjectInteraction : MonoBehaviour {
 	//
 	private void ToggleMeter() {
 		_meter.Toggle();
-		_controller.OnLightSwitchToggled(_meter);
+		_controller.OnLightSwitchToggled(_meter, _appliance.GetZone());
 	}
 }

@@ -16,14 +16,22 @@ public class ResourceManager : MonoBehaviour {
 	private List<Transform> _avatars;
 	private List<Appliance> _appliances;
 
+	[Header("Containers")]
 	public float cash;
 	public float comfort;
 	public int temperature;
 	public int power;
 	public int co2;
 
+	[Header("Production")]
 	public float cashProduction;
 	public float comfortProduction;
+
+	[Header("Properties")]
+	public float happyComfortInterval = 5;
+	public float euphoricComfrotInterval = 10;
+	public int comfortHarvestCount = 0;
+	public int comfortHarvestMax = 30;
 
 	//Sort use instead of constructor
 	void Awake(){
