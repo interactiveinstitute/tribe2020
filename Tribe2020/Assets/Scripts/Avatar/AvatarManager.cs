@@ -18,6 +18,7 @@ public class AvatarManager : MonoBehaviour {
 	public void OnLightToggled(ElectricMeter meter, Room zone) {
 		List<BehaviourAI> occupants = zone.GetOccupants();
 
+        if (occupants.Count == 0) return;
 		//Let's try to only notify one avatar. So we don't get several characters running for the light switch
 		occupants[0].CheckLighting(AvatarActivity.SessionType.TurnOn);
 	}

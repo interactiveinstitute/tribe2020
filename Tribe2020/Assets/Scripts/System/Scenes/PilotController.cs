@@ -84,7 +84,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		_saveMgr = SaveManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
 
-		_avatarMgr = GetComponent<AvatarManager>();
+		//_avatarMgr = GetComponent<AvatarManager>();
 		_avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
 		_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
@@ -509,6 +509,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 	//
 	public void OnLightSwitchToggled(ElectricMeter meter, Room zone) {
+        _avatarMgr.OnLightToggled(meter, zone);
 		if(meter.GivesPower) {
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
 		} else {

@@ -36,6 +36,7 @@ public class BehaviourAI : SimulationObject
     //private GameObject[] _appliances;
     private static Appliance[] _devices;
     private Room _curRoom;
+    private int _nrOfActiveColliders = 0;
 
     //private bool _isSync = false;
     //private bool _isScheduleOver = false;
@@ -1203,10 +1204,37 @@ public class BehaviourAI : SimulationObject
             //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
             if (other.GetComponent<Room>() != _curRoom)
             {
-
-                OnExitCurrentRoom();
+                //If it's a new room and this is the first collider in that room, the counter should be 1
+                _nrOfActiveColliders = 1;
+                //This will (among other things) set _curRoom, so it doesn't double trig.
                 OnEnterNewRoom(other.GetComponent<Room>());
-                
+            }else
+            {
+                //Triggering collision in the same room that we're already inside. Increment the counter. (This is related to that we can have several colliders in the same room.
+                _nrOfActiveColliders++;
+
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        //Did the avatar collide with a roooom?
+        if (other.GetComponent<Room>())
+        {
+            //Rooms/zones can have multiple collider boxes which each trigger a collision, hence this check
+            if (other.GetComponent<Room>() == _curRoom)
+            {
+                _nrOfActiveColliders--;
+                if(_nrOfActiveColliders == 0)
+                {
+                    OnExitCurrentRoom();
+                    _curRoom = null;
+                }
+                else if(_nrOfActiveColliders < 0)
+                {
+                    DebugManager.LogError("Something is fucked up with collisiondetection. nrOfActiveColliders is less than 0!", this, this);
+                }
             }
         }
     }
