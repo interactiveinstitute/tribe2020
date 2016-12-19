@@ -159,16 +159,16 @@ Light:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013831994390}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 7
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2.9
+  m_Intensity: 0
   m_Range: 2
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -198,17 +198,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueId: 37fea758-bebe-4f23-84e5-c6ff38b61271
   title: Floor Lamp
   description: Lightbulb on a stick
   playerAffordances: []
-  avatarAffordances: 
+  avatarAffordances: []
   owners: []
   appliedEEMs: []
-  performedEnergyMeasures: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
+  possibleEEMs: []
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &114000013862791242
 MonoBehaviour:
@@ -230,6 +230,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0
@@ -274,6 +277,7 @@ MonoBehaviour:
   runlevelOn: 2
   runlevelOff: 1
   runlevelUnpowered: 0
+  relatedEfficiency: 0
 --- !u!208 &208000014187142746
 NavMeshObstacle:
   m_ObjectHideFlags: 1
