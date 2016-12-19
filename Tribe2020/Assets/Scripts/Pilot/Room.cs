@@ -8,6 +8,7 @@ public class Room : MonoBehaviour {
 	public float temperature;
 	public float airQuality;
 	public float lux;
+    [SerializeField]
     private List<BehaviourAI> _occupants;
 
     public Affordance avatarAffordanceSwitchLight;
