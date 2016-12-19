@@ -104,6 +104,11 @@ public class Room : MonoBehaviour {
         _occupants.Remove(avatar);
     }
 
+	//
+	public List<BehaviourAI> GetOccupants() {
+		return _occupants;
+	}
+
 	////This functions assumes that the provided affordance is the light switch affordance.
 	//public void UpdateLighting(Affordance affordance) {
  //       //Debug.Log("light was changed");

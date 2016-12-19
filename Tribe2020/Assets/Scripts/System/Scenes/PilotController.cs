@@ -2,8 +2,9 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
+using System;
 
-public class PilotController : Controller {
+public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//Singleton features
 	public static PilotController GetInstance(){
 		return _instance as PilotController;
@@ -29,6 +30,8 @@ public class PilotController : Controller {
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
 	private LocalisationManager _localMgr;
+	[SerializeField]
+	private AvatarManager _avatarMgr;
 
 	//Interaction props
 	[SerializeField]
@@ -67,16 +70,25 @@ public class PilotController : Controller {
 		_view = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 		_camMgr = CameraManager.GetInstance();
+
 		_audioMgr = AudioManager.GetInstance();
+		_audioMgr.SetInterface(this);
+
 		_mainMeter = MainMeter.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+
 		_narrationMgr = NarrationManager.GetInstance();
+		_narrationMgr.SetInterface(this);
+
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
 
-		_avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
-		_appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
+		_avatarMgr = GetComponent<AvatarManager>();
+		_avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
+		_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
+
+		ClearView();
 
 		playPeriod = endTime - startTime;
 	}
@@ -123,7 +135,7 @@ public class PilotController : Controller {
 			_touchReset = false;
 		}
 
-		_view.date.GetComponent<Text>().text = _timeMgr.CurrentDate;
+		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
 		if(energy < 1000) {
@@ -316,7 +328,7 @@ public class PilotController : Controller {
 	}
 
 	//
-	public override void ControlAvatar(string id, Object action) {
+	public override void ControlAvatar(string id, UnityEngine.Object action) {
 		foreach(BehaviourAI avatar in _avatars) {
 			if(avatar.name == id) {
 				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
@@ -396,8 +408,6 @@ public class PilotController : Controller {
 				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
 			} else if(_view.GetCurrentUI() == _view.inbox) {
 				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
-			} else if(_view.GetCurrentUI() == _view.mail) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailClosed);
 			}
 		}
 
@@ -410,8 +420,6 @@ public class PilotController : Controller {
 			} else if(ui == _view.inbox) {
 				_view.BuildInbox(_narrationMgr.GetQuests(), _narrationMgr.GetCompletedQuests());
 				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
-			} else if(ui == _view.mail) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
 			} else if(ui == _view.energyPanel) {
 				_narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
 			} else if(ui == _view.comfortPanel) {
@@ -431,6 +439,10 @@ public class PilotController : Controller {
 	public void SelectGridView() {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_GRIDVIEW) { return; }
 
+		_view.EnableEnergyPanel();
+		_view.EnableComfortPanel();
+		_view.HideApocalypsometer();
+
 		_camMgr.GoToGridView();
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedGridView);
 	}
@@ -438,6 +450,10 @@ public class PilotController : Controller {
 	//
 	public void SelectOverview() {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_OVERVIEW) { return; }
+
+		_view.DisableEnergyPanel();
+		_view.DisableComfortPanel();
+		_view.ShowApocalypsometer();
 
 		_camMgr.GoToOverview();
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
@@ -449,22 +465,22 @@ public class PilotController : Controller {
 	}
 
 	//
-	public void OnQuestPressed(Quest quest) {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_INBOX) { return; }
-			//if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-		_view.BuildMail(quest);
-		//_view.ShowQuest(quest);
-		ResetTouch();
+	//public void OnQuestPressed(Quest quest) {
+	//	if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_INBOX) { return; }
+	//		//if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
+	//	_view.BuildMail(quest);
+	//	//_view.ShowQuest(quest);
+	//	ResetTouch();
 
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-		//}
-	}
+	//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
+	//	//}
+	//}
 	
-	//
-	public void OnQuestClosed() {
-		_view.HideQuest();
-		ResetTouch();
-	}
+	////
+	//public void OnQuestClosed() {
+	//	_view.HideQuest();
+	//	ResetTouch();
+	//}
 
 	//
 	public void OnHarvestTap(GameObject go) {
@@ -492,7 +508,7 @@ public class PilotController : Controller {
 	}
 
 	//
-	public void OnLightSwitchToggled(ElectricMeter meter) {
+	public void OnLightSwitchToggled(ElectricMeter meter, Room zone) {
 		if(meter.GivesPower) {
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
 		} else {
@@ -681,8 +697,8 @@ public class PilotController : Controller {
 
 	//
 	public void GenerateUniqueIDs() {
-		List<BehaviourAI> avatars = new List<BehaviourAI>(Object.FindObjectsOfType<BehaviourAI>());
-		List<Appliance> appliances = new List<Appliance>(Object.FindObjectsOfType<Appliance>());
+		List<BehaviourAI> avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
+		List<Appliance> appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		foreach(BehaviourAI avatar in avatars) {
             UniqueId[] ids = avatar.GetComponents<UniqueId>();
@@ -706,5 +722,9 @@ public class PilotController : Controller {
 	public void LoadScene(string scene) {
 		SaveGameState();
 		_sceneMgr.LoadScene(scene);
+	}
+
+	public void ShowCongratulations(string text) {
+		throw new NotImplementedException();
 	}
 }

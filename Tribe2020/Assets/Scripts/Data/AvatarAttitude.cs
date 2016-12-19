@@ -9,6 +9,7 @@ public class AvatarAttitude : MonoBehaviour {
     AvatarMood _avatarMood;
     //GameObject _avatarManager;
     Gems _gems;
+	private ResourceManager _resourceMgr;
 
     //public float food;
     //public float transport;
@@ -25,12 +26,12 @@ public class AvatarAttitude : MonoBehaviour {
     Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
 
     //Constructor
-    void Start()
-    {
+    void Start() {
         _timeMgr = GameTime.GetInstance();
         _gems = Gems.GetInstance();
+		_resourceMgr = ResourceManager.GetInstance();
 
-        List<AvatarMood.Mood> markovStates = new List<AvatarMood.Mood>();
+		List<AvatarMood.Mood> markovStates = new List<AvatarMood.Mood>();
         markovStates.Add(AvatarMood.Mood.angry);
         markovStates.Add(AvatarMood.Mood.sad);
         //markovStates.Add(Mood.tired);
@@ -62,55 +63,48 @@ public class AvatarAttitude : MonoBehaviour {
         TryReleaseSatisfactionGem(_timeMgr.time);
     }
 
-    public AvatarMood.Mood TryChangeMood(AvatarMood.Mood moodInput)
-    {
+    public AvatarMood.Mood TryChangeMood(AvatarMood.Mood moodInput) {
         return markovMood.SetToNextState(new AvatarMood.Mood[] { markovMood.GetCurrentState(), moodInput }, new float[]{ 1.0f - responsivenessMood, responsivenessMood});
     }
 
-    public AvatarMood.Mood GetCurrentMood()
-    {
+    public AvatarMood.Mood GetCurrentMood() {
         return markovMood.GetCurrentState();
     }
 
-    public void StartNewInteraction(Affordance affordance)
-    {
+    public void StartNewInteraction(Affordance affordance) {
         currentInteractionAffordance = affordance;
         markovMood.Restart();
     }
 
-    public void EndInteraction()
-    {
+    public void EndInteraction() {
         currentInteractionAffordance = null;
         markovMood.End();
     }
 
-    public bool IsInteracting()
-    {
+    public bool IsInteracting() {
         return currentInteractionAffordance != null;
         //return markovMood.IsActive();
     }
 
-    public Affordance GetCurrentInteractionAffordance()
-    {
+    public Affordance GetCurrentInteractionAffordance() {
         return currentInteractionAffordance;
     }
 
     public void TryReleaseSatisfactionGem(double time) {
-
         AvatarMood.Mood mood = GetCurrentMood();
         if (mood == AvatarMood.Mood.happy || mood == AvatarMood.Mood.euphoric) {
 
             double timeBetweenReleases = 10.0f;
             switch (mood){
                 case AvatarMood.Mood.happy:
-                    timeBetweenReleases = 10.0f;
+                    timeBetweenReleases = _resourceMgr.happyComfortInterval;
                 break;
                 case AvatarMood.Mood.euphoric:
-                    timeBetweenReleases = 5.0f;
+                    timeBetweenReleases = _resourceMgr.euphoricComfrotInterval;
                 break;
             }
 
-            if (time > _timeLastHappinessRelease + timeBetweenReleases) {
+            if (time > _timeLastHappinessRelease + timeBetweenReleases && _resourceMgr.comfortHarvestCount < _resourceMgr.comfortHarvestMax) {
                 _timeLastHappinessRelease = time;
                 ReleaseSatisfactionGem();
             }
@@ -119,7 +113,8 @@ public class AvatarAttitude : MonoBehaviour {
     }
 
     public void ReleaseSatisfactionGem() {
-        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.5f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
+        _gems.Instantiate(_gems.satisfactionGem, transform.position + 1.5f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
+		_resourceMgr.comfortHarvestCount++;
     }
 
 }

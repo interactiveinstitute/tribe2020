@@ -64,7 +64,7 @@ public class LightManager : MonoBehaviour {
 
         if(pilotContent == null || pilotMesh == null || avatars == null)
         {
-            DebugManager.LogError("Missing some references in light manager", this.gameObject, this);
+            //DebugManager.LogError("Missing some references in light manager", this.gameObject, this);
         }
     }
 
