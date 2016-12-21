@@ -61,8 +61,9 @@ public class Graph : DataNode {
 
 		scalefactorY = graphHeight / (float)Max;
 
-		Data = Source.GetPeriod (GetStartTime (), GetStopTime ());
-
+        if (Source != null) {
+            Data = Source.GetPeriod(GetStartTime(), GetStopTime());
+        }
 			
 	}
 

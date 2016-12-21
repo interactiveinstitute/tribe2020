@@ -4,12 +4,11 @@ using UnityEngine;
 [System.Serializable]
 public class AvatarAttitude : MonoBehaviour {
 
+    //Singletons
     GameTime _timeMgr;
-
     AvatarMood _avatarMood;
-    //GameObject _avatarManager;
+    ResourceManager _resourceMgr;
     Gems _gems;
-	private ResourceManager _resourceMgr;
 
     //public float food;
     //public float transport;
@@ -25,13 +24,16 @@ public class AvatarAttitude : MonoBehaviour {
     Markov<AvatarMood.Mood> markovMood = new Markov<AvatarMood.Mood>();
     Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
 
+    public Texture2D _textureFace;
+
     //Constructor
     void Start() {
         _timeMgr = GameTime.GetInstance();
         _gems = Gems.GetInstance();
 		_resourceMgr = ResourceManager.GetInstance();
+        _avatarMood = AvatarMood.GetInstance();
 
-		List<AvatarMood.Mood> markovStates = new List<AvatarMood.Mood>();
+        List<AvatarMood.Mood> markovStates = new List<AvatarMood.Mood>();
         markovStates.Add(AvatarMood.Mood.angry);
         markovStates.Add(AvatarMood.Mood.sad);
         //markovStates.Add(Mood.tired);
@@ -57,6 +59,9 @@ public class AvatarAttitude : MonoBehaviour {
         markovMood.SetCurrentState(preferedMood);
 
         //markovMood.Restart(preferedMood);
+
+        UpdateFaceTexture();
+
     }
 
     void Update() {
@@ -64,7 +69,14 @@ public class AvatarAttitude : MonoBehaviour {
     }
 
     public AvatarMood.Mood TryChangeMood(AvatarMood.Mood moodInput) {
-        return markovMood.SetToNextState(new AvatarMood.Mood[] { markovMood.GetCurrentState(), moodInput }, new float[]{ 1.0f - responsivenessMood, responsivenessMood});
+        AvatarMood.Mood moodNew = markovMood.SetToNextState(new AvatarMood.Mood[] { markovMood.GetCurrentState(), moodInput }, new float[]{ 1.0f - responsivenessMood, responsivenessMood});
+        UpdateFaceTexture();
+        return moodNew;
+    }
+
+    public void SetMood(AvatarMood.Mood mood) {
+        markovMood.SetCurrentState(mood);
+        UpdateFaceTexture();
     }
 
     public AvatarMood.Mood GetCurrentMood() {
@@ -113,8 +125,16 @@ public class AvatarAttitude : MonoBehaviour {
     }
 
     public void ReleaseSatisfactionGem() {
-        _gems.Instantiate(_gems.satisfactionGem, transform.position + 1.5f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
+        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.5f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
 		_resourceMgr.comfortHarvestCount++;
+    }
+
+    void UpdateFaceTexture() {
+        _textureFace = _avatarMood.GetFaceTexture(markovMood.GetCurrentState());
+        SkinnedMeshRenderer renderer = transform.FindChild("Model/Face").GetComponent<SkinnedMeshRenderer>();
+        if (_textureFace != null && renderer != null) {
+            renderer.materials[0].mainTexture = _textureFace;
+        }
     }
 
 }
