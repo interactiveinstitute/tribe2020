@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class MediaPlayerSampleSphereGUI : MonoBehaviour {
+public class MedaiPlayerSampleSphereGUI : MonoBehaviour {
 	
 	public MediaPlayerCtrl scrMedia;
 	// Use this for initialization
@@ -19,7 +19,9 @@ public class MediaPlayerSampleSphereGUI : MonoBehaviour {
 		}
 	
 	}
-	
+
+	#if !UNITY_WEBGL
+
 	void OnGUI() {
 		
 	
@@ -50,4 +52,5 @@ public class MediaPlayerSampleSphereGUI : MonoBehaviour {
 		
 
 	}
+	#endif
 }

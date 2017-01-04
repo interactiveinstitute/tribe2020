@@ -1,5 +1,4 @@
-#ifndef _TRAMPOLINE_CUSTOM_UNITY_VIDEOPLAYER_H_
-#define _TRAMPOLINE_CUSTOM_UNITY_VIDEOPLAYER_H_
+#pragma once
 
 #import <CoreMedia/CMTime.h>
 
@@ -19,7 +18,7 @@
 {
     id<CustomVideoPlayerDelegate> delegate;
 }
-@property (nonatomic, assign) id delegate;
+@property (nonatomic, retain) id delegate;
 
 + (BOOL)CanPlayToTexture:(NSURL*)url;
 
@@ -29,9 +28,11 @@
 
 - (BOOL)playToView:(CustomVideoPlayerView*)view;
 - (BOOL)playToTexture;
+- (BOOL)playToTextureloop;
 - (BOOL)isPlaying;
+- (BOOL)getError;
 
-- (int)curFrameTexture;
+- (intptr_t)curFrameTexture;
 
 - (void)pause;
 - (void)resume;
@@ -39,6 +40,7 @@
 - (void)rewind;
 - (void)seekToTimestamp:(CMTime)time;
 - (void)seekTo:(float)timeSeconds;
+- (void)setSpeed:(float)fSpeed;
 
 - (BOOL)setAudioVolume:(float)volume;
 
@@ -46,8 +48,5 @@
 - (float)durationSeconds;
 - (float)curTimeSeconds;
 - (CGSize)videoSize;
+- (void)setTextureID:(intptr_t)id;
 @end
-
-
-
-#endif // _TRAMPOLINE_UNITY_VIDEOPLAYER_H_
