@@ -12,42 +12,57 @@ extern "C" __attribute__((visibility ("default"))) NSString *const kUnityViewDid
 @interface CustomVideoPlayerInterface : NSObject <CustomVideoPlayerDelegate> {
 @public
     CustomVideoPlayer *player;
-    CustomVideoPlayerView *view;
     CGRect margin;
     bool bLoop;
+    
+    bool m_bFinish;
+    bool m_bUnload;
+    bool m_bLoading;
+    
+    bool m_bLoopPlay;
+    NSURL* m_videoURL;
 }
-- (void)playVideo:(NSURL *)videoURL;
-
-- (void)orientationDidChange:(NSNotification *)notification;
 
 - (void)onPlayerReady;
 
 - (void)onPlayerDidFinishPlayingVideo;
+
 
 @end
 
 @implementation CustomVideoPlayerInterface
 
 - (void)loadVideo:(NSURL *)videoURL {
+    m_bFinish = false;
     [player loadVideo:videoURL];
 }
 - (void)playVideo{
 
-    if (!view && [player readyToPlay])
+    if ([player readyToPlay])
         [self play];
 }
 
-- (void)orientationDidChange:(NSNotification *)notification {
 
-    if (view) [self resizeView];
-}
 
 - (void)onPlayerReady {
     
-    if (!player.isPlaying) {
-        if (view) [self resizeView];
-        //[self play];
+
+    m_bLoading = false;
+    
+    if(m_bUnload == true)
+    {
+        m_bUnload = false;
+        [self unload];
     }
+    
+    if( m_bLoopPlay == true)
+    {
+        [self play];
+        m_bLoopPlay =false;
+    }
+   
+    
+    
 }
 
 - (void)resizeView {
@@ -70,18 +85,26 @@ extern "C" __attribute__((visibility ("default"))) NSString *const kUnityViewDid
 }
 
 - (void)play {
-    if (view) {
-        view.hidden = NO;
-        [player playToView:view];
-    } else {
-        [player playToTexture];
-    }
+    m_bFinish = false;
+    
+    [player playToTexture];
+    
+}
+
+- (void)playloop {
+    m_bFinish = false;
+    
+    [player playToTextureloop];
+    
 }
 
 - (void)unload {
-    if (view) {
-        [view removeFromSuperview];
-        view = nil;
+    
+  
+    if( m_bLoading == true)
+    {
+        m_bUnload = true;
+        return;
     }
 
     [player unloadPlayer];
@@ -89,18 +112,34 @@ extern "C" __attribute__((visibility ("default"))) NSString *const kUnityViewDid
 
 - (void)onPlayerDidFinishPlayingVideo {
     
+    
     if(bLoop)
     {
-        [player seekTo:0.0f];
-        [self play];
+        if( [m_videoURL isFileURL])
+        {
+            [player seekTo:0.0f];
+            [self playloop];
+        }
+        else
+        {
+            [self unload];
+            [self loadVideo:m_videoURL];
+            m_bLoopPlay = true;
+        }
+        
+        
+        
     }
     else
     {
-        [self unload];
+        //[self unload];
+        m_bFinish = true;
     }
     
 }
 @end
+
+
 
 const int PLAYER_MAX = 8;
 static CustomVideoPlayerInterface * _Player[PLAYER_MAX];
@@ -155,19 +194,24 @@ extern "C" void VideoPlayerPluginDestroyInstance(int iID)
     if(iID < 0 || iID >= PLAYER_MAX)
         return;
     
-    if(!_Player[iID])
+    if(_Player[iID])
     {
-        if(!_Player[iID]->player)
+        if(_Player[iID]->player)
         {
             [_Player[iID]->player unloadPlayer];
-            [_Player[iID]->player dealloc];
+            //[_Player[iID]->player dealloc];
+            _Player[iID]->player  = NULL;
+            
             
         }
         
         
-        [_Player[iID] dealloc];
-        _PlayerUsed[iID] = false;
+        //[_Player[iID] dealloc];
+        _Player[iID] = NULL;
+        
     }
+    
+    _PlayerUsed[iID] = false;
     
     
 }
@@ -178,11 +222,19 @@ extern "C" void VideoPlayerPluginLoadVideo(int iID,const char *videoURL) {
     if(iID < 0 || iID >= PLAYER_MAX)
         return;
     
+    
+    
     if (_GetPlayer(iID)->player.isPlaying) {
         [_GetPlayer(iID)->player unloadPlayer];
     }
+    
+    _GetPlayer(iID)->m_bFinish = false;
+    _GetPlayer(iID)->m_bLoading = true;
+    
+    _GetPlayer(iID)->m_videoURL = _GetUrl(videoURL);
 
-    [_GetPlayer(iID) loadVideo:_GetUrl(videoURL)];
+    [_GetPlayer(iID) loadVideo:_GetPlayer(iID)->m_videoURL];
+    
 }
 
 extern "C" void VideoPlayerPluginPlayVideo(int iID) {
@@ -190,6 +242,7 @@ extern "C" void VideoPlayerPluginPlayVideo(int iID) {
     if(iID < 0 || iID >= PLAYER_MAX)
         return;
     
+    _GetPlayer(iID)->m_bFinish = false;
     
     [_GetPlayer(iID) playVideo];
 }
@@ -231,16 +284,9 @@ extern "C" void VideoPlayerPluginRewindVideo(int iID) {
     if(iID < 0 || iID >= PLAYER_MAX)
         return;
     
-    if (_GetPlayer(iID)->view) {
-        [_GetPlayer(iID)->player rewind];
-    } else {
-        //FIXME TextureでRewindすると既に読み込まれたものは表示されないのでUnity側でRewindは行わないようにしている
-    }
 }
 extern "C" bool VideoPlayerPluginCanOutputToTexture(const char *videoURL) {
 
-
-    
     return [CustomVideoPlayer CanPlayToTexture:_GetUrl(videoURL)];
 }
 
@@ -268,9 +314,26 @@ extern "C" void VideoPlayerPluginExtents(int iID,int *w, int *h) {
     CGSize sz = [_GetPlayer(iID)->player videoSize];
     *w = (int) sz.width;
     *h = (int) sz.height;
+    
+    
+    if(sz.width == 0)
+    {
+        [_GetPlayer(iID)->player curFrameTexture];
+    }
+    
+    
 }
 
-extern "C" int VideoPlayerPluginCurFrameTexture(int iID) {
+
+extern "C" void VideoPlayerPluginSetTexture(int iID,int iTextureID)
+{
+    if(iID < 0 || iID >= PLAYER_MAX)
+        return;
+    
+    [_GetPlayer(iID)->player setTextureID:iTextureID];
+}
+
+extern "C" intptr_t VideoPlayerPluginCurFrameTexture(int iID) {
 
     if(iID < 0 || iID >= PLAYER_MAX)
         return 0;
@@ -311,4 +374,43 @@ extern "C" void VideoPlayerPluginStopVideo(int iID) {
     if (_GetPlayer(iID)->player) {
         [_GetPlayer(iID) unload];
     }
+}
+
+extern "C" bool VideoPlayerPluginFinish(int iID) {
+    if(iID < 0 || iID >= PLAYER_MAX)
+        return false;
+    
+    if (_GetPlayer(iID)->player) {
+        return _GetPlayer(iID)->m_bFinish;
+    }
+    
+    return false;
+
+}
+
+extern "C" bool VideoPlayerPluginError(int iID) {
+    if(iID < 0 || iID >= PLAYER_MAX)
+        return false;
+    
+    if (_GetPlayer(iID)->player) {
+        return [_GetPlayer(iID)->player getError ];
+        //return _GetPlayer(iID)->player get;
+        
+    }
+    
+    return false;
+}
+
+extern "C" void VideoPlayerPluginSetSpeed(int iID,float fSpeed) {
+        if(iID < 0 || iID >= PLAYER_MAX)
+            return;
+        
+        if (_GetPlayer(iID)->player) {
+            [_GetPlayer(iID)->player setSpeed:fSpeed ];
+            //return _GetPlayer(iID)->player get;
+            
+        }
+    
+    
+    
 }

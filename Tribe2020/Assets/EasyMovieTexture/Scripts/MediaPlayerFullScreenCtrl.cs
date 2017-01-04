@@ -24,7 +24,8 @@ public class MediaPlayerFullScreenCtrl : MonoBehaviour {
 	
 	}
 	
-	
+
+
 	
 	void Resize()
 	{
@@ -34,8 +35,10 @@ public class MediaPlayerFullScreenCtrl : MonoBehaviour {
 		float fRatio = (float) m_iOrgHeight / (float)m_iOrgWidth;
 		
 		m_objVideo.transform.localScale = new Vector3( 20.0f / fRatio, 20.0f / fRatio, 1.0f);
-		
+
+	#if !UNITY_WEBGL
 		m_objVideo.transform.GetComponent<MediaPlayerCtrl>().Resize();
+	#endif
 	}
 	
 	
