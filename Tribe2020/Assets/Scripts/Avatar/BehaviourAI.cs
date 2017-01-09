@@ -1282,14 +1282,15 @@ public class BehaviourAI : SimulationObject
                 return;
             }
 
-            Appliance lightSwitch = _curRoom.GetLightSwitch();
+            //Appliance lightSwitch = _curRoom.GetLightSwitch();
+            Appliance lightSwitch = _curRoom.GetApplianceWithAffordance(_curRoom.avatarAffordanceSwitchLight);
             if (lightSwitch == null)
             {
                 DebugManager.LogError(name + " couldn't find a lightswitch in this room!", _curRoom, this);
                 return;
             }
 
-            InitApplianceTemporaryActivity(_curRoom.GetLightSwitch(), wantedAction, "", true);
+            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true);
 
         }
     }

@@ -58,8 +58,6 @@ public class AvatarAttitude : MonoBehaviour {
 
         markovMood.SetCurrentState(preferedMood);
 
-        //markovMood.Restart(preferedMood);
-
         UpdateFaceTexture();
 
     }

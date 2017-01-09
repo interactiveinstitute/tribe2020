@@ -11,7 +11,7 @@ public class Room : MonoBehaviour {
     [SerializeField]
     private List<BehaviourAI> _occupants;
 
-    public Affordance avatarAffordanceSwitchLight;
+    public Affordance avatarAffordanceSwitchLight; //Should perhaps be static, or part of a singleton?
 
     // Use this for initialization
     void Start() {
@@ -29,16 +29,18 @@ public class Room : MonoBehaviour {
 
 	//
 	public bool IsLit() {
-        Appliance lightSwitch = GetLightSwitch();
-        if(lightSwitch == null)
+        //Appliance lightSwitch = GetLightSwitch();
+        Appliance lightSwitch = GetApplianceWithAffordance(avatarAffordanceSwitchLight);
+        if (lightSwitch == null)
         {
             return false; //Presumption: no light switch -> no light
         }
-        return GetLightSwitch().GetComponent<ElectricMeter>().GivesPower;
+        return lightSwitch.GetComponent<ElectricMeter>().GivesPower;
 	}
 
-	//Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
-	public Appliance GetLightSwitch() {
+    //Replaced by general function GetApplianceWithAffordance(Affordance affordance) below.
+    //Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
+    /*public Appliance GetLightSwitch() {
         foreach (Appliance device in _devices) {
             foreach (Affordance aff in device.avatarAffordances)
             {
@@ -52,7 +54,7 @@ public class Room : MonoBehaviour {
 		}
 
 		return null;
-	}
+	}*/
 
     //Tries to retrieve the first available appliance with the given affordance in this room
     public Appliance GetApplianceWithAffordance(Affordance affordance)

@@ -501,7 +501,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		string location = json["location"];
 
 		if(location.Equals("current")) {
-			_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
+            Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
+            room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
 		}
 
 		//Debug.Log(name + " create " + currency + " in " + location);
