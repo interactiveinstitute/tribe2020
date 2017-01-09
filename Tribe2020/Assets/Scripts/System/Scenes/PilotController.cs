@@ -6,21 +6,21 @@ using System;
 
 public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//Singleton features
-	public static PilotController GetInstance(){
+	public static PilotController GetInstance() {
 		return _instance as PilotController;
 	}
 	private InputState _curState = InputState.ALL;
 
 	#region Fields
 	public bool debug = false;
-    public bool enableSaveLoad = true;
+	public bool enableSaveLoad = true;
 
 	public double startTime;
 	public double endTime;
 	public double playPeriod;
 
-    //Access all singleton systemss
-    private PilotView _view;
+	//Access all singleton systemss
+	private PilotView _view;
 	private GameTime _timeMgr;
 	private CameraManager _camMgr;
 	private AudioManager _audioMgr;
@@ -53,10 +53,10 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	private List<Appliance> _appliances;
 
 	private bool _firstUpdate = false;
-    #endregion
+	#endregion
 
-    //Sort use instead of constructor
-    void Awake(){
+	//Sort use instead of constructor
+	void Awake() {
 		_instance = this;
 	}
 
@@ -66,7 +66,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	// Use this for initialization
-	void Start(){
+	void Start() {
 		_view = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 		_camMgr = CameraManager.GetInstance();
@@ -92,9 +92,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 		playPeriod = endTime - startTime;
 	}
-	
+
 	// Update is called once per frame
-	void Update(){
+	void Update() {
 		if(!_firstUpdate) {
 			_firstUpdate = true;
 			LoadGameState();
@@ -139,9 +139,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
 		if(energy < 1000) {
-			_view.energyCounter.text = Mathf.Floor(energy ) + " Wh";
+			_view.energyCounter.text = Mathf.Floor(energy) + " Wh";
 		} else if(energy < 1000000) {
-			_view.energyCounter.text = Mathf.Floor(energy/10)/100 + " kWh";
+			_view.energyCounter.text = Mathf.Floor(energy / 10) / 100 + " kWh";
 		} else if(energy < 100000000000) {
 			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " kWh";
 		} else {
@@ -159,16 +159,16 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	//
-	private void OnTouchStart(Vector3 pos){
+	private void OnTouchStart(Vector3 pos) {
 		//Debug.Log("OnTouchStart");
 		_touchTimer = 0;
 		if(_touchState == IDLE) {
 			_startPos = pos;
 		}
 	}
-	
+
 	//
-	private void OnTouch(Vector3 pos){
+	private void OnTouch(Vector3 pos) {
 		//_camMgr.cameraState = CameraManager.PANNED;
 		_touchTimer += Time.unscaledDeltaTime;
 
@@ -176,9 +176,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		//	_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
 		//}
 	}
-	
+
 	//
-	private void OnTouchEnded(Vector3 pos){
+	private void OnTouchEnded(Vector3 pos) {
 		//Debug.Log("ontouchended");
 		_camMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
@@ -200,21 +200,21 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 			}
 		}
 	}
-	
+
 	//
-	private void OnTap(Vector3 pos){
+	private void OnTap(Vector3 pos) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
 	}
 
 	//
-	private void OnDoubleTap(Vector3 pos){
+	private void OnDoubleTap(Vector3 pos) {
 		//Debug.Log("Double tapped at " + pos);
 	}
 
 	//
-	private void OnSwipe(Vector3 start, Vector3 end){
+	private void OnSwipe(Vector3 start, Vector3 end) {
 		//Debug.Log("cotroller.OnSwipe " + start + " , " + end);
 		if(_view.IsAnyOverlayActive()) {
 			return;
@@ -260,7 +260,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	//
-	public void ResetTouch(){
+	public void ResetTouch() {
 		_touchTimer = 0;
 		_doubleTimer = 0;
 		_startPos = Input.mousePosition;
@@ -475,7 +475,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
 	//	//}
 	//}
-	
+
 	////
 	//public void OnQuestClosed() {
 	//	_view.HideQuest();
@@ -501,16 +501,18 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		string location = json["location"];
 
 		if(location.Equals("current")) {
+            //Debug.Log(_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch());
+            //_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
             Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
             room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
-		}
+        }
 
 		//Debug.Log(name + " create " + currency + " in " + location);
 	}
 
 	//
 	public void OnLightSwitchToggled(ElectricMeter meter, Room zone) {
-        _avatarMgr.OnLightToggled(meter, zone);
+		_avatarMgr.OnLightToggled(meter, zone);
 		if(meter.GivesPower) {
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
 		} else {
@@ -637,10 +639,10 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		foreach(BehaviourAI avatar in _avatars) {
 			avatarsJSON.Add(avatar.Encode());
 		}
-        _saveMgr.SetCurrentSlotArray("avatarStates", avatarsJSON);
+		_saveMgr.SetCurrentSlotArray("avatarStates", avatarsJSON);
 
-        //Save appliance states
-        JSONArray applianceJSON = new JSONArray();
+		//Save appliance states
+		JSONArray applianceJSON = new JSONArray();
 		foreach(Appliance appliance in _appliances) {
 			applianceJSON.Add(appliance.SerializeAsJSON());
 		}
@@ -654,11 +656,11 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 	//
 	public override void LoadGameState() {
-        if (!enableSaveLoad) {
-            if (debug) { Debug.Log("save/load disabled. Will not load game data."); }
-            return;
-        }
-        if (debug) { Debug.Log("Loading game state"); }
+		if(!enableSaveLoad) {
+			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
+			return;
+		}
+		if(debug) { Debug.Log("Loading game state"); }
 
 		_saveMgr.LoadCurrentSlot();
 
@@ -668,20 +670,20 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		_camMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 
 		//Load avatar states
-		if (_saveMgr.GetCurrentSlotData("avatarStates") != null) {
-            JSONArray avatarsJSON = _saveMgr.GetCurrentSlotData("avatarStates").AsArray;
-            foreach (JSONClass avatarJSON in avatarsJSON) {
-                foreach (BehaviourAI avatar in _avatars) {
-                    string loadedName = avatarJSON["name"];
-                    if (avatar.name == loadedName) {
-                        avatar.Decode(avatarJSON);
-                    }
-                }
-            }
-        }
+		if(_saveMgr.GetCurrentSlotData("avatarStates") != null) {
+			JSONArray avatarsJSON = _saveMgr.GetCurrentSlotData("avatarStates").AsArray;
+			foreach(JSONClass avatarJSON in avatarsJSON) {
+				foreach(BehaviourAI avatar in _avatars) {
+					string loadedName = avatarJSON["name"];
+					if(avatar.name == loadedName) {
+						avatar.Decode(avatarJSON);
+					}
+				}
+			}
+		}
 
-        //Load appliance states
-        if (_saveMgr.GetCurrentSlotData("Appliances") != null) {
+		//Load appliance states
+		if(_saveMgr.GetCurrentSlotData("Appliances") != null) {
 			JSONArray appsJSON = _saveMgr.GetCurrentSlotData("Appliances").AsArray;
 			foreach(JSONClass appJSON in appsJSON) {
 				foreach(Appliance app in _appliances) {
@@ -703,20 +705,19 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		List<Appliance> appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		foreach(BehaviourAI avatar in avatars) {
-            UniqueId[] ids = avatar.GetComponents<UniqueId>();
-            foreach (UniqueId id in ids) {
+			UniqueId[] ids = avatar.GetComponents<UniqueId>();
+			foreach(UniqueId id in ids) {
 				DestroyImmediate(id);
 			}
 			avatar.gameObject.AddComponent<UniqueId>();
 		}
 
 		foreach(Appliance app in appliances) {
-            UniqueId[] ids = app.GetComponents<UniqueId>();
-            foreach (UniqueId id in ids)
-            {
-                DestroyImmediate(id);
-            }
-            app.gameObject.AddComponent<UniqueId>();
+			UniqueId[] ids = app.GetComponents<UniqueId>();
+			foreach(UniqueId id in ids) {
+				DestroyImmediate(id);
+			}
+			app.gameObject.AddComponent<UniqueId>();
 		}
 	}
 
@@ -726,6 +727,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		_sceneMgr.LoadScene(scene);
 	}
 
+	//
 	public void ShowCongratulations(string text) {
 		throw new NotImplementedException();
 	}
