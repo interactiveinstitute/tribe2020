@@ -35,8 +35,8 @@ public class ObjectInteraction : MonoBehaviour {
 		_satisfactionButton = _interactionPanel.GetChild(2).GetComponent<Button>();
 		_measureButton = _interactionPanel.GetChild(3).GetComponent<Button>();
 
-		if(GetComponent<ElectricMeter>()) {
-			_meter = GetComponent<ElectricMeter>();
+        _meter = GetComponent<ElectricMeter>();
+        if (_meter != null) {
 			_powerButton.onClick.AddListener(() => ToggleMeter());
 		}
 
@@ -56,6 +56,7 @@ public class ObjectInteraction : MonoBehaviour {
 	//
 	private void ToggleMeter() {
 		_meter.Toggle();
-		_controller.OnLightSwitchToggled(_meter, _appliance.GetZone());
+        _controller.OnElectricMeterToggle(_meter);
+        //_appliance.GetZone().OnApplianceInteraction(_appliance);
 	}
 }

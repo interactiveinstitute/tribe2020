@@ -15,7 +15,7 @@ public class AvatarManager : MonoBehaviour {
 	}
 
 	//
-	public void OnLightToggled(ElectricMeter meter, Room zone) {
+	public void OnLightToggled(Room zone) {
 		List<BehaviourAI> occupants = zone.GetOccupants();
 
         if (occupants.Count == 0) return;

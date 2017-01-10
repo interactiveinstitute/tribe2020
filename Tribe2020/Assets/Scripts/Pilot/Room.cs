@@ -38,24 +38,6 @@ public class Room : MonoBehaviour {
         return lightSwitch.GetComponent<ElectricMeter>().GivesPower;
 	}
 
-    //Replaced by general function GetApplianceWithAffordance(Affordance affordance) below.
-    //Retrieve the first occasion of a light switch. Not nice with string comparison! Please improve
-    /*public Appliance GetLightSwitch() {
-        foreach (Appliance device in _devices) {
-            foreach (Affordance aff in device.avatarAffordances)
-            {
-                //Checking with strings should only be done in special cases!
-                //Aim for always getting an actual reference to the affordance we want to compare against rather than using strings.
-                if (aff == avatarAffordanceSwitchLight)
-                {
-                    return device;
-                }
-            }
-		}
-
-		return null;
-	}*/
-
     //Tries to retrieve the first available appliance with the given affordance in this room
     public Appliance GetApplianceWithAffordance(Affordance affordance)
     {
