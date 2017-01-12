@@ -27,7 +27,7 @@ public class Gems : MonoBehaviour {
 
     public void Instantiate(GameObject gemPrefab, Vector3 position, Action<Gem> callback = null, int value = 1, float scaleFactor = 0.0f) {
 
-        GameObject closeGem = FindCloseGem(gemPrefab);
+        GameObject closeGem = FindCloseGem(position);
         if (closeGem != null) {
             closeGem.GetComponent<Gem>().AddValue(value);
         }
@@ -39,13 +39,12 @@ public class Gems : MonoBehaviour {
         }
     }
 
-    GameObject FindCloseGem(GameObject gem) {
+    GameObject FindCloseGem(Vector3 position) {
 
         float minDist = 1.0f;
         GameObject minObject = null;
         foreach(Transform child in transform) {
-            float dist = Vector2.Distance(new Vector2(gem.transform.localPosition.x, gem.transform.localPosition.z), new Vector2(child.localPosition.x, child.localPosition.z));
-
+            float dist = Vector2.Distance(new Vector2(position.x, position.z), new Vector2(child.position.x, child.position.z));
             if (dist < minDist) {
                 minDist = dist;
                 minObject = child.gameObject;

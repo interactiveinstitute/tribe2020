@@ -70,18 +70,18 @@ public class AvatarMood : MonoBehaviour {
         TryReleaseSatisfactionGem(_timeMgr.time);
     }
 
-    public AvatarMood.Mood TryChangeMood(AvatarMood.Mood moodInput) {
-        AvatarMood.Mood moodNew = markovMood.SetToNextState(new AvatarMood.Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
+    public Mood TryChangeMood(Mood moodInput) {
+        Mood moodNew = markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
         UpdateFaceTextureByCurrentMood();
         return moodNew;
     }
 
-    public void SetMood(AvatarMood.Mood mood) {
+    public void SetMood(Mood mood) {
         markovMood.SetCurrentState(mood);
         UpdateFaceTextureByCurrentMood();
     }
 
-    public AvatarMood.Mood GetCurrentMood() {
+    public Mood GetCurrentMood() {
         return markovMood.GetCurrentState();
     }
 
@@ -105,15 +105,15 @@ public class AvatarMood : MonoBehaviour {
     }
 
     public void TryReleaseSatisfactionGem(double time) {
-        AvatarMood.Mood mood = GetCurrentMood();
-        if (mood == AvatarMood.Mood.happy || mood == AvatarMood.Mood.euphoric) {
+        Mood mood = GetCurrentMood();
+        if (mood == Mood.happy || mood == Mood.euphoric) {
 
             double timeBetweenReleases = 10.0f;
             switch (mood) {
-                case AvatarMood.Mood.happy:
+                case Mood.happy:
                 timeBetweenReleases = _resourceMgr.happyComfortInterval;
                 break;
-                case AvatarMood.Mood.euphoric:
+                case Mood.euphoric:
                 timeBetweenReleases = _resourceMgr.euphoricComfrotInterval;
                 break;
             }
