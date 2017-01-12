@@ -1013,13 +1013,14 @@ public class BehaviourAI : SimulationObject
 
     public void InteractWithAvatar(BehaviourAI targetAvatar, Affordance affordance)
     {
+        DebugManager.Log(name + " is starts interacting with " + targetAvatar, this, this);
         if (targetAvatar != null)
         {
             //Only interact with new avatar if you, and the other other avatar, are not already busy interacting.
-            if (!GetComponent<AvatarAttitude>().IsInteracting() && !targetAvatar.GetComponent<AvatarAttitude>().IsInteracting())
+            if (!GetComponent<AvatarMood>().IsInteracting() && !targetAvatar.GetComponent<AvatarMood>().IsInteracting())
             {
-                GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
-                targetAvatar.GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
+                GetComponent<AvatarMood>().StartNewInteraction(affordance);
+                targetAvatar.GetComponent<AvatarMood>().StartNewInteraction(affordance);
                 TalkToOtherAvatarEmoji(targetAvatar);
             }
         }
@@ -1147,8 +1148,7 @@ public class BehaviourAI : SimulationObject
         {
             foreach (ElectricDevice device in GetRunningActivity().turnedOnDevices)
             {
-                AvatarStats.Efficiencies relatedEfficiency = device.relatedEfficiency;
-                if (_stats.TestEnergyEfficiency(relatedEfficiency))
+                if (_stats.TestEnergyEfficiency())
                 {
                     DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
                     device.SetRunlevel(0);
@@ -1157,7 +1157,6 @@ public class BehaviourAI : SimulationObject
                 {
                     DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
                 }
-                //DebugManager.Log("Turning off device", device, this);
             }
         }
 
@@ -1240,7 +1239,7 @@ public class BehaviourAI : SimulationObject
 
     void OnWalkToOtherRoom()
     {
-        _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
+        _stats.TestEnergyEfficiency(CheckLighting, AvatarActivity.SessionType.TurnOff);
     }
 
     void OnEnterNewRoom(Room room)
@@ -1296,7 +1295,7 @@ public class BehaviourAI : SimulationObject
 
     void TalkToOtherAvatarEmoji(BehaviourAI other)
     {
-        AvatarMood.Mood mood = GetComponent<AvatarAttitude>().GetCurrentMood();
+        AvatarMood.Mood mood = GetComponent<AvatarMood>().GetCurrentMood();
         AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
 
         //DebugManager.Log(name + " talks " + mood +" to " + other.name, this, this);
@@ -1312,7 +1311,7 @@ public class BehaviourAI : SimulationObject
         
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
-        bool continueTalking = HasAffordance(GetComponent<AvatarAttitude>().GetCurrentInteractionAffordance());
+        bool continueTalking = HasAffordance(GetComponent<AvatarMood>().GetCurrentInteractionAffordance());
 
         if (continueTalking)
         {
@@ -1320,12 +1319,12 @@ public class BehaviourAI : SimulationObject
             transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
             yield return new WaitForSeconds(2);
-            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
             TalkToOtherAvatarEmoji(other);
         }
         else
         {
-            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
             EndTalkToOtherAvatar();
             other.EndTalkToOtherAvatar();
         }
@@ -1334,69 +1333,8 @@ public class BehaviourAI : SimulationObject
     public void EndTalkToOtherAvatar()
     {
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
-        GetComponent<AvatarAttitude>().EndInteraction();
+        GetComponent<AvatarMood>().EndInteraction();
     }
-
-    /*void TalkToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType = AvatarConversation.speechType.greeting, int count = 0)
-    {
-        DebugManager.Log(name + ": " + GetComponent<AvatarConversation>().GetLine(speechType), gameObject, this);
-        StartCoroutine(other.ListenToOtherAvatar(this, speechType, ++count));
-    }
-
-    public System.Collections.IEnumerator ListenToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType, int count)
-    {
-        bool continueTalking = false;
-        AvatarConversation.speechType newSpeechType = speechType;
-        int r;
-
-        switch (speechType)
-        {
-            case AvatarConversation.speechType.greeting:
-                if (count >= 2)
-                {
-                    newSpeechType = AvatarConversation.speechType.topic;
-                }
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.topic:
-                newSpeechType = AvatarConversation.speechType.reaction;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.reaction:
-                r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.question:
-                newSpeechType = AvatarConversation.speechType.answer;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.answer:
-                r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.goodbye:
-                newSpeechType = AvatarConversation.speechType.goodbyeFinal;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.goodbyeFinal:
-                continueTalking = false;
-                break;
-        }
-
-        //Should I say goodbye
-        if(count > 10 && UnityEngine.Random.value > 0.75f)
-        {
-            newSpeechType = AvatarConversation.speechType.goodbye;
-        }
-
-        if (continueTalking)
-        {
-            yield return new WaitForSeconds(2);
-            TalkToOtherAvatar(other, newSpeechType, count);
-        }
-    }*/
 
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
