@@ -51,7 +51,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010474060234}
-  - 114: {fileID: 114000011413048882}
+  - 114: {fileID: 114000012931176216}
   m_Layer: 0
   m_Name: Pose Position
   m_TagString: Untagged
@@ -704,6 +704,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0
@@ -740,6 +743,7 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  relatedEfficiency: 3
 --- !u!114 &114000010596342838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -787,25 +791,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e1e99a2f4148b894a99f36aa9602c8da, type: 2}
   - {fileID: 11400000, guid: 73ee974ce2ca8b645aee4d4aaf2ddf09, type: 2}
   - {fileID: 11400000, guid: 27b4fe04e6657834493997b45069f59a, type: 2}
+  temporaryAvatarAffordances: []
   owners:
   - {fileID: 0}
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []
   harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
---- !u!114 &114000011413048882
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010498237918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114000011425202566
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -838,6 +833,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
@@ -856,6 +854,18 @@ MonoBehaviour:
   runlevelOn: 0
   runlevelOff: 0
   runlevelUnpowered: 0
+  relatedEfficiency: 0
+--- !u!114 &114000012931176216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010498237918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acaa54903aa00f43a7686195b08e3d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000014064388960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -872,9 +882,11 @@ MonoBehaviour:
   playerAffordances: []
   avatarAffordances:
   - {fileID: 11400000, guid: 746f09dfe276fdb4eb9ca243a0f50469, type: 2}
+  temporaryAvatarAffordances: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []

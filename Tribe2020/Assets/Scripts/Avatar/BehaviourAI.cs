@@ -19,6 +19,7 @@ public class BehaviourAI : SimulationObject
     private ThirdPersonCharacter _charController;
     [SerializeField]
     private Vector3 _savedIdlePosition;
+    private Appliance _poseAppliance = null;
 
     //private Vector3 _curTargetPos;
     public AvatarActivity _curActivity;
@@ -259,7 +260,6 @@ public class BehaviourAI : SimulationObject
                 }
                 break;
             case AvatarActivity.AvatarState.Posing:
-                //Be aware. This SitDown method is another than the one in this class.
                 //_charController.SitDown(); //Sets a boolean in the animator object
                 _charController.Move(Vector3.zero, false, false);
                 break;
@@ -696,7 +696,6 @@ public class BehaviourAI : SimulationObject
     public void PoseAtCurrentTarget(string pose)
     {
         GameObject targetObject = GetRunningActivity().GetCurrentTargetObject();
-
         ChangePoseAt(pose, targetObject.GetComponent<Appliance>());
     }
 
@@ -722,9 +721,6 @@ public class BehaviourAI : SimulationObject
             GetRunningActivity().NextSession();
             return;
         }
-        //Disable stuff before custom positioning
-        _agent.enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
 
         //save the currentPosition for when standing up again.
         _savedIdlePosition = transform.position;
@@ -755,10 +751,6 @@ public class BehaviourAI : SimulationObject
         if(emptySlot == null)
         {
             //No available position for posing
-            //Enable stuff before return
-            _agent.enabled = true;
-            GetComponent<Rigidbody>().isKinematic = false;
-            //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
             DebugManager.Log("no free pose slots in/at the appliance!", appliance, this);
             //Set avatarState accordingly!!!! We never posed so set to idle.
             GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
@@ -766,6 +758,14 @@ public class BehaviourAI : SimulationObject
             return;
         }
         else {//We found a slot. Hurray!
+             
+            //save a reference to the thing we are posing on/at
+            _poseAppliance = appliance;
+
+            //Disable stuff before custom positioning
+            _agent.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+
             emptySlot.occupant = this;
             transform.position = emptySlot.position;//coord;
             transform.rotation = emptySlot.rotation;
@@ -776,10 +776,6 @@ public class BehaviourAI : SimulationObject
 
             GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Posing);
         }
-
-
-        
-        //_charController.SetPose("Sit");
     }
 
     void ShowCoffeeCup()
@@ -871,7 +867,13 @@ public class BehaviourAI : SimulationObject
 
     public void ReturnToIdlePose()
     {
-        DebugManager.Log("Returning to normal pose.", this, this);
+        AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
+        if (state != AvatarActivity.AvatarState.Posing)
+        {
+            return;
+        }
+        DebugManager.Log("avatar was posing. Returning to idle pose.", this);
+        //DebugManager.Log("Returning to normal pose.", this, this);
         if (_savedIdlePosition != null)
         {
             transform.position = _savedIdlePosition;
@@ -879,7 +881,11 @@ public class BehaviourAI : SimulationObject
         _agent.enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
 
-        GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>().ReleasePoseSlot(this);
+        if (_poseAppliance != null)
+        {
+            _poseAppliance.ReleasePoseSlot(this);
+            _poseAppliance = null;
+        }
 
         //_charController.TurnOffAllBools();
         //_charController.StandUp();
@@ -1132,12 +1138,12 @@ public class BehaviourAI : SimulationObject
         string activityName = GetRunningActivity().name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
-        AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
-        if(state == AvatarActivity.AvatarState.Posing)
-        {
-            DebugManager.Log("avatar was posing. Returning to idle pose.", this);
+        //AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
+        //if(state == AvatarActivity.AvatarState.Posing)
+        //{
+            //DebugManager.Log("avatar was posing. Returning to idle pose.", this);
             ReturnToIdlePose();
-        }
+        //}
 
         //Also set state to idle. Maybe not necessary but just in case so we have a clean slate before starting next activity.
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);

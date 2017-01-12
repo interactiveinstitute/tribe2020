@@ -290,8 +290,8 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
-            if(_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
+            //If we are gonna be moving somewhere, we should do that from an idle pose!
+            if(GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
             {
                 _ai.ReturnToIdlePose();
             }
