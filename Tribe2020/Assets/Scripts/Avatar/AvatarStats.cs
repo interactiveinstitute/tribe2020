@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
+    [Range(0.0f, 1.0f)]
+    public float knowledge;
+    [Range(0.0f, 1.0f)]
+    public float attitude;
+    [Range(0.0f, 1.0f)]
+    public float normSensititvity;
+
+
 
     public float conviction;
 	public float energy;
@@ -23,6 +31,12 @@ public class AvatarStats : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	}
+
+    public float GetEnergyEfficiency()
+    {
+        //INSERT algorithm for generating energy efficiency here! For now, just return attitude :-D
+        return attitude;
+    }
 
     private bool RunEfficiencyTest(float value)
     {
