@@ -5,28 +5,23 @@ using System.Collections.Generic;
 
 public class AvatarMood : MonoBehaviour {
 
-    //Singleton features
-    /*private static AvatarMood _instance;
-    public static AvatarMood GetInstance() {
-        return _instance;
-    }*/
-
     public enum Mood { angry, sad, tired, neutral_neg, neutral_pos, surprised, happy, euphoric };
 
     //Singletons
     GameTime _timeMgr;
-    AvatarMood _avatarMood;
+    AvatarManager _avatarMood;
     ResourceManager _resourceMgr;
     Gems _gems;
 
     public float responsivenessMood;
 
     double _timeLastHappinessRelease;
+    double _timeLastMoodChange;
 
     private Affordance currentInteractionAffordance = null;
 
-    public AvatarMood.Mood preferedMood;
-    Markov<AvatarMood.Mood> markovMood = new Markov<AvatarMood.Mood>();
+    public Mood preferedMood;
+    Markov<Mood> markovMood = new Markov<Mood>();
     Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
 
     //Sort use instead of constructor
@@ -68,21 +63,33 @@ public class AvatarMood : MonoBehaviour {
 
     void Update() {
         TryReleaseSatisfactionGem(_timeMgr.time);
+        TryResetMood(_timeMgr.time);
     }
 
     public Mood TryChangeMood(Mood moodInput) {
         Mood moodNew = markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
+        _timeLastMoodChange = _timeMgr.time;
         UpdateFaceTextureByCurrentMood();
         return moodNew;
     }
 
     public void SetMood(Mood mood) {
         markovMood.SetCurrentState(mood);
+        _timeLastMoodChange = _timeMgr.time;
         UpdateFaceTextureByCurrentMood();
     }
 
     public Mood GetCurrentMood() {
         return markovMood.GetCurrentState();
+    }
+
+    public void TryResetMood(double time) {
+        Mood mood = GetCurrentMood();
+        if (mood != preferedMood) {
+            if (time > _timeLastMoodChange + _resourceMgr.moodResetTime) {
+                SetMood(preferedMood);
+            }
+        }
     }
 
     public void StartNewInteraction(Affordance affordance) {
