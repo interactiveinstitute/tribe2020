@@ -33,10 +33,10 @@ public class AvatarActivity : ScriptableObject {
     public bool hasStartTime = true;
     //public double endTime = 0;
 
+    public bool isTemporary = false;
+
     //Activity session types
     public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt, InteractWithAvatar };
-	//Energy efficieny check types
-	public enum EfficiencyType { None, Ligthing, Heating, Cooling, Device };
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
@@ -56,6 +56,10 @@ public class AvatarActivity : ScriptableObject {
         public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
+
+        public enum SetMoodOptions { No, Try, Force }
+        public SetMoodOptions setAvatarMood;
+        public AvatarMood.Mood mood;
 		//public EfficiencyType relatedEfficieny;
 		//public CheckType checkType;
 		//public float efficienyLevel;
@@ -133,7 +137,20 @@ public class AvatarActivity : ScriptableObject {
 	public void StartSession(Session session) {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
 
-        _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
+        //Add temporary avatar affordances
+        if (!isTemporary) {
+            _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
+        }
+
+        //Set mood
+        switch (session.setAvatarMood) {
+            case Session.SetMoodOptions.Try:
+                _ai.ChangeMood(session.mood, false);
+            break;
+            case Session.SetMoodOptions.Force:
+                _ai.ChangeMood(session.mood, true);
+            break;
+        }
 
         switch (session.type) {
 			case SessionType.WaitForDuration:
@@ -155,47 +172,31 @@ public class AvatarActivity : ScriptableObject {
 				_ai.Wait();
 				break;
 			case SessionType.WalkTo:
-                if(session.appliance != null)
+                if(session.appliance == null)
                 {
-                    _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
-                }else
-                {
-                    _ai.WalkTo(session.requiredAffordance, session.avatarOwnsTarget);
+                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
                 }
-				break;
+                _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
+            break;
 			case SessionType.SetRunlevel:
-                if(session.appliance != null)
-                {
-                    _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
+                if (session.appliance == null) {
+                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
                 }
-                else
-                {
-                    _ai.SetRunLevel(session.requiredAffordance, int.Parse(session.parameter), session.avatarOwnsTarget);
-                }
-				
+                _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
 				NextSession();
 				break;
             case SessionType.TurnOn:
-                if (session.appliance != null)
-                {
-                    _ai.TurnOn(session.appliance);
+                if (session.appliance == null) {
+                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
                 }
-                else
-                {
-                    _ai.TurnOn(session.requiredAffordance);
-                }
-
+                _ai.TurnOn(session.appliance);
                 NextSession();
                 break;
             case SessionType.TurnOff:
-                if (session.appliance != null)
-                {
-                    _ai.TurnOff(session.appliance);
+                if (session.appliance == null) {
+                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
                 }
-                else
-                {
-                    _ai.TurnOff(session.requiredAffordance);
-                }
+                _ai.TurnOff(session.appliance);
 
                 NextSession();
                 break;

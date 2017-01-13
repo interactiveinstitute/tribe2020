@@ -465,6 +465,7 @@ public class BehaviourAI : SimulationObject
     public void StartTemporaryActivity(AvatarActivity activity)
     {
         DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
+        activity.isTemporary = true;
         _tempActivities.Push(activity);
         _tempActivities.Peek().Init(this);
         _tempActivities.Peek().Start();
@@ -613,11 +614,12 @@ public class BehaviourAI : SimulationObject
     //}
 
     //Makes the avatar walks towards an object by setting the navmeshagent destination.
-    public void WalkTo(Affordance affordance, bool isOwned)
+    public Appliance WalkTo(Affordance affordance, bool isOwned)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, isOwned);
         Appliance targetAppliance = GetApplianceForAffordance(affordance, isOwned);
         WalkTo(targetAppliance, isOwned);
+        return targetAppliance;
     }
 
     //Let's use the reference to the appliance
@@ -1056,7 +1058,7 @@ public class BehaviourAI : SimulationObject
     //}
 
     // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-    public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage)
+    public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage = false)
     {
         Appliance targetAppliance = null;
         float minDist = float.MaxValue;
@@ -1288,7 +1290,7 @@ public class BehaviourAI : SimulationObject
                 return;
             }
 
-            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true);
+            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true,GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>());
 
         }
     }
@@ -1357,12 +1359,21 @@ public class BehaviourAI : SimulationObject
         StartTemporaryActivity(activity);
     }
 
-    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo)
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, Appliance returnToAppliance = null)
     {
         DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
 
         AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        if (returnToAppliance != null) {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = returnToAppliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
 
         //Let's build relevant sessions and inject them into the activity we just created.
         AvatarActivity.Session interactSession = new AvatarActivity.Session();
@@ -1386,51 +1397,17 @@ public class BehaviourAI : SimulationObject
         StartTemporaryActivity(activity);
     }
 
-    /*public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
-    {
-        DebugManager.Log("Yo! Gonna flip that lamp switch to " + turnOn, lightSwitch.gameObject, this);
-        //Create an activity for turning on the laaajt!
-        AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
-        roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
-
-        //Let's build relevant sessions and inject them into the activity we just created.
-        AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
-        walkToLightSwitch.title = "Walking to light switch";
-        walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-        walkToLightSwitch.target = AvatarActivity.Target.LampSwitch; //Is this needed if we instead set appliance below? I didn't remove this, if it would mess something else up. /Martin
-        walkToLightSwitch.appliance = lightSwitch;
-        walkToLightSwitch.currentRoom = true;
-
-        AvatarActivity.Session switchLight = new AvatarActivity.Session();
-        switchLight.title = turnOn ? "Turning on light" : "Turning off light";
-        switchLight.type = turnOn ? AvatarActivity.SessionType.TurnOn : AvatarActivity.SessionType.TurnOff;
-        switchLight.appliance = lightSwitch;
-
-        //Insert at beginning (register in inverted performance order)
-        roomLightActivity.InsertSession(switchLight);
-        roomLightActivity.InsertSession(walkToLightSwitch);
-
-        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
-        StartTemporaryActivity(roomLightActivity);
-    }*/
-
-    ////
-    //public void QuickTurnLightOn(Appliance lightSwitch)
-    //{
-    //    AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
-    //    walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-    //    walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
-    //    walkToLightSwitch.currentRoom = true;
-
-    //    AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
-    //    turnOnLight.title = "Turn on light";
-    //    turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
-    //    turnOnLight.target = AvatarActivity.Target.LampSwitch;
-    //    turnOnLight.parameter = "0";
-
-    //    _curActivity.InsertSession(turnOnLight);
-    //    _curActivity.InsertSession(walkToLightSwitch);
-    //}
+    public void ChangeMood(AvatarMood.Mood mood, bool force) {
+        AvatarMood component = gameObject.GetComponent<AvatarMood>();
+        if(component != null) {
+            if (force) {
+                component.SetMood(mood);
+            }
+            else {
+                component.TryChangeMood(mood);
+            }
+        }
+    }
 
     // Save function
     public JSONClass Encode()
