@@ -521,7 +521,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
             //If appliance is light switch
             foreach (Appliance.AffordanceSlot affordanceSlot in appliance.avatarAffordances) {
                 if (affordanceSlot.affordance == zone.avatarAffordanceSwitchLight) {
-                    _avatarMgr.OnLightToggled(zone);
+                    _avatarMgr.OnLightToggled(zone, meter.GivesPower);
 
                     if (meter.GivesPower) {
                         _narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);

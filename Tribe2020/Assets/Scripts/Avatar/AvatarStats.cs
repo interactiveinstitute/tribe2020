@@ -11,18 +11,16 @@ public class AvatarStats : MonoBehaviour {
     [Range(0.0f, 1.0f)]
     public float normSensititvity;
 
-
-
     public float conviction;
 	public float energy;
 
-    public float maxEfficiencyValue;
+    /*public float maxEfficiencyValue;
 	public float lightingEfficiency;
 	public float warmingEfficiency;
 	public float coolingEfficiency;
-	public float deviceEfficiency;
+	public float deviceEfficiency;*/
 
-    public enum Efficiencies { Lighting, Warming, Cooling, Device}
+    //public enum Efficiencies { Lighting, Warming, Cooling, Device}
 
     // Use this for initialization
     void Start() {
@@ -38,7 +36,11 @@ public class AvatarStats : MonoBehaviour {
         return attitude;
     }
 
-    private bool RunEfficiencyTest(float value)
+    public bool RunEnergyEfficiencyTest() {
+        return GetEnergyEfficiency() >= Random.value;
+    }
+
+    /*private bool RunEfficiencyTest(float value)
     {
         return value >= Random.value * maxEfficiencyValue;
     }
@@ -62,11 +64,56 @@ public class AvatarStats : MonoBehaviour {
                 break;
         }
         return RunEfficiencyTest(value);
-    }
+    }*/
 
     //First argument is always parameter to test, following parameters are success callback with up to 4 arguments
     //Always return success flag
-    public bool TestEnergyEfficiency(Efficiencies efficiencies)
+
+    public bool TestEnergyEfficiency() {
+        return RunEnergyEfficiencyTest();
+    }
+
+    public bool TestEnergyEfficiency(System.Action successCallback) {
+        if (!RunEnergyEfficiencyTest()) {
+            return false;
+        }
+        successCallback();
+        return true;
+    }
+
+    public bool TestEnergyEfficiency<U1>(System.Action<U1> successCallback, U1 p1) {
+        if (!RunEnergyEfficiencyTest()) {
+            return false;
+        }
+        successCallback(p1);
+        return true;
+    }
+
+    public bool TestEnergyEfficiency<U1, U2>(System.Action<U1, U2> successCallback, U1 p1, U2 p2) {
+        if (!RunEnergyEfficiencyTest()) {
+            return false;
+        }
+        successCallback(p1, p2);
+        return true;
+    }
+
+    public bool TestEnergyEfficiency<U1, U2, U3>(System.Action<U1, U2, U3> successCallback, U1 p1, U2 p2, U3 p3) {
+        if (!RunEnergyEfficiencyTest()) {
+            return false;
+        }
+        successCallback(p1, p2, p3);
+        return true;
+    }
+
+    public bool TestEnergyEfficiency<U1, U2, U3, U4>(System.Action<U1, U2, U3, U4> successCallback, U1 p1, U2 p2, U3 p3, U4 p4) {
+        if (!RunEnergyEfficiencyTest()) {
+            return false;
+        }
+        successCallback(p1, p2, p3, p4);
+        return true;
+    }
+
+    /*public bool TestEnergyEfficiency(Efficiencies efficiencies)
     {
         return RunEfficiencyTest(efficiencies);
     }
@@ -124,6 +171,6 @@ public class AvatarStats : MonoBehaviour {
 
         successCallback(p1, p2, p3, p4);
         return true;
-    }
+    }*/
 
 }

@@ -15,8 +15,14 @@ public class AvatarManager : MonoBehaviour {
 	}
 
 	//
-	public void OnLightToggled(Room zone) {
+	public void OnLightToggled(Room zone, bool lightOn) {
 		List<BehaviourAI> occupants = zone.GetOccupants();
+
+        if (!lightOn) {
+            foreach (BehaviourAI occupant in occupants) {
+                occupant.gameObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.angry);
+            }
+        }
 
         if (occupants.Count == 0) return;
 		//Let's try to only notify one avatar. So we don't get several characters running for the light switch

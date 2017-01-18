@@ -1,34 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ComfortLevelExpressions : MonoBehaviour {
 	public GameObject face;
-	public Texture[] myTextures = new Texture[5];
-	int maxTextures;
-	int arrayPos = 0;
+
+    public List<AvatarMood.Mood> _faceTextureIndices;
+    public List<Texture2D> _faceTextures;
+    Texture2D _textureFace;
+
 
 	void Start ()
 	{
-		maxTextures = myTextures.Length-1;
-	}
+        face = transform.FindChild("Model/Face").gameObject;
+        UpdateFaceTextureByCurrentMood();
+    }
 
 
-	void Update ()
+    void Update ()
 	{
-		ChangeFaceTexture ();
 	}
-		
-	void ChangeFaceTexture(){
-		if (Input.GetKeyDown (KeyCode.U)) {
-			face.GetComponent<Renderer> ().material.mainTexture = myTextures [arrayPos];
 
-			if (arrayPos == maxTextures) {
-				arrayPos = 0;
-			} else {
-				arrayPos++;
-			}
+    Texture2D GetFaceTextureByMood(AvatarMood.Mood mood) {
+        int i = _faceTextureIndices.IndexOf(mood);
+        return i != -1 ? _faceTextures[i] : null;
+    }
 
-		} 
-	}
-		
+    public void SetFaceTexture(AvatarMood.Mood mood) {
+        _textureFace = GetFaceTextureByMood(mood);
+        if (_textureFace != null) {
+            face.GetComponent<SkinnedMeshRenderer>().material.mainTexture = _textureFace;
+        }
+    }
+
+    public void UpdateFaceTextureByCurrentMood() {
+        AvatarMood.Mood mood = gameObject.GetComponent<AvatarMood>().GetCurrentMood();
+        SetFaceTexture(mood);
+    }
+
 }

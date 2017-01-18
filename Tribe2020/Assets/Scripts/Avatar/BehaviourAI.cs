@@ -465,6 +465,7 @@ public class BehaviourAI : SimulationObject
     public void StartTemporaryActivity(AvatarActivity activity)
     {
         DebugManager.Log(name + ". StartTemporaryActivity(" + activity + ")", this);
+        activity.isTemporary = true;
         _tempActivities.Push(activity);
         _tempActivities.Peek().Init(this);
         _tempActivities.Peek().Start();
@@ -613,11 +614,12 @@ public class BehaviourAI : SimulationObject
     //}
 
     //Makes the avatar walks towards an object by setting the navmeshagent destination.
-    public void WalkTo(Affordance affordance, bool isOwned)
+    public Appliance WalkTo(Affordance affordance, bool isOwned)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, isOwned);
         Appliance targetAppliance = GetApplianceWithAffordance(affordance, isOwned);
         WalkTo(targetAppliance, isOwned);
+        return targetAppliance;
     }
 
     //Let's use the reference to the appliance
@@ -1019,13 +1021,14 @@ public class BehaviourAI : SimulationObject
 
     public void InteractWithAvatar(BehaviourAI targetAvatar, Affordance affordance)
     {
+        DebugManager.Log(name + " is starts interacting with " + targetAvatar, this, this);
         if (targetAvatar != null)
         {
             //Only interact with new avatar if you, and the other other avatar, are not already busy interacting.
-            if (!GetComponent<AvatarAttitude>().IsInteracting() && !targetAvatar.GetComponent<AvatarAttitude>().IsInteracting())
+            if (!GetComponent<AvatarMood>().IsInteracting() && !targetAvatar.GetComponent<AvatarMood>().IsInteracting())
             {
-                GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
-                targetAvatar.GetComponent<AvatarAttitude>().StartNewInteraction(affordance);
+                GetComponent<AvatarMood>().StartNewInteraction(affordance);
+                targetAvatar.GetComponent<AvatarMood>().StartNewInteraction(affordance);
                 TalkToOtherAvatarEmoji(targetAvatar);
             }
         }
@@ -1062,6 +1065,7 @@ public class BehaviourAI : SimulationObject
 
     // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership and currentRoom conditions
     public Appliance GetApplianceWithAffordance(Affordance affordance, bool userOwnage, bool currentRoom = false)
+
     {
         
 
@@ -1179,8 +1183,7 @@ public class BehaviourAI : SimulationObject
         {
             foreach (ElectricDevice device in GetRunningActivity().turnedOnDevices)
             {
-                AvatarStats.Efficiencies relatedEfficiency = device.relatedEfficiency;
-                if (_stats.TestEnergyEfficiency(relatedEfficiency))
+                if (_stats.TestEnergyEfficiency())
                 {
                     DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
                     device.SetRunlevel(0);
@@ -1189,7 +1192,6 @@ public class BehaviourAI : SimulationObject
                 {
                     DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
                 }
-                //DebugManager.Log("Turning off device", device, this);
             }
         }
 
@@ -1272,7 +1274,7 @@ public class BehaviourAI : SimulationObject
 
     void OnWalkToOtherRoom()
     {
-        _stats.TestEnergyEfficiency(AvatarStats.Efficiencies.Lighting, CheckLighting, AvatarActivity.SessionType.TurnOff);
+        _stats.TestEnergyEfficiency(CheckLighting, AvatarActivity.SessionType.TurnOff);
     }
 
     void OnEnterNewRoom(Room room)
@@ -1321,14 +1323,14 @@ public class BehaviourAI : SimulationObject
                 return;
             }
 
-            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true);
+            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true,GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>());
 
         }
     }
 
     void TalkToOtherAvatarEmoji(BehaviourAI other)
     {
-        AvatarMood.Mood mood = GetComponent<AvatarAttitude>().GetCurrentMood();
+        AvatarMood.Mood mood = GetComponent<AvatarMood>().GetCurrentMood();
         AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
 
         //DebugManager.Log(name + " talks " + mood +" to " + other.name, this, this);
@@ -1344,7 +1346,7 @@ public class BehaviourAI : SimulationObject
         
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
-        bool continueTalking = HasAffordance(GetComponent<AvatarAttitude>().GetCurrentInteractionAffordance());
+        bool continueTalking = HasAffordance(GetComponent<AvatarMood>().GetCurrentInteractionAffordance());
 
         if (continueTalking)
         {
@@ -1352,12 +1354,12 @@ public class BehaviourAI : SimulationObject
             transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
             yield return new WaitForSeconds(2);
-            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
             TalkToOtherAvatarEmoji(other);
         }
         else
         {
-            AvatarMood.Mood moodNew = GetComponent<AvatarAttitude>().TryChangeMood(moodInput);
+            AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
             EndTalkToOtherAvatar();
             other.EndTalkToOtherAvatar();
         }
@@ -1366,69 +1368,8 @@ public class BehaviourAI : SimulationObject
     public void EndTalkToOtherAvatar()
     {
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
-        GetComponent<AvatarAttitude>().EndInteraction();
+        GetComponent<AvatarMood>().EndInteraction();
     }
-
-    /*void TalkToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType = AvatarConversation.speechType.greeting, int count = 0)
-    {
-        DebugManager.Log(name + ": " + GetComponent<AvatarConversation>().GetLine(speechType), gameObject, this);
-        StartCoroutine(other.ListenToOtherAvatar(this, speechType, ++count));
-    }
-
-    public System.Collections.IEnumerator ListenToOtherAvatar(BehaviourAI other, AvatarConversation.speechType speechType, int count)
-    {
-        bool continueTalking = false;
-        AvatarConversation.speechType newSpeechType = speechType;
-        int r;
-
-        switch (speechType)
-        {
-            case AvatarConversation.speechType.greeting:
-                if (count >= 2)
-                {
-                    newSpeechType = AvatarConversation.speechType.topic;
-                }
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.topic:
-                newSpeechType = AvatarConversation.speechType.reaction;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.reaction:
-                r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.question:
-                newSpeechType = AvatarConversation.speechType.answer;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.answer:
-                r = UnityEngine.Random.Range(0, 2);
-                newSpeechType = r == 0 ? AvatarConversation.speechType.topic : AvatarConversation.speechType.question;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.goodbye:
-                newSpeechType = AvatarConversation.speechType.goodbyeFinal;
-                continueTalking = true;
-                break;
-            case AvatarConversation.speechType.goodbyeFinal:
-                continueTalking = false;
-                break;
-        }
-
-        //Should I say goodbye
-        if(count > 10 && UnityEngine.Random.value > 0.75f)
-        {
-            newSpeechType = AvatarConversation.speechType.goodbye;
-        }
-
-        if (continueTalking)
-        {
-            yield return new WaitForSeconds(2);
-            TalkToOtherAvatar(other, newSpeechType, count);
-        }
-    }*/
 
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
     {
@@ -1451,12 +1392,21 @@ public class BehaviourAI : SimulationObject
         StartTemporaryActivity(activity);
     }
 
-    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo)
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, Appliance returnToAppliance = null)
     {
         DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
 
         AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
+
+        if (returnToAppliance != null) {
+            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+            walkToSession.title = "Walking to appliance";
+            walkToSession.type = AvatarActivity.SessionType.WalkTo;
+            walkToSession.appliance = returnToAppliance;
+            walkToSession.currentRoom = true;
+            activity.InsertSession(walkToSession);
+        }
 
         //Let's build relevant sessions and inject them into the activity we just created.
         AvatarActivity.Session interactSession = new AvatarActivity.Session();
@@ -1480,51 +1430,17 @@ public class BehaviourAI : SimulationObject
         StartTemporaryActivity(activity);
     }
 
-    /*public void UseLightSwitch(Appliance lightSwitch, bool turnOn)
-    {
-        DebugManager.Log("Yo! Gonna flip that lamp switch to " + turnOn, lightSwitch.gameObject, this);
-        //Create an activity for turning on the laaajt!
-        AvatarActivity roomLightActivity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
-        roomLightActivity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
-
-        //Let's build relevant sessions and inject them into the activity we just created.
-        AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
-        walkToLightSwitch.title = "Walking to light switch";
-        walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-        walkToLightSwitch.target = AvatarActivity.Target.LampSwitch; //Is this needed if we instead set appliance below? I didn't remove this, if it would mess something else up. /Martin
-        walkToLightSwitch.appliance = lightSwitch;
-        walkToLightSwitch.currentRoom = true;
-
-        AvatarActivity.Session switchLight = new AvatarActivity.Session();
-        switchLight.title = turnOn ? "Turning on light" : "Turning off light";
-        switchLight.type = turnOn ? AvatarActivity.SessionType.TurnOn : AvatarActivity.SessionType.TurnOff;
-        switchLight.appliance = lightSwitch;
-
-        //Insert at beginning (register in inverted performance order)
-        roomLightActivity.InsertSession(switchLight);
-        roomLightActivity.InsertSession(walkToLightSwitch);
-
-        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
-        StartTemporaryActivity(roomLightActivity);
-    }*/
-
-    ////
-    //public void QuickTurnLightOn(Appliance lightSwitch)
-    //{
-    //    AvatarActivity.Session walkToLightSwitch = new AvatarActivity.Session();
-    //    walkToLightSwitch.type = AvatarActivity.SessionType.WalkTo;
-    //    walkToLightSwitch.target = AvatarActivity.Target.LampSwitch;
-    //    walkToLightSwitch.currentRoom = true;
-
-    //    AvatarActivity.Session turnOnLight = new AvatarActivity.Session();
-    //    turnOnLight.title = "Turn on light";
-    //    turnOnLight.type = AvatarActivity.SessionType.SetRunlevel;
-    //    turnOnLight.target = AvatarActivity.Target.LampSwitch;
-    //    turnOnLight.parameter = "0";
-
-    //    _curActivity.InsertSession(turnOnLight);
-    //    _curActivity.InsertSession(walkToLightSwitch);
-    //}
+    public void ChangeMood(AvatarMood.Mood mood, bool force) {
+        AvatarMood component = gameObject.GetComponent<AvatarMood>();
+        if(component != null) {
+            if (force) {
+                component.SetMood(mood);
+            }
+            else {
+                component.TryChangeMood(mood);
+            }
+        }
+    }
 
     // Save function
     public JSONClass Encode()

@@ -28,9 +28,10 @@ public class ResourceManager : MonoBehaviour {
 	public float comfortProduction;
 
 	[Header("Properties")]
-	public float happyComfortInterval = 5;
-	public float euphoricComfrotInterval = 10;
-	public int comfortHarvestCount = 0;
+	public float happyComfortInterval = 300;
+	public float euphoricComfrotInterval = 60;
+    public float moodResetTime = 1000;
+    public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
 
 	//Sort use instead of constructor
