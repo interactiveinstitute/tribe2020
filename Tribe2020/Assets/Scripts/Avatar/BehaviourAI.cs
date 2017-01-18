@@ -1405,7 +1405,7 @@ public class BehaviourAI : SimulationObject
             walkToSession.type = AvatarActivity.SessionType.WalkTo;
             walkToSession.appliance = returnToAppliance;
             walkToSession.currentRoom = true;
-            activity.InsertSession(walkToSession);
+            activity.InsertSessionAtCurrentIndex(walkToSession);
         }
 
         //Let's build relevant sessions and inject them into the activity we just created.

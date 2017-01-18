@@ -212,27 +212,27 @@ public class AvatarActivity : ScriptableObject {
 			case SessionType.WalkTo:
                 if(session.appliance == null)
                 {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
+                    session.appliance = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.currentRoom);
                 }
                 _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
             break;
 			case SessionType.SetRunlevel:
                 if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
+                    session.appliance = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.currentRoom);
                 }
                 _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
 				NextSession();
 				break;
             case SessionType.TurnOn:
                 if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
+                    session.appliance = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.currentRoom);
                 }
                 _ai.TurnOn(session.appliance);
                 NextSession();
                 break;
             case SessionType.TurnOff:
                 if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
+                    session.appliance = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.currentRoom);
                 }
                 _ai.TurnOff(session.appliance);
 
