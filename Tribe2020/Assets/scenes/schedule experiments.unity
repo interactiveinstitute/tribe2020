@@ -920,7 +920,12 @@ Prefab:
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.size
-      value: 4
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
+        type: 2}
+      propertyPath: thingsInHands.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000010513443900, guid: 346cda8097346714eaa6165fdbde0362, type: 2}
       propertyPath: m_LocalPosition.x
@@ -962,34 +967,34 @@ Prefab:
         type: 2}
       propertyPath: schedule.Array.data[0].activity
       value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
+      objectReference: {fileID: 11400000, guid: 06b1be30471c43a46b052cf354aca41d,
         type: 2}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[1].time
-      value: 14:00
+      value: 12:20
       objectReference: {fileID: 0}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[1].activity
       value: 
-      objectReference: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c,
+      objectReference: {fileID: 11400000, guid: f26194a60238de341aa0735b8af74299,
         type: 2}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[2].time
-      value: 16:30
+      value: 16:00
       objectReference: {fileID: 0}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[2].activity
       value: 
-      objectReference: {fileID: 11400000, guid: be0c453c5535f2447948309507eba1c5,
+      objectReference: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4,
         type: 2}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[3].time
-      value: 17:00
+      value: 16:30
       objectReference: {fileID: 0}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
@@ -1000,7 +1005,7 @@ Prefab:
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
       propertyPath: schedule.Array.data[0].time
-      value: 12:00
+      value: 08:00
       objectReference: {fileID: 0}
     - target: {fileID: 114000012038547090, guid: 346cda8097346714eaa6165fdbde0362,
         type: 2}
@@ -1860,7 +1865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
+  linePrefab: {fileID: 21300000, guid: 208047cc42e593748b261083b69e6490, type: 2}
   color: {r: 0.737931, g: 1, b: 0, a: 1}
   maxValue: 100
   minValue: 0
@@ -2486,7 +2491,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 1
-  randomSeed: 263866011
+  randomSeed: -1017760342
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -5037,7 +5042,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.3446691, g: 0.7289539, b: 0.9191176, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data:
@@ -5418,8 +5423,7 @@ Prefab:
     - target: {fileID: 11439236, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
       propertyPath: avatarAffordances.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: aef2c772cf191e249a0ca2513b4a8eee,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 164190, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
       propertyPath: m_Name
       value: Work Entrance
@@ -5433,6 +5437,15 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: aef2c772cf191e249a0ca2513b4a8eee,
         type: 2}
+    - target: {fileID: 11439236, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
+      propertyPath: avatarAffordances.Array.data[0].affordance
+      value: 
+      objectReference: {fileID: 11400000, guid: aef2c772cf191e249a0ca2513b4a8eee,
+        type: 2}
+    - target: {fileID: 11439236, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
+      propertyPath: avatarAffordances.Array.data[0].availableSlots
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
   m_IsPrefabParent: 0
@@ -6347,7 +6360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
+  linePrefab: {fileID: 0}
   color: {r: 0, g: 0.54482746, b: 1, a: 1}
   maxValue: 100
   minValue: 0
@@ -7403,7 +7416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38315fe932d452441b645ce18a329c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
+  linePrefab: {fileID: 0}
   color: {r: 0.63529414, g: 1, b: 0.3882353, a: 1}
   maxValue: 100
   minValue: 0
@@ -7653,7 +7666,8 @@ MonoBehaviour:
   description: The location for workers to come to in the morning
   playerAffordances: []
   avatarAffordances:
-  - {fileID: 0}
+  - affordance: {fileID: 0}
+    availableSlots: 0
   temporaryAvatarAffordances: []
   owners: []
   appliedEEMs: []
@@ -11735,7 +11749,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: 60.500008}
+  m_AnchoredPosition: {x: 125, y: 60.500053}
   m_SizeDelta: {x: 250, y: -121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &732872584
@@ -12376,7 +12390,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.41176468, g: 0.41176468, b: 0.41176468, a: 0.78431374}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data:
@@ -16074,7 +16088,7 @@ ParticleSystem:
   moveWithTransform: 1
   autoRandomSeed: 1
   scalingMode: 1
-  randomSeed: -1934894237
+  randomSeed: -523096108
   InitialModule:
     serializedVersion: 2
     enabled: 1
@@ -17952,10 +17966,8 @@ MonoBehaviour:
   viewGuideRowPrefab: {fileID: 1000013316688104, guid: a67829d6dcf577a4b86b4a75a39b808d,
     type: 2}
   viewpointIconPrefab: {fileID: 116102, guid: c7a72ab6e32b78741a00240101091fe5, type: 2}
-  mailButtonPrefab: {fileID: 1000010623696194, guid: db7a69b8906548a4f833f793a55dc342,
-    type: 2}
-  EEMButtonPrefab: {fileID: 1000011575247888, guid: 9df48106b19751141a18505ab58d1169,
-    type: 2}
+  mailButtonPrefab: {fileID: 0}
+  EEMButtonPrefab: {fileID: 0}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
   menus:
   - {fileID: 756889792}
@@ -19259,7 +19271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueId: 
+  uniqueId: 5cfaacad-85f5-448d-8fd6-6221a7c6f6d7
 --- !u!1 &1198357539
 GameObject:
   m_ObjectHideFlags: 0
@@ -20215,8 +20227,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 228.125, y: -143.46155}
-  m_SizeDelta: {x: 323.75, y: 266.9231}
+  m_AnchoredPosition: {x: 228.125, y: -143.27393}
+  m_SizeDelta: {x: 323.75, y: 266.54785}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1241098489
 MonoBehaviour:
@@ -25372,7 +25384,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.3241372, g: 0.32358348, b: 0.33088237, a: 0.78431374}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data:
@@ -28846,8 +28858,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 33.125, y: -143.46155}
-  m_SizeDelta: {x: 46.25, y: 266.9231}
+  m_AnchoredPosition: {x: 33.125, y: -143.27393}
+  m_SizeDelta: {x: 46.25, y: 266.54785}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1817087941
 MonoBehaviour:
@@ -29129,7 +29141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
+  linePrefab: {fileID: 0}
   color: {r: 1, g: 0, b: 0, a: 1}
   maxValue: 100
   minValue: 0
@@ -30014,7 +30026,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.8897059, g: 0.8468448, b: 0.26822016, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data:
@@ -31516,25 +31528,10 @@ Prefab:
       propertyPath: owners.Array.data[0]
       value: 
       objectReference: {fileID: 525369965}
-    - target: {fileID: 4000010474060234, guid: b1b421edbaf7b7543a10e02928960628, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000010474060234, guid: b1b421edbaf7b7543a10e02928960628, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000010474060234, guid: b1b421edbaf7b7543a10e02928960628, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.573
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000011616894880, guid: b1b421edbaf7b7543a10e02928960628, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.72
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000011616894880, guid: b1b421edbaf7b7543a10e02928960628, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -0.4
+    - target: {fileID: 114000011412522144, guid: b1b421edbaf7b7543a10e02928960628,
+        type: 2}
+      propertyPath: avatarAffordances.Array.data[1].availableSlots
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b1b421edbaf7b7543a10e02928960628, type: 2}

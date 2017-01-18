@@ -616,7 +616,7 @@ public class BehaviourAI : SimulationObject
     public void WalkTo(Affordance affordance, bool isOwned)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, isOwned);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, isOwned);
+        Appliance targetAppliance = GetApplianceWithAffordance(affordance, isOwned);
         WalkTo(targetAppliance, isOwned);
     }
 
@@ -649,7 +649,7 @@ public class BehaviourAI : SimulationObject
     public void WarpTo(Affordance affordance, bool isOwned)
     {
         //Appliance appliance = FindNearestAppliance(target, isOwned);
-        Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
+        Appliance appliance = GetApplianceWithAffordance(affordance, isOwned);
         WarpTo(appliance, isOwned);
     }
 
@@ -708,7 +708,7 @@ public class BehaviourAI : SimulationObject
             return;
         }
         //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
-        Appliance appliance = GetApplianceForAffordance(affordance, isOwned);
+        Appliance appliance = GetApplianceWithAffordance(affordance, isOwned);
         ChangePoseAt(pose, appliance);
     }
 
@@ -902,7 +902,7 @@ public class BehaviourAI : SimulationObject
 			DebugManager.LogError("No affordance provided to the SetRunLevel function!", this, this);
 		}
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
+        Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
 
         if (targetAppliance == null)
         {
@@ -950,7 +950,7 @@ public class BehaviourAI : SimulationObject
     public void TurnOn(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
+        Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
         TurnOn(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -982,7 +982,7 @@ public class BehaviourAI : SimulationObject
     public void TurnOff(Affordance affordance, bool userOwnage = false)
     {
         //Appliance targetAppliance = FindNearestAppliance(target, false);
-        Appliance targetAppliance = GetApplianceForAffordance(affordance, userOwnage);
+        Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
         TurnOff(targetAppliance);
 		//TODO: temp solution
 		targetAppliance.OnUsage(affordance);
@@ -1013,7 +1013,7 @@ public class BehaviourAI : SimulationObject
 
     public void InteractWithAvatar(Affordance affordance)
     {
-        BehaviourAI targetAvatar = GetAvatarForAffordance(affordance);
+        BehaviourAI targetAvatar = GetAvatarWithAffordance(affordance);
         InteractWithAvatar(targetAvatar, affordance);
 	}
 
@@ -1060,57 +1060,74 @@ public class BehaviourAI : SimulationObject
     //    return targetAppliance;
     //}
 
-    // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership
-    public Appliance GetApplianceForAffordance(Affordance affordance, bool userOwnage)
+    // Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership and currentRoom conditions
+    public Appliance GetApplianceWithAffordance(Affordance affordance, bool userOwnage, bool currentRoom = false)
     {
-        Appliance targetAppliance = null;
-        float minDist = float.MaxValue;
+        
 
-        foreach (Appliance app in _devices)
+        Appliance targetAppliance = null;
+
+        //If we want to find an appliance in the current room, we delegate the task to the current room, which hold a reference to all the appliances within it.
+        if (currentRoom)
         {
-            List<Affordance> affordances = app.avatarAffordances;
-            if (affordances.Contains(affordance) && (!userOwnage || app.owners.Contains(this)))
+            BehaviourAI owner = userOwnage ? this : null;
+            targetAppliance = _curRoom.GetApplianceWithAffordance(affordance, owner);
+        }
+        else
+        {
+            float minDist = float.MaxValue;
+            foreach (Appliance app in _devices)
             {
-                float dist = Vector3.Distance(transform.position, app.transform.position);
-                if (dist < minDist)
-                {
-                    minDist = dist;
-                    targetAppliance = app;
+                // TODO: Also retrieve temporary affordances
+                List<Appliance.AffordanceSlot> affordances = app.avatarAffordances;
+                foreach(Appliance.AffordanceSlot affordanceSlot in affordances) {
+                    if (affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this)))
+                    {
+                        float dist = Vector3.Distance(this.transform.position, app.transform.position);
+                        if (dist < minDist)
+                        {
+                            minDist = dist;
+                            targetAppliance = app;
+                        }
+                    }
                 }
             }
         }
 
-        if (targetAppliance == null)
-        {
-            if(userOwnage)
-                DebugManager.LogError(name + " could not find an OWNED appliance with affordance: " + affordance.ToString(), this);
-            else
-                DebugManager.LogError(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
-        }
+        //if (targetAppliance == null)
+        //{
+        //    if(userOwnage)
+        //        DebugManager.Log(name + " could not find an OWNED appliance with affordance: " + affordance.ToString(), this);
+        //    else
+        //        DebugManager.Log(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
+        //}
 
-        DebugManager.Log("Min dist appliance: ", targetAppliance, this);
+        //DebugManager.Log("Min dist appliance: ", targetAppliance, this);
 
         return targetAppliance;
     }
 
-    public BehaviourAI GetAvatarForAffordance(Affordance affordance)
+    public BehaviourAI GetAvatarWithAffordance(Affordance affordance, GameObject[] avatars)
     {
         BehaviourAI targetAvatar = null;
         float minDist = float.MaxValue;
 
-        foreach (GameObject avatar in GameObject.FindGameObjectsWithTag("Avatar"))
+        //TODO: Have a reference to all avatars in beforehand
+        foreach (GameObject avatar in avatars)
         {
             if (avatar != gameObject) //Ignore yourself - find another avatar
             {
-                List<Affordance> affordances = new List<Affordance>(avatar.GetComponent<Appliance>().avatarAffordances);
+                List<Appliance.AffordanceSlot> affordances = new List<Appliance.AffordanceSlot>(avatar.GetComponent<Appliance>().avatarAffordances);
                 affordances.AddRange(avatar.GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-                if (affordances.Contains(affordance))
-                {
-                    float dist = Vector3.Distance(transform.position, avatar.transform.position);
-                    if (dist < minDist)
+                foreach (Appliance.AffordanceSlot affordanceSlot in affordances) {
+                    if (affordanceSlot.affordance == affordance)
                     {
-                        minDist = dist;
-                        targetAvatar = avatar.GetComponent<BehaviourAI>();
+                        float dist = Vector3.Distance(transform.position, avatar.transform.position);
+                        if (dist < minDist)
+                        {
+                            minDist = dist;
+                            targetAvatar = avatar.GetComponent<BehaviourAI>();
+                        }
                     }
                 }
             }
@@ -1119,13 +1136,20 @@ public class BehaviourAI : SimulationObject
         return targetAvatar;
     }
 
+    public BehaviourAI GetAvatarWithAffordance(Affordance affordance)
+    {
+        return GetAvatarWithAffordance(affordance, GameObject.FindGameObjectsWithTag("Avatar"));
+    }
+
     public bool HasAffordance(Affordance affordance)
     {
-        List<Affordance> affordances = new List<Affordance>(GetComponent<Appliance>().avatarAffordances);
+        List<Appliance.AffordanceSlot> affordances = new List<Appliance.AffordanceSlot>(GetComponent<Appliance>().avatarAffordances);
         affordances.AddRange(GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-        if (affordances.Contains(affordance))
-        {
-            return true;
+        foreach (Appliance.AffordanceSlot affordanceSlot in  affordances) {
+            if (affordanceSlot.affordance == affordance)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -1147,6 +1171,8 @@ public class BehaviourAI : SimulationObject
 
         //Also set state to idle. Maybe not necessary but just in case so we have a clean slate before starting next activity.
         GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        //Don't go nowhere!
+        _agent.ResetPath();
 
         //Check if we should turn off stuff when ending this activity.
         if (GetRunningActivity().turnedOnDevices != null)
@@ -1409,7 +1435,7 @@ public class BehaviourAI : SimulationObject
         AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         activity.Init(this);//Make sure _curSession is 0 before we start injecting sessions into the activity
 
-        activity.InsertSession(session);
+        activity.InsertSessionAtCurrentIndex(session);
 
         if (walkTo)
         {
@@ -1418,7 +1444,7 @@ public class BehaviourAI : SimulationObject
             walkToSession.type = AvatarActivity.SessionType.WalkTo;
             walkToSession.appliance = appliance;
             walkToSession.currentRoom = true;
-            activity.InsertSession(walkToSession);
+            activity.InsertSessionAtCurrentIndex(walkToSession);
         }
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
@@ -1438,7 +1464,7 @@ public class BehaviourAI : SimulationObject
         interactSession.type = sessionType;
         interactSession.parameter = parameter;
         interactSession.appliance = appliance;
-        activity.InsertSession(interactSession);
+        activity.InsertSessionAtCurrentIndex(interactSession);
 
         if (walkTo)
         {
@@ -1447,7 +1473,7 @@ public class BehaviourAI : SimulationObject
             walkToSession.type = AvatarActivity.SessionType.WalkTo;
             walkToSession.appliance = appliance;
             walkToSession.currentRoom = true;
-            activity.InsertSession(walkToSession);
+            activity.InsertSessionAtCurrentIndex(walkToSession);
         }
 
         //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!

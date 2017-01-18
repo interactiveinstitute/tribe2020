@@ -39,27 +39,53 @@ public class Room : MonoBehaviour {
 	}
 
     //Tries to retrieve the first available appliance with the given affordance in this room
-    public Appliance GetApplianceWithAffordance(Affordance affordance)
+    public Appliance GetApplianceWithAffordance(Affordance affordance, BehaviourAI owner = null)
     {
+        Appliance targetAppliance = null;
+        float minDist = float.MaxValue;
         foreach (Appliance device in _devices)
         {
-            foreach(Affordance aff in device.avatarAffordances)
+            List<Appliance.AffordanceSlot> affordances = device.avatarAffordances;
+            foreach (Appliance.AffordanceSlot affordanceSlot in affordances)
             {
-                //We must check for reference equality. We only want to return if it's the same scriptableObject asset (the assets are actually different instances of the scriptableObject)
-                //Hmm. But doesn't Equals default to reference equality? So if we haven't overridden it we should be fine, no?
-                if(Object.ReferenceEquals(aff, affordance))
+                if (affordanceSlot.affordance == affordance && (owner == null || device.owners.Contains(owner)))
                 {
-                    return device;
+                    float dist = Vector3.Distance(transform.position, device.transform.position);
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        targetAppliance = device;
+                    }
                 }
-
             }
+
+            //foreach (Affordance aff in device.avatarAffordances)
+            //{
+                
+                
+            //    //We must check for reference equality. We only want to return if it's the same scriptableObject asset (the assets are actually different instances of the scriptableObject)
+            //    //Hmm. But doesn't Equals default to reference equality? So if we haven't overridden it we should be fine, no?
+            //    if(Object.ReferenceEquals(aff, affordance))
+            //    {
+            //        return device;
+            //    }
+
+            //}
             //if (device.avatarAffordances.Contains(affordance))//Must check for being same instance
             //{
             //    return device;
             //}
         }
 
-        return null;
+        //if (targetAppliance == null)
+        //{
+        //    if (owner != null)
+        //        DebugManager.LogError(name + " could not find an OWNED appliance with affordance: " + affordance.ToString(), this);
+        //    else
+        //        DebugManager.LogError(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
+        //}
+
+        return targetAppliance;
     }
 
     public int GetPersonCount()

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Collections;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
@@ -10,9 +11,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public List<EnergyEfficiencyMeasure> playerAffordances;
-	//public List<AvatarActivity.Target> avatarAffordances_old;
-	public List<Affordance> avatarAffordances;
-    public List<Affordance> temporaryAvatarAffordances;
+    public List<AffordanceSlot> avatarAffordances;
+    public List<AffordanceSlot> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 	private Room _zone;
@@ -23,6 +23,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
         public Vector3 position;
         public Quaternion rotation;
         public BehaviourAI occupant;
+    }
+
+    [System.Serializable]
+    public class AffordanceSlot
+    {
+        public Affordance affordance;
+        public int availableSlots;
     }
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
@@ -118,12 +125,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_harvestButton.SetActive(true);
 	}
 
-    public List<Affordance> GetTemporaryAvatarAffordances()
+    public List<Appliance.AffordanceSlot> GetTemporaryAvatarAffordances()
     {
         return temporaryAvatarAffordances;
     }
 
-    public void SetTemporaryAvatarAffordances(List<Affordance> affordances)
+    public void SetTemporaryAvatarAffordances(List<Appliance.AffordanceSlot> affordances)
     {
         temporaryAvatarAffordances = affordances;
     }
@@ -131,6 +138,36 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
     public void ClearTemporaryAvatarAffordances()
     {
         temporaryAvatarAffordances.Clear();
+    }
+
+    public bool TryToTakeAffordanceSlot(Affordance affordance)
+    {
+        for(int i = 0; i < avatarAffordances.Count; i++)
+        {
+            if(avatarAffordances[i].affordance == affordance)
+            {
+                if(avatarAffordances[i].availableSlots > 0)
+                {
+                    avatarAffordances[i].availableSlots--;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool releaseAffordanceSlot(Affordance affordance)
+    {
+
+        for (int i = 0; i < avatarAffordances.Count; i++)
+        {
+            if (avatarAffordances[i].affordance == affordance)
+            {
+                avatarAffordances[i].availableSlots++;
+                return true;
+            }
+        }
+        return false;
     }
 
     //Releases all pose slots that are currently occupied by the supplied occupant
