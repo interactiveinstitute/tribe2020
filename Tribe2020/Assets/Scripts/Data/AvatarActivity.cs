@@ -91,6 +91,12 @@ public class AvatarActivity : ScriptableObject {
     //Initialize without startTime
     public void Init(BehaviourAI ai)
     {
+        AvatarActivity runningActivity = ai.GetRunningActivity();
+        if (runningActivity) {
+            SetCurrentAvatarState(runningActivity.GetCurrentAvatarState());
+            SetCurrentTargetObject(runningActivity.GetCurrentTargetObject());
+        }
+
         _timeMgr = GameTime.GetInstance();
         _ai = ai;
         hasStartTime = false;
@@ -150,6 +156,11 @@ public class AvatarActivity : ScriptableObject {
             case Session.SetMoodOptions.Force:
                 _ai.ChangeMood(session.mood, true);
             break;
+        }
+
+        //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
+        if (_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo) {
+            _ai.ReturnToIdlePose();
         }
 
         switch (session.type) {
@@ -214,7 +225,10 @@ public class AvatarActivity : ScriptableObject {
                 {
                     DebugManager.LogError("No parameter supplied for setting pose", this, this);
                 }
-                _ai.ChangePoseAt(session.parameter, session.requiredAffordance, false);
+                if (session.appliance == null) {
+                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, false);
+                }
+                _ai.ChangePoseAt(session.parameter, session.appliance);
 
                 NextSession();
                 break;
@@ -291,11 +305,6 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
-            if(_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
-            {
-                _ai.ReturnToIdlePose();
-            }
             //Debug.Log("starting session" + sessions[_currSession].title);
             StartSession(GetSessionAtIndex(_currSession));
 		}
