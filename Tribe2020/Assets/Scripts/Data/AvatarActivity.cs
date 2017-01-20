@@ -136,6 +136,12 @@ public class AvatarActivity : ScriptableObject {
     //Initialize without startTime
     public void Init(BehaviourAI ai)
     {
+        AvatarActivity runningActivity = ai.GetRunningActivity();
+        if (runningActivity) {
+            SetCurrentAvatarState(runningActivity.GetCurrentAvatarState());
+            SetCurrentTargetObject(runningActivity.GetCurrentTargetObject());
+        }
+
         _timeMgr = GameTime.GetInstance();
         _ai = ai;
         hasStartTime = false;
@@ -197,7 +203,7 @@ public class AvatarActivity : ScriptableObject {
                 _ai.ChangeMood(session.mood, true);
             break;
         }
-
+        
         //Setup appliance references
         if (!session.appliance && _activityAppliance && !session.setActivityAppliance)
         {
@@ -211,8 +217,11 @@ public class AvatarActivity : ScriptableObject {
         {
             _activityAppliance = session.appliance;
         }
-
-
+        
+        //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
+        if (_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo) {
+            _ai.ReturnToIdlePose();
+        }
 
         switch (session.type) {
 			case SessionType.WaitForDuration:
@@ -265,6 +274,7 @@ public class AvatarActivity : ScriptableObject {
                 {
                     DebugManager.LogError("No parameter supplied for setting pose", this, this);
                 }
+
                 _ai.ChangePoseAt(session.parameter, session.appliance);
                 NextSession();
                 break;

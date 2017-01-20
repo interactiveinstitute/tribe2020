@@ -625,6 +625,7 @@ public class BehaviourAI : SimulationObject
     //Let's use the reference to the appliance
     public void WalkTo(Appliance appliance, bool isOwned)
     {
+
         if (appliance == null)
         {
             DebugManager.LogError("Didn't find a WalkTo target. doing activity " + _curActivity.name + ". Skipping to next session", this);
@@ -1164,18 +1165,21 @@ public class BehaviourAI : SimulationObject
         string activityName = GetRunningActivity().name;
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
-        //AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
-        //if(state == AvatarActivity.AvatarState.Posing)
-        //{
-            //DebugManager.Log("avatar was posing. Returning to idle pose.", this);
-            ReturnToIdlePose();
-        //}
 
+
+        AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
+        if (state == AvatarActivity.AvatarState.Posing)
+        {
+            DebugManager.Log("avatar was posing. Returning to idle pose.", this);
+            ReturnToIdlePose();
+        }
+        
         //Also set state to idle. Maybe not necessary but just in case so we have a clean slate before starting next activity.
-        GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        
         //Don't go nowhere!
         _agent.ResetPath();
-
+        
         //Check if we should turn off stuff when ending this activity.
         if (GetRunningActivity().turnedOnDevices != null)
         {
@@ -1206,7 +1210,7 @@ public class BehaviourAI : SimulationObject
             DebugManager.Log("Current target object now is: ", GetRunningActivity().GetCurrentTargetObject(), this);
             
             //We must make the avatar continue to walk towards the "previous" target, since the tempactivity might have changed the agentdestination, creating a mismatch between curTarget and agentdestination. 
-            SetAgentDestination(GetRunningActivity());
+            //SetAgentDestination(GetRunningActivity());
 
             ////We don't want to do moar stuffz in here. Bail out!
             //return;
@@ -1320,8 +1324,9 @@ public class BehaviourAI : SimulationObject
                 DebugManager.LogError(name + " couldn't find a lightswitch in this room!", _curRoom, this);
                 return;
             }
-
-            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true, GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>());
+            
+            //Init temporary activity
+            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true, true);
 
         }
     }
@@ -1390,20 +1395,38 @@ public class BehaviourAI : SimulationObject
         StartTemporaryActivity(activity);
     }
 
-    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, Appliance returnToAppliance = null)
+    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, bool returnToPrevActivity)
     {
         DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
 
         AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
         activity.Init(this);//Just to make sure _curSession is 0 before we start injecting sessions into the activity
 
-        if (returnToAppliance != null) {
-            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
-            walkToSession.title = "Walking to appliance";
-            walkToSession.type = AvatarActivity.SessionType.WalkTo;
-            walkToSession.appliance = returnToAppliance;
-            walkToSession.currentRoom = true;
-            activity.InsertSessionAtCurrentIndex(walkToSession);
+        if (returnToPrevActivity) {
+            AvatarActivity runningActivity = GetRunningActivity();
+            if (runningActivity) {
+
+                Appliance returnToAppliance = runningActivity.GetCurrentTargetObject().GetComponent<Appliance>();
+
+                if (returnToAppliance != null) { //Try to sit down after returning from switching the light
+                    AvatarActivity.Session session = new AvatarActivity.Session();
+                    session.title = "Change pose";
+                    session.type = AvatarActivity.SessionType.ChangePoseAt;
+                    session.parameter = "ChillOut";
+                    session.appliance = returnToAppliance;
+                    session.currentRoom = false;
+                    activity.InsertSessionAtCurrentIndex(session);
+                }
+
+                if (returnToAppliance != null) {
+                    AvatarActivity.Session walkToSession = new AvatarActivity.Session();
+                    walkToSession.title = "Walking to appliance";
+                    walkToSession.type = AvatarActivity.SessionType.WalkTo;
+                    walkToSession.appliance = returnToAppliance;
+                    walkToSession.currentRoom = false;
+                    activity.InsertSessionAtCurrentIndex(walkToSession);
+                }
+            }
         }
 
         //Let's build relevant sessions and inject them into the activity we just created.
