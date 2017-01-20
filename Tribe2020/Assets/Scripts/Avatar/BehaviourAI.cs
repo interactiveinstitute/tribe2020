@@ -279,7 +279,7 @@ public class BehaviourAI : SimulationObject
         }
     }
 
-    private AvatarActivity GetRunningActivity()
+    public AvatarActivity GetRunningActivity()
     {
         if (_tempActivities.Count > 0)
         {
@@ -632,8 +632,6 @@ public class BehaviourAI : SimulationObject
             return;
         }
 
-        DebugManager.Log("walking to appliance ", appliance, this);
-
         GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
         SetAgentDestination(appliance);
@@ -701,18 +699,18 @@ public class BehaviourAI : SimulationObject
         ChangePoseAt(pose, targetObject.GetComponent<Appliance>());
     }
 
-    public void ChangePoseAt(string pose, Affordance affordance, bool isOwned)
-    {
-        if (affordance == null)
-        {
-            DebugManager.LogError("Hey. You gave me a null affordance when trying to pose. What's up with that?! I'll skip to next session", this, this);
-            GetRunningActivity().NextSession();
-            return;
-        }
-        //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
-        Appliance appliance = GetApplianceWithAffordance(affordance, isOwned);
-        ChangePoseAt(pose, appliance);
-    }
+    //public void ChangePoseAt(string pose, Affordance affordance, bool isOwned)
+    //{
+    //    if (affordance == null)
+    //    {
+    //        DebugManager.LogError("Hey. You gave me a null affordance when trying to pose. What's up with that?! I'll skip to next session", this, this);
+    //        GetRunningActivity().NextSession();
+    //        return;
+    //    }
+    //    //Appliance appliance = FindNearestAppliance(target, isOwned).GetComponent<Appliance>();
+    //    Appliance appliance = GetApplianceWithAffordance(affordance, isOwned);
+    //    ChangePoseAt(pose, appliance);
+    //}
 
     public void ChangePoseAt(string pose, Appliance appliance)
     {
@@ -1083,8 +1081,8 @@ public class BehaviourAI : SimulationObject
             foreach (Appliance app in _devices)
             {
                 // TODO: Also retrieve temporary affordances
-                List<Appliance.AffordanceSlot> affordances = app.avatarAffordances;
-                foreach(Appliance.AffordanceSlot affordanceSlot in affordances) {
+                List<Appliance.AffordanceResource> affordances = app.avatarAffordances;
+                foreach(Appliance.AffordanceResource affordanceSlot in affordances) {
                     if (affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this)))
                     {
                         float dist = Vector3.Distance(this.transform.position, app.transform.position);
@@ -1121,9 +1119,9 @@ public class BehaviourAI : SimulationObject
         {
             if (avatar != gameObject) //Ignore yourself - find another avatar
             {
-                List<Appliance.AffordanceSlot> affordances = new List<Appliance.AffordanceSlot>(avatar.GetComponent<Appliance>().avatarAffordances);
+                List<Appliance.AffordanceResource> affordances = new List<Appliance.AffordanceResource>(avatar.GetComponent<Appliance>().avatarAffordances);
                 affordances.AddRange(avatar.GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-                foreach (Appliance.AffordanceSlot affordanceSlot in affordances) {
+                foreach (Appliance.AffordanceResource affordanceSlot in affordances) {
                     if (affordanceSlot.affordance == affordance)
                     {
                         float dist = Vector3.Distance(transform.position, avatar.transform.position);
@@ -1147,9 +1145,9 @@ public class BehaviourAI : SimulationObject
 
     public bool HasAffordance(Affordance affordance)
     {
-        List<Appliance.AffordanceSlot> affordances = new List<Appliance.AffordanceSlot>(GetComponent<Appliance>().avatarAffordances);
+        List<Appliance.AffordanceResource> affordances = new List<Appliance.AffordanceResource>(GetComponent<Appliance>().avatarAffordances);
         affordances.AddRange(GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-        foreach (Appliance.AffordanceSlot affordanceSlot in  affordances) {
+        foreach (Appliance.AffordanceResource affordanceSlot in  affordances) {
             if (affordanceSlot.affordance == affordance)
             {
                 return true;
@@ -1323,7 +1321,7 @@ public class BehaviourAI : SimulationObject
                 return;
             }
 
-            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true,GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>());
+            InitApplianceTemporaryActivity(lightSwitch, wantedAction, "", true, GetRunningActivity().GetCurrentTargetObject().GetComponent<Appliance>());
 
         }
     }

@@ -519,7 +519,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
             Room zone = appliance.GetZone();
 
             //If appliance is light switch
-            foreach (Appliance.AffordanceSlot affordanceSlot in appliance.avatarAffordances) {
+            foreach (Appliance.AffordanceResource affordanceSlot in appliance.avatarAffordances) {
                 if (affordanceSlot.affordance == zone.avatarAffordanceSwitchLight) {
                     _avatarMgr.OnLightToggled(zone, meter.GivesPower);
 

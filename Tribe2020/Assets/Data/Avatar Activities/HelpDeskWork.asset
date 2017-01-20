@@ -22,15 +22,32 @@ MonoBehaviour:
     parameter: 
     avatarOwnsTarget: 1
     currentRoom: 0
+    setActivityAppliance: 1
+    setAvatarMood: 0
+    mood: 0
   - title: Sit at station
     type: 10
     appliance: {fileID: 0}
-    requiredAffordance: {fileID: 11400000, guid: e1e99a2f4148b894a99f36aa9602c8da,
-      type: 2}
+    requiredAffordance: {fileID: 0}
     tempAvatarAffordances: []
     parameter: WorkComputer
-    avatarOwnsTarget: 1
+    avatarOwnsTarget: 0
     currentRoom: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  - title: Become available
+    type: 14
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 73ee974ce2ca8b645aee4d4aaf2ddf09,
+      type: 2}
+    tempAvatarAffordances: []
+    parameter: 
+    avatarOwnsTarget: 0
+    currentRoom: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Start help desk station
     type: 7
     appliance: {fileID: 0}
@@ -40,6 +57,9 @@ MonoBehaviour:
     parameter: 1
     avatarOwnsTarget: 0
     currentRoom: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Do work
     type: 3
     appliance: {fileID: 0}
@@ -48,6 +68,21 @@ MonoBehaviour:
     parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  - title: Become unavailable
+    type: 15
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 73ee974ce2ca8b645aee4d4aaf2ddf09,
+      type: 2}
+    tempAvatarAffordances: []
+    parameter: 
+    avatarOwnsTarget: 0
+    currentRoom: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   _currSession: 0
   _curTargetObj: {fileID: 0}
   _curAvatarState: 0
@@ -55,3 +90,4 @@ MonoBehaviour:
   _delay: 0
   startTime: 0
   hasStartTime: 1
+  isTemporary: 0

@@ -45,8 +45,8 @@ public class Room : MonoBehaviour {
         float minDist = float.MaxValue;
         foreach (Appliance device in _devices)
         {
-            List<Appliance.AffordanceSlot> affordances = device.avatarAffordances;
-            foreach (Appliance.AffordanceSlot affordanceSlot in affordances)
+            List<Appliance.AffordanceResource> affordances = device.avatarAffordances;
+            foreach (Appliance.AffordanceResource affordanceSlot in affordances)
             {
                 if (affordanceSlot.affordance == affordance && (owner == null || device.owners.Contains(owner)))
                 {
