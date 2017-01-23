@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System;
 
-public class PilotController : Controller, NarrationInterface, AudioInterface {
+public class PilotController : Controller, NarrationInterface, AudioInterface, CameraInterface {
 	//Singleton features
 	public static PilotController GetInstance() {
 		return _instance as PilotController;
 	}
+	[SerializeField]
 	private InputState _curState = InputState.ALL;
 
 	#region Fields
@@ -20,6 +21,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	public double playPeriod;
 
 	//Access all singleton systemss
+	[SerializeField]
 	private PilotView _view;
 	private GameTime _timeMgr;
 	private CameraManager _camMgr;
@@ -67,9 +69,11 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 	// Use this for initialization
 	void Start() {
-		_view = PilotView.GetInstance();
+		//_view = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
+
 		_camMgr = CameraManager.GetInstance();
+		_camMgr.SetInterface(this);
 
 		_audioMgr = AudioManager.GetInstance();
 		_audioMgr.SetInterface(this);
@@ -339,6 +343,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 	//
 	public void OnOkPressed() {
+		Debug.Log("OnOKPressed");
 		ResetTouch();
 
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_PROMPT) {
@@ -386,12 +391,12 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	//
-	public override void ShowMessage(string key, string message, bool showButton) {
+	public void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
 		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
 		string msg = _localMgr.GetPhrase(key);
 		if(msg == "") { msg = message + "!"; }
 
-		_view.ShowMessage(msg, true, showButton);
+		_view.ShowMessage(msg, portrait, true, showButton);
 	}
 
 	//Open user interface
@@ -465,24 +470,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	//
-	//public void OnQuestPressed(Quest quest) {
-	//	if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_INBOX) { return; }
-	//		//if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-	//	_view.BuildMail(quest);
-	//	//_view.ShowQuest(quest);
-	//	ResetTouch();
-
-	//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-	//	//}
-	//}
-
-	////
-	//public void OnQuestClosed() {
-	//	_view.HideQuest();
-	//	ResetTouch();
-	//}
-
-	//
 	public void OnHarvestTap(GameObject go) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
 
@@ -501,11 +488,11 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		string location = json["location"];
 
 		if(location.Equals("current")) {
-            //Debug.Log(_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch());
-            //_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
-            Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
-            room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
-        }
+			//Debug.Log(_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch());
+			//_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
+			Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
+			room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
+		}
 
 		//Debug.Log(name + " create " + currency + " in " + location);
 	}
@@ -513,24 +500,23 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//
 	public void OnElectricMeterToggle(ElectricMeter meter) {
 
-        Appliance appliance = meter.gameObject.GetComponent<Appliance>();
-        if (appliance) {
+		Appliance appliance = meter.gameObject.GetComponent<Appliance>();
+		if(appliance) {
 
-            Room zone = appliance.GetZone();
+			Room zone = appliance.GetZone();
 
-            //If appliance is light switch
-            if (appliance.avatarAffordances.Contains(zone.avatarAffordanceSwitchLight)) {
-                _avatarMgr.OnLightToggled(zone, meter.GivesPower);
+			//If appliance is light switch
+			if(appliance.avatarAffordances.Contains(zone.avatarAffordanceSwitchLight)) {
+				_avatarMgr.OnLightToggled(zone, meter.GivesPower);
 
-                if (meter.GivesPower) {
-                    _narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
-                }
-                else {
-                    _narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOff);
-                }
-            }
+				if(meter.GivesPower) {
+					_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
+				} else {
+					_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOff);
+				}
+			}
 
-        }
+		}
 	}
 
 	//
@@ -614,12 +600,12 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 
 	//
 	public override void SetTimeScale(int timeScale) {
-		_timeMgr.VisualTimeScale = timeScale;
+		_timeMgr.SimulationTimeScaleFactor = timeScale;
 	}
 
 	//
 	public void SetTimeScale(float timeScale) {
-		_timeMgr.VisualTimeScale = timeScale;
+		_timeMgr.SimulationTimeScaleFactor = timeScale;
 	}
 
 	//
@@ -743,5 +729,21 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//
 	public void ShowCongratulations(string text) {
 		throw new NotImplementedException();
+	}
+
+	//
+	public void MoveCamera(string animation) {
+		_camMgr.PlayAnimation(animation);
+	}
+
+	//
+	public void StopCamera() {
+		Debug.Log("StopCamera");
+		_camMgr.StopAnimation();
+	}
+
+	//
+	public void OnAnimationEvent(string animationEvent) {
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.CameraAnimationEvent, animationEvent);
 	}
 }
