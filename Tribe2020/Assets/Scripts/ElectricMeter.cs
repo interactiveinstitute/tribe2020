@@ -221,7 +221,7 @@ public class ElectricMeter : DataNode {
 		lastupdate = _timeMgr.time;
 	}
 
-	//Set the meter node to powered or unpowered state. Returns true of a new stated was initiated by the call. 
+	//Set the meter node to powered or unpowered state. Returns true if a new stated was initiated by the call. 
     //Martin: isn't this the same information twice (see comment below for powering function) - couldn't HasPower be a function call instead, or actually propagate the electricty down the tree structure?
 	public virtual bool powered(bool powered) {
 		if (HasPower == powered)
@@ -229,12 +229,17 @@ public class ElectricMeter : DataNode {
 
 		HasPower = powered;
 
-		if (!GivesPower)
-			return false;
-			
-		foreach (ElectricMeter child in Powering) {
-			child.powered (HasPower && GivesPower);
-		}
+        ////EEEEh. Why would we return false here? I'm changing this /Gunnar
+        //if (!GivesPower)
+        //	return false;
+
+        if (GivesPower)
+        {
+            foreach (ElectricMeter child in Powering)
+            {
+                child.powered(HasPower && GivesPower);
+            }
+        }
 
 		return true;
 

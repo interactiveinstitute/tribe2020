@@ -215,20 +215,26 @@ public class ElectricDevice : ElectricMeter {
 	}
 
 
-	public virtual void SetRunlevel(string level) {
+	//public virtual void SetRunlevel(string level) {
 
-		int newrunlevel = 0;
+	//	int newrunlevel = 0;
 		
-		SetRunlevel(newrunlevel);
-	}
+	//	SetRunlevel(newrunlevel);
+	//}
 		
 	public override bool powered(bool powered) {
 
-		//If no change return. 
-		if (!base.powered (powered))
-			return false;
+        ////If no change return. 
+        if (!base.powered(powered))
+            return false;
 
-		if (powered) {
+        //ElectricDevice me = this;
+
+        ////No change?
+        //if (HasPower == powered)
+        //    return false;
+
+        if (powered) {
 			//Reapply the current runlevel or a defaul one. 
 			if (RetainsRunlevel)
 				SetRunlevel (RetainedRunlevel);
@@ -236,7 +242,8 @@ public class ElectricDevice : ElectricMeter {
 				SetRunlevel (DefaultRunlevel);
 		} else {
 			RetainedRunlevel = runlevel;
-			SetRunlevel (-1);
+            SetRunlevel(runlevelOff);
+			//SetRunlevel (-1);
 		}
 
 		return true;

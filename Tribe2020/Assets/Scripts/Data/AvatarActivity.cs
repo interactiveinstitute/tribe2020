@@ -16,7 +16,9 @@ public class AvatarActivity : ScriptableObject {
 	private int _currSession;
 	private BehaviourAI _ai;
     [SerializeField]
-    private GameObject _curTargetObj; //Should this be part of activity? Previously in BehaviourAI
+    private GameObject _curTargetObj;
+    private Appliance _activityAppliance;
+    private RetrievedAffordance affordanceInUse;
     [Serializable]
     public enum AvatarState { Idle, Walking, Posing };
     [SerializeField]
@@ -36,7 +38,7 @@ public class AvatarActivity : ScriptableObject {
     public bool isTemporary = false;
 
     //Activity session types
-    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt, InteractWithAvatar };
+    public enum SessionType { WalkTo, SitDown, WaitForDuration, WaitUntilEnd, SetRunlevel, Interact, Warp, TurnOn, TurnOff, ChangePose, ChangePoseAt, InteractWithAvatar, WaitForAffordanceAvailable, ReleaseTakenAffordance, IncreaseNrOfAffordanceSlots, DecreaseNrOfAffordanceSlots, SetActivityAppliance, ClearActivityAppliance };
 	//Energy efficieny check types
 	public enum CheckType { LessThan, GreaterThan };
 	//
@@ -52,10 +54,11 @@ public class AvatarActivity : ScriptableObject {
         public Appliance appliance = null;
 		//public Target target;
 		public Affordance requiredAffordance;
-        public List<Affordance> tempAvatarAffordances;
+        public List<Appliance.AffordanceResource> tempAvatarAffordances;
         public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
+        public bool setActivityAppliance;
 
         public enum SetMoodOptions { No, Try, Force }
         public SetMoodOptions setAvatarMood;
@@ -65,6 +68,12 @@ public class AvatarActivity : ScriptableObject {
 		//public float efficienyLevel;
 	}
 
+    public class RetrievedAffordance
+    {
+        public Appliance owningAppliance;
+        public Affordance affordance;
+    }
+
 	//public virtual void Init(BehaviourAI ai) {
 
  //       _ai = ai;
@@ -72,25 +81,67 @@ public class AvatarActivity : ScriptableObject {
 	//	//ExecuteCommand(ai, sessions[_currSession]);
 	//}
 
-
+    //Nomally things that should be continuosly updated (versus set/initialised with startsession) should be handled in behaviourAI. The wait related updates are an exception to this.
 	public virtual void Step(BehaviourAI ai) {
         //Don't try any stuff if where not in a session.
         if (IsThisActivityFinished())
         {
             return;
         }
-        if(GetSessionAtIndex(_currSession).type == SessionType.WaitForDuration) {
-            if(_delay > 0f) {
-                _delay -= Time.deltaTime;
-            } else {
-                NextSession();
-            }
+
+        //decrement timer
+        if (_delay >= 0f)
+        {
+            //TODO: Make this update from simulation time. deltaTime is related to frames.
+            _delay -= Time.deltaTime;
+        }
+
+        //Do stuff at certain conditions
+        Session session = GetCurrentSession();
+        switch (session.type) {
+            case SessionType.WaitForAffordanceAvailable:
+                if (_delay < 0f)
+                {
+                    DebugManager.Log("Gave up waiting for appliance with affordance", this, this);
+                    JumpToAffordanceRelease();
+                }else {
+                    Appliance device = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.avatarOwnsTarget);
+                    if (device)
+                    {
+                        if (TryToTakeAffordanceSlot(session.requiredAffordance, device))
+                        {
+                            if (session.setActivityAppliance)
+                            {
+                                _activityAppliance = session.appliance;
+                            }
+                            DebugManager.Log("Found an available appliance with affordance " + session.requiredAffordance, this, this);
+                            //AvatarActivity.Session walkToAvailableAffordance = new Session();
+                            //walkToAvailableAffordance.type = SessionType.WalkTo;
+                            NextSession();
+                        }
+                    }
+                }
+                break;
+            case SessionType.WaitForDuration:
+                if (_delay < 0f)
+                {
+                    NextSession();
+                }
+                break;
+            default:
+                break;
         }
 	}
 
     //Initialize without startTime
     public void Init(BehaviourAI ai)
     {
+        AvatarActivity runningActivity = ai.GetRunningActivity();
+        if (runningActivity) {
+            SetCurrentAvatarState(runningActivity.GetCurrentAvatarState());
+            SetCurrentTargetObject(runningActivity.GetCurrentTargetObject());
+        }
+
         _timeMgr = GameTime.GetInstance();
         _ai = ai;
         hasStartTime = false;
@@ -130,7 +181,7 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
         }
 
-        StartSession(GetSessionAtIndex(_currSession));
+        StartSession(GetCurrentSession());
 	}
 
 	//
@@ -138,6 +189,7 @@ public class AvatarActivity : ScriptableObject {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
 
         //Add temporary avatar affordances
+        //Shouldn't it be possible to also have temporary affordances for non temporary activities? For example being available for discussion when chilling in the sofa? //Gunnar
         if (!isTemporary) {
             _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
         }
@@ -150,6 +202,25 @@ public class AvatarActivity : ScriptableObject {
             case Session.SetMoodOptions.Force:
                 _ai.ChangeMood(session.mood, true);
             break;
+        }
+        
+        //Setup appliance references
+        if (!session.appliance && _activityAppliance && !session.setActivityAppliance)
+        {
+            session.appliance = _activityAppliance;
+        }
+        if (!session.appliance && session.requiredAffordance)
+        {
+            session.appliance = _ai.GetApplianceWithAffordance(session.requiredAffordance, session.avatarOwnsTarget, session.currentRoom);
+        }
+        if(session.appliance && session.setActivityAppliance)
+        {
+            _activityAppliance = session.appliance;
+        }
+        
+        //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
+        if (_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo) {
+            _ai.ReturnToIdlePose();
         }
 
         switch (session.type) {
@@ -172,32 +243,22 @@ public class AvatarActivity : ScriptableObject {
 				_ai.Wait();
 				break;
 			case SessionType.WalkTo:
-                if(session.appliance == null)
-                {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
-                }
                 _ai.WalkTo(session.appliance, session.avatarOwnsTarget);
             break;
 			case SessionType.SetRunlevel:
-                if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance, session.avatarOwnsTarget);
-                }
                 _ai.SetRunLevel(session.appliance, int.Parse(session.parameter));
 				NextSession();
 				break;
             case SessionType.TurnOn:
-                if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
-                }
                 _ai.TurnOn(session.appliance);
                 NextSession();
                 break;
             case SessionType.TurnOff:
-                if (session.appliance == null) {
-                    session.appliance = _ai.GetApplianceForAffordance(session.requiredAffordance);
-                }
                 _ai.TurnOff(session.appliance);
-
+                NextSession();
+                break;
+            case SessionType.SitDown:
+                _ai.PoseAtCurrentTarget("Sit");
                 NextSession();
                 break;
             case SessionType.ChangePose:
@@ -206,7 +267,6 @@ public class AvatarActivity : ScriptableObject {
                     DebugManager.LogError("No parameter supplied for setting pose", this, this);
                 }
                 _ai.changePoseTo(session.parameter);
-
                 NextSession();
                 break;
             case SessionType.ChangePoseAt:
@@ -214,24 +274,74 @@ public class AvatarActivity : ScriptableObject {
                 {
                     DebugManager.LogError("No parameter supplied for setting pose", this, this);
                 }
-                _ai.ChangePoseAt(session.parameter, session.requiredAffordance, false);
 
+                _ai.ChangePoseAt(session.parameter, session.appliance);
                 NextSession();
                 break;
             case SessionType.InteractWithAvatar:
                 _ai.InteractWithAvatar(session.requiredAffordance);
                 NextSession();
                 break;
+            case SessionType.WaitForAffordanceAvailable:
+                if (session.parameter == "")
+                {
+                    DebugManager.LogError("No duration set for parameter in session WaitForAffordance in activity " + name + "avatar " + _ai.name, this, this);
+                    _delay = UnityEngine.Random.Range(40, 900); //Didn't get a wait parameter. Setting a random duration between 40 sec and 15 min.
+                }
+                else
+                {
+                    _delay = int.Parse(session.parameter);
+                }
+                //_ai.Wait(); //Keeeeeep stilll!
+                break;
+            case SessionType.ReleaseTakenAffordance:
+                if (!ReleaseTakenAffordanceSlot())
+                {
+                    DebugManager.LogError("Was not able to release affordance", this, this);
+                }
+                NextSession();
+                break;
+            case SessionType.IncreaseNrOfAffordanceSlots:
+                if (session.appliance || session.requiredAffordance)
+                {
+                    int count = 1;
+                    if (session.parameter != "")
+                        count = int.Parse(session.parameter);
+                    if (!session.appliance.IncreaseNrOfAffordanceSlots(session.requiredAffordance, count))
+                        DebugManager.LogError("Couldn't increase affordance slot " + session.requiredAffordance + " of " + session.appliance, this, this);
+                }
+                NextSession();
+                break;
+            case SessionType.DecreaseNrOfAffordanceSlots:
+                if (session.appliance || session.requiredAffordance)
+                {
+                    int count = 1;
+                    if (session.parameter != "")
+                        count = int.Parse(session.parameter);
+                    if (!session.appliance.DecreaseNrOfAffordanceSlots(session.requiredAffordance, count))
+                        DebugManager.LogError("Something went wrong when decreasing nrofaffordance slots " + session.requiredAffordance + " of " + session.appliance, this, this);
+                }
+                NextSession();
+                break;
+            case SessionType.SetActivityAppliance:
+                if (session.appliance)
+                {
+                    _activityAppliance = session.appliance;
+                }
+                else
+                {
+                    DebugManager.LogError("Couldn't set activityAppliance for some reason!", this, this);
+                }
+                NextSession();
+                break;
+            case SessionType.ClearActivityAppliance:
+                _activityAppliance = null;
+                break;
             default:
                 DebugManager.Log("unknown SessionType", this);
                 break;
 		}
 	}
-
-    public Session GetCurrentSession()
-    {
-        return sessions.Count > 0 ? sessions[_currSession] : null;
-    }
 
     //
     public void SimulateSession(Session session)
@@ -255,6 +365,11 @@ public class AvatarActivity : ScriptableObject {
         }
     }
 
+    public Session GetCurrentSession()
+    {
+        return sessions.Count > 0 ? sessions[_currSession] : null;
+    }
+
     private Session GetSessionAtIndex(int index)
     {
         if(index < sessions.Count)
@@ -271,19 +386,25 @@ public class AvatarActivity : ScriptableObject {
     }
 
 	//
-	public void InsertSession(Session session) {
+	public void InsertSessionAtCurrentIndex(Session session) {
         if (session == null)
         {
             DebugManager.LogError("Session is null!", this);
         }
 		sessions.Insert(_currSession, session);
-
-        //Eeeeeh. Whaaat? We don't want to start this here right? /Gunnar
-		//StartSession(session);
 	}
 
-	//
-	public void NextSession() {
+    public void InsertSessionAtEnd(Session session)
+    {
+        if (session == null)
+        {
+            DebugManager.LogError("Session is null!", this);
+        }
+        sessions.Add(session);
+    }
+
+    //
+    public void NextSession() {
         DebugManager.Log("incrementing _currSssion. Index: " + (_currSession + 1) + ", max: " + (sessions.Count - 1), this);
         _currSession++;
 
@@ -291,15 +412,72 @@ public class AvatarActivity : ScriptableObject {
             DebugManager.Log("_currSession out of bound. No more sessions in this activity. calling activityOver callback", this);
             _ai.OnActivityOver();
 		} else {
-            //If we were posing AND we are gonna be moving somewhere, we should do that from an idle pose!
-            if(_curAvatarState == AvatarState.Posing && GetSessionAtIndex(_currSession).type == SessionType.WalkTo)
+            //If we are gonna be moving somewhere, we should do that from an idle pose!
+            if(GetCurrentSession().type == SessionType.WalkTo)
             {
                 _ai.ReturnToIdlePose();
             }
             //Debug.Log("starting session" + sessions[_currSession].title);
-            StartSession(GetSessionAtIndex(_currSession));
+            StartSession(GetCurrentSession());
 		}
 	}
+
+    // Was not sure what to name this function. The important point is that it won't run the remaining sessions but still mark the activity as finished.
+    public void JumpToAffordanceRelease()
+    {
+        //AvatarActivity.Session waitSession = new AvatarActivity.Session();
+        //waitSession.title = "wait until end";
+        //waitSession.type = AvatarActivity.SessionType.WaitUntilEnd;
+        //waitSession.parameter = "";
+        //InsertSessionAtEnd(waitSession);
+        //_currSession = sessions.Count - 1;
+        //StartSession(GetCurrentSession());
+        for(int i = _currSession; i < sessions.Count; i++)
+        {
+            if(sessions[i].type == SessionType.ReleaseTakenAffordance)
+            {
+                _currSession = i;
+                break;
+            }
+        }
+
+
+        //Ok. we are either at the end. Or. We are at the session that releases the affordance. Either way, jump to the session after (if at end this will trigger activityfinished)
+        NextSession();
+    }
+
+    //This function gets called by the appliance that holds the affordance slot. When calling this function the appliance should already have removed this activity from the list of "subscribing" activities.
+    public bool LoseAffordanceSlot()
+    {
+        if(affordanceInUse != null)
+        {
+            affordanceInUse = null;
+            JumpToAffordanceRelease();
+            return true;
+        }
+        return false;
+    }
+
+    private bool ReleaseTakenAffordanceSlot()
+    {
+        if(affordanceInUse != null) {
+                affordanceInUse.owningAppliance.ReleaseAffordanceSlot(affordanceInUse.affordance, this);
+                return true;
+        }
+        return false;
+    }
+
+    private bool TryToTakeAffordanceSlot(Affordance affordance, Appliance device)
+    {
+        if (device.TakeAffordanceSlot(affordance, this))
+        {
+            affordanceInUse = new RetrievedAffordance();
+            affordanceInUse.affordance = affordance;
+            affordanceInUse.owningAppliance = device;
+            return true;
+        }
+        return false;
+    }
 
     public void Simulate()
     {
@@ -328,7 +506,7 @@ public class AvatarActivity : ScriptableObject {
 
 	//
 	public void OnDestinationReached() {
-        DebugManager.Log(_ai.name + " reached destination " + GetSessionAtIndex(_currSession).requiredAffordance + ". if current SessionType is walkTo, start next session", this);
+        DebugManager.Log(_ai.name + " reached destination " + GetCurrentSession().requiredAffordance + ". Start next session", this);
         //if (sessions[_currSession].type == SessionType.WalkTo)//We do this check. In case the character
         //{
             NextSession();
@@ -349,7 +527,7 @@ public class AvatarActivity : ScriptableObject {
         //First increment _currsession by one. We don't want to run the current session again.
         _currSession++;
         while(!IsThisActivityFinished()) {
-			SimulateSession(GetSessionAtIndex(_currSession));
+			SimulateSession(GetCurrentSession());
             _currSession++;
 		}
 

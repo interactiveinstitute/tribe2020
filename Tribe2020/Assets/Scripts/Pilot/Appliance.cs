@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Collections;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
@@ -10,9 +11,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public List<EnergyEfficiencyMeasure> playerAffordances;
-	//public List<AvatarActivity.Target> avatarAffordances_old;
-	public List<Affordance> avatarAffordances;
-    public List<Affordance> temporaryAvatarAffordances;
+    public List<AffordanceResource> avatarAffordances;
+    public List<AffordanceResource> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 	private Room _zone;
@@ -23,6 +23,49 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
         public Vector3 position;
         public Quaternion rotation;
         public BehaviourAI occupant;
+    }
+
+    [System.Serializable]
+    public class AffordanceResource
+    {
+        public Affordance affordance;
+        public int nrOfSlots;
+        public List<AvatarActivity> subscribingActivities = new List<AvatarActivity>();
+
+        public int usedSlots()
+        {
+            return subscribingActivities.Count;
+        }
+
+        public bool AddUser(AvatarActivity activity)
+        {
+            if (usedSlots() < nrOfSlots)
+            {
+                subscribingActivities.Add(activity);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveUser(AvatarActivity activity)
+        {
+            if (usedSlots() > 0)
+            {
+                subscribingActivities.Remove(activity);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveAllUsers()
+        {
+            foreach(AvatarActivity activity in subscribingActivities.ToArray())
+            {
+                activity.LoseAffordanceSlot();
+                subscribingActivities.Remove(activity);
+            }
+            return false;
+        }
     }
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
@@ -118,12 +161,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_harvestButton.SetActive(true);
 	}
 
-    public List<Affordance> GetTemporaryAvatarAffordances()
+    public List<Appliance.AffordanceResource> GetTemporaryAvatarAffordances()
     {
         return temporaryAvatarAffordances;
     }
 
-    public void SetTemporaryAvatarAffordances(List<Affordance> affordances)
+    public void SetTemporaryAvatarAffordances(List<Appliance.AffordanceResource> affordances)
     {
         temporaryAvatarAffordances = affordances;
     }
@@ -131,6 +174,87 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
     public void ClearTemporaryAvatarAffordances()
     {
         temporaryAvatarAffordances.Clear();
+    }
+
+    public bool DecreaseNrOfAffordanceSlots(Affordance affordance, int count = 1)
+    {
+        for(int i = 0; i < avatarAffordances.Count; i++)
+        {
+            if(avatarAffordances[i].affordance == affordance)
+            {
+                AffordanceResource resource = avatarAffordances[i];
+
+                int margin = resource.nrOfSlots - resource.usedSlots();
+                int mustBeRemoved = count - margin;
+
+                if (mustBeRemoved < 0)
+                    mustBeRemoved = 0;
+
+                for(int j = 0; j < mustBeRemoved; j++)
+                {
+                    resource.subscribingActivities[0].LoseAffordanceSlot();
+                }
+
+                resource.nrOfSlots -= count;
+                if(resource.nrOfSlots < 0)
+                {
+                    resource.nrOfSlots = 0;
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IncreaseNrOfAffordanceSlots(Affordance affordance, int count = 1)
+    {
+        for (int i = 0; i < avatarAffordances.Count; i++)
+        {
+            if (avatarAffordances[i].affordance == affordance)
+            {
+                avatarAffordances[i].nrOfSlots += count;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool RemoveAllUsersOfAffordance(Affordance affordance)
+    {
+        foreach(AffordanceResource affordanceResource in avatarAffordances)
+        {
+            if(affordanceResource.affordance == affordance)
+            {
+                return affordanceResource.RemoveAllUsers();
+
+            }
+        }
+        return false;
+    }
+
+    public bool TakeAffordanceSlot(Affordance affordance, AvatarActivity activity)
+    {
+        foreach (AffordanceResource affordanceResource in avatarAffordances)
+        {
+            if (affordanceResource.affordance == affordance)
+            {
+                return affordanceResource.AddUser(activity);
+            }
+        }
+        return false;
+    }
+
+    public bool ReleaseAffordanceSlot(Affordance affordance, AvatarActivity activity)
+    {
+        foreach(AffordanceResource affordanceResource in avatarAffordances)
+        {
+            if(affordanceResource.affordance == affordance)
+            {
+                return affordanceResource.RemoveUser(activity);
+            }
+        }
+        return false;
     }
 
     //Releases all pose slots that are currently occupied by the supplied occupant
