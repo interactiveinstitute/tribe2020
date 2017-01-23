@@ -436,13 +436,13 @@ public class AvatarActivity : ScriptableObject {
         {
             if(sessions[i].type == SessionType.ReleaseTakenAffordance)
             {
-                _currSession = i+1;
+                _currSession = i;
                 break;
             }
         }
 
 
-        //Ok. we are either at the end. Or. We are at the session that releases the affordance. Either way, jump to the session after (if at and this will trigger activityfinished)
+        //Ok. we are either at the end. Or. We are at the session that releases the affordance. Either way, jump to the session after (if at end this will trigger activityfinished)
         NextSession();
     }
 

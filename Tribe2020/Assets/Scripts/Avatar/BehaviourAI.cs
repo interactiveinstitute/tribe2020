@@ -1174,10 +1174,11 @@ public class BehaviourAI : SimulationObject
             ReturnToIdlePose();
         }
         
-        //Also set state to idle. Maybe not necessary but just in case so we have a clean slate before starting next activity.
-        //GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
-        
         //Don't go nowhere!
+        if( state == AvatarActivity.AvatarState.Walking)
+        {
+            GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
+        }
         _agent.ResetPath();
         
         //Check if we should turn off stuff when ending this activity.
