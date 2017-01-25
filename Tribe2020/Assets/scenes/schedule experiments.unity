@@ -1380,8 +1380,9 @@ Transform:
   - {fileID: 1312491963}
   - {fileID: 1661767354}
   - {fileID: 1565960243}
+  - {fileID: 372151337}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!114 &55318401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2275,7 +2276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 0}
+  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
   color: {r: 0.737931, g: 1, b: 0, a: 1}
   maxValue: 100
   minValue: 0
@@ -5631,7 +5632,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.3446691, g: 0.7289539, b: 0.9191176, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
@@ -7585,13 +7586,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 0}
+  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
   color: {r: 0, g: 0.54482746, b: 1, a: 1}
   maxValue: 100
   minValue: 0
   value: 0
   electricMeter: {fileID: 0}
-  timeSeries: {fileID: 0}
+  timeSeries: {fileID: 314943531}
 --- !u!222 &314943533
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8498,7 +8499,7 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 55318400}
     m_Modifications:
     - target: {fileID: 114000012477659158, guid: 36e9592e43efaa840b09dc124a744d9b,
         type: 2}
@@ -8511,7 +8512,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011789569684, guid: 36e9592e43efaa840b09dc124a744d9b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.0000007369496
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000011789569684, guid: 36e9592e43efaa840b09dc124a744d9b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -8535,7 +8536,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011789569684, guid: 36e9592e43efaa840b09dc124a744d9b, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114000010742537176, guid: 36e9592e43efaa840b09dc124a744d9b,
         type: 2}
@@ -8573,6 +8574,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affordances: []
+--- !u!4 &372151337 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4000011789569684, guid: 36e9592e43efaa840b09dc124a744d9b,
+    type: 2}
+  m_PrefabInternal: {fileID: 372151330}
 --- !u!114 &372151338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8873,7 +8879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38315fe932d452441b645ce18a329c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 0}
+  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
   color: {r: 0.63529414, g: 1, b: 0.3882353, a: 1}
   maxValue: 100
   minValue: 0
@@ -8900,7 +8906,7 @@ MonoBehaviour:
   - 0
   - 0
   electricMeter: {fileID: 0}
-  timeSeries: {fileID: 0}
+  timeSeries: {fileID: 381244466}
 --- !u!114 &381244468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9148,7 +9154,7 @@ Transform:
   m_Children:
   - {fileID: 2103717978}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!114 &389447198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10460,7 +10466,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 460832, guid: 00d0b349319c29c4d8699d9fd95bdcbb, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 460832, guid: 00d0b349319c29c4d8699d9fd95bdcbb, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -12477,16 +12483,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aaf795927d7b624a837ff5be0c9ec54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  costPanel: {fileID: 0}
-  performedPanel: {fileID: 0}
-  moneyCost: {fileID: 0}
-  comfortCost: {fileID: 0}
-  powerImpact: {fileID: 0}
-  gasImpact: {fileID: 0}
-  co2Impact: {fileID: 0}
-  moneyImpact: {fileID: 0}
-  comfortImpact: {fileID: 0}
+  title: {fileID: 39794433}
+  costPanel: {fileID: 922708738}
+  performedPanel: {fileID: 196411429}
+  moneyCost: {fileID: 1958898893}
+  comfortCost: {fileID: 294284977}
+  powerImpact: {fileID: 1771763156}
+  gasImpact: {fileID: 217828882}
+  co2Impact: {fileID: 957456650}
+  moneyImpact: {fileID: 557287484}
+  comfortImpact: {fileID: 1802753750}
 --- !u!114 &566803131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14228,7 +14234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b4ef4c947b11e4b98350ec008fb280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  satisfactionGem: {fileID: 981033316, guid: 6e41c0e6dcc9d6146bbba64dbf8b1ab2, type: 2}
+  satisfactionGem: {fileID: 1000012389141984, guid: 6e41c0e6dcc9d6146bbba64dbf8b1ab2,
+    type: 2}
 --- !u!1 &729964382
 GameObject:
   m_ObjectHideFlags: 0
@@ -14352,7 +14359,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: 0.000045776367}
+  m_AnchoredPosition: {x: 125, y: -0.000061035156}
   m_SizeDelta: {x: 250, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &732872584
@@ -15056,7 +15063,7 @@ MonoBehaviour:
   title: Energy
   originalPosition: {x: 800, y: 0}
   targetPosition: {x: 400, y: 0}
-  toggleButton: {fileID: 0}
+  toggleButton: {fileID: 1860262822}
 --- !u!222 &756889794
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15353,7 +15360,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.41176468, g: 0.41176468, b: 0.41176468, a: 0.78431374}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
@@ -15985,7 +15992,7 @@ MonoBehaviour:
   title: Comfort
   originalPosition: {x: -800, y: 0}
   targetPosition: {x: -400, y: 0}
-  toggleButton: {fileID: 0}
+  toggleButton: {fileID: 1312098225}
 --- !u!222 &811052371
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18368,7 +18375,7 @@ MonoBehaviour:
   - key: Press Button
     value: {fileID: 944897951}
   - key: Fireworks
-    value: {fileID: 0}
+    value: {fileID: 944897949}
   defaultMusic: Climbing the Mountain
 --- !u!1 &945174390
 GameObject:
@@ -18801,7 +18808,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.3446691, g: 0.7289539, b: 0.9191176, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
@@ -19913,7 +19920,7 @@ MonoBehaviour:
   arrowImg: {fileID: 21300000, guid: 3f8910e4c20bee04caa80bc4352d5772, type: 3}
   pointingHandImg: {fileID: 21300000, guid: b860651a0754b264fbd193650c631370, type: 3}
   circleImg: {fileID: 21300000, guid: 06b9b1ab0241dca4f981ac63c8c17521, type: 3}
-  currrentImage: {fileID: 0}
+  currrentImage: {fileID: 1519410307}
 --- !u!111 &996964233
 Animation:
   m_ObjectHideFlags: 0
@@ -22187,16 +22194,16 @@ MonoBehaviour:
   comfort: {fileID: 1524522206}
   title: {fileID: 517898166}
   date: {fileID: 697073461}
-  power: {fileID: 0}
-  energyCounter: {fileID: 0}
-  timeBar: {fileID: 0}
-  apocalypsePointer: {fileID: 0}
-  apocalypsePercent: {fileID: 0}
+  power: {fileID: 910250155}
+  energyCounter: {fileID: 1271372446}
+  timeBar: {fileID: 1548289943}
+  apocalypsePointer: {fileID: 356523106}
+  apocalypsePercent: {fileID: 941949635}
   inboxUI: {fileID: 2048416344}
-  inboxList: {fileID: 0}
+  inboxList: {fileID: 988754361}
   mailCountText: {fileID: 1454978159}
   viewpointGuideUI: {fileID: 753103041}
-  overviewIcon: {fileID: 0}
+  overviewIcon: {fileID: 1202841431}
   defaultIcon: {fileID: 21300000, guid: 7d908908c0ea7824fa8d75636f978dc9, type: 3}
   lockIcon: {fileID: 21300000, guid: 2cd1569c1b37f8b4b98498afc43e5578, type: 3}
   currentColor: {r: 0.121568635, g: 0.6117647, b: 0.31764707, a: 1}
@@ -22210,20 +22217,23 @@ MonoBehaviour:
   animationUI: {fileID: 996964231}
   fireworks: {fileID: 1008940907}
   actionButtonPrefab: {fileID: 131604, guid: 0416b27305708074c8d7bb310e901652, type: 2}
-  viewGuideRowPrefab: {fileID: 0}
+  viewGuideRowPrefab: {fileID: 1000013316688104, guid: a67829d6dcf577a4b86b4a75a39b808d,
+    type: 2}
   viewpointIconPrefab: {fileID: 116102, guid: c7a72ab6e32b78741a00240101091fe5, type: 2}
-  mailButtonPrefab: {fileID: 0}
-  EEMButtonPrefab: {fileID: 0}
+  mailButtonPrefab: {fileID: 1000010623696194, guid: db7a69b8906548a4f833f793a55dc342,
+    type: 2}
+  EEMButtonPrefab: {fileID: 1000011575247888, guid: 9df48106b19751141a18505ab58d1169,
+    type: 2}
   FeedbackNumber: {fileID: 160668, guid: de8d29e614a67524993a54c194651a7b, type: 2}
   menus:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 756889792}
+  - {fileID: 811052369}
   - {fileID: 2048416345}
   - {fileID: 90782241}
-  - {fileID: 0}
-  settingsPanel: {fileID: 0}
-  energyPanel: {fileID: 0}
-  comfortPanel: {fileID: 0}
+  - {fileID: 248305217}
+  settingsPanel: {fileID: 1135554904}
+  energyPanel: {fileID: 756889792}
+  comfortPanel: {fileID: 811052369}
   inbox: {fileID: 2048416345}
   inspector: {fileID: 90782241}
   apocalypsometer: {fileID: 248305217}
@@ -22491,7 +22501,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011900272710, guid: 79769193b9ce28c45b0fa41ff393f086, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114000012774719584, guid: 79769193b9ce28c45b0fa41ff393f086,
         type: 2}
@@ -22609,7 +22619,7 @@ Transform:
   - {fileID: 1694523534}
   - {fileID: 1547911331}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &1063844511
 GameObject:
   m_ObjectHideFlags: 0
@@ -22906,7 +22916,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.8897059, g: 0.8671473, b: 0.07196152, a: 1}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
@@ -24457,7 +24467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 1
+  autoStart: 0
   saveProgress: 1
   debug: 0
   startQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
@@ -26545,16 +26555,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aaf795927d7b624a837ff5be0c9ec54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  costPanel: {fileID: 0}
-  performedPanel: {fileID: 0}
-  moneyCost: {fileID: 0}
-  comfortCost: {fileID: 0}
-  powerImpact: {fileID: 0}
-  gasImpact: {fileID: 0}
-  co2Impact: {fileID: 0}
-  moneyImpact: {fileID: 0}
-  comfortImpact: {fileID: 0}
+  title: {fileID: 480489130}
+  costPanel: {fileID: 1551804855}
+  performedPanel: {fileID: 491387605}
+  moneyCost: {fileID: 2106540641}
+  comfortCost: {fileID: 808598595}
+  powerImpact: {fileID: 1703842326}
+  gasImpact: {fileID: 709908556}
+  co2Impact: {fileID: 1687772189}
+  moneyImpact: {fileID: 1383748148}
+  comfortImpact: {fileID: 541916394}
 --- !u!114 &1315856567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27243,16 +27253,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aaf795927d7b624a837ff5be0c9ec54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  costPanel: {fileID: 0}
-  performedPanel: {fileID: 0}
-  moneyCost: {fileID: 0}
-  comfortCost: {fileID: 0}
-  powerImpact: {fileID: 0}
-  gasImpact: {fileID: 0}
-  co2Impact: {fileID: 0}
-  moneyImpact: {fileID: 0}
-  comfortImpact: {fileID: 0}
+  title: {fileID: 899268097}
+  costPanel: {fileID: 1098774742}
+  performedPanel: {fileID: 201183769}
+  moneyCost: {fileID: 1821567941}
+  comfortCost: {fileID: 149206237}
+  powerImpact: {fileID: 1904336740}
+  gasImpact: {fileID: 1422977178}
+  co2Impact: {fileID: 8183418}
+  moneyImpact: {fileID: 1382513853}
+  comfortImpact: {fileID: 1309166682}
 --- !u!114 &1343347793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30660,7 +30670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueId: 
+  uniqueId: b5389c75-9fc2-4136-8b7e-90c0054b3a78
 --- !u!1 &1565728904
 GameObject:
   m_ObjectHideFlags: 0
@@ -31274,7 +31284,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.3241372, g: 0.32358348, b: 0.33088237, a: 0.78431374}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
@@ -32799,6 +32809,10 @@ Prefab:
       propertyPath: owners.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6537508, guid: 61256a63d500d7b4595d0cc2b3423658, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 61256a63d500d7b4595d0cc2b3423658, type: 2}
   m_IsPrefabParent: 0
@@ -33027,7 +33041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueId: 
+  uniqueId: 3af474ad-ae3d-4e07-9303-4c39c60012b1
 --- !u!1 &1687772189
 GameObject:
   m_ObjectHideFlags: 0
@@ -35039,16 +35053,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aaf795927d7b624a837ff5be0c9ec54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  costPanel: {fileID: 0}
-  performedPanel: {fileID: 0}
-  moneyCost: {fileID: 0}
-  comfortCost: {fileID: 0}
-  powerImpact: {fileID: 0}
-  gasImpact: {fileID: 0}
-  co2Impact: {fileID: 0}
-  moneyImpact: {fileID: 0}
-  comfortImpact: {fileID: 0}
+  title: {fileID: 998468720}
+  costPanel: {fileID: 919974340}
+  performedPanel: {fileID: 1256418022}
+  moneyCost: {fileID: 1910461116}
+  comfortCost: {fileID: 369764595}
+  powerImpact: {fileID: 1745709376}
+  gasImpact: {fileID: 1536399915}
+  co2Impact: {fileID: 751630173}
+  moneyImpact: {fileID: 2103119699}
+  comfortImpact: {fileID: 1010924019}
 --- !u!114 &1785107876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35868,13 +35882,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16310cd5d2534ed43ab2455b556d534c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 0}
+  linePrefab: {fileID: 1000010839118024, guid: 208047cc42e593748b261083b69e6490, type: 2}
   color: {r: 1, g: 0, b: 0, a: 1}
   maxValue: 100
   minValue: 0
   value: 0
   electricMeter: {fileID: 0}
-  timeSeries: {fileID: 0}
+  timeSeries: {fileID: 1840524703}
 --- !u!222 &1840524705
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -36753,7 +36767,7 @@ MonoBehaviour:
   Source: {fileID: 0}
   ValueIndex: 0
   color: {r: 0.8897059, g: 0.8468448, b: 0.26822016, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   Staircase: 1
   Debug: []
   Data:
