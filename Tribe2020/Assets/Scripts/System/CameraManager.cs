@@ -30,10 +30,23 @@ public class CameraManager : MonoBehaviour {
 	[SerializeField]
 	private bool _inOverview;
 
-	//Camera movement variables
+    //Camera movement variables
+    private float _defaultFOV;
 	private Vector3 _lastPos = Vector3.zero;
 	private Vector3 _targetPos = Vector3.zero;
 	private Vector3 _lastRot, _targetRot;
+    private bool _isLooking = false;
+    [SerializeField]
+    private Vector3 _lookAtRotation;
+    [SerializeField, ShowOnly]
+    private float _lookaAtFOV;
+    //[SerializeField]
+    //private Vector3 _lookAtEuler;
+    [SerializeField] [Range (0, 10)]
+    private float zoomInLevel;
+
+    [Range (0, 1)]
+    public float fracJourney = 0;
 
 	//Orientation interaction variables
 	public Camera gameCamera;
@@ -43,7 +56,8 @@ public class CameraManager : MonoBehaviour {
 
 	private float speed = 0.1f;
 	private float startTime;
-	private float journeyLength;
+    [ShowOnly]
+	public float journeyLength;
 
 	private float _panSpeed = 0.01f;
 
@@ -59,6 +73,8 @@ public class CameraManager : MonoBehaviour {
 	void Start() {
 		_controller = PilotController.GetInstance();
 
+        _defaultFOV = gameCamera.fieldOfView;
+
 		_lastPos = _targetPos = gameCamera.transform.position;
 		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 
@@ -68,19 +84,32 @@ public class CameraManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(_firstLoop) {
-			SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
-			_firstLoop = false;
-		}
+        //if(_lookAtRotation)
+        //_lookAtEuler = _lookAtRotation.eulerAngles;
 
-		if(journeyLength > 0) {
+        if (_firstLoop)
+        {
+            SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
+            _firstLoop = false;
+        }
+
+        if (journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
-			float fracJourney = distCovered / journeyLength;
+			fracJourney = distCovered / journeyLength;
 
-			if(cameraState == CameraManager.CameraState.Idle) {
-				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
-				gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
-			}
+            {
+			//if(cameraState == CameraManager.CameraState.Idle) {
+                if (!_isLooking)
+                {
+                    gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
+                    gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
+                    gameCamera.fieldOfView = Mathf.Lerp(_lookaAtFOV, _defaultFOV, fracJourney);
+                } else
+                {
+                    gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _lookAtRotation, fracJourney);
+                    gameCamera.fieldOfView = Mathf.Lerp(_defaultFOV, _lookaAtFOV, fracJourney);
+                }
+            }
 		}
 	}	
 
@@ -191,15 +220,23 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+    private void SaveCurrentAsLastCameraState()
+    {
+        _lastPos = gameCamera.transform.position;
+        _lastRot = gameCamera.transform.eulerAngles;
+    }
+
 	//
 	public void GoToOverview() {
 		_inOverview = true;
 		_curView = _overview;
 
-		_lastPos = gameCamera.transform.position;
+        SaveCurrentAsLastCameraState();
+		
+        //_lastPos = gameCamera.transform.position;
 		_targetPos = _curView.transform.position;
 
-		_lastRot = gameCamera.transform.eulerAngles;
+		//_lastRot = gameCamera.transform.eulerAngles;
 		_targetRot = _curView.transform.eulerAngles;
 
 		startTime = Time.unscaledTime;
@@ -214,6 +251,111 @@ public class CameraManager : MonoBehaviour {
 
 		SetViewpoint((int)currentCoordinates.x, (int)currentCoordinates.y, Vector2.zero);
 	}
+
+    public void SetLookAtTarget(Appliance appliance)
+    {
+        _isLooking = true;
+        // distance to zoomed in object
+        float distance = Vector3.Distance(gameCamera.transform.position, appliance.transform.position);
+        
+        float applianceHeight = 1; //Set a default approximate height for things without collider
+        if (appliance.GetComponent<BoxCollider>())
+        {
+            applianceHeight = appliance.GetComponent<BoxCollider>().bounds.size.y;
+        }
+
+        //FOV is the vertical agnle of the viewport, so let's use the height (and distance) for calculating how much we should zoom in
+        _lookaAtFOV = Mathf.Rad2Deg * 2 * Mathf.Atan2(applianceHeight, distance);
+
+        // calculate the horizontal FOV for the zoomed in state. We need this to position the object on the left side of the screen
+        float radAngle = _lookaAtFOV * Mathf.Deg2Rad;
+        float radHFOV = 2 * Mathf.Atan(Mathf.Tan(radAngle / 2) * gameCamera.aspect);
+        float hFOV = Mathf.Rad2Deg * radHFOV;
+
+        Vector3 appliancePosition = appliance.transform.position;
+        appliancePosition.y += applianceHeight / 2;
+
+        startTime = Time.unscaledTime;
+        SaveCurrentAsLastCameraState();
+        //_lookAtRotation = new GameObject().transform;
+        //_lookAtTransform.rotation = transform.rotation;
+        //_lookAtTransform.position = transform.position;
+        //_lookAtRotation.LookAt(appliancePosition);
+        
+
+        Vector3 relativePos = appliancePosition - transform.position;
+        _lookAtRotation = Quaternion.LookRotation(relativePos).eulerAngles;
+        //Position thee appliance on the left side of the screen
+        _lookAtRotation += new Vector3(0, hFOV / 4, 0);
+        //gameCamera.transform.LookAt(appliance.transform);
+    }
+
+    //private float calculateHorizontalFOV(Appliance appliance)
+    //{
+    //    BoxCollider collider = appliance.GetComponent<BoxCollider>();
+    //    if (collider)
+    //    {
+    //        Vector3 cen = collider.bounds.center;
+    //        Vector3 ext = collider.bounds.extents;
+    //        Vector2[] extentPoints = new Vector2[8]
+    //        {
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x-ext.x, cen.y-ext.y, cen.z-ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x+ext.x, cen.y-ext.y, cen.z-ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x-ext.x, cen.y-ext.y, cen.z+ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x+ext.x, cen.y-ext.y, cen.z+ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x-ext.x, cen.y+ext.y, cen.z-ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x+ext.x, cen.y+ext.y, cen.z-ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x-ext.x, cen.y+ext.y, cen.z+ext.z)),
+    //            gameCamera.WorldToScreenPoint(new Vector3(cen.x+ext.x, cen.y+ext.y, cen.z+ext.z))
+    //        };
+    //        Vector2 min = extentPoints[0];
+    //        Vector2 max = extentPoints[0];
+    //        foreach (Vector2 v in extentPoints)
+    //        {
+    //            min = Vector2.Min(min, v);
+    //            max = Vector2.Max(max, v);
+    //        }
+
+    //        // distance to appliance from camera
+    //        float distance = Vector3.Distance(gameCamera.transform.position, appliance.transform.position);
+
+    //        //Find if wider of taller
+    //        float screenHeight = max.y - min.y;
+    //        float screenWidth = max.x - min.x;
+    //        if(screenHeight > screenWidth)
+    //        {
+    //            //Set field of view from height
+    //            Vector3 worldSize = gameCamera.ScreenToWorldPoint(new Vector3(max.x, max.y, distance)) - gameCamera.ScreenToWorldPoint(new Vector3(min.x, min.y, distance));
+    //        }
+
+
+    //        //float applianceHeight = 1; //Set a default approximate height for things without collider
+    //        //if (appliance.GetComponent<BoxCollider>())
+    //        //{
+    //        //    applianceHeight = appliance.GetComponent<BoxCollider>().bounds.size.y;
+    //        //}
+
+    //        //FOV is the vertical agnle of the viewport, so let's use the height (and distance) for calculating how much we should zoom in
+    //        _lookaAtFOV = Mathf.Rad2Deg * 2 * Mathf.Atan2(applianceHeight, distance);
+
+    //        // calculate the horizontal FOV for the zoomed in state. We need this to position the object on the left side of the screen
+    //        float radAngle = _lookaAtFOV * Mathf.Deg2Rad;
+    //        float radHFOV = 2 * Mathf.Atan(Mathf.Tan(radAngle / 2) * gameCamera.aspect);
+    //        float hFOV = Mathf.Rad2Deg * radHFOV;
+    //        //return new Rect(min.x, min.y, max.x - min.x, max.y - min.y);
+    //    }
+
+    //}
+
+    public void ClearLookAtTarget()
+    {
+        //Save the current zoom as the _lookAtFOV
+        _lookaAtFOV = gameCamera.fieldOfView;
+        _isLooking = false;
+        startTime = Time.unscaledTime;
+        SaveCurrentAsLastCameraState();
+        //_lookAtRotation = null;
+    }
 
 	//
 	public void SetViewpoint(int x, int y, Vector2 dir) {
@@ -239,11 +381,13 @@ public class CameraManager : MonoBehaviour {
 			currentCoordinates = targetCoordinates;
 			_curView = _views[(int)currentCoordinates.y][(int)currentCoordinates.x];
 
-			//Prepare interpolated transition
-			_lastPos = gameCamera.transform.position;
-			_targetPos = _curView.transform.position;
+            //Save from state
+            SaveCurrentAsLastCameraState();
 
-			_lastRot = gameCamera.transform.eulerAngles;
+            //Set to state
+            //_lastPos = gameCamera.transform.position;
+            _targetPos = _curView.transform.position;
+			//_lastRot = gameCamera.transform.eulerAngles;
 			_targetRot = _curView.transform.eulerAngles;
 
 			startTime = Time.unscaledTime;

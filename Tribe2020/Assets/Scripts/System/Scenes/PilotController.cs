@@ -359,6 +359,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
 
+        _camMgr.SetLookAtTarget(app);
+
 		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
 		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
 		_view.BuildInspector(title, description, app);
@@ -433,6 +435,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	//Hide any open user interface
 	public void HideUI() {
 		_view.SetCurrentUI(null);
+        _camMgr.ClearLookAtTarget();
 	}
 
 	//
