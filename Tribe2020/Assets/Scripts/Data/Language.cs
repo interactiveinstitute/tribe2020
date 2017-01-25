@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Language", menuName = "Localisation/Language", order = 1)]
 public class Language : ScriptableObject {
+	public Sprite flagSprite;
+	public string code;
+
 	//
 	public bool isTestLanguage;
 	
@@ -10,6 +14,7 @@ public class Language : ScriptableObject {
 	[System.Serializable]
 	public struct KeyValue {
 		public string key;
+		[TextArea(3, 3)]
 		public string value;
 		public List<string> values;
 	}

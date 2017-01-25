@@ -6,7 +6,7 @@ public interface NarrationInterface{
 	void SetControlState(Controller.InputState state);
 	void ControlInterface(string id, string action);
 	void PlaySound(string sound);
-	void ShowMessage(string key, string message, bool showButton);
+	void ShowMessage(string key, string message, Sprite portrait, bool showButton);
 	void CreateHarvest(string commandJSON);
 	void ControlAvatar(string id, string action, Vector3 targetPosition);
 	void ControlAvatar(string id, Object action);
@@ -16,4 +16,7 @@ public interface NarrationInterface{
 	void SaveGameState();
 	void SetTimeScale(float timeScale);
 	void RequestCurrentView();
+	void MoveCamera(string animation);
+	void OnAnimationEvent(string animationEvent);
+	void StopCamera();
 }

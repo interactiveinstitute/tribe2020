@@ -24,6 +24,8 @@ public class NarrationManager : MonoBehaviour {
 	public Quest startQuest;
 	public List<Quest> quests;
 	public List<Quest> curQuests = new List<Quest>();
+	public Quest activeNarrative;
+	public List<Quest> listeningNarratives;
 	public List<Quest> completedQuests = new List<Quest>();
 	#endregion
 
@@ -34,7 +36,6 @@ public class NarrationManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		//_controller = Controller.GetInstance();
 	}
 
 	// Update is called once per frame
@@ -44,6 +45,11 @@ public class NarrationManager : MonoBehaviour {
 	//
 	public void SetInterface(NarrationInterface i) {
 		_interface = i;
+	}
+
+	//
+	public NarrationInterface GetInterface() {
+		return _interface;
 	}
 
 	//
@@ -117,16 +123,17 @@ public class NarrationManager : MonoBehaviour {
 
 		// Limit user interaction
 		_interface.SetControlState(quest.GetCurrentInteractionLimits());
-		string id, action;
+		string id, action, localKey;
 
 		switch(quest.GetCurrentStepType()) {
 			case Quest.QuestStepType.Popup:
-				//if(debug) { Debug.Log(name + ":Popup " + "Narrative." + quest.title + ":" + step.title); }
-				_interface.ShowMessage("Narrative." + quest.title + ":" + step.title, step.message, false);
+				localKey = "Narrative." + quest.title + ":" + step.title;
+
+				_interface.ShowMessage(localKey, step.message, step.portrait, false);
 				break;
 			case Quest.QuestStepType.Prompt:
-				//if(debug) { Debug.Log(name + ":Prompt " + "Narrative." + quest.title + ":" + step.title); }
-				_interface.ShowMessage("Narrative." + quest.title + ":" + step.title, step.message, true);
+				localKey = "Narrative." + quest.title + ":" + step.title;
+				_interface.ShowMessage(localKey, step.message, step.portrait, true);
 				break;
 			case Quest.QuestStepType.PlayAnimation:
 				_interface.ControlInterface("animation", "hide");
@@ -166,6 +173,13 @@ public class NarrationManager : MonoBehaviour {
 				break;
 			case Quest.QuestStepType.PilotComplete:
 				break;
+			case Quest.QuestStepType.MoveCamera:
+				JSONNode json = JSON.Parse(step.commandJSON);
+				_interface.MoveCamera(json["animation"]);
+				break;
+			case Quest.QuestStepType.StopCamera:
+				_interface.StopCamera();
+				break;
 		}
 
 		//If there are no conditions, just step to the next quest step
@@ -174,6 +188,14 @@ public class NarrationManager : MonoBehaviour {
 		} else if(quest.GetCurrentStep().condition == Quest.QuestEvent.FindView) {
 			_interface.RequestCurrentView();
 		}
+	}
+
+	//
+	public void DoAction(string method, string prop) {
+	}
+
+	//
+	public void OnEvent(string e, string prop) {
 	}
 
 	// Called to send quest related event to all active quest. Progresses related quests

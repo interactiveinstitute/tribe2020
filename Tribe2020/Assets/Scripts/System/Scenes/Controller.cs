@@ -26,8 +26,8 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
-	public virtual void ShowMessage(string key, string message, bool showButton) {
-	}
+	//public virtual void ShowMessage(string key, string message, bool showButton) {
+	//}
 
 	//
 	public virtual void ClearView() {

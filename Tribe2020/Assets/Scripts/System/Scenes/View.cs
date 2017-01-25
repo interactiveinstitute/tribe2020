@@ -19,8 +19,8 @@ public class View : MonoBehaviour {
 	}
 
 	//
-	public virtual void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
-	}
+	//public virtual void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
+	//}
 
 	//
 	public virtual void ControlInterface(string id, string action) {

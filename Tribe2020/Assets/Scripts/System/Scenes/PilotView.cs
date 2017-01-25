@@ -291,9 +291,15 @@ public class PilotView : View{
 	}
 
 	//
-	public override void ShowMessage(string message, bool showAtBottom, bool showOkButton = true) {
+	public void ShowMessage(string message, Sprite portrait, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
+		if(portrait) {
+			messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
+			messageUI.transform.GetChild(0).gameObject.SetActive(true);
+		} else {
+			messageUI.transform.GetChild(0).gameObject.SetActive(false);
+		}
 
 		messageButton.SetActive(showOkButton);
 	}

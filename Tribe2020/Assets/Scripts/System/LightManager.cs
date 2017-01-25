@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class LightManager : MonoBehaviour {
 

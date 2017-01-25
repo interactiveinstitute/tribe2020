@@ -133,7 +133,7 @@ public class BattleController : Controller {
 	}
 
 	//
-	public override void ShowMessage(string key, string message, bool showButton) {
+	public void ShowMessage(string key, string message, bool showButton) {
 	}
 
 	//

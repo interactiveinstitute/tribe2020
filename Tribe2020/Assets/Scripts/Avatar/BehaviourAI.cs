@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityStandardAssets.Characters.ThirdPerson;
 using SimpleJSON; // For encoding and decoding avatar states
 using System;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(ThirdPersonCharacter))]

@@ -166,11 +166,11 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void SaveCurrentSlot(bool currentScene = true) {
-		Save(currentSlot, currentScene);
+		Save();
 	}
 
 	//
-	public void Save(int slot, bool currentScene = true) {
+	public void Save() {
 		if(currentSlot != -1) {
 			File.WriteAllText(_filePath, _dataClone.ToString());
 		}

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System;
 
-public class PilotController : Controller, NarrationInterface, AudioInterface {
+public class PilotController : Controller, NarrationInterface, AudioInterface, CameraInterface {
 	//Singleton features
 	public static PilotController GetInstance() {
 		return _instance as PilotController;
@@ -83,6 +83,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
+
+		_camMgr = CameraManager.GetInstance();
+		_camMgr.SetInterface(this);
 
 		//_avatarMgr = GetComponent<AvatarManager>();
 		_avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
@@ -388,12 +391,12 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	}
 
 	//
-	public override void ShowMessage(string key, string message, bool showButton) {
+	public /*override*/ void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
 		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
 		string msg = _localMgr.GetPhrase(key);
 		if(msg == "") { msg = message + "!"; }
 
-		_view.ShowMessage(msg, true, showButton);
+		_view.ShowMessage(msg, portrait, true, showButton);
 	}
 
 	//Open user interface
@@ -749,4 +752,18 @@ public class PilotController : Controller, NarrationInterface, AudioInterface {
 	public void ShowCongratulations(string text) {
 		throw new NotImplementedException();
 	}
+
+	//
+	public void MoveCamera(string animation) {
+		_camMgr.PlayAnimation(animation);
+	}
+
+	public void StopCamera() {
+		_camMgr.StopAnimation();
+	}
+
+	public void OnAnimationEvent(string animationEvent) {
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.CameraAnimationEvent, animationEvent);
+	}
+
 }

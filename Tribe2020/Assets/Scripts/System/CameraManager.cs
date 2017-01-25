@@ -15,6 +15,7 @@ public class CameraManager : MonoBehaviour {
 	public bool xWrap = false;
 	public bool yWrap = false;
 	private PilotController _controller;
+	private CameraInterface _interface;
 
 	public enum CameraState { Idle, Full, Room, Panned };
 	public CameraState cameraState = CameraState.Idle;
@@ -113,7 +114,12 @@ public class CameraManager : MonoBehaviour {
                 }
             }
 		}
-	}	
+	}
+
+	//
+	public void SetInterface(CameraInterface i) {
+		_interface = i;
+	}
 
 	//
 	public void UpdateVisibility() {
@@ -564,6 +570,30 @@ public class CameraManager : MonoBehaviour {
 	//
 	public void UnlockView(int x, int y) {
 		_views[y][x].locked = false;
+	}
+
+	//
+	public void PlayAnimation(string animation) {
+		GetComponent<Animator>().enabled = true;
+		GetComponent<Animator>().Play(animation);
+	}
+
+	//
+	public void StopAnimation() {
+		GetComponent<Animator>().Stop();
+		GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
+		GetComponent<Animator>().enabled = false;
+
+		//if(_inOverview) {
+		//	GoToOverview();
+		//} else {
+		//	GoToGridView();
+		//}
+	}
+
+	//
+	public void OnAnimationEvent(string animationEvent) {
+		_interface.OnAnimationEvent(animationEvent);
 	}
 
 	//
