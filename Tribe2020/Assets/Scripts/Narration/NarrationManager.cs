@@ -24,8 +24,11 @@ public class NarrationManager : MonoBehaviour {
 	public Quest startQuest;
 	public List<Quest> quests;
 	public List<Quest> curQuests = new List<Quest>();
+	public int selectIndex;
+
 	public Quest activeNarrative;
 	public List<Quest> listeningNarratives;
+
 	public List<Quest> completedQuests = new List<Quest>();
 	#endregion
 
@@ -54,30 +57,45 @@ public class NarrationManager : MonoBehaviour {
 
 	//
 	public void SetStartState() {
-		AddQuest(startQuest, 0);
+		AddQuest(startQuest, selectIndex);
 	}
 
 	//
 	public void NextStep() {
-		if(curQuests.Count > 0) {
-			if(curQuests[0].IsComplete()) {
-			} else {
-				OnQuestEvent(curQuests[0].GetCurrentStep().condition, curQuests[0].GetCurrentStep().conditionField);
-				StartQuestStep(curQuests[0]);
-			}
+		if(curQuests[selectIndex].IsComplete()) {
+		} else {
+			OnQuestEvent(curQuests[selectIndex].GetCurrentStep().condition, 
+				curQuests[0].GetCurrentStep().conditionField);
+			StartQuestStep(curQuests[selectIndex]);
 		}
+
+		//if(curQuests.Count > 0) {
+		//	if(curQuests[0].IsComplete()) {
+		//	} else {
+		//		OnQuestEvent(curQuests[0].GetCurrentStep().condition, curQuests[0].GetCurrentStep().conditionField);
+		//		StartQuestStep(curQuests[0]);
+		//	}
+		//}
 	}
 
 	//
 	public void PrevStep() {
-		if(curQuests.Count > 0) {
-			curQuests[0].PrevStep();
+		curQuests[selectIndex].PrevStep();
 
-			if(curQuests[0].GetCurrentStepIndex() > 0 && curQuests[0].GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
-				PrevStep();
-			}
-			StartQuestStep(curQuests[0]);
+		if(curQuests[selectIndex].GetCurrentStepIndex() > 0 && 
+			curQuests[0].GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
+			PrevStep();
 		}
+		StartQuestStep(curQuests[selectIndex]);
+
+		//if(curQuests.Count > 0) {
+		//	curQuests[0].PrevStep();
+
+		//	if(curQuests[0].GetCurrentStepIndex() > 0 && curQuests[0].GetCurrentStep().condition == Quest.QuestEvent.EMPTY) {
+		//		PrevStep();
+		//	}
+		//	StartQuestStep(curQuests[0]);
+		//}
 	}
 
 	//

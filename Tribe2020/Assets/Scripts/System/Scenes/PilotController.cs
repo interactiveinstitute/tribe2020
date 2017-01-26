@@ -319,28 +319,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override void ControlAvatar(string id, string action, Vector3 pos) {
-		Debug.Log("Searching for avatar " + id);
-		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == id) {
-				Debug.Log("Found matching avatar");
-				avatar.TakeControlOfAvatar();
-				avatar.WalkTo(pos);
-			}
-		}
-	}
-
-	//
-	public override void ControlAvatar(string id, UnityEngine.Object action) {
-		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == id) {
-				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
-				avatar.StartTemporaryActivity(newAct);
-			}
-		}
-	}
-
-	//
 	public void OnOkPressed() {
 		ResetTouch();
 
@@ -388,15 +366,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		//SetCurrentUI(_view.mail);
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
-	}
-
-	//
-	public /*override*/ void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
-		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
-		string msg = _localMgr.GetPhrase(key);
-		if(msg == "") { msg = message + "!"; }
-
-		_view.ShowMessage(msg, portrait, true, showButton);
 	}
 
 	//Open user interface
@@ -471,24 +440,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	//public void OnQuestPressed(Quest quest) {
-	//	if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_INBOX) { return; }
-	//		//if(_curState == InputState.ALL || _curState == InputState.ONLY_OPEN_QUEST) {
-	//	_view.BuildMail(quest);
-	//	//_view.ShowQuest(quest);
-	//	ResetTouch();
-
-	//	_narrationMgr.OnQuestEvent(Quest.QuestEvent.QuestOpened);
-	//	//}
-	//}
-
-	////
-	//public void OnQuestClosed() {
-	//	_view.HideQuest();
-	//	ResetTouch();
-	//}
-
-	//
 	public void OnHarvestTap(GameObject go) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
 
@@ -498,22 +449,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 		ResetTouch();
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
-	}
-
-	//
-	public void CreateHarvest(string command) {
-		JSONNode json = JSON.Parse(command);
-		string currency = json["type"];
-		string location = json["location"];
-
-		if(location.Equals("current")) {
-            //Debug.Log(_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch());
-            //_camMgr.GetCurrentViewpoint().relatedZones[0].GetLightSwitch().AddHarvest();
-            Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
-            room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
-        }
-
-		//Debug.Log(name + " create " + currency + " in " + location);
 	}
 
 	//
@@ -589,14 +524,69 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		}
 	}
 
+	#region Narrative Methods
 	//
-	public override void ClearView() {
-		_view.ClearView();
+	public override void SetControlState(InputState state) {
+		_curState = state;
 	}
 
 	//
 	public override void ControlInterface(string id, string action) {
 		_view.ControlInterface(id, action);
+	}
+
+	//
+	public override void PlaySound(string sound) {
+		_audioMgr.PlaySound(sound);
+	}
+
+	//
+	public void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
+		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
+		string msg = _localMgr.GetPhrase(key);
+		if(msg == "") { msg = message + "!"; }
+
+		_view.ShowMessage(msg, portrait, true, showButton);
+	}
+
+	//
+	public void CreateHarvest(string command) {
+		JSONNode json = JSON.Parse(command);
+		string currency = json["type"];
+		string location = json["location"];
+
+		if(location.Equals("current")) {
+			Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
+			room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
+		}
+	}
+
+	//
+	public override void ControlAvatar(string id, string action, Vector3 pos) {
+		Debug.Log("Searching for avatar " + id);
+		foreach(BehaviourAI avatar in _avatars) {
+			if(avatar.name == id) {
+				Debug.Log("Found matching avatar");
+				avatar.TakeControlOfAvatar();
+				avatar.WalkTo(pos);
+			}
+		}
+	}
+
+	//
+	public override void ControlAvatar(string id, UnityEngine.Object action) {
+		foreach(BehaviourAI avatar in _avatars) {
+			if(avatar.name == id) {
+				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
+				avatar.StartTemporaryActivity(newAct);
+			}
+		}
+	}
+
+	//
+	public override void UnlockView(int x, int y) {
+		_camMgr.UnlockView(x, y);
+		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 	}
 
 	//
@@ -606,14 +596,10 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override void PlaySound(string sound) {
-		_audioMgr.PlaySound(sound);
+	public override void ClearView() {
+		_view.ClearView();
 	}
-
-	//
-	public override void SetControlState(InputState state) {
-		_curState = state;
-	}
+	#endregion
 
 	//
 	public string GetPhrase(string groupKey, string key, int index) {
@@ -627,7 +613,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void SetTimeScale(float timeScale) {
-		_timeMgr.VisualTimeScale = timeScale;
+		_timeMgr.SimulationTimeScaleFactor = timeScale;
 	}
 
 	//
@@ -640,11 +626,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		return _timeMgr.CurrentDate;
 	}
 
-	//
-	public override void UnlockView(int x, int y) {
-		_camMgr.UnlockView(x, y);
-		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
-	}
+	
 
 	//
 	public override void SaveGameState() {

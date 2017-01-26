@@ -14,7 +14,7 @@ public class CameraManager : MonoBehaviour {
 	public bool debug = false;
 	public bool xWrap = false;
 	public bool yWrap = false;
-	private PilotController _controller;
+	//private PilotController _controller;
 	private CameraInterface _interface;
 
 	public enum CameraState { Idle, Full, Room, Panned };
@@ -73,7 +73,7 @@ public class CameraManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		_controller = PilotController.GetInstance();
+		//_controller = PilotController.GetInstance();
 
         _lastFOV = _defaultFOV = gameCamera.fieldOfView;
 
@@ -251,7 +251,7 @@ public class CameraManager : MonoBehaviour {
 		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
-		_controller.OnNewViewpoint(_curView, _views, _inOverview);
+		_interface.OnNewViewpoint(_curView, _views, _inOverview);
 	}
 
 	//
@@ -457,7 +457,7 @@ public class CameraManager : MonoBehaviour {
 			journeyLength = Vector3.Distance(_lastPos, _targetPos);
 
 			//Controller callback
-			_controller.OnNewViewpoint(_curView, _views, _inOverview);
+			_interface.OnNewViewpoint(_curView, _views, _inOverview);
 		}
 	}
 
