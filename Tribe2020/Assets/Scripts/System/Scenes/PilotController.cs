@@ -624,9 +624,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//
 	public override string GetCurrentDate() {
 		return _timeMgr.CurrentDate;
-	}
-
-	
+	}	
 
 	//
 	public override void SaveGameState() {
