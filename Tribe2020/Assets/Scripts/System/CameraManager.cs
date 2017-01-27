@@ -35,11 +35,11 @@ public class CameraManager : MonoBehaviour {
     private float _defaultFOV;
 	private Vector3 _lastPos = Vector3.zero;
 	private Vector3 _targetPos = Vector3.zero;
-	private Vector3 _lastRot, _targetRot;
+	private Quaternion _lastRot, _targetRot;
     private float _lastFOV;
     private bool _isLooking = false;
     [SerializeField]
-    private Vector3 _lookAtRotation;
+    private Quaternion _lookAtRotation;
     [SerializeField, ShowOnly]
     private float _lookaAtFOV;
     //[SerializeField]
@@ -78,7 +78,8 @@ public class CameraManager : MonoBehaviour {
         _lastFOV = _defaultFOV = gameCamera.fieldOfView;
 
         _lastPos = _targetPos = gameCamera.transform.position;
-		_lastRot = _targetRot = gameCamera.transform.eulerAngles;
+		//_lastRot = _targetRot = gameCamera.transform.eulerAngles;
+        _lastRot = _targetRot = gameCamera.transform.rotation;
 
 
 		//Populate collection of viewpoints
@@ -105,11 +106,13 @@ public class CameraManager : MonoBehaviour {
                 if (!_isLooking)
                 {
                     gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
-                    gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _targetRot, fracJourney);
+                    gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _targetRot, fracJourney);
                     gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _defaultFOV, fracJourney);
                 } else
                 {
-                    gameCamera.transform.eulerAngles = Vector3.Lerp(_lastRot, _lookAtRotation, fracJourney);
+                    //gameCamera.transform.rotation = Quaternion.RotateTowards(Quaternion.Euler(_lastRot), Quaternion.Euler(_targetRot), 0.1f);
+                    gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _lookAtRotation, fracJourney);
+                    //gameCamera.transform.eulerAngles = Vector3.Slerp(_lastRot, _lookAtRotation, fracJourney);
                     gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _lookaAtFOV, fracJourney);
                 }
             }
@@ -231,7 +234,7 @@ public class CameraManager : MonoBehaviour {
     private void SaveCurrentAsLastCameraState()
     {
         _lastPos = gameCamera.transform.position;
-        _lastRot = gameCamera.transform.eulerAngles;
+        _lastRot = gameCamera.transform.rotation;
         _lastFOV = gameCamera.fieldOfView;
     }
 
@@ -246,7 +249,7 @@ public class CameraManager : MonoBehaviour {
 		_targetPos = _curView.transform.position;
 
 		//_lastRot = gameCamera.transform.eulerAngles;
-		_targetRot = _curView.transform.eulerAngles;
+		_targetRot = _curView.transform.rotation;
 
 		startTime = Time.unscaledTime;
 		journeyLength = Vector3.Distance(_lastPos, _targetPos);
@@ -289,9 +292,9 @@ public class CameraManager : MonoBehaviour {
         Vector3 appliancePosition = appliance.transform.position;
         appliancePosition.y += applianceHeight / 2;
         Vector3 relativePos = appliancePosition - transform.position;
-        _lookAtRotation = Quaternion.LookRotation(relativePos).eulerAngles;
+        _lookAtRotation = Quaternion.LookRotation(relativePos);
         //Position thee appliance on the left side of the screen
-        _lookAtRotation += new Vector3(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
+        _lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);  //new Vector3(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
         //gameCamera.transform.LookAt(appliance.transform);
     }
 
@@ -451,7 +454,7 @@ public class CameraManager : MonoBehaviour {
             //_lastPos = gameCamera.transform.position;
             _targetPos = _curView.transform.position;
 			//_lastRot = gameCamera.transform.eulerAngles;
-			_targetRot = _curView.transform.eulerAngles;
+			_targetRot = _curView.transform.rotation;
 
 			startTime = Time.unscaledTime;
 			journeyLength = Vector3.Distance(_lastPos, _targetPos);
