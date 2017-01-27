@@ -25,10 +25,24 @@ public class MagicMojoMachine : MonoBehaviour {
     public Sprite MoodSprite4;
     public Sprite MoodSprite5;
 
+	[Header("Image for ee label")]
+	public Image eeLabelImage;
+
+	[Header("Energy efficiency labels")]
+	public Sprite eeLabel1;
+	public Sprite eeLabel2;
+	public Sprite eeLabel3;
+	public Sprite eeLabel4;
+	public Sprite eeLabel5;
+	public Sprite eeLabel6;
+	public Sprite eeLabel7;
+	public Sprite eeLabel8;
+
 
 
     List<string> moodList = new List<string>();
     List<Sprite> moodImageList = new List<Sprite>();
+	List<Sprite> eeLabelList = new List<Sprite>();
 
     // Use this for initialization
     void Start () {
@@ -47,6 +61,17 @@ public class MagicMojoMachine : MonoBehaviour {
         moodImageList.Add(MoodSprite4);
         moodImageList.Add(MoodSprite5);
 
+		eeLabelList.Add(eeLabel1);
+		eeLabelList.Add(eeLabel2);
+		eeLabelList.Add(eeLabel3);
+		eeLabelList.Add(eeLabel4);
+		eeLabelList.Add(eeLabel5);
+		eeLabelList.Add(eeLabel6);
+		eeLabelList.Add(eeLabel7);
+		eeLabelList.Add(eeLabel8);
+
+
+
 
     }
 
@@ -59,6 +84,7 @@ public class MagicMojoMachine : MonoBehaviour {
 
         MoodImage.sprite = moodImageList[randomArrayIndex];
         MoodText.text = moodList[randomArrayIndex];
+		eeLabelImage.sprite = eeLabelList[randomArrayIndex];
 
         SatisfactionSlider.value = Random.Range(0, 40);
         TemperatureSlider.value = Random.Range(0, 40);
