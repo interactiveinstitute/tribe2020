@@ -1376,27 +1376,6 @@ public class BehaviourAI : SimulationObject
         GetComponent<AvatarMood>().EndInteraction();
     }
 
-    public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.Session session, bool walkTo)
-    {
-        AvatarActivity activity = UnityEngine.ScriptableObject.CreateInstance<AvatarActivity>();
-        activity.Init(this);//Make sure _curSession is 0 before we start injecting sessions into the activity
-
-        activity.InsertSessionAtCurrentIndex(session);
-
-        if (walkTo)
-        {
-            AvatarActivity.Session walkToSession = new AvatarActivity.Session();
-            walkToSession.title = "Walking to appliance";
-            walkToSession.type = AvatarActivity.SessionType.WalkTo;
-            walkToSession.appliance = appliance;
-            walkToSession.currentRoom = true;
-            activity.InsertSessionAtCurrentIndex(walkToSession);
-        }
-
-        //Alright. We've built a super nice activity for turning on the light. Ledz ztart itt!
-        StartTemporaryActivity(activity);
-    }
-
     public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, bool returnToPrevActivity)
     {
         DebugManager.Log("Yo! Gonna " + sessionType + " that appliance: ", appliance.gameObject, this);
@@ -1409,16 +1388,6 @@ public class BehaviourAI : SimulationObject
             if (runningActivity) {
 
                 Appliance returnToAppliance = runningActivity.GetCurrentTargetObject().GetComponent<Appliance>();
-
-                if (returnToAppliance != null) { //Try to sit down after returning from switching the light
-                    AvatarActivity.Session session = new AvatarActivity.Session();
-                    session.title = "Change pose";
-                    session.type = AvatarActivity.SessionType.ChangePoseAt;
-                    session.parameter = "ChillOut";
-                    session.appliance = returnToAppliance;
-                    session.currentRoom = false;
-                    activity.InsertSessionAtCurrentIndex(session);
-                }
 
                 if (returnToAppliance != null) {
                     AvatarActivity.Session walkToSession = new AvatarActivity.Session();
