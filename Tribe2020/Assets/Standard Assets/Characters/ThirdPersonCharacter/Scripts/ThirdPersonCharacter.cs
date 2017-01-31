@@ -154,8 +154,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Animator.SetBool(coffee, false);
         }
 
+        public void SetMood(int moodId) {
+            m_Animator.SetInteger("Mood",moodId);
+        }
 
-		void UpdateAnimator(Vector3 move)
+        void UpdateAnimator(Vector3 move)
 		{
 			// update the animator parameters
 			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);

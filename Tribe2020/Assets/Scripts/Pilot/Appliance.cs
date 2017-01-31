@@ -12,7 +12,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string description;
 	public List<EnergyEfficiencyMeasure> playerAffordances;
     public List<AffordanceResource> avatarAffordances;
-    public List<AffordanceResource> temporaryAvatarAffordances;
 	//public List<string> owners;
     public List<BehaviourAI> owners;
 	private Room _zone;
@@ -66,6 +65,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
             }
             return false;
         }
+
+        public int AvailableSlots() {
+            return nrOfSlots - usedSlots();
+        }
+
     }
 
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
@@ -160,21 +164,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void AddHarvest() {
 		_harvestButton.SetActive(true);
 	}
-
-    public List<Appliance.AffordanceResource> GetTemporaryAvatarAffordances()
-    {
-        return temporaryAvatarAffordances;
-    }
-
-    public void SetTemporaryAvatarAffordances(List<Appliance.AffordanceResource> affordances)
-    {
-        temporaryAvatarAffordances = affordances;
-    }
-
-    public void ClearTemporaryAvatarAffordances()
-    {
-        temporaryAvatarAffordances.Clear();
-    }
 
     public bool DecreaseNrOfAffordanceSlots(Affordance affordance, int count = 1)
     {
