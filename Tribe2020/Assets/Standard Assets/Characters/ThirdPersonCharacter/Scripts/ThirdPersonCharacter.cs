@@ -28,19 +28,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
 		//bool m_Crouching;
-  //      bool m_Sitting;
+		//      bool m_Sitting;
 
+		//TRIBE mod to avoid nullpointer for groundcheck
+		void Awake() {
+			GameObject go = this.gameObject;
 
-		void Start()
-		{
-			m_Animator = GetComponent<Animator>();
-			m_Rigidbody = GetComponent<Rigidbody>();
-			m_Capsule = GetComponent<CapsuleCollider>();
+			m_Animator = go.GetComponent<Animator>();
+			m_Rigidbody = go.GetComponent<Rigidbody>();
+			m_Capsule = go.GetComponent<CapsuleCollider>();
 			m_CapsuleHeight = m_Capsule.height;
 			m_CapsuleCenter = m_Capsule.center;
 
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
+		}
+
+		void Start()
+		{
+			//m_Animator = GetComponent<Animator>();
+			//m_Rigidbody = GetComponent<Rigidbody>();
+			//m_Capsule = GetComponent<CapsuleCollider>();
+			//m_CapsuleHeight = m_Capsule.height;
+			//m_CapsuleCenter = m_Capsule.center;
+
+			//m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+			//m_OrigGroundCheckDistance = m_GroundCheckDistance;
 		}
 
         //public void SetSitState(bool sit)

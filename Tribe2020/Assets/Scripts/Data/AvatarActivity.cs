@@ -258,7 +258,7 @@ public class AvatarActivity : ScriptableObject {
                 NextSession();
                 break;
             case SessionType.SitDown:
-                _ai.PoseAtCurrentTarget("Sit");
+				_ai.PoseAtCurrentTarget("Sit");
                 NextSession();
                 break;
             case SessionType.ChangePose:
