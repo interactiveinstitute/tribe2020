@@ -54,7 +54,6 @@ public class AvatarActivity : ScriptableObject {
         public Appliance appliance = null;
 		//public Target target;
 		public Affordance requiredAffordance;
-        public List<Appliance.AffordanceResource> tempAvatarAffordances;
         public string parameter;
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
@@ -190,9 +189,9 @@ public class AvatarActivity : ScriptableObject {
 
         //Add temporary avatar affordances
         //Shouldn't it be possible to also have temporary affordances for non temporary activities? For example being available for discussion when chilling in the sofa? //Gunnar
-        if (!isTemporary) {
+        /*if (!isTemporary) {
             _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
-        }
+        }*/
 
         //Set mood
         switch (session.setAvatarMood) {

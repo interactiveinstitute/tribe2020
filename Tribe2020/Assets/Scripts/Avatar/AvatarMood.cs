@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 
 public class AvatarMood : MonoBehaviour {
@@ -12,6 +13,9 @@ public class AvatarMood : MonoBehaviour {
     AvatarManager _avatarMood;
     ResourceManager _resourceMgr;
     Gems _gems;
+
+    //Components
+    private ThirdPersonCharacter _charController;
 
     public float responsivenessMood;
 
@@ -35,6 +39,9 @@ public class AvatarMood : MonoBehaviour {
         _gems = Gems.GetInstance();
         _resourceMgr = ResourceManager.GetInstance();
 
+        _charController = GetComponent<ThirdPersonCharacter>();
+
+        //Markov
         List<Mood> markovStates = new List<Mood>();
         markovStates.Add(Mood.angry);
         markovStates.Add(Mood.sad);
@@ -140,5 +147,6 @@ public class AvatarMood : MonoBehaviour {
 
     void UpdateFaceTextureByCurrentMood() {
         gameObject.GetComponent<ComfortLevelExpressions>().UpdateFaceTextureByCurrentMood();
+        _charController.SetMood((int)GetCurrentMood());
     }
 }

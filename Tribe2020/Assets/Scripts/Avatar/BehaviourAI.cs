@@ -1121,9 +1121,7 @@ public class BehaviourAI : SimulationObject
         {
             if (avatar != gameObject) //Ignore yourself - find another avatar
             {
-                List<Appliance.AffordanceResource> affordances = new List<Appliance.AffordanceResource>(avatar.GetComponent<Appliance>().avatarAffordances);
-                affordances.AddRange(avatar.GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-                foreach (Appliance.AffordanceResource affordanceSlot in affordances) {
+                foreach (Appliance.AffordanceResource affordanceSlot in avatar.GetComponent<Appliance>().avatarAffordances) {
                     if (affordanceSlot.affordance == affordance)
                     {
                         float dist = Vector3.Distance(transform.position, avatar.transform.position);
@@ -1145,14 +1143,12 @@ public class BehaviourAI : SimulationObject
         return GetAvatarWithAffordance(affordance, GameObject.FindGameObjectsWithTag("Avatar"));
     }
 
-    public bool HasAffordance(Affordance affordance)
+    public bool HasAvailableAffordanceSlot(Affordance affordance)
     {
-        List<Appliance.AffordanceResource> affordances = new List<Appliance.AffordanceResource>(GetComponent<Appliance>().avatarAffordances);
-        affordances.AddRange(GetComponent<Appliance>().GetTemporaryAvatarAffordances());
-        foreach (Appliance.AffordanceResource affordanceSlot in  affordances) {
+        foreach (Appliance.AffordanceResource affordanceSlot in GetComponent<Appliance>().avatarAffordances) {
             if (affordanceSlot.affordance == affordance)
             {
-                return true;
+                return affordanceSlot.AvailableSlots() > 0;
             }
         }
         return false;
@@ -1351,7 +1347,7 @@ public class BehaviourAI : SimulationObject
         
         transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
-        bool continueTalking = HasAffordance(GetComponent<AvatarMood>().GetCurrentInteractionAffordance());
+        bool continueTalking = HasAvailableAffordanceSlot(GetComponent<AvatarMood>().GetCurrentInteractionAffordance());
 
         if (continueTalking)
         {
