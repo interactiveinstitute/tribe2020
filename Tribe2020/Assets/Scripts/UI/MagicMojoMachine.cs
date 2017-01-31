@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Script for testing the graphics by changing it on interval of 1 sec
+
+using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -8,15 +10,15 @@ public class MagicMojoMachine : MonoBehaviour {
     [Header("Mood text")]
     public Text MoodText;
 
+	[Header("Mood Icon")]
+	public Image MoodImage;
+
     [Header("Sliders")]
     public Slider SatisfactionSlider;
     public Slider TemperatureSlider;
     public Slider KnowledgeSlider;
     public Slider AttitudeSlider;
     public Slider NormSensitivitySlider;
-
-    [Header("Mood Icon")]
-    public Image MoodImage;
 
     [Header("Images for the moods")]
     public Sprite MoodSprite1;
@@ -54,6 +56,7 @@ public class MagicMojoMachine : MonoBehaviour {
         moodList.Add("Billy is happy");
         moodList.Add("Billy is suicidal");
         moodList.Add("Billy is BigBillyBossMan");
+		moodList.Add ("Billy is Billy");
 
         moodImageList.Add(MoodSprite1);
         moodImageList.Add(MoodSprite2);
@@ -69,9 +72,6 @@ public class MagicMojoMachine : MonoBehaviour {
 		eeLabelList.Add(eeLabel6);
 		eeLabelList.Add(eeLabel7);
 		eeLabelList.Add(eeLabel8);
-
-
-
 
     }
 
@@ -93,6 +93,5 @@ public class MagicMojoMachine : MonoBehaviour {
         NormSensitivitySlider.value = Random.Range(0, 40);
 
     }
-	
 
 }
