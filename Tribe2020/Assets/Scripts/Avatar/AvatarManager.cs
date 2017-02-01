@@ -2,7 +2,19 @@
 using System.Collections.Generic;
 
 public class AvatarManager : MonoBehaviour {
+	//Singleton hack
+	private static AvatarManager _instance;
+	public static AvatarManager GetInstance() {
+		return _instance;
+	}
+
 	private List<BehaviourAI> _avatars;
+	public AvatarConversation conversation;
+
+	//
+	void Awake() {
+		_instance = this;
+	}
 
 	// Use this for initialization
 	void Start () {

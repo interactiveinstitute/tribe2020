@@ -13,6 +13,7 @@ public class BehaviourAI : SimulationObject
     [SerializeField]
     private PilotController _controller;
     private GameTime _timeMgr;
+	private AvatarManager _avatarMgr;
 
     [SerializeField]
     private AvatarStats _stats;
@@ -70,6 +71,7 @@ public class BehaviourAI : SimulationObject
     {
         _controller = PilotController.GetInstance();
         _timeMgr = GameTime.GetInstance();
+		_avatarMgr = AvatarManager.GetInstance();
 
         _stats = GetComponent<AvatarStats>();
 
@@ -1333,10 +1335,8 @@ public class BehaviourAI : SimulationObject
     {
         AvatarMood.Mood mood = GetComponent<AvatarMood>().GetCurrentMood();
         AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
-
-        //DebugManager.Log(name + " talks " + mood +" to " + other.name, this, this);
         
-        AvatarConversation.EmojiLine line = GameObject.Find("AvatarManager").GetComponent<AvatarConversation>().GenerateEmojiLine(environmentLevel, mood);
+        AvatarConversation.EmojiLine line = _avatarMgr.conversation.GenerateEmojiLine(environmentLevel, mood);
         transform.FindChild("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
         StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
     }

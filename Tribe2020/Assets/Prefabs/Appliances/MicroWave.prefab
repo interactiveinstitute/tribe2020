@@ -5,12 +5,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 454036}
-  - 65: {fileID: 6518112}
-  - 114: {fileID: 114000011583822320}
-  - 114: {fileID: 11492776}
+  - component: {fileID: 454036}
+  - component: {fileID: 6518112}
+  - component: {fileID: 114000011583822320}
+  - component: {fileID: 11492776}
   m_Layer: 0
   m_Name: MicroWave
   m_TagString: Appliance
@@ -23,11 +23,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 415520}
-  - 33: {fileID: 3343558}
-  - 23: {fileID: 2367128}
+  - component: {fileID: 415520}
+  - component: {fileID: 3343558}
+  - component: {fileID: 2367128}
   m_Layer: 0
   m_Name: Microwave__Body
   m_TagString: Untagged
@@ -40,11 +40,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 491460}
-  - 33: {fileID: 3316142}
-  - 23: {fileID: 2318690}
+  - component: {fileID: 491460}
+  - component: {fileID: 3316142}
+  - component: {fileID: 2318690}
   m_Layer: 0
   m_Name: Microwave__Door
   m_TagString: Untagged
@@ -61,10 +61,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 454036}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &454036
 Transform:
   m_ObjectHideFlags: 1
@@ -74,12 +74,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: 6.633, y: 1.031, z: -2.891}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 415520}
   - {fileID: 491460}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &491460
 Transform:
   m_ObjectHideFlags: 1
@@ -89,10 +89,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 454036}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2318690
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -108,7 +108,9 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: c995acb9e6abb234daff8173657245b0, type: 2}
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -116,7 +118,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -138,7 +140,9 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
   - {fileID: 2100000, guid: c995acb9e6abb234daff8173657245b0, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -146,7 +150,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -197,10 +201,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 51af2e78cf3bf1c42956845a9024fcd4, type: 2}
   - {fileID: 11400000, guid: 7b0c528d33544e64d9fe71a2e1467ed9, type: 2}
   avatarAffordances:
-  - {fileID: 11400000, guid: 5e963c9903b9c7742b29414b68d3c746, type: 2}
+  - affordance: {fileID: 11400000, guid: 5e963c9903b9c7742b29414b68d3c746, type: 2}
+    nrOfSlots: 0
+    subscribingActivities: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []
@@ -257,6 +264,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0

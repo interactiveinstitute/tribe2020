@@ -5,13 +5,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 468340}
-  - 65: {fileID: 6557808}
-  - 208: {fileID: 208000012746626698}
-  - 114: {fileID: 11415298}
-  - 114: {fileID: 11414528}
+  - component: {fileID: 468340}
+  - component: {fileID: 6557808}
+  - component: {fileID: 208000012746626698}
+  - component: {fileID: 11415298}
+  - component: {fileID: 11414528}
   m_Layer: 0
   m_Name: Espresso Machine
   m_TagString: Appliance
@@ -24,11 +24,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 492192}
-  - 33: {fileID: 3353334}
-  - 23: {fileID: 2370180}
+  - component: {fileID: 492192}
+  - component: {fileID: 3353334}
+  - component: {fileID: 2370180}
   m_Layer: 0
   m_Name: CoffeMachine__Body
   m_TagString: Untagged
@@ -41,10 +41,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 484400}
-  - 114: {fileID: 11427426}
+  - component: {fileID: 484400}
+  - component: {fileID: 11427426}
   m_Layer: 0
   m_Name: Interaction Point
   m_TagString: Untagged
@@ -61,12 +61,12 @@ Transform:
   m_LocalRotation: {x: -0.000000007450581, y: 0.7071069, z: -0, w: 0.70710677}
   m_LocalPosition: {x: 11.488688, y: 0.3378323, z: 3.7535813}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 492192}
   - {fileID: 484400}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &484400
 Transform:
   m_ObjectHideFlags: 1
@@ -76,10 +76,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.66, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 468340}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &492192
 Transform:
   m_ObjectHideFlags: 1
@@ -89,10 +89,10 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 468340}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2370180
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -110,7 +110,9 @@ MeshRenderer:
   - {fileID: 2100000, guid: c5bc7f6457a72f1449f1057a294fb86b, type: 2}
   - {fileID: 2100000, guid: 344b279e1f3f67a408975874c941b5e3, type: 2}
   - {fileID: 2100000, guid: 85402c7197e45114cad4ea7596195120, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -118,7 +120,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -163,10 +165,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
-  - {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
+  - affordance: {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
+    nrOfSlots: 1
+    subscribingActivities: []
+  - affordance: {fileID: 11400000, guid: 0bb35b53769734644b8879649fe9b627, type: 2}
+    nrOfSlots: 1
+    subscribingActivities: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: -0.5}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []
@@ -191,6 +199,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0
