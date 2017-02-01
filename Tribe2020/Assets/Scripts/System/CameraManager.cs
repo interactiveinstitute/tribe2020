@@ -442,11 +442,18 @@ public class CameraManager : MonoBehaviour {
 		if(_views[y][x].locked) {
 			if(dir == Vector2.right) { GotoRightView(targetCoordinates); }
 			if(dir == Vector2.left) { GotoLeftView(targetCoordinates); }
-			if(dir == Vector2.up) { GotoUpperView(targetCoordinates); }
-			if(dir == Vector2.down) { GotoLowerView(targetCoordinates); }
+			if(dir == Vector2.up) {
+                GotoUnlockedViewPointOnFloor((int)targetCoordinates.y,dir);
+                GotoUpperView(targetCoordinates);
+            }
+			if(dir == Vector2.down) {
+                GotoUnlockedViewPointOnFloor((int)targetCoordinates.y, dir);
+                //GotoLowerView(targetCoordinates);
+            }
 			return;
 		} else {
 
+            //Is new viewpoint on another floor?
             if (TryFloorChange(targetCoordinates)) {
                 OnFloorChange(targetCoordinates);
             }
@@ -496,8 +503,26 @@ public class CameraManager : MonoBehaviour {
 		return _views;
 	}
 
-	//
-	public Vector2 GetCurrentCoordinates() {
+    Viewpoint GetFirstUnlockedViewpointOnFloor(int y) {
+        foreach(Viewpoint viewpoint in _views[y]) {
+            if (!viewpoint.locked) {
+                return viewpoint;
+            }
+        }
+        return null;
+    }
+
+    void GotoUnlockedViewPointOnFloor(int y, Vector2 dir) {
+        foreach (Viewpoint viewpoint in _views[y]) {
+            if (!viewpoint.locked) {
+                SetViewpoint(viewpoint.xIndex, viewpoint.yIndex, dir);
+                return;
+            }
+        }
+    }
+
+    //
+    public Vector2 GetCurrentCoordinates() {
 		return currentCoordinates;
 	}
 
