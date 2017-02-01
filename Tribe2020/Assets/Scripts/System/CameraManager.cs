@@ -96,6 +96,7 @@ public class CameraManager : MonoBehaviour {
         if (_firstLoop)
         {
             SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
+            OnFloorChange(startCoordinates);
             _firstLoop = false;
         }
 
@@ -445,6 +446,11 @@ public class CameraManager : MonoBehaviour {
 			if(dir == Vector2.down) { GotoLowerView(targetCoordinates); }
 			return;
 		} else {
+
+            if (TryFloorChange(targetCoordinates)) {
+                OnFloorChange(targetCoordinates);
+            }
+
 			//Update view state
 			currentCoordinates = targetCoordinates;
 			_curView = _views[(int)currentCoordinates.y][(int)currentCoordinates.x];
@@ -466,8 +472,22 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
-	//
-	public Viewpoint GetViewpoint(int x, int y) {
+    bool TryFloorChange(Vector2 targetCoordinates) {
+        return targetCoordinates.y != currentCoordinates.y;
+    }
+
+    void OnFloorChange(Vector2 targetCoordinates) {
+        //Turn off lights on current floor
+        Floor currentFloor = _curView.relatedZones[0].GetFloor();
+        currentFloor.ToggleLightActive(false);
+
+        //Turn on lights on new floor
+        Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
+        newFloor.ToggleLightActive(true);
+    }
+
+    //
+    public Viewpoint GetViewpoint(int x, int y) {
 		return _views[y][x];
 	}
 

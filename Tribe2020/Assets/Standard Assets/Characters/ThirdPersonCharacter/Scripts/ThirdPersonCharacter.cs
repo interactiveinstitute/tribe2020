@@ -27,6 +27,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float m_CapsuleHeight;
 		Vector3 m_CapsuleCenter;
 		CapsuleCollider m_Capsule;
+        string _currentPose;
 		//bool m_Crouching;
 		//      bool m_Sitting;
 
@@ -143,10 +144,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		//	}
 		//}
 
+        public string GetCurrentPose() {
+            return _currentPose;
+        }
+
         public void SetPose(string pose)
         {
+            _currentPose = pose;
+
             //If we want to set no pose, we just deactivate all bools.
-            if (pose == "" || pose == "Stand" || pose == "Idle")
+            if (pose == null || pose == "" || pose == "Stand" || pose == "Idle")
             {
                 TurnOffAllBools();
                 return;//Bail out!

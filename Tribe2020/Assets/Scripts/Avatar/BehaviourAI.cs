@@ -1165,11 +1165,15 @@ public class BehaviourAI : SimulationObject
 
         DebugManager.Log(name + "'s activity " + activityName + " is over", this);
 
-
+        _agent.enabled = true;
         AvatarActivity.AvatarState state = GetRunningActivity().GetCurrentAvatarState();
         if (state == AvatarActivity.AvatarState.Posing)
         {
-            DebugManager.Log("avatar was posing. Returning to idle pose.", this);
+            //_agent.enabled = true;
+            //GetComponent<Rigidbody>().isKinematic = false;
+
+            //_agent.enabled = true;
+            //DebugManager.Log("avatar was posing. Returning to idle pose.", this);
             ReturnToIdlePose();
         }
         
@@ -1179,7 +1183,8 @@ public class BehaviourAI : SimulationObject
             GetRunningActivity().SetCurrentAvatarState(AvatarActivity.AvatarState.Idle);
         }
         _agent.ResetPath();
-        
+
+
         //Check if we should turn off stuff when ending this activity.
         if (GetRunningActivity().turnedOnDevices != null)
         {
@@ -1311,7 +1316,7 @@ public class BehaviourAI : SimulationObject
                 //Light is ok: turned on
                 return;
             }
-            else if(wantedAction == AvatarActivity.SessionType.TurnOff && (!_curRoom.IsLit() || _curRoom.GetPersonCount() > 1))
+            else if(wantedAction == AvatarActivity.SessionType.TurnOff && (!_curRoom.IsLit() || _curRoom.GetAvatarCount() > 1))
             {
                 //Light is ok: turned off
                 return;
@@ -1384,6 +1389,16 @@ public class BehaviourAI : SimulationObject
             if (runningActivity) {
 
                 Appliance returnToAppliance = runningActivity.GetCurrentTargetObject().GetComponent<Appliance>();
+
+                if (returnToAppliance != null) {
+                    AvatarActivity.Session poseSession = new AvatarActivity.Session();
+                    poseSession.title = "Change Pose";
+                    poseSession.type = AvatarActivity.SessionType.ChangePoseAt;
+                    poseSession.appliance = returnToAppliance;
+                    poseSession.parameter = _charController.GetCurrentPose();
+                    poseSession.currentRoom = false;
+                    activity.InsertSessionAtCurrentIndex(poseSession);
+                }
 
                 if (returnToAppliance != null) {
                     AvatarActivity.Session walkToSession = new AvatarActivity.Session();

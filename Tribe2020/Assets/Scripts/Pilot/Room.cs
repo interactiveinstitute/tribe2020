@@ -88,14 +88,14 @@ public class Room : MonoBehaviour {
         return targetAppliance;
     }
 
-    public int GetPersonCount()
+    public int GetAvatarCount()
     {
         return _occupants.Count;
     }
 
     public bool IsEmpty()
     {
-        return GetPersonCount() == 0;
+        return GetAvatarCount() == 0;
     }
 
     public bool IsObjectInRoom(GameObject obj)
@@ -119,6 +119,10 @@ public class Room : MonoBehaviour {
 	public List<BehaviourAI> GetOccupants() {
 		return _occupants;
 	}
+
+    public Floor GetFloor() {
+        return GetComponentInParent<Floor>();
+    }
 
 	////This functions assumes that the provided affordance is the light switch affordance.
 	//public void UpdateLighting(Affordance affordance) {
