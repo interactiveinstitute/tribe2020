@@ -26,6 +26,20 @@ public class PilotView : View{
 	public RectTransform apocalypsePointer;
 	public Text apocalypsePercent;
 
+	[Header("Character Interface")]
+	public Text characterTitle;
+	public Text characterDescription;
+	public Text characterMood;
+	public Image characterMoodImage;
+	public Text characterSatisfaction;
+	public Slider characterSatisfactionSlider;
+	public Text characterTmperature;
+	public Slider characterTmperatureSlider;
+	public Text characterKnowledge;
+	public Slider characterKnowledgeSlider;
+	public Text characterAttitude;
+	public Slider characterAttitudeSlider;
+
 	[Header("Quest UI")]
 	public GameObject inboxUI;
 	public Transform inboxList;
@@ -65,7 +79,7 @@ public class PilotView : View{
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
-	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer;
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer, characterPanel;
 	private bool _settingsIsVisible = false;
 	#endregion
 
@@ -230,6 +244,7 @@ public class PilotView : View{
 		switch(id) {
 			case "inspector":
 				_controller.HideUI();
+				GetComponent<Animator>().Play("IdleCanvas");
 				//inspectorUI.SetActive(visibility);
 				break;
 			case "animation":
@@ -241,7 +256,7 @@ public class PilotView : View{
 				break;
 			case "playAnimation":
 				if(debug) { Debug.Log(name + ": PlayAnimation " + animationUI.GetComponent<Animation>().GetClip(action)); }
-				animationUI.GetComponent<Animation>().Play(action);
+				GetComponent<Animator>().Play(action);
 				break;
 		}
 	}
@@ -251,8 +266,11 @@ public class PilotView : View{
 		if(title == "") { title = app.title + "!"; }
 		if(description == "") { description = app.description + "!"; }
 
-		inspector.GetComponentsInChildren<Text>()[0].text = title;
-		inspector.GetComponentsInChildren<Text>()[2].text = description;
+		characterTitle.text = title;
+		characterDescription.text = description;
+
+		//inspector.GetComponentsInChildren<Text>()[0].text = title;
+		//inspector.GetComponentsInChildren<Text>()[2].text = description;
 		BuildEEMInterface(app);
 	}
 

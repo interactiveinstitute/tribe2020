@@ -12,20 +12,51 @@ MonoBehaviour:
   m_Name: San Pablo Intro
   m_EditorClassIdentifier: 
   steps:
-  - description: Yoghurt Enters
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    conditions:
-    - type: 
-      prop: 
-  - description: Yoghurt says hi
+  - description: Pause simulation
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114307086061560422, guid: e81b7eb55c646bf4d86ab9303ef33f7b,
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: SetTimeScale
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    conditions: []
+  - description: Start camera animation
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: MoveCamera
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: SanPabloIntro
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    conditions:
+    - type: CameraAnimationEvent
+      prop: phrase_00
+  - description: In the center of Spain
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
             type: 2}
           m_MethodName: SendMessage
           m_Mode: 5
@@ -34,7 +65,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Hi!
+            m_StringArgument: San Pablo Intro_0
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,

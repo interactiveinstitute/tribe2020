@@ -41,13 +41,13 @@ MonoBehaviour:
     condition: 1
     conditionField: 
     inputState: 1
-  - title: PlayAnimation.Swipe
+  - title: PlayAnimation.SwipeInstruction
     type: 3
     message: 
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
-    animation: Swipe
+    animation: SwipeInstruction
     commandJSON: 
     activity: {fileID: 0}
     timeScale: 0
@@ -75,13 +75,13 @@ MonoBehaviour:
     condition: 2
     conditionField: 
     inputState: 2
-  - title: PlayAnimation.HideAll
+  - title: PlayAnimation.IdleCanvas
     type: 3
     message: Let's have a look around. Swipe the screen to move to another view.
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
-    animation: HideAll
+    animation: IdleCanvas
     commandJSON: 
     activity: {fileID: 0}
     timeScale: 0
@@ -92,10 +92,10 @@ MonoBehaviour:
     condition: 0
     conditionField: 
     inputState: 13
-  - title: Prompt.There seems to be a lot o
+  - title: Prompt.Energy consumption is a b
     type: 0
-    message: There seems to be a lot of energy consumption going on here. Let's have
-      a look at the "apocalypsometer".
+    message: Energy consumption is a bit tricky. Partially because it's hard to sense
+      energy.
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
@@ -110,10 +110,11 @@ MonoBehaviour:
     condition: 1
     conditionField: 
     inputState: 1
-  - title: PlayAnimation.MarkPilot
-    type: 3
-    message: 'F. Shaman: Let''s have a look around. Swipe the screen to move to another
-      view.'
+  - title: Prompt.We can see the light from
+    type: 0
+    message: We can see the light from a lamp and sense the warmth of a radiator,
+      but we can't see an electrical current or how hot and cold air is running through
+      a room.
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
@@ -125,16 +126,52 @@ MonoBehaviour:
     objectField: {fileID: 0}
     showAtBottom: 0
     conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: Prompt.Luckily, I have some tool
+    type: 0
+    message: Luckily, I have some tools to help me out with this. Let's check them
+      out!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkPilot
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "p\x02"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: PlayAnimation.MarkApocalypsometer
+    type: 3
+    message: 'F. Shaman: Let''s have a look around. Swipe the screen to move to another
+      view.'
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkApocalypsometer
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: "p\x02"
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
     condition: 29
     conditionField: 
     inputState: 15
-  - title: PlayAnimation.MarkViewTitle
+  - title: PlayAnimation.IdleCanvas
     type: 3
     message: 
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
-    animation: MarkViewTitle
+    animation: IdleCanvas
     commandJSON: 
     activity: {fileID: 0}
     timeScale: 0
@@ -216,14 +253,14 @@ MonoBehaviour:
     condition: 1
     conditionField: 
     inputState: 1
-  - title: PlayAnimation.MarkGridView
+  - title: PlayAnimation.PulsateApocaCloseButton
     type: 3
     message: This is a nifty tool I use to see how much energy and gas is being consumed
       in this area.
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
-    animation: MarkGridView
+    animation: PulsateApocaCloseButton
     commandJSON: 
     activity: {fileID: 0}
     timeScale: 0
@@ -234,13 +271,13 @@ MonoBehaviour:
     condition: 30
     conditionField: 
     inputState: 16
-  - title: PlayAnimation.HideAll
+  - title: PlayAnimation.IdleCanvas
     type: 3
     message: Let's head back inside
     portrait: {fileID: 0}
     valueField: 
     viewpoint: {fileID: 0}
-    animation: HideAll
+    animation: IdleCanvas
     commandJSON: 
     activity: {fileID: 0}
     timeScale: 0

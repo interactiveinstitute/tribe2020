@@ -6,6 +6,7 @@ using System;
 
 public class PilotController : Controller, NarrationInterface, AudioInterface, CameraInterface {
 	//Singleton features
+	private static PilotController _tempInstance;
 	public static PilotController GetInstance() {
 		return _instance as PilotController;
 	}
@@ -20,9 +21,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public double playPeriod;
 
 	//Access all singleton systemss
-	private PilotView _view;
+	public PilotView view;
 	private GameTime _timeMgr;
-	private CameraManager _camMgr;
+	public CameraManager cameraMgr;
 	private AudioManager _audioMgr;
 	private MainMeter _mainMeter;
 	private ResourceManager _resourceMgr;
@@ -58,6 +59,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
+		_tempInstance = this;
 	}
 
 	//
@@ -67,9 +69,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	// Use this for initialization
 	void Start() {
-		_view = PilotView.GetInstance();
+		view = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
-		_camMgr = CameraManager.GetInstance();
+		cameraMgr = CameraManager.GetInstance();
 
 		_audioMgr = AudioManager.GetInstance();
 		_audioMgr.SetInterface(this);
@@ -84,8 +86,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_saveMgr = SaveManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
 
-		_camMgr = CameraManager.GetInstance();
-		_camMgr.SetInterface(this);
+		cameraMgr = CameraManager.GetInstance();
+		cameraMgr.SetInterface(this);
 
 		//_avatarMgr = GetComponent<AvatarManager>();
 		_avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
@@ -138,24 +140,24 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 			_touchReset = false;
 		}
 
-		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
-		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
+		view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
+		view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
 		if(energy < 1000) {
-			_view.energyCounter.text = Mathf.Floor(energy) + " Wh";
+			view.energyCounter.text = Mathf.Floor(energy) + " Wh";
 		} else if(energy < 1000000) {
-			_view.energyCounter.text = Mathf.Floor(energy / 10) / 100 + " kWh";
+			view.energyCounter.text = Mathf.Floor(energy / 10) / 100 + " kWh";
 		} else if(energy < 100000000000) {
-			_view.energyCounter.text = Mathf.Floor(energy / 1000) + " kWh";
+			view.energyCounter.text = Mathf.Floor(energy / 1000) + " kWh";
 		} else {
-			_view.energyCounter.text = Mathf.Floor(energy / 1000000) + " MWh";
+			view.energyCounter.text = Mathf.Floor(energy / 1000000) + " MWh";
 		}
 
-		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
-		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
-		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
+		view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
+		view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
+		view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
 
-		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
+		view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
 		if(_timeMgr.time > endTime) {
 			LoadScene("MenuScene");
 		}
@@ -183,7 +185,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//
 	private void OnTouchEnded(Vector3 pos) {
 		//Debug.Log("ontouchended");
-		_camMgr.cameraState = CameraManager.CameraState.Idle;
+		cameraMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
@@ -219,7 +221,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//
 	private void OnSwipe(Vector3 start, Vector3 end) {
 		//Debug.Log("cotroller.OnSwipe " + start + " , " + end);
-		if(_view.IsAnyOverlayActive()) {
+		if(view.IsAnyOverlayActive()) {
 			return;
 		}
 
@@ -230,31 +232,31 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 			float dirMod = (dir + 90) % 360;
 			if(dirMod > 45 && dirMod <= 135) {
-				_camMgr.GotoLeftView();
+				cameraMgr.GotoLeftView();
 			} else if(dir > 45 && dir <= 135) {
-				_camMgr.GotoLowerView();
+				cameraMgr.GotoLowerView();
 			} else if(dir > 135 && dir <= 225) {
-				_camMgr.GotoRightView();
+				cameraMgr.GotoRightView();
 			} else if(dir > 225 && dir <= 315) {
-				_camMgr.GotoUpperView();
+				cameraMgr.GotoUpperView();
 			}
 
 			_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetCurrentViewpoint().title);
+			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, cameraMgr.GetCurrentViewpoint().title);
 		}
 	}
 
 	//
 	public void OnPinchIn() {
 		if(_curState == InputState.ALL) {
-			_camMgr.GotoUpperView();
+			cameraMgr.GotoUpperView();
 		}
 	}
 
 	//
 	public void OnPinchOut() {
 		if(_curState == InputState.ALL) {
-			_camMgr.GotoLowerView();
+			cameraMgr.GotoLowerView();
 		}
 	}
 
@@ -320,40 +322,41 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void OnOkPressed() {
-		ResetTouch();
+		_tempInstance.ResetTouch();
 
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_PROMPT) {
-			_view.messageUI.SetActive(false);
+		if(_tempInstance._curState == InputState.ALL || _tempInstance._curState == InputState.ONLY_PROMPT) {
+			_tempInstance.view.messageUI.SetActive(false);
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
+			_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 		}
 
-		PlaySound("Press Button");
+		_tempInstance.PlaySound("Press Button");
 	}
 
 	//
 	public void ToggleMenu() {
-		_view.ToggleMenu();
+		_tempInstance.view.ToggleMenu();
 	}
 
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
 
-        _camMgr.SetLookAtTarget(app);
+		_tempInstance.cameraMgr.SetLookAtTarget(app);
 
 		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
 		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
-		_view.BuildInspector(title, description, app);
-		SetCurrentUI(_view.inspector);
+
+		_tempInstance.view.BuildInspector(title, description, app);
+		SetCurrentUI(_tempInstance.view.characterPanel);
 
 		//_view.BuildInspector(appliance);
 		//SetCurrentUI(_view.inspector);
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
+		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
 		if(app.GetComponent<BehaviourAI>()) {
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
+			_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
 		}
 	}
 
@@ -368,57 +371,67 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
 	}
 
-	//Open user interface
+	//
 	public void SetCurrentUI(RectTransform ui) {
+		SetCurrentUI(_tempInstance, ui);
+	}
+
+	//Open user interface
+	public void SetCurrentUI(PilotController controller, RectTransform ui) {
 		if(debug) { Debug.Log(name + ": SetCurrentUI(" + ui.name + ")"); }
 		if(_curState != InputState.ALL) {
-			if(ui == _view.energyPanel && _curState != InputState.ONLY_ENERGY) { return; }
-			if(ui == _view.comfortPanel && _curState != InputState.ONLY_COMFORT) { return; }
-			if(ui == _view.inbox && _curState != InputState.ONLY_OPEN_INBOX) { return; }
+			if(ui == controller.view.energyPanel && controller._curState != InputState.ONLY_ENERGY) { return; }
+			if(ui == controller.view.comfortPanel && controller._curState != InputState.ONLY_COMFORT) { return; }
+			if(ui == controller.view.inbox && controller._curState != InputState.ONLY_OPEN_INBOX) { return; }
 		}
 
-		if(_view.GetCurrentUI() != null) {
-			if(_view.GetCurrentUI() == _view.inspector) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
-			} else if(_view.GetCurrentUI() == _view.inbox) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
+		if(controller.view.GetCurrentUI() != null) {
+			if(controller.view.GetCurrentUI() == controller.view.inspector) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
+			} else if(controller.view.GetCurrentUI() == controller.view.inbox) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
 			}
 		}
 
-		if(ui == _view.GetCurrentUI()) {
+		if(ui == controller.view.GetCurrentUI()) {
 			HideUI();
 		} else {
-			_view.SetCurrentUI(ui);
-			if(ui == _view.inspector) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
-			} else if(ui == _view.inbox) {
-				_view.BuildInbox(_narrationMgr.GetQuests(), _narrationMgr.GetCompletedQuests());
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
-			} else if(ui == _view.energyPanel) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
-			} else if(ui == _view.comfortPanel) {
-				_narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenComfortPanel);
+			controller.view.SetCurrentUI(ui);
+			if(ui == controller.view.inspector) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
+			} else if(ui == controller.view.inbox) {
+				controller.view.BuildInbox(controller._narrationMgr.GetQuests(), controller._narrationMgr.GetCompletedQuests());
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
+			} else if(ui == controller.view.energyPanel) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
+			} else if(ui == controller.view.comfortPanel) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenComfortPanel);
+			} else if(ui == controller.view.apocalypsometer) {
+				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
 			}
 		}
 
-		ResetTouch();
+		controller.ResetTouch();
 	}
 
 	//Hide any open user interface
 	public void HideUI() {
-		_view.SetCurrentUI(null);
-        _camMgr.ClearLookAtTarget();
+		_tempInstance.view.SetCurrentUI(null);
+		_tempInstance.cameraMgr.ClearLookAtTarget();
+
+		//_view.SetCurrentUI(null);
+  //      _camMgr.ClearLookAtTarget();
 	}
 
 	//
 	public void SelectGridView() {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_GRIDVIEW) { return; }
 
-		_view.EnableEnergyPanel();
-		_view.EnableComfortPanel();
-		_view.HideApocalypsometer();
+		view.EnableEnergyPanel();
+		view.EnableComfortPanel();
+		view.HideApocalypsometer();
 
-		_camMgr.GoToGridView();
+		cameraMgr.GoToGridView();
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedGridView);
 	}
 
@@ -426,17 +439,17 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public void SelectOverview() {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_OVERVIEW) { return; }
 
-		_view.DisableEnergyPanel();
-		_view.DisableComfortPanel();
-		_view.ShowApocalypsometer();
+		view.DisableEnergyPanel();
+		view.DisableComfortPanel();
+		view.ShowApocalypsometer();
 
-		_camMgr.GoToOverview();
+		cameraMgr.GoToOverview();
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
 	}
 
 	//Request narration event for current view
 	public void RequestCurrentView() {
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _camMgr.GetCurrentViewpoint().title);
+		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, cameraMgr.GetCurrentViewpoint().title);
 	}
 
 	//
@@ -444,7 +457,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
 
 		_resourceMgr.cash += 10;
-		_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
+		view.CreateFeedback(go.transform.position, "+" + 10 + "€");
 		go.SetActive(false);
 
 		ResetTouch();
@@ -478,10 +491,10 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public override void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
-		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), curView, overview);
-		_view.UpdateViewpointTitle(curView.title);
+		_tempInstance.view.UpdateViewpointGuide(_tempInstance.cameraMgr.GetViewpoints(), curView, overview);
+		_tempInstance.view.UpdateViewpointTitle(curView.title);
 
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
+		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
 	}
 
 	//
@@ -494,7 +507,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 			_resourceMgr.comfort -= eem.comfortCost;
 
 			appliance.ApplyEEM(eem);
-			_view.BuildEEMInterface(appliance);
+			view.BuildEEMInterface(appliance);
 
 			//_resourceMgr.RefreshProduction();
 
@@ -532,7 +545,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public override void ControlInterface(string id, string action) {
-		_view.ControlInterface(id, action);
+		_tempInstance.view.ControlInterface(id, action);
 	}
 
 	//
@@ -546,7 +559,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		string msg = _localMgr.GetPhrase(key);
 		if(msg == "") { msg = message + "!"; }
 
-		_view.ShowMessage(msg, portrait, true, showButton);
+		view.ShowMessage(msg, portrait, true, showButton);
 	}
 
 	//
@@ -556,7 +569,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		string location = json["location"];
 
 		if(location.Equals("current")) {
-			Room room = _camMgr.GetCurrentViewpoint().relatedZones[0];
+			Room room = cameraMgr.GetCurrentViewpoint().relatedZones[0];
 			room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
 		}
 	}
@@ -585,19 +598,19 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public override void UnlockView(int x, int y) {
-		_camMgr.UnlockView(x, y);
-		_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
+		cameraMgr.UnlockView(x, y);
+		view.UpdateViewpointGuide(cameraMgr.GetViewpoints(), cameraMgr.GetCurrentViewpoint());
 	}
 
 	//
 	public override void ShowCongratualations(string text) {
 		_audioMgr.PlaySound("Fireworks");
-		_view.ShowCongratualations(_localMgr.GetPhrase(text));
+		view.ShowCongratualations(_localMgr.GetPhrase(text));
 	}
 
 	//
 	public override void ClearView() {
-		_view.ClearView();
+		view.ClearView();
 	}
 	#endregion
 
@@ -633,7 +646,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_saveMgr.SetCurrentSlotClass("ResourceManager", _resourceMgr.SerializeAsJSON());
 		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
 		_saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
-		_saveMgr.SetCurrentSlotClass("CameraManager", _camMgr.SerializeAsJSON());
+		_saveMgr.SetCurrentSlotClass("CameraManager", cameraMgr.SerializeAsJSON());
 
 		//Save avatar states
 		JSONArray avatarsJSON = new JSONArray();
@@ -668,7 +681,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
 		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 		_localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
-		_camMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
+		cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 
 		//Load avatar states
 		if(_saveMgr.GetCurrentSlotData("avatarStates") != null) {
@@ -735,11 +748,11 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void MoveCamera(string animation) {
-		_camMgr.PlayAnimation(animation);
+		cameraMgr.PlayAnimation(animation);
 	}
 
 	public void StopCamera() {
-		_camMgr.StopAnimation();
+		cameraMgr.StopAnimation();
 	}
 
 	public void OnAnimationEvent(string animationEvent) {

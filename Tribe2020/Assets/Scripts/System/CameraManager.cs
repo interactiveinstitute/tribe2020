@@ -52,6 +52,8 @@ public class CameraManager : MonoBehaviour {
 
 	//Orientation interaction variables
 	public Camera gameCamera;
+	public Animator animator;
+	public Transform overlayCanvas;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
 	private int _curFloor = 0;
@@ -88,8 +90,8 @@ public class CameraManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-        //if(_lookAtRotation)
-        //_lookAtEuler = _lookAtRotation.eulerAngles;
+		//if(_lookAtRotation)
+		//_lookAtEuler = _lookAtRotation.eulerAngles;
 
         if (_firstLoop)
         {
@@ -97,7 +99,7 @@ public class CameraManager : MonoBehaviour {
             _firstLoop = false;
         }
 
-        if (journeyLength > 0) {
+		if (journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
 			fracJourney = distCovered / journeyLength;
 
@@ -291,7 +293,7 @@ public class CameraManager : MonoBehaviour {
         }
         Vector3 appliancePosition = appliance.transform.position;
         appliancePosition.y += applianceHeight / 2;
-        Vector3 relativePos = appliancePosition - transform.position;
+        Vector3 relativePos = appliancePosition - gameCamera.transform.position;
         _lookAtRotation = Quaternion.LookRotation(relativePos);
         //Position thee appliance on the left side of the screen
         _lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);  //new Vector3(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
@@ -346,9 +348,9 @@ public class CameraManager : MonoBehaviour {
 
             //This is some code i've used to debug if the calculated world points actually is representing the outer limits of the collider. Strangely, the points are drawn on weird distances when zoomed out
             // and correctly when zoomed in. 
-            Vector3 minInWorld = gameCamera.ScreenToWorldPoint(new Vector3(min.x, min.y, distance));
-            Vector3 maxInWorld = gameCamera.ScreenToWorldPoint(new Vector3(max.x, max.y, distance));
-            DrawLine(maxInWorld, minInWorld, Color.red, 30.0f);
+            //Vector3 minInWorld = gameCamera.ScreenToWorldPoint(new Vector3(min.x, min.y, distance));
+            //Vector3 maxInWorld = gameCamera.ScreenToWorldPoint(new Vector3(max.x, max.y, distance));
+            //DrawLine(maxInWorld, minInWorld, Color.red, 30.0f);
 
             //Should we use width or height?
             if (heightOnScreen > widthOnScreen)
@@ -357,7 +359,7 @@ public class CameraManager : MonoBehaviour {
                 Vector3 heightStartPoint = gameCamera.ScreenToWorldPoint(new Vector3(min.x, min.y, distance));
                 Vector3 heightEndPoint = gameCamera.ScreenToWorldPoint(new Vector3(min.x, max.y, distance));
                 Vector3 heightVector = heightEndPoint - heightStartPoint;
-                DrawLine(heightStartPoint, heightEndPoint, Color.red, 20.0f);
+                //DrawLine(heightStartPoint, heightEndPoint, Color.red, 20.0f);
                 return 1.2f * Mathf.Rad2Deg * 2 * Mathf.Atan2(heightVector.magnitude/2, distance);
             }
             else
@@ -366,7 +368,7 @@ public class CameraManager : MonoBehaviour {
                 Vector3 widthStartPoint = gameCamera.ScreenToWorldPoint(new Vector3(min.x, min.y, distance));
                 Vector3 widthEndPoint = gameCamera.ScreenToWorldPoint(new Vector3(max.x, min.y, distance));
                 Vector3 widthVector = widthEndPoint - widthStartPoint;
-                DrawLine(widthStartPoint, widthEndPoint, Color.red, 20.0f);
+                //DrawLine(widthStartPoint, widthEndPoint, Color.red, 20.0f);
                 float hFOV = Mathf.Rad2Deg * 2 * Mathf.Atan2(widthVector.magnitude/2, distance);
                 //Be aware that we should set it double, since we can only use the left side of screen. I.E. Double the fov after calculation so we can us half of that to show appliance zoomed in.
                 hFOV *= 2;
@@ -447,12 +449,12 @@ public class CameraManager : MonoBehaviour {
 			currentCoordinates = targetCoordinates;
 			_curView = _views[(int)currentCoordinates.y][(int)currentCoordinates.x];
 
-            //Save from state
-            SaveCurrentAsLastCameraState();
+			//Save from state
+			SaveCurrentAsLastCameraState();
 
-            //Set to state
-            //_lastPos = gameCamera.transform.position;
-            _targetPos = _curView.transform.position;
+			//Set to state
+			//_lastPos = gameCamera.transform.position;
+			_targetPos = _curView.transform.position;
 			//_lastRot = gameCamera.transform.eulerAngles;
 			_targetRot = _curView.transform.rotation;
 
@@ -577,15 +579,15 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void PlayAnimation(string animation) {
-		GetComponent<Animator>().enabled = true;
-		GetComponent<Animator>().Play(animation);
+		animator.enabled = true;
+		animator.Play(animation);
 	}
 
 	//
 	public void StopAnimation() {
-		GetComponent<Animator>().Stop();
-		GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
-		GetComponent<Animator>().enabled = false;
+		animator.Stop();
+		overlayCanvas.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
+		animator.enabled = false;
 
 		//if(_inOverview) {
 		//	GoToOverview();
