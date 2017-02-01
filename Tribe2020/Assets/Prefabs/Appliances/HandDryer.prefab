@@ -5,10 +5,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 458032}
-  - 114: {fileID: 11441240}
+  - component: {fileID: 458032}
+  - component: {fileID: 11441240}
   m_Layer: 0
   m_Name: Interaction Point
   m_TagString: Untagged
@@ -21,11 +21,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 467642}
-  - 33: {fileID: 3346228}
-  - 23: {fileID: 2388912}
+  - component: {fileID: 467642}
+  - component: {fileID: 3346228}
+  - component: {fileID: 2388912}
   m_Layer: 0
   m_Name: Handdryer__Body
   m_TagString: Untagged
@@ -38,13 +38,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 426034}
-  - 65: {fileID: 6516222}
-  - 208: {fileID: 208000012191567596}
-  - 114: {fileID: 114000010453038570}
-  - 114: {fileID: 11479856}
+  - component: {fileID: 426034}
+  - component: {fileID: 6516222}
+  - component: {fileID: 208000012191567596}
+  - component: {fileID: 114000010453038570}
+  - component: {fileID: 11479856}
   m_Layer: 0
   m_Name: HandDryer
   m_TagString: Appliance
@@ -61,12 +61,12 @@ Transform:
   m_LocalRotation: {x: -0, y: -0.000007376074, z: -0, w: 1}
   m_LocalPosition: {x: 0.7229998, y: 1.0724238, z: -1.3979998}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: -0.001, z: 0}
   m_Children:
   - {fileID: 467642}
   - {fileID: 458032}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -0.001, z: 0}
 --- !u!4 &458032
 Transform:
   m_ObjectHideFlags: 1
@@ -76,10 +76,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.75, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 426034}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &467642
 Transform:
   m_ObjectHideFlags: 1
@@ -89,10 +89,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 426034}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2388912
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -109,7 +109,9 @@ MeshRenderer:
   - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
   - {fileID: 2100000, guid: 69a03f97026b34646af53a6d1cd3af1b, type: 2}
   - {fileID: 2100000, guid: 344b279e1f3f67a408975874c941b5e3, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -117,7 +119,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -173,10 +175,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
-  - {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642, type: 2}
+  - affordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642, type: 2}
+    nrOfSlots: 0
+    subscribingActivities: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
   cashProduction: 0
   comfortPorduction: 0
   possibleEEMs: []
@@ -238,6 +243,9 @@ MonoBehaviour:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0

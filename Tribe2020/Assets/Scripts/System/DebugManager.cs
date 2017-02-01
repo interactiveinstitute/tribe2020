@@ -16,8 +16,11 @@ public class DebugManager : MonoBehaviour {
     static public bool staticLightManager;
     public bool LightManager = true;
 
-    // Use this for initialization
-    void Start () {
+	static public bool staticCameraManager;
+	public bool CameraManager = true;
+
+	// Use this for initialization
+	void Start () {
 	
 	}
 	
@@ -27,6 +30,7 @@ public class DebugManager : MonoBehaviour {
         staticAvatarActivity = AvatarActivity;
         staticAppliance = Appliance;
         staticLightManager = LightManager;
+		staticCameraManager = CameraManager;
 	}
 
     static public void Log(string message, System.Object caller)
@@ -67,12 +71,14 @@ public class DebugManager : MonoBehaviour {
         }else if(caller is LightManager && !staticLightManager)
         {
             print = false;
-        }
+        } else if(caller is CameraManager && !staticCameraManager) {
+			print = false;
+		}
 
 
 
-        //Ok. Ledz print that shit!
-        if (print)
+		//Ok. Ledz print that shit!
+		if (print)
         {
             if (context != null)
             {
