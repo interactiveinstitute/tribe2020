@@ -49,6 +49,16 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
 
+	[Header("Save between sessions")]
+	public bool syncTime;
+	public bool syncPilot;
+	public bool syncCamera;
+	public bool syncResources;
+	public bool syncNarrative;
+	public bool syncLocalization;
+	public bool syncAvatars;
+	public bool syncAppliances;
+
 	private List<Appliance> _appliances;
 
 	private bool _firstUpdate = false;
@@ -628,21 +638,23 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public override void SaveGameState() {
 		if(debug) { Debug.Log("Saving game state"); }
 
-		_saveMgr.SetCurrentSlotClass("ResourceManager", _resourceMgr.SerializeAsJSON());
-		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
-		_saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
-		_saveMgr.SetCurrentSlotClass("CameraManager", _cameraMgr.SerializeAsJSON());
-		_saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
+		if(syncResources) _saveMgr.SetCurrentSlotClass("ResourceManager", _resourceMgr.SerializeAsJSON());
+		if(syncNarrative) _saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
+		if(syncLocalization) _saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
+		if(syncCamera) _saveMgr.SetCurrentSlotClass("CameraManager", _cameraMgr.SerializeAsJSON());
+		if(syncAvatars) _saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
 
 		//Save appliance states
-		JSONArray applianceJSON = new JSONArray();
-		foreach(Appliance appliance in _appliances) {
-			applianceJSON.Add(appliance.SerializeAsJSON());
+		if(syncAppliances) {
+			JSONArray applianceJSON = new JSONArray();
+			foreach(Appliance appliance in _appliances) {
+				applianceJSON.Add(appliance.SerializeAsJSON());
+			}
+			_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
 		}
-		_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
 
-		_saveMgr.SetCurrentSlotData("lastTime", _timeMgr.time.ToString());
-		_saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
+		if(syncTime) _saveMgr.SetCurrentSlotData("lastTime", _timeMgr.time.ToString());
+		if(syncPilot) _saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
 
 		_saveMgr.SaveCurrentSlot();
 	}
@@ -655,16 +667,16 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		}
 		if(debug) { Debug.Log("Loading game state"); }
 
-		_saveMgr.LoadCurrentSlot();
+		if(syncPilot) _saveMgr.LoadCurrentSlot();
 
-		_resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
-		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
-		_localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
-		_cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
-		_avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
+		if(syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
+		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
+		if(syncLocalization) _localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
+		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
+		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 
 		//Load appliance states
-		if(_saveMgr.GetCurrentSlotData("Appliances") != null) {
+		if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
 			JSONArray appsJSON = _saveMgr.GetCurrentSlotData("Appliances").AsArray;
 			foreach(JSONClass appJSON in appsJSON) {
 				foreach(Appliance app in _appliances) {
@@ -675,7 +687,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 			}
 		}
 
-		if(_saveMgr.GetCurrentSlotData("lastTime") != null) {
+		if(syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
 			_timeMgr.SetTime(_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
 		}
 	}
