@@ -23,7 +23,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//Access all singleton systemss
 	public PilotView view;
 	private GameTime _timeMgr;
-	public CameraManager cameraMgr;
+	private CameraManager cameraMgr;
 	private AudioManager _audioMgr;
 	private MainMeter _mainMeter;
 	private ResourceManager _resourceMgr;
@@ -50,7 +50,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public const float D_TAP_TIMEOUT = 0.2f;
 	public const float SWIPE_THRESH = 50;
 
-	private List<BehaviourAI> _avatars;
 	private List<Appliance> _appliances;
 
 	private bool _firstUpdate = false;
@@ -71,7 +70,6 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	void Start() {
 		view = PilotView.GetInstance();
 		_timeMgr = GameTime.GetInstance();
-		cameraMgr = CameraManager.GetInstance();
 
 		_audioMgr = AudioManager.GetInstance();
 		_audioMgr.SetInterface(this);
@@ -89,8 +87,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		cameraMgr = CameraManager.GetInstance();
 		cameraMgr.SetInterface(this);
 
-		//_avatarMgr = GetComponent<AvatarManager>();
-		_avatars = new List<BehaviourAI>(UnityEngine.Object.FindObjectsOfType<BehaviourAI>());
+		_avatarMgr = AvatarManager.GetInstance();
+
 		_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		ClearView();
@@ -576,24 +574,12 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public override void ControlAvatar(string id, string action, Vector3 pos) {
-		Debug.Log("Searching for avatar " + id);
-		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == id) {
-				Debug.Log("Found matching avatar");
-				avatar.TakeControlOfAvatar();
-				avatar.WalkTo(pos);
-			}
-		}
+		_avatarMgr.ControlAvatar(id, action, pos);
 	}
 
 	//
 	public override void ControlAvatar(string id, UnityEngine.Object action) {
-		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == id) {
-				AvatarActivity newAct = UnityEngine.ScriptableObject.Instantiate<AvatarActivity>(action as AvatarActivity);
-				avatar.StartTemporaryActivity(newAct);
-			}
-		}
+		_avatarMgr.ControlAvatar(id, action);
 	}
 
 	//
@@ -647,13 +633,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
 		_saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
 		_saveMgr.SetCurrentSlotClass("CameraManager", cameraMgr.SerializeAsJSON());
-
-		//Save avatar states
-		JSONArray avatarsJSON = new JSONArray();
-		foreach(BehaviourAI avatar in _avatars) {
-			avatarsJSON.Add(avatar.Encode());
-		}
-		_saveMgr.SetCurrentSlotArray("avatarStates", avatarsJSON);
+		_saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
 
 		//Save appliance states
 		JSONArray applianceJSON = new JSONArray();
@@ -682,19 +662,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 		_localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
 		cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
-
-		//Load avatar states
-		if(_saveMgr.GetCurrentSlotData("avatarStates") != null) {
-			JSONArray avatarsJSON = _saveMgr.GetCurrentSlotData("avatarStates").AsArray;
-			foreach(JSONClass avatarJSON in avatarsJSON) {
-				foreach(BehaviourAI avatar in _avatars) {
-					string loadedName = avatarJSON["name"];
-					if(avatar.name == loadedName) {
-						avatar.Decode(avatarJSON);
-					}
-				}
-			}
-		}
+		_avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 
 		//Load appliance states
 		if(_saveMgr.GetCurrentSlotData("Appliances") != null) {
@@ -743,7 +711,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void ShowCongratulations(string text) {
-		throw new NotImplementedException();
+		cameraMgr.PlayFireworks();
+		view.ShowCongratualations(text);
 	}
 
 	//

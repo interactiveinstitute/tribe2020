@@ -31,13 +31,13 @@ public class PilotView : View{
 	public Text characterDescription;
 	public Text characterMood;
 	public Image characterMoodImage;
-	public Text characterSatisfaction;
+	//public Text characterSatisfaction;
 	public Slider characterSatisfactionSlider;
-	public Text characterTmperature;
+	//public Text characterTmperature;
 	public Slider characterTmperatureSlider;
-	public Text characterKnowledge;
+	//public Text characterKnowledge;
 	public Slider characterKnowledgeSlider;
-	public Text characterAttitude;
+	//public Text characterAttitude;
 	public Slider characterAttitudeSlider;
 
 	[Header("Quest UI")]

@@ -14,11 +14,18 @@ public class CameraManager : MonoBehaviour {
 	public bool debug = false;
 	public bool xWrap = false;
 	public bool yWrap = false;
-	//private PilotController _controller;
+
+	[Header("External References")]
+	public Camera gameCamera;
+	public Animator animator;
+	public Transform overlayCanvas;
+	public ParticleSystem fireworks;
+
 	private CameraInterface _interface;
 
-	public enum CameraState { Idle, Full, Room, Panned };
+	[Header("Camera State")]
 	public CameraState cameraState = CameraState.Idle;
+	public enum CameraState { Idle, Full, Room, Panned };
 
 	//Viewpoint variables
 	public Vector2 startCoordinates = Vector2.zero;
@@ -52,9 +59,6 @@ public class CameraManager : MonoBehaviour {
 	public float fracJourney = 0;
 
 	//Orientation interaction variables
-	public Camera gameCamera;
-	public Animator animator;
-	public Transform overlayCanvas;
 	private float _perspectiveZoomSpeed = 0.25f;
 	private float _orthoZoomSpeed = 0.25f;
 	private int _curFloor = 0;
@@ -67,6 +71,8 @@ public class CameraManager : MonoBehaviour {
 	private float _panSpeed = 0.01f;
 
 	private bool _firstLoop = true;
+
+	
 	#endregion
 
 	//Sort use instead of constructor
@@ -612,6 +618,11 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
+	public void PlayFireworks() {
+		fireworks.Play();
+	}
+
+	//
 	public void StopAnimation() {
 		animator.Stop();
 		overlayCanvas.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
@@ -629,7 +640,7 @@ public class CameraManager : MonoBehaviour {
 		_interface.OnAnimationEvent(animationEvent);
 	}
 
-	//
+	//Serialize state as json for a save file
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 
@@ -648,7 +659,7 @@ public class CameraManager : MonoBehaviour {
 		return json;
 	}
 
-	//
+	//Deserialize json and apply states to aspects handled by the manager
 	public void DeserializeFromJSON(JSONClass json) {
 		if(json != null) {
 			JSONArray views = json["views"].AsArray;
