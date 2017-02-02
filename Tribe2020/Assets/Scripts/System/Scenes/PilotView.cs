@@ -57,7 +57,7 @@ public class PilotView : View{
 
 	[Header("View Guide")]
 	public Transform viewpointGuideUI;
-	public Image overviewIcon;
+	//public Image overviewIcon;
 	public Sprite defaultIcon;
 	public Sprite lockIcon;
 	public Color currentColor;
@@ -189,11 +189,11 @@ public class PilotView : View{
 			}
 		}
 
-		if(overview) {
-			overviewIcon.color = currentColor;
-		} else {          
-			overviewIcon.color = Color.white;
-		}
+		//if(overview) {
+		//	overviewIcon.color = currentColor;
+		//} else {          
+		//	overviewIcon.color = Color.white;
+		//}
 	}
 
 	//
