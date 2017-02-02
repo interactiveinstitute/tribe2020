@@ -27,18 +27,16 @@ public class PilotView : View{
 	public Text apocalypsePercent;
 
 	[Header("Character Interface")]
-	public Text characterTitle;
-	public Text characterDescription;
-	public Text characterMood;
-	public Image characterMoodImage;
-	//public Text characterSatisfaction;
-	public Slider characterSatisfactionSlider;
-	//public Text characterTmperature;
-	public Slider characterTmperatureSlider;
-	//public Text characterKnowledge;
-	public Slider characterKnowledgeSlider;
-	//public Text characterAttitude;
-	public Slider characterAttitudeSlider;
+	public Text avatarTitle;
+	public Text avatarDescription;
+	public Image avatarMood;
+	public Text avatarTemperature;
+	public Image avatarEfficiency;
+	public Slider avatarSatisfaction;
+	public Slider avatarKnowledge;
+	public Slider avatarAttitude;
+	public Slider avatarNorm;
+	public Transform avatarEEMContainer;
 
 	[Header("Quest UI")]
 	public GameObject inboxUI;
@@ -64,7 +62,6 @@ public class PilotView : View{
 	public Text victoryText;
 
 	public Transform animationUI;
-	public ParticleSystem fireworks;
 
 	[Header("Generated UI Prefabs")]
 	public GameObject actionButtonPrefab;
@@ -266,8 +263,8 @@ public class PilotView : View{
 		if(title == "") { title = app.title + "!"; }
 		if(description == "") { description = app.description + "!"; }
 
-		characterTitle.text = title;
-		characterDescription.text = description;
+		avatarTitle.text = title;
+		avatarDescription.text = description;
 
 		//inspector.GetComponentsInChildren<Text>()[0].text = title;
 		//inspector.GetComponentsInChildren<Text>()[2].text = description;
@@ -450,14 +447,8 @@ public class PilotView : View{
 
 	//
 	public override void ShowCongratualations(string text) {
-		ShowFireworks();
 		victoryUI.SetActive(true);
 		victoryText.text = text;
-	}
-
-	//
-	public void ShowFireworks() {
-		fireworks.Play();
 	}
 
 	//
