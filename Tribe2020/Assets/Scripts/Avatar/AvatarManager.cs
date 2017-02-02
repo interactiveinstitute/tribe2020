@@ -8,6 +8,7 @@ public class AvatarManager : MonoBehaviour {
 	public static AvatarManager GetInstance() {
 		return _instance;
 	}
+
 	[SerializeField]
 	private List<BehaviourAI> _avatars;
 	public AvatarConversation conversation;

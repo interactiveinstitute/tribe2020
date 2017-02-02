@@ -30,13 +30,24 @@ public class PilotView : View{
 	public Text avatarTitle;
 	public Text avatarDescription;
 	public Image avatarMood;
+	public Text avatarTemperatureTitle;
 	public Text avatarTemperature;
+	public Text avatarEfficiencyTitle;
 	public Image avatarEfficiency;
+	public Text avatarSatisfactionTitle;
 	public Slider avatarSatisfaction;
+	public Text avatarKnowledgeTitle;
 	public Slider avatarKnowledge;
+	public Text avatarAttitudeTitle;
 	public Slider avatarAttitude;
+	public Text avatarNormTitle;
 	public Slider avatarNorm;
+	public Text avatarEEMTitle;
 	public Transform avatarEEMContainer;
+
+	[Header("Device Interface")]
+	public Text deviceTitle;
+	public Text deviceDescription;
 
 	[Header("Quest UI")]
 	public GameObject inboxUI;
@@ -76,7 +87,7 @@ public class PilotView : View{
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
-	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer, characterPanel;
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer, characterPanel, devicePanel;
 	private bool _settingsIsVisible = false;
 	#endregion
 
@@ -266,8 +277,17 @@ public class PilotView : View{
 		avatarTitle.text = title;
 		avatarDescription.text = description;
 
-		//inspector.GetComponentsInChildren<Text>()[0].text = title;
-		//inspector.GetComponentsInChildren<Text>()[2].text = description;
+		BuildEEMInterface(app);
+	}
+
+	//
+	public void BuildDevicePanel(string title, string description, Appliance app) {
+		if(title == "") { title = app.title + "!"; }
+		if(description == "") { description = app.description + "!"; }
+
+		deviceTitle.text = title;
+		deviceDescription.text = description;
+
 		BuildEEMInterface(app);
 	}
 

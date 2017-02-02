@@ -32,6 +32,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	private SaveManager _saveMgr;
 	private LocalisationManager _localMgr;
 	private AvatarManager _avatarMgr;
+	private ApplianceManager _applianceMgr;
 
 	//Interaction props
 	[SerializeField]
@@ -59,7 +60,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public bool syncAvatars;
 	public bool syncAppliances;
 
-	private List<Appliance> _appliances;
+	//private List<Appliance> _appliances;
 
 	private bool _firstUpdate = false;
 	#endregion
@@ -97,8 +98,9 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		_cameraMgr.SetInterface(this);
 
 		_avatarMgr = AvatarManager.GetInstance();
+		_applianceMgr = ApplianceManager.GetInstance();
 
-		_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
+		//_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		ClearView();
 
@@ -354,8 +356,13 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
 		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
 
-		_tempInstance._view.BuildInspector(title, description, app);
-		SetCurrentUI(_tempInstance._view.characterPanel);
+		if(app.GetComponent<BehaviourAI>()) {
+			_tempInstance._view.BuildInspector(title, description, app);
+			SetCurrentUI(_tempInstance._view.characterPanel);
+		} else {
+			_tempInstance._view.BuildDevicePanel(title, description, app);
+			SetCurrentUI(_tempInstance._view.devicePanel);
+		}
 
 		//_view.BuildInspector(appliance);
 		//SetCurrentUI(_view.inspector);
@@ -643,15 +650,16 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		if(syncLocalization) _saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
 		if(syncCamera) _saveMgr.SetCurrentSlotClass("CameraManager", _cameraMgr.SerializeAsJSON());
 		if(syncAvatars) _saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
+		if(syncAppliances) _saveMgr.SetCurrentSlotClass("ApplianceManager", _applianceMgr.SerializeAsJSON());
 
 		//Save appliance states
-		if(syncAppliances) {
-			JSONArray applianceJSON = new JSONArray();
-			foreach(Appliance appliance in _appliances) {
-				applianceJSON.Add(appliance.SerializeAsJSON());
-			}
-			_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
-		}
+		//if(syncAppliances) {
+		//	JSONArray applianceJSON = new JSONArray();
+		//	foreach(Appliance appliance in _appliances) {
+		//		applianceJSON.Add(appliance.SerializeAsJSON());
+		//	}
+		//	_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
+		//}
 
 		if(syncTime) _saveMgr.SetCurrentSlotData("lastTime", _timeMgr.time.ToString());
 		if(syncPilot) _saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
@@ -674,18 +682,19 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		if(syncLocalization) _localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
 		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
+		if(syncAppliances) _applianceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ApplianceManager"));
 
 		//Load appliance states
-		if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
-			JSONArray appsJSON = _saveMgr.GetCurrentSlotData("Appliances").AsArray;
-			foreach(JSONClass appJSON in appsJSON) {
-				foreach(Appliance app in _appliances) {
-					if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
-						app.DeserializeFromJSON(appJSON);
-					}
-				}
-			}
-		}
+		//if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
+		//	JSONArray appsJSON = _saveMgr.GetCurrentSlotData("Appliances").AsArray;
+		//	foreach(JSONClass appJSON in appsJSON) {
+		//		foreach(Appliance app in _appliances) {
+		//			if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
+		//				app.DeserializeFromJSON(appJSON);
+		//			}
+		//		}
+		//	}
+		//}
 
 		if(syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
 			_timeMgr.SetTime(_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
@@ -716,8 +725,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void LoadScene(string scene) {
-		SaveGameState();
-		_sceneMgr.LoadScene(scene);
+		_tempInstance.SaveGameState();
+		_tempInstance._sceneMgr.LoadScene(scene);
 	}
 
 	//
