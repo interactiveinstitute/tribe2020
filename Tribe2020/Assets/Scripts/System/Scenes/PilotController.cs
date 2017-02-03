@@ -479,6 +479,24 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
+	public void OnHarvest(Gem gem) {
+		//_tempInstance._resourceMgr.AddComfort(gem.value);
+		Destroy(gem.gameObject);
+
+		switch(gem.type) {
+			case "cash":
+				_tempInstance._resourceMgr.AddCash(gem.value);
+				break;
+			case "satisfaction":
+				_tempInstance._resourceMgr.AddComfort(gem.value);
+				break;
+		}
+
+		_tempInstance._audioMgr.PlaySound("Press Button");
+		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested, "satisfaction");
+	}
+
+	//
 	public void OnElectricMeterToggle(ElectricMeter meter) {
 
         Appliance appliance = meter.gameObject.GetComponent<Appliance>();

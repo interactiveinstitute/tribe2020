@@ -2,10 +2,14 @@
 using UnityEngine.EventSystems;
 using System.Collections;
 using System;
+using UnityEngine.Events;
 
 public class Gem : MonoBehaviour, IPointerClickHandler {
+	//Click callback
+	public UnityEvent clickCallback;
 
     float _yPivot;
+	public string type;
     public int value = 1;
     float _scaleFactor = 0.1f;
 
@@ -46,11 +50,14 @@ public class Gem : MonoBehaviour, IPointerClickHandler {
     }
 
     public void OnPointerClick(PointerEventData data) {
-        if (onTapCallback != null) {
-            onTapCallback(this);
-        }
-        Destroy(gameObject);
-		_resourceMgr.comfortHarvestCount--;
+		//Debug.Log(name + " was clicked");
+		clickCallback.Invoke();
+
+  //      if (onTapCallback != null) {
+  //          //onTapCallback(this);
+  //      }
+  //      Destroy(gameObject);
+		//_resourceMgr.comfortHarvestCount--;
     }
 
 }

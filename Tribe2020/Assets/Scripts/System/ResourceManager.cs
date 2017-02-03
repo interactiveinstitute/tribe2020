@@ -84,6 +84,10 @@ public class ResourceManager : MonoBehaviour {
         comfort += gem.value;
     }
 
+	public void AddCash(int value) {
+		cash += value;
+	}
+
     //
     public void RefreshProductionForAppliance(GameObject go){
 		
