@@ -19,12 +19,27 @@ public class PilotView : View{
 	public Transform title;
 	public Transform date;
 
+	[Header("Satisfaction")]
+	public Text satisfactionTitle;
+
 	[Header("Energy")]
+	public Text energyTitle;
 	public Transform power;
 	public Text energyCounter;
 	public RectTransform timeBar;
+
+	[Header("Inbox")]
+	public Text inboxTitle;
+
+	[Header("Apocalypsometer")]
+	public Text apocalypsometerTitle;
 	public RectTransform apocalypsePointer;
 	public Text apocalypsePercent;
+
+	[Header("Menu")]
+	public Text menuTitle;
+	public Text settingsButtonText;
+	public Text quitButtonText;
 
 	[Header("Character Interface")]
 	public Text avatarTitle;
@@ -48,6 +63,8 @@ public class PilotView : View{
 	[Header("Device Interface")]
 	public Text deviceTitle;
 	public Text deviceDescription;
+	public Text deviceEEMTitle;
+	public Transform deviceEEMContainer;
 
 	[Header("Quest UI")]
 	public GameObject inboxUI;
@@ -145,6 +162,11 @@ public class PilotView : View{
 				}
 			}
 		}
+	}
+
+	//
+	public void SetController(PilotController controller) {
+		_controller = controller;
 	}
 
 	//
@@ -269,6 +291,27 @@ public class PilotView : View{
 		}
 	}
 
+	//
+	public void TranslateInterface() {
+		satisfactionTitle.text = _controller.GetPhrase("Interface", "comfort panel title");
+		energyTitle.text = _controller.GetPhrase("Interface", "energy panel title");
+		inboxTitle.text = _controller.GetPhrase("Interface", "inbox panel title");
+		apocalypsometerTitle.text = _controller.GetPhrase("Interface", "apocalypse panel title");
+		menuTitle.text = _controller.GetPhrase("Interface", "menu panel title");
+		settingsButtonText.text = _controller.GetPhrase("Interface", "menu settings");
+		quitButtonText.text = _controller.GetPhrase("Interface", "menu quit");
+
+		avatarTemperatureTitle.text = _controller.GetPhrase("Interface", "avatar temperature");
+		avatarEfficiencyTitle.text = _controller.GetPhrase("Interface", "avatar efficiency");
+		avatarSatisfactionTitle.text = _controller.GetPhrase("Interface", "avatar satisfaction");
+		avatarKnowledgeTitle.text = _controller.GetPhrase("Interface", "avatar knowledge");
+		avatarAttitudeTitle.text = _controller.GetPhrase("Interface", "avatar attitude");
+		avatarNormTitle.text = _controller.GetPhrase("Interface", "avatar norm");
+		avatarEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+
+		deviceEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+	}
+
 	//Fill INSPECTOR with details and eem options for selected appliance
 	public void BuildInspector(string title, string description, Appliance app) {
 		if(title == "") { title = app.title + "!"; }
@@ -281,14 +324,53 @@ public class PilotView : View{
 	}
 
 	//
-	public void BuildDevicePanel(string title, string description, Appliance app) {
-		if(title == "") { title = app.title + "!"; }
-		if(description == "") { description = app.description + "!"; }
+	public void BuildAvatarPanel(Appliance app) {
+		avatarTitle.text = app.title;
+		avatarDescription.text = _controller.GetPhrase("Avatars", app.title);
 
-		deviceTitle.text = title;
-		deviceDescription.text = description;
+		BuildEEMInterface(avatarEEMContainer, app);
+	}
 
-		BuildEEMInterface(app);
+	//
+	public void BuildDevicePanel(Appliance app) {
+		deviceTitle.text = _controller.GetPhrase("Appliance", app.title + "_Title");
+		deviceDescription.text = _controller.GetPhrase("Appliance", app.title + "_Description");
+
+		BuildEEMInterface(deviceEEMContainer, app);
+	}
+
+	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
+	public void BuildEEMInterface(Transform container, Appliance app) {
+		RemoveChildren(container);
+		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
+
+		foreach(EnergyEfficiencyMeasure eem in eems) {
+			EnergyEfficiencyMeasure curEEM = eem;
+			GameObject buttonObj = Instantiate(EEMButtonPrefab);
+			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
+			Button button = buttonObj.GetComponent<Button>();
+
+			if(!app.appliedEEMs.Contains(curEEM)) {
+				if(eem.callback == "") {
+					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+				} else {
+					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+				}
+				eemProps.SetCost(eem.cashCost, eem.comfortCost);
+			} else {
+				button.interactable = false;
+			}
+
+			string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
+			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
+			eemProps.title.text = eemTitle;
+
+			buttonObj.GetComponent<Image>().color = eem.color;
+
+			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
+
+			buttonObj.transform.SetParent(container, false);
+		}
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance

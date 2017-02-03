@@ -79,6 +79,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	// Use this for initialization
 	void Start() {
 		_view = PilotView.GetInstance();
+		_view.SetController(this);
+
 		_timeMgr = GameTime.GetInstance();
 
 		_audioMgr = AudioManager.GetInstance();
@@ -103,6 +105,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		//_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		ClearView();
+		_view.TranslateInterface();
 
 		playPeriod = endTime - startTime;
 	}
@@ -357,10 +360,10 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
 
 		if(app.GetComponent<BehaviourAI>()) {
-			_tempInstance._view.BuildInspector(title, description, app);
+			_tempInstance._view.BuildAvatarPanel(app);
 			SetCurrentUI(_tempInstance._view.characterPanel);
 		} else {
-			_tempInstance._view.BuildDevicePanel(title, description, app);
+			_tempInstance._view.BuildDevicePanel(app);
 			SetCurrentUI(_tempInstance._view.devicePanel);
 		}
 
@@ -637,6 +640,11 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//
 	public string GetPhrase(string groupKey, string key, int index) {
 		return _localMgr.GetPhrase(groupKey, key, index);
+	}
+
+	//
+	public string GetPhrase(string groupKey, string key) {
+		return _localMgr.GetPhrase(groupKey, key);
 	}
 
 	//
