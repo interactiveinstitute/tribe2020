@@ -12,7 +12,8 @@ public class MovieController : Controller {
 	public GameObject videoObject;
 	private MediaPlayerCtrl _videoController;
 	[SerializeField]
-	private LocalisationManager _localisationMgr;
+	private LocalisationManager _localMgr;
+	private SaveManager _saveMgr;
 
 	private bool _isStarted = false;
 	private float _subtitleTimer = 0;
@@ -32,9 +33,13 @@ public class MovieController : Controller {
 	// Use this for initialization
 	void Start () {
 		_sceneMgr = CustomSceneManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
+		_saveMgr = SaveManager.GetInstance();
 
 		//_video.Play();
 		//_videoDuration = _video.GetDuration();
+
+		_localMgr.SetLanguage(_saveMgr.GetData("language"));
 
 		if(videoObject != null) {
 			_videoController = videoObject.GetComponent<MediaPlayerCtrl>();
@@ -68,7 +73,7 @@ public class MovieController : Controller {
 		if(_isStarted) {
 			_subtitleTimer += Time.fixedDeltaTime;
 				if(_subtitles[_subtitleIndex].time < _videoController.GetSeekPosition() && _subtitleIndex < _subtitles.Count - 1) {
-					_movieView.ShowSubtitle(_subtitles[_subtitleIndex].text);
+					_movieView.ShowSubtitle(_localMgr.GetPhrase("Intro Movie", "" + _subtitleIndex));
 					_subtitleIndex++;
 				}
 			}
