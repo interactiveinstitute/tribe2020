@@ -171,14 +171,19 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public void Save() {
-		if(currentSlot != -1) {
+		//if(currentSlot != -1) {
 			File.WriteAllText(_filePath, _dataClone.ToString());
-		}
+		//}
 	}
 
 	//
 	public void Load() {
+		if(debug) { Debug.Log("Load: " + currentSlot); }
+
 		_dataClone = ReadFileAsJSON();
+		if(currentSlot == -1) {
+			currentSlot = saveSlot;
+		}
 	}
 
 	//
@@ -191,6 +196,7 @@ public class SaveManager : MonoBehaviour{
 		if(debug) { Debug.Log("Load: " + currentSlot); }
 
 		_dataClone = ReadFileAsJSON();
+		currentSlot = slot;
 		SetData("lastSlot", slot.ToString());
 	}
 

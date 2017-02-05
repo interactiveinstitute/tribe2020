@@ -3,8 +3,9 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class LocalisationController : MonoBehaviour {
-	public SaveManager saveManager;
+	private SaveManager _saveMgr;
 	public CustomSceneManager sceneManager;
+	private LocalisationManager _localMgr;
 
 	public List<Language> languages;
 	public GameObject localisationButtonPrefab;
@@ -12,11 +13,14 @@ public class LocalisationController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		saveManager.Load();
-		if(saveManager.GetData("language") != null) {
+		_saveMgr = SaveManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
+
+		//_localMgr.DeserializeFromJSON(_saveMgr.GetData("language"));
+
+		if(_saveMgr.GetData("language") != null) {
 			sceneManager.LoadScene("MovieScene");
 		}
-
 
 		foreach(Language lang in languages) {
 			Language curLang = lang;
@@ -34,8 +38,11 @@ public class LocalisationController : MonoBehaviour {
 
 	//
 	public void OnLanguagePicked(string language) {
-		saveManager.SetData("language", language);
-		saveManager.Save();
+		_localMgr.SetLanguage(language);
+
+		_saveMgr.SetData("language", _localMgr.curLanguage.name);
+		//_saveMgr.SetData("language", language);
+		_saveMgr.Save();
 
 		sceneManager.LoadScene("MovieScene");
 	}

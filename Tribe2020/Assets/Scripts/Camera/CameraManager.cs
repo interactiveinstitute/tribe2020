@@ -619,6 +619,7 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void PlayFireworks() {
+		Debug.Log("playing fireworks");
 		fireworks.Play();
 	}
 

@@ -147,7 +147,7 @@ public class BattleController : Controller {
 	}
 
 	//
-	public override void ShowCongratualations(string text) {
+	public void ShowCongratualations(string text) {
 		_view.ShowCongratualations(text);
 	}
 

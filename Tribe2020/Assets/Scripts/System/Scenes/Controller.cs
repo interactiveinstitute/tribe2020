@@ -46,8 +46,8 @@ public class Controller : MonoBehaviour {
 	}
 
 	//
-	public virtual void ShowCongratualations(string text) {
-	}
+	//public virtual void ShowCongratualations(string text) {
+	//}
 
 	//
 	public virtual void ControlAvatar(string id, string action, Vector3 pos) {

@@ -17,7 +17,7 @@ public class Quest : ScriptableObject {
 		QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
 		ResourceHarvested, BattleOver, InspectorOpened, InspectorClosed, InboxOpened, InboxClosed, MailOpened, MailClosed,
 		OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn, AvatarSelected,
-		SelectedOverview, SelectedGridView, CameraMoveOver, CameraAnimationEvent
+		SelectedOverview, SelectedGridView, CameraMoveOver, CameraAnimationEvent, ApocalypsometerClosed
 	};
 
 	

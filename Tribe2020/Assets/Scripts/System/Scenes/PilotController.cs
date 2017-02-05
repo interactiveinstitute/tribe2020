@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System;
 
-public class PilotController : Controller, NarrationInterface, AudioInterface, CameraInterface {
+public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface {
 	//Singleton features
-	private static PilotController _tempInstance;
+	private static PilotController _instance;
 	public static PilotController GetInstance() {
 		return _instance as PilotController;
 	}
-	private InputState _curState = InputState.ALL;
+	//public enum InputState {
+	//	ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
+	//	ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
+	//	ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
+	//};
+	private Controller.InputState _curState = Controller.InputState.ALL;
 
 	#region Fields
 	public bool debug = false;
@@ -68,7 +73,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
-		_tempInstance = this;
+		_instance = this;
 	}
 
 	//
@@ -220,7 +225,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	private void OnTap(Vector3 pos) {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_TAP) { return; }
 
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
 	}
@@ -237,7 +242,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 			return;
 		}
 
-		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
+		if(_curState == Controller.InputState.ALL || _curState == Controller.InputState.ONLY_SWIPE) {
 			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
 			dir = (dir * Mathf.Rad2Deg + 360) % 360;
 			float dist = Vector3.Distance(start, end);
@@ -260,14 +265,14 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void OnPinchIn() {
-		if(_curState == InputState.ALL) {
+		if(_curState == Controller.InputState.ALL) {
 			_cameraMgr.GotoUpperView();
 		}
 	}
 
 	//
 	public void OnPinchOut() {
-		if(_curState == InputState.ALL) {
+		if(_curState == Controller.InputState.ALL) {
 			_cameraMgr.GotoLowerView();
 		}
 	}
@@ -334,46 +339,46 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void OnOkPressed() {
-		_tempInstance.ResetTouch();
+		_instance.ResetTouch();
 
-		if(_tempInstance._curState == InputState.ALL || _tempInstance._curState == InputState.ONLY_PROMPT) {
-			_tempInstance._view.messageUI.SetActive(false);
+		if(_instance._curState == Controller.InputState.ALL || _instance._curState == Controller.InputState.ONLY_PROMPT) {
+			_instance._view.messageUI.SetActive(false);
 
-			_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
+			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 		}
 
-		_tempInstance.PlaySound("Press Button");
+		_instance.PlaySound("Press Button");
 	}
 
 	//
 	public void ToggleMenu() {
-		_tempInstance._view.ToggleMenu();
+		_instance._view.ToggleMenu();
 	}
 
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_APPLIANCE_SELECT) { return; }
 
-		_tempInstance._cameraMgr.SetLookAtTarget(app);
+		_instance._cameraMgr.SetLookAtTarget(app);
 
 		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
 		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
 
 		if(app.GetComponent<BehaviourAI>()) {
-			_tempInstance._view.BuildAvatarPanel(app);
-			SetCurrentUI(_tempInstance._view.characterPanel);
+			_instance._view.BuildAvatarPanel(app);
+			SetCurrentUI(_instance._view.characterPanel);
 		} else {
-			_tempInstance._view.BuildDevicePanel(app);
-			SetCurrentUI(_tempInstance._view.devicePanel);
+			_instance._view.BuildDevicePanel(app);
+			SetCurrentUI(_instance._view.devicePanel);
 		}
 
 		//_view.BuildInspector(appliance);
 		//SetCurrentUI(_view.inspector);
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
-		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
+		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
 		if(app.GetComponent<BehaviourAI>()) {
-			_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
+			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
 		}
 	}
 
@@ -390,16 +395,16 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void SetCurrentUI(RectTransform ui) {
-		SetCurrentUI(_tempInstance, ui);
+		SetCurrentUI(_instance, ui);
 	}
 
 	//Open user interface
 	public void SetCurrentUI(PilotController controller, RectTransform ui) {
 		if(debug) { Debug.Log(name + ": SetCurrentUI(" + ui.name + ")"); }
-		if(_curState != InputState.ALL) {
-			if(ui == controller._view.energyPanel && controller._curState != InputState.ONLY_ENERGY) { return; }
-			if(ui == controller._view.comfortPanel && controller._curState != InputState.ONLY_COMFORT) { return; }
-			if(ui == controller._view.inbox && controller._curState != InputState.ONLY_OPEN_INBOX) { return; }
+		if(_curState != Controller.InputState.ALL) {
+			if(ui == controller._view.energyPanel && controller._curState != Controller.InputState.ONLY_ENERGY) { return; }
+			if(ui == controller._view.comfortPanel && controller._curState != Controller.InputState.ONLY_COMFORT) { return; }
+			if(ui == controller._view.inbox && controller._curState != Controller.InputState.ONLY_OPEN_INBOX) { return; }
 		}
 
 		if(controller._view.GetCurrentUI() != null) {
@@ -433,8 +438,12 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//Hide any open user interface
 	public void HideUI() {
-		_tempInstance._view.SetCurrentUI(null);
-		_tempInstance._cameraMgr.ClearLookAtTarget();
+		if(_instance._view.GetCurrentUI() == _instance._view.apocalypsometer) {
+			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ApocalypsometerClosed);
+		}
+
+		_instance._view.SetCurrentUI(null);
+		_instance._cameraMgr.ClearLookAtTarget();
 
 		//_view.SetCurrentUI(null);
   //      _camMgr.ClearLookAtTarget();
@@ -442,7 +451,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void SelectGridView() {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_GRIDVIEW) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_SELECT_GRIDVIEW) { return; }
 
 		_view.EnableEnergyPanel();
 		_view.EnableComfortPanel();
@@ -454,7 +463,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void SelectOverview() {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_SELECT_OVERVIEW) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_SELECT_OVERVIEW) { return; }
 
 		_view.DisableEnergyPanel();
 		_view.DisableComfortPanel();
@@ -471,7 +480,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void OnHarvestTap(GameObject go) {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_HARVEST) { return; }
 
 		_resourceMgr.cash += 10;
 		_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
@@ -488,15 +497,15 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 		switch(gem.type) {
 			case "cash":
-				_tempInstance._resourceMgr.AddCash(gem.value);
+				_instance._resourceMgr.AddCash(gem.value);
 				break;
 			case "satisfaction":
-				_tempInstance._resourceMgr.AddComfort(gem.value);
+				_instance._resourceMgr.AddComfort(gem.value);
 				break;
 		}
 
-		_tempInstance._audioMgr.PlaySound("Press Button");
-		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested, "satisfaction");
+		_instance._audioMgr.PlaySound("Press Button");
+		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested, "satisfaction");
 	}
 
 	//
@@ -525,17 +534,17 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
-		_tempInstance._view.UpdateViewpointGuide(_tempInstance._cameraMgr.GetViewpoints(), curView, overview);
-		_tempInstance._view.UpdateViewpointTitle(curView.title);
+	public void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
+		_instance._view.UpdateViewpointGuide(_instance._cameraMgr.GetViewpoints(), curView, overview);
+		_instance._view.UpdateViewpointTitle(curView.title);
 
-		_tempInstance._narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
+		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
 	}
 
 	//
 	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
+		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_APPLY_EEM) { return; }
 
 		if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
 			_resourceMgr.cash -= eem.cashCost;
@@ -574,17 +583,17 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	#region Narrative Methods
 	//
-	public override void SetControlState(InputState state) {
+	public void SetControlState(Controller.InputState state) {
 		_curState = state;
 	}
 
 	//
-	public override void ControlInterface(string id, string action) {
-		_tempInstance._view.ControlInterface(id, action);
+	public void ControlInterface(string id, string action) {
+		_instance._view.ControlInterface(id, action);
 	}
 
 	//
-	public override void PlaySound(string sound) {
+	public void PlaySound(string sound) {
 		_audioMgr.PlaySound(sound);
 	}
 
@@ -610,29 +619,30 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override void ControlAvatar(string id, string action, Vector3 pos) {
+	public void ControlAvatar(string id, string action, Vector3 pos) {
 		_avatarMgr.ControlAvatar(id, action, pos);
 	}
 
 	//
-	public override void ControlAvatar(string id, UnityEngine.Object action) {
+	public void ControlAvatar(string id, UnityEngine.Object action) {
 		_avatarMgr.ControlAvatar(id, action);
 	}
 
 	//
-	public override void UnlockView(int x, int y) {
+	public void UnlockView(int x, int y) {
 		_cameraMgr.UnlockView(x, y);
 		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
 	}
 
 	//
-	public override void ShowCongratualations(string text) {
-		_audioMgr.PlaySound("Fireworks");
-		_view.ShowCongratualations(_localMgr.GetPhrase(text));
+	public void ShowCongratualations(string text) {
+		_instance._audioMgr.PlaySound("Fireworks");
+		_instance._view.ShowCongratualations(_localMgr.GetPhrase(text));
+		_instance._cameraMgr.PlayFireworks();
 	}
 
 	//
-	public override void ClearView() {
+	public void ClearView() {
 		_view.ClearView();
 	}
 	#endregion
@@ -648,7 +658,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override void SetTimeScale(int timeScale) {
+	public void SetTimeScale(int timeScale) {
 		_timeMgr.VisualTimeScale = timeScale;
 	}
 
@@ -663,17 +673,17 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	}
 
 	//
-	public override string GetCurrentDate() {
+	public string GetCurrentDate() {
 		return _timeMgr.CurrentDate;
-	}	
+	}
 
 	//
-	public override void SaveGameState() {
+	public void SaveGameState() {
 		if(debug) { Debug.Log("Saving game state"); }
 
 		if(syncResources) _saveMgr.SetCurrentSlotClass("ResourceManager", _resourceMgr.SerializeAsJSON());
 		if(syncNarrative) _saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
-		if(syncLocalization) _saveMgr.SetCurrentSlotClass("LocalisationManager", _localMgr.SerializeAsJSON());
+		if(syncLocalization) _saveMgr.SetData("language", _localMgr.curLanguage.name);
 		if(syncCamera) _saveMgr.SetCurrentSlotClass("CameraManager", _cameraMgr.SerializeAsJSON());
 		if(syncAvatars) _saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
 		if(syncAppliances) _saveMgr.SetCurrentSlotClass("ApplianceManager", _applianceMgr.SerializeAsJSON());
@@ -687,14 +697,14 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		//	_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
 		//}
 
-		if(syncTime) _saveMgr.SetCurrentSlotData("lastTime", _timeMgr.time.ToString());
+		if(syncTime) _saveMgr.SetCurrentSlotData("lastTime", _timeMgr.offset.ToString());
 		if(syncPilot) _saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
 
 		_saveMgr.SaveCurrentSlot();
 	}
 
 	//
-	public override void LoadGameState() {
+	public void LoadGameState() {
 		if(!enableSaveLoad) {
 			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
 			return;
@@ -705,7 +715,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 		if(syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
 		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
-		if(syncLocalization) _localMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("LocalisationManager"));
+		if(syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
 		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 		if(syncAppliances) _applianceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ApplianceManager"));
@@ -723,7 +733,7 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 		//}
 
 		if(syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
-			_timeMgr.SetTime(_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
+			_timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
 		}
 	}
 
@@ -751,14 +761,8 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 
 	//
 	public void LoadScene(string scene) {
-		_tempInstance.SaveGameState();
-		_tempInstance._sceneMgr.LoadScene(scene);
-	}
-
-	//
-	public void ShowCongratulations(string text) {
-		_cameraMgr.PlayFireworks();
-		_view.ShowCongratualations(text);
+		_instance.SaveGameState();
+		_instance._sceneMgr.LoadScene(scene);
 	}
 
 	//
@@ -773,5 +777,4 @@ public class PilotController : Controller, NarrationInterface, AudioInterface, C
 	public void OnAnimationEvent(string animationEvent) {
 		_narrationMgr.OnQuestEvent(Quest.QuestEvent.CameraAnimationEvent, animationEvent);
 	}
-
 }

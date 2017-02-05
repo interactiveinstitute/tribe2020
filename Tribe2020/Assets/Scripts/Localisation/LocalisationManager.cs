@@ -41,6 +41,15 @@ public class LocalisationManager : MonoBehaviour {
 	}
 
 	//
+	public void SetLanguage(string language) {
+		foreach(Language lang in languages) {
+			if(lang.name.Equals(language)) {
+				curLanguage = lang;
+			}
+		}
+	}
+
+	//
 	public string GetPhrase(string groupKey) {
 		string[] parse = groupKey.Split(':');
 		if(parse.Length == 2) {
