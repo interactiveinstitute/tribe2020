@@ -421,6 +421,11 @@ public class PilotView : View{
 		messageButton.SetActive(showOkButton);
 	}
 
+	//
+	public void HideMessage() {
+		messageUI.SetActive(false);
+	}
+
 	//Fill INBOX interface with ongoing and completed narratives
 	public void BuildInbox(List<Quest> currentQuests, List<Quest> completedQuests) {
 		RemoveChildren(inboxList);
@@ -608,5 +613,10 @@ public class PilotView : View{
 	//
 	public bool IsAnyOverlayActive() {
 		return _curMenu != null;
+	}
+
+	//
+	public void PlayUIAnimation(string animation) {
+		GetComponent<Animator>().Play(animation);
 	}
 }
