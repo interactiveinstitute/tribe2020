@@ -3,14 +3,20 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Facebook.Unity;
 
-public class MenuController : Controller {
+public class MenuController : MonoBehaviour {
+	//Singleton hack
+	private static MenuController _instance;
+	public static MenuController GetInstance() {
+		return _instance;
+	}
+
 	public GameObject animatedCharacter;
 	public Transform animatedPilot;
 	public RectTransform animatedLogo;
 
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
-	private LocalisationManager _localMgr;
+	public LocalisationManager localMgr;
 
 	[Header("UI Panels")]
 	public RectTransform mainMenu;
@@ -44,11 +50,18 @@ public class MenuController : Controller {
 	[Header("Settings")]
 	public Transform languageDropdown;
 
+	//
+	void Awake() {
+		_instance = this;
+	}
+
 	// Use this for initialization
 	void Start () {
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
-		_localMgr = LocalisationManager.GetInstance();
+		localMgr = LocalisationManager.GetInstance();
+
+		localMgr.SetLanguage(_saveMgr.GetData("language"));
 
 		_curMenu = mainMenu;
 		menus = new List<Transform>();
@@ -142,7 +155,7 @@ public class MenuController : Controller {
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
-			button.GetComponentInChildren<Text>().text = "New Game";
+			button.GetComponentInChildren<Text>().text = GetPhrase("Interface", "main newgame");
 			pendingNewGameSlot = slot;
 			button.GetComponent<Button>().onClick.AddListener(() => OpenPilotMenu(slot));
 			removeButton.gameObject.SetActive(false);
@@ -166,7 +179,7 @@ public class MenuController : Controller {
 		Dropdown dropdown = languageDropdown.GetComponent<Dropdown>();
 		List<string> langStrings = new List<string>();
 
-		foreach(Language lang in _localMgr.languages) {
+		foreach(Language lang in localMgr.languages) {
 			langStrings.Add(lang.name);
 		}
 
@@ -287,5 +300,10 @@ public class MenuController : Controller {
 		//	this.LastResponse = "Empty Response\n";
 		//	LogView.AddLog(this.LastResponse);
 		}
+	}
+
+	//
+	public string GetPhrase(string group, string key) {
+		return localMgr.GetPhrase(group, key);
 	}
 }

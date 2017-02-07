@@ -12,6 +12,7 @@ public class AvatarManager : MonoBehaviour {
 	[SerializeField]
 	private List<BehaviourAI> _avatars;
 	public AvatarConversation conversation;
+	public Sprite playerPortrait;
 
 	//
 	void Awake() {
@@ -61,6 +62,16 @@ public class AvatarManager : MonoBehaviour {
 				avatar.StartTemporaryActivity(newAct);
 			}
 		}
+	}
+
+	//
+	public AvatarStats GetAvatar(string name) {
+		foreach(BehaviourAI ai in _avatars) {
+			if(ai.GetComponent<Appliance>().name.Equals(name)) {
+				return ai.GetComponent<AvatarStats>();
+			}
+		}
+		return null;
 	}
 
 	//Serialize state as json for a save file

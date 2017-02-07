@@ -13,10 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   steps:
   - description: Pause simulation
+    conditionType: 
+    conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: SetTimeScale
           m_Mode: 4
@@ -30,12 +32,13 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    conditions: []
   - description: Start camera animation
+    conditionType: 
+    conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: MoveCamera
           m_Mode: 5
@@ -49,25 +52,209 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    conditions:
-    - type: CameraAnimationEvent
-      prop: phrase_00
   - description: In the center of Spain
+    conditionType: AnimationEvent
+    conditionProp: phrase_00
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: SendMessage
+          m_MethodName: ShowMessage
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: San Pablo Intro_0
+            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.In the
+              center of Spain li", button:False}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    conditions: []
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: HideMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:0, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Being a roman city
+    conditionType: AnimationEvent
+    conditionProp: phrase_01
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: ShowMessage
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Zaragoza,
+              being a roman c", button:False}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: HideMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:1, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Because of the many
+    conditionType: AnimationEvent
+    conditionProp: phrase_02
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: ShowMessage
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Because
+              of the many ancie", button:False}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: HideMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:2, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Zaragoza Vivienda
+    conditionType: AnimationEvent
+    conditionProp: phrase_03
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: ShowMessage
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Zaragoza
+              Vivienda are try", button:False}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: HideMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Stop camera animation
+    conditionType: AnimationEvent
+    conditionProp: end
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: StopCamera
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - description: Start simulation
+    conditionType: 
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+            type: 2}
+          m_MethodName: SetTimeScale
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 30
+            m_FloatArgument: 0
+            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  followingNarratives:
+  - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}

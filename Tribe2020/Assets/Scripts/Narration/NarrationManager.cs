@@ -16,20 +16,29 @@ public class NarrationManager : MonoBehaviour {
 	//private Controller _controller;
 	private NarrationInterface _interface;
 
-	//public Transform tutorialAnimation;
+	[Header("Debug Mode")]
 	public bool autoStart = true;
 	public bool saveProgress = true;
 	public bool debug = false;
 
+	[Header("Narratives")]
+	public Narrative curInFocus;
+	public List<Narrative> starters;
+	public List<Narrative> active;
+	public List<Narrative> archive;
+
+	[Header("Old Solution")]
 	public Quest startQuest;
 	public List<Quest> quests;
 	public List<Quest> curQuests = new List<Quest>();
-	public int selectIndex;
 
 	public Quest activeNarrative;
 	public List<Quest> listeningNarratives;
 
 	public List<Quest> completedQuests = new List<Quest>();
+
+	[Header("Narration Control")]
+	public int selectIndex;
 	#endregion
 
 	//Sort use instead of constructor
@@ -56,8 +65,64 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//
+	public void Init() {
+		foreach(Narrative n in starters) {
+			ActivateNarrative(n);
+		}
+
+		OnNarrativeEvent();
+	}
+
+	//
 	public void SetStartState() {
 		AddQuest(startQuest, selectIndex);
+
+		foreach(Narrative n in starters) {
+			ActivateNarrative(n);
+		}
+	}
+
+	//
+	public void ActivateNarrative(Narrative narrative) {
+		Narrative n = Object.Instantiate(narrative) as Narrative;
+		active.Add(n);
+	}
+
+	//Callback for game event, progress narratives that are listening for the event
+	public void OnNarrativeEvent(string eventType = "", string prop = "") {
+		bool didProgress = false;
+		//For every active narrative, going backwards
+		for(int i = active.Count - 1; i >= 0; i--) {
+			Narrative.Step curStep = active[i].GetCurrentStep();
+			//Check if event fullfills conditions for current step
+			if((curStep.conditionType == "" || curStep.conditionType == eventType) &&
+				(curStep.conditionProp == "" || curStep.conditionProp == prop)) {
+				//Invoke event function
+				curStep.unityEvent.Invoke();
+				//Progress narrative
+				active[i].Progress();
+				//Check if narrative was completed
+				if(active[i].IsComplete()) {
+					//Temporarily store narrative for following narratives
+					Narrative n = active[i];
+					//Archive and remove completed narrative
+					archive.Add(active[i]);
+					active.RemoveAt(i);
+					//Start eventual following narratives
+					foreach(Narrative fn in n.followingNarratives) {
+						ActivateNarrative(fn);
+					}
+					//Save game due to progress
+					_interface.SaveGameState();
+				}
+				//Flag progress
+				didProgress = true;
+			}
+		}
+		//Fire empty event to start eventual new steps
+		if(didProgress) {
+			OnNarrativeEvent();
+		}
 	}
 
 	//
@@ -219,32 +284,32 @@ public class NarrationManager : MonoBehaviour {
 	// Called to send quest related event to all active quest. Progresses related quests
 	// and starts next quest if quest fully progressed
 	public void OnQuestEvent(Quest.QuestEvent questEvent, string argument = "") {
-		if(debug) { Debug.Log(name + ": Received event " + questEvent + "(" + argument + ")"); }
-		for(int i = curQuests.Count - 1; i >= 0; i--) {
-			Quest curQuest = curQuests[i];
-			if(curQuest.GetCurrentStep().condition == questEvent) {
-				if(curQuest.GetCurrentStep().conditionField == "" ||
-					curQuest.GetCurrentStep().conditionField == argument) {
-					if(debug) { Debug.Log(name + ":" + curQuest.name + " progressed"); }
+		//if(debug) { Debug.Log(name + ": Received event " + questEvent + "(" + argument + ")"); }
+		//for(int i = curQuests.Count - 1; i >= 0; i--) {
+		//	Quest curQuest = curQuests[i];
+		//	if(curQuest.GetCurrentStep().condition == questEvent) {
+		//		if(curQuest.GetCurrentStep().conditionField == "" ||
+		//			curQuest.GetCurrentStep().conditionField == argument) {
+		//			if(debug) { Debug.Log(name + ":" + curQuest.name + " progressed"); }
 
-					_interface.ClearView();
-					curQuest.NextStep();
-					if(curQuest.IsComplete()) {
-						completedQuests.Add(curQuest);
-						curQuests.Remove(curQuest);
+		//			_interface.ClearView();
+		//			curQuest.NextStep();
+		//			if(curQuest.IsComplete()) {
+		//				completedQuests.Add(curQuest);
+		//				curQuests.Remove(curQuest);
 
-						if(curQuest.nextQuest != null) {
-							AddQuest(curQuest.nextQuest, 0);
-						}
+		//				if(curQuest.nextQuest != null) {
+		//					AddQuest(curQuest.nextQuest, 0);
+		//				}
 
-						_interface.SetControlState(Controller.InputState.ALL);
-						_interface.SaveGameState();
-					} else {
-						StartQuestStep(curQuests[i]);
-					}
-				}
-			}
-		}
+		//				_interface.SetControlState(Controller.InputState.ALL);
+		//				_interface.SaveGameState();
+		//			} else {
+		//				StartQuestStep(curQuests[i]);
+		//			}
+		//		}
+		//	}
+		//}
 	}
 
 	// Returns index for given quest

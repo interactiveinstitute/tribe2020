@@ -24,6 +24,7 @@ public class Language : ScriptableObject {
 	public class ValueGroup {
 		public string title;
 		public List<KeyValue> values;
+		public bool translated = false;
 	}
 
 	public List<Language.ValueGroup> groups; 

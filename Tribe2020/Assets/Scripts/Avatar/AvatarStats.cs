@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
+	public Sprite portrait;
+
     [Range(0.0f, 1.0f)]
     public float knowledge;
     [Range(0.0f, 1.0f)]

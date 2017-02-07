@@ -72,11 +72,15 @@ public class MovieController : Controller {
 
 		if(_isStarted) {
 			_subtitleTimer += Time.fixedDeltaTime;
-				if(_subtitles[_subtitleIndex].time < _videoController.GetSeekPosition() && _subtitleIndex < _subtitles.Count - 1) {
+			if(_subtitles[_subtitleIndex].time < _videoController.GetSeekPosition() && _subtitleIndex < _subtitles.Count - 1) {
+				if(_subtitles[_subtitleIndex].text == "") {
+					_movieView.ShowSubtitle("");
+				} else {
 					_movieView.ShowSubtitle(_localMgr.GetPhrase("Intro Movie", "" + _subtitleIndex));
-					_subtitleIndex++;
 				}
+				_subtitleIndex++;
 			}
+		}
 	}
 
 	//

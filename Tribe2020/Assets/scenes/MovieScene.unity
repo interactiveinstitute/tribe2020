@@ -102,6 +102,8 @@ GameObject:
   - component: {fileID: 25268292}
   - component: {fileID: 25268291}
   - component: {fileID: 25268290}
+  - component: {fileID: 25268294}
+  - component: {fileID: 25268293}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -162,7 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -183,6 +185,34 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 25268288}
+--- !u!114 &25268293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 25268288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
+--- !u!114 &25268294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 25268288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &306045375
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +256,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -424,10 +454,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: b4372c0046200e0499b93bce7a4fb3c4, type: 3}
-    m_FontSize: 24
-    m_FontStyle: 0
+    m_FontSize: 18
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 2
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -435,7 +465,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Skip
+  m_Text: X
 --- !u!222 &819707691
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -487,30 +517,36 @@ MonoBehaviour:
   videoObject: {fileID: 475571649}
   _localMgr: {fileID: 0}
   _subtitles:
-  - text: In the cradle of humanity, nature governed over human life
-    time: 29000
-  - text: This all changed however, with the innovation of
-    time: 32000
-  - text: '... Fire'
-    time: 32000
-  - text: As the fire shamans of the old gained power through burning
-    time: 38000
-  - text: so started the shift in balance of energy consumption
-    time: 46000
+  - text: In the cradle of humanity, nature governed over mankind
+    time: 25000
+  - text: However, this all changed with the discovery of one technology
+    time: 30000
+  - text: Fire
+    time: 35000
+  - text: As the fire shamans mastered the art of burning
+    time: 40000
+  - text: So started the shift in balance of energy consumption
+    time: 45000
+  - text: 
+    time: 50000
   - text: Our tribes grew and with them our dempand for more energy
     time: 52000
   - text: We continued to burn more and more, fueling the skies with carbon dioxide
-    time: 56000
+    time: 57000
   - text: Until eventually
-    time: 64000
-  - text: there was nothing left to burn
-    time: 73000
+    time: 62000
+  - text: There was nothing left to burn
+    time: 66000
+  - text: 
+    time: 72000
   - text: You are the decendant of the first fire shamans
     time: 80000
-  - text: and you have been given a chance
-    time: 85000
-  - text: to save the future you must gather the...
-    time: 87000
+  - text: To save the world you must undo what has been done
+    time: 84000
+  - text: But you cannot do it alone, you must unite the TRIBE
+    time: 88000
+  - text: 
+    time: 90000
 --- !u!1 &1036630164
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,8 +946,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -80, y: -20}
-  m_SizeDelta: {x: 160, y: 40}
+  m_AnchoredPosition: {x: -20.1, y: -20}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2126372088
 MonoBehaviour:
@@ -977,15 +1013,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.12156863, g: 0.6117647, b: 0.31764707, a: 0.39215687}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 0c455a0b4defb5e49935ab1523bf3020, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
