@@ -106,7 +106,9 @@ public class PilotView : View{
 
 	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer, characterPanel, devicePanel;
 	private bool _settingsIsVisible = false;
-	#endregion
+    #endregion
+
+    CharacterPanel _characterPanel;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -123,9 +125,11 @@ public class PilotView : View{
 		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
 		apocalypsePercent.text = "0 %";
 
-		//Clear inbox
-		//RemoveChildren(inboxList);
-	}
+        _characterPanel = GetComponentInChildren<CharacterPanel>();
+
+        //Clear inbox
+        //RemoveChildren(inboxList);
+    }
 	
 	//Update is called once per frame
 	void Update(){
@@ -327,6 +331,8 @@ public class PilotView : View{
 	public void BuildAvatarPanel(Appliance app) {
 		avatarTitle.text = app.title;
 		avatarDescription.text = _controller.GetPhrase("Avatars", app.title);
+
+        _characterPanel.BuildPanel(app.gameObject);
 
 		BuildEEMInterface(avatarEEMContainer, app);
 	}
