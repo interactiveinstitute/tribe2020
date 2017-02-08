@@ -34,7 +34,9 @@ public class GameTime : MonoBehaviour {
 			return 0;
 		}
 	}
-		
+
+    [HideInInspector]
+    public float simulationDeltaTime;
 	public double StartTime;
 	public double offset;
 	public double time = Double.NaN;
@@ -124,7 +126,7 @@ public class GameTime : MonoBehaviour {
 		//Do all key actions requiered until the new time
 		DoKeyActions(new_time);
 
-
+        simulationDeltaTime = (float) (new_time - time);
 		time = new_time;
 		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 

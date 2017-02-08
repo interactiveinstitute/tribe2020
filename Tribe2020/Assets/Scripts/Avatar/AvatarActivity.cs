@@ -93,7 +93,7 @@ public class AvatarActivity : ScriptableObject {
         if (_delay >= 0f)
         {
             //TODO: Make this update from simulation time. deltaTime is related to frames.
-            _delay -= Time.deltaTime;
+            _delay -= _timeMgr.simulationDeltaTime;
         }
 
         //Do stuff at certain conditions
