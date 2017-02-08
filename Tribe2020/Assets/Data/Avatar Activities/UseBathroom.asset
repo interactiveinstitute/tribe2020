@@ -13,28 +13,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: 
   sessions:
-  - title: Walking to bathroom
-    type: 0
+  - title: Wait for toilet free
+    type: 12
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: ed51aa6006d7cfa46b1a6bbfde74f324,
       type: 2}
-    parameter: use_toilet
+    parameter: 300
     avatarOwnsTarget: 0
     currentRoom: 0
-    setActivityAppliance: 0
+    setActivityAppliance: 1
+    useActivityAppliance: 1
     setAvatarMood: 0
     mood: 0
-  - title: Using toilet
-    type: 5
+  - title: Walk to toilet
+    type: 0
     appliance: {fileID: 0}
-    requiredAffordance: {fileID: 11400000, guid: ed51aa6006d7cfa46b1a6bbfde74f324,
-      type: 2}
-    parameter: 1
+    requiredAffordance: {fileID: 0}
+    parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
     setActivityAppliance: 0
+    useActivityAppliance: 1
+    setAvatarMood: 0
+    mood: 0
+  - title: Sit on toilet
+    type: 10
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 0}
+    parameter: Sit
+    avatarOwnsTarget: 0
+    currentRoom: 0
+    setActivityAppliance: 0
+    useActivityAppliance: 1
+    setAvatarMood: 0
+    mood: 0
+  - title: Release oneself
+    type: 2
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 0}
+    parameter: 30
+    avatarOwnsTarget: 0
+    currentRoom: 0
+    setActivityAppliance: 0
+    useActivityAppliance: 1
     setAvatarMood: 1
-    mood: 7
+    mood: 6
   - title: Walking to sink
     type: 0
     appliance: {fileID: 0}
@@ -42,19 +65,33 @@ MonoBehaviour:
       type: 2}
     parameter: 
     avatarOwnsTarget: 0
-    currentRoom: 0
+    currentRoom: 1
     setActivityAppliance: 0
+    useActivityAppliance: 0
     setAvatarMood: 0
     mood: 0
-  - title: Washing hands
-    type: 5
+  - title: Start washing hands
+    type: 8
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 128f870dfa6a6f542bff16c173befabf,
       type: 2}
-    parameter: 1
+    parameter: 
     avatarOwnsTarget: 0
-    currentRoom: 0
+    currentRoom: 1
     setActivityAppliance: 0
+    useActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  - title: Stop washing hands
+    type: 8
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 128f870dfa6a6f542bff16c173befabf,
+      type: 2}
+    parameter: 
+    avatarOwnsTarget: 0
+    currentRoom: 1
+    setActivityAppliance: 0
+    useActivityAppliance: 0
     setAvatarMood: 0
     mood: 0
   - title: Walking to dryer
@@ -64,22 +101,47 @@ MonoBehaviour:
       type: 2}
     parameter: 
     avatarOwnsTarget: 0
-    currentRoom: 0
+    currentRoom: 1
     setActivityAppliance: 0
+    useActivityAppliance: 0
     setAvatarMood: 0
     mood: 0
-  - title: Drying hands
-    type: 4
+  - title: Start drying hands
+    type: 7
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642,
       type: 2}
-    parameter: 1
+    parameter: 
+    avatarOwnsTarget: 0
+    currentRoom: 1
+    setActivityAppliance: 0
+    useActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  - title: Stop drying hands
+    type: 8
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642,
+      type: 2}
+    parameter: 
+    avatarOwnsTarget: 0
+    currentRoom: 1
+    setActivityAppliance: 0
+    useActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  - title: Release toilet use
+    type: 13
+    appliance: {fileID: 0}
+    requiredAffordance: {fileID: 0}
+    parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
     setActivityAppliance: 0
+    useActivityAppliance: 1
     setAvatarMood: 0
     mood: 0
-  - title: Chilling in social space
+  - title: Walk somewhere else
     type: 0
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: ceb1598aa7d7e2445969cbfa6eff6a86,
@@ -88,6 +150,7 @@ MonoBehaviour:
     avatarOwnsTarget: 0
     currentRoom: 0
     setActivityAppliance: 0
+    useActivityAppliance: 0
     setAvatarMood: 0
     mood: 0
   _currSession: 0
