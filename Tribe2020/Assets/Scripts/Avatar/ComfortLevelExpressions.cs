@@ -12,8 +12,8 @@ public class ComfortLevelExpressions : MonoBehaviour {
 
 	void Start ()
 	{
-        face = transform.FindChild("Model/Face").gameObject;
-        UpdateFaceTextureByCurrentMood();
+        //face = transform.FindChild("Model/Face").gameObject;
+        //UpdateFaceTextureByCurrentMood();
     }
 
 
@@ -29,7 +29,7 @@ public class ComfortLevelExpressions : MonoBehaviour {
     public void SetFaceTexture(AvatarMood.Mood mood) {
         _textureFace = GetFaceTextureByMood(mood);
         if (_textureFace != null) {
-            face.GetComponent<SkinnedMeshRenderer>().material.mainTexture = _textureFace;
+            //face.GetComponent<SkinnedMeshRenderer>().material.mainTexture = _textureFace;
         }
     }
 
