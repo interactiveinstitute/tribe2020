@@ -18,12 +18,12 @@ public class NarrationManagerEditor : Editor {
 			myScript.PrevStep();
 		}
 
-		if(GUILayout.Button("Restart", GUILayout.Width(100))) {
-			myScript.SetStartState();
+		if(GUILayout.Button("Restart Selected", GUILayout.Width(100))) {
+			myScript.ResetSelected();
 		}
 
-		if(GUILayout.Button("Finish", GUILayout.Width(100))) {
-			myScript.FinishNarrative();
+		if(GUILayout.Button("Finish Selected", GUILayout.Width(100))) {
+			myScript.FinishSelected();
 		}
 	}
 }

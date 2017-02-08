@@ -16,13 +16,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000011789569684}
-  - 65: {fileID: 65000011294120920}
-  - 208: {fileID: 208000014187142746}
-  - 114: {fileID: 114000013862791242}
-  - 114: {fileID: 114000012477659158}
+  - component: {fileID: 4000011789569684}
+  - component: {fileID: 65000011294120920}
+  - component: {fileID: 208000014187142746}
+  - component: {fileID: 114000013862791242}
+  - component: {fileID: 114000012477659158}
   m_Layer: 0
   m_Name: Floor Lamp
   m_TagString: Untagged
@@ -35,11 +35,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000010360117702}
-  - 33: {fileID: 33000011078601986}
-  - 23: {fileID: 23000014222011796}
+  - component: {fileID: 4000010360117702}
+  - component: {fileID: 33000011078601986}
+  - component: {fileID: 23000014222011796}
   m_Layer: 0
   m_Name: LampFloor__Body
   m_TagString: Untagged
@@ -52,10 +52,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000013570679290}
-  - 108: {fileID: 108000011085141830}
+  - component: {fileID: 4000013570679290}
+  - component: {fileID: 108000011085141830}
   m_Layer: 0
   m_Name: Point light
   m_TagString: Untagged
@@ -72,10 +72,10 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000011789569684}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4000011789569684
 Transform:
   m_ObjectHideFlags: 1
@@ -85,12 +85,12 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.3857918, y: -0.037082672, z: 2.1040459}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000010360117702}
   - {fileID: 4000013570679290}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4000013570679290
 Transform:
   m_ObjectHideFlags: 1
@@ -100,10 +100,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.401, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000011789569684}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23000014222011796
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -119,7 +119,9 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 344b279e1f3f67a408975874c941b5e3, type: 2}
   - {fileID: 2100000, guid: 249986315ba01014daaec9694e676a43, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -127,7 +129,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -200,6 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Floor Lamp
   description: Lightbulb on a stick
+  icon: {fileID: 21300000, guid: 9b53f0a244e56944687c1a6c6b438cda, type: 3}
   playerAffordances: []
   avatarAffordances: []
   owners: []
@@ -277,7 +280,6 @@ MonoBehaviour:
   runlevelOn: 2
   runlevelOff: 1
   runlevelUnpowered: 0
-  relatedEfficiency: 0
 --- !u!208 &208000014187142746
 NavMeshObstacle:
   m_ObjectHideFlags: 1

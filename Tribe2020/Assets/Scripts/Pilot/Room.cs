@@ -120,7 +120,23 @@ public class Room : MonoBehaviour {
 		return _occupants;
 	}
 
-    public Floor GetFloor() {
+	//Returns all appliances in the room
+	public List<Appliance> GetAppliances() {
+		return _devices;
+	}
+
+	//Returns all electric devices in the room
+	public List<ElectricDevice> GetElectricDevices() {
+		List<ElectricDevice> eDevices = new List<ElectricDevice>();
+		foreach(Appliance app in _devices) {
+			if(app.GetComponent<ElectricDevice>()) {
+				eDevices.Add(app.GetComponent<ElectricDevice>());
+			}
+		}
+		return eDevices;
+	}
+
+	public Floor GetFloor() {
         return GetComponentInParent<Floor>();
     }
 
