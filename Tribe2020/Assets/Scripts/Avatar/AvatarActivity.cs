@@ -58,6 +58,7 @@ public class AvatarActivity : ScriptableObject {
 		public bool avatarOwnsTarget;
 		public bool currentRoom;
         public bool setActivityAppliance;
+        public bool useActivityAppliance = true;
 
         public enum SetMoodOptions { No, Try, Force }
         public SetMoodOptions setAvatarMood;
@@ -203,8 +204,8 @@ public class AvatarActivity : ScriptableObject {
             break;
         }
         
-        //Setup appliance references
-        if (!session.appliance && _activityAppliance && !session.setActivityAppliance)
+        //Setup appliance reference
+        if (session.useActivityAppliance && _activityAppliance && !session.setActivityAppliance)
         {
             session.appliance = _activityAppliance;
         }
