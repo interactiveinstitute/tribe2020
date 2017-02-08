@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 114000014268063458}
   - component: {fileID: 114000011584839538}
   - component: {fileID: 114000011490770672}
+  - component: {fileID: 114684005188211906}
   m_Layer: 12
   m_Name: OfficeWorker
   m_TagString: Avatar
@@ -989,7 +990,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011262242068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.319, y: 0.3502744, z: 13.869}
+  m_LocalPosition: {x: 7.46, y: 0.3502744, z: 14.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4000011784947872}
@@ -1675,7 +1676,7 @@ Animator:
   m_GameObject: {fileID: 1000011262242068}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 4424e67bf55053f4ba3863d59bb0496d, type: 3}
-  m_Controller: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6e561fe9e77f4ff4db30e43cd330d855, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1710,8 +1711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: Yoghurt Ableton
-  description: Yoghurt is an able worker. She can do a ton of work in fact.
+  title: Jaivar Rough
+  description: Rough is ready to do some heavy lifting for the environment.
   playerAffordances:
   - {fileID: 11400000, guid: 757237e10395d394ba0f110a1f090a3b, type: 2}
   avatarAffordances:
@@ -1720,7 +1721,7 @@ MonoBehaviour:
     subscribingActivities: []
   owners: []
   appliedEEMs: []
-  interactionPos: {x: 0.82103527, y: 0.3502744, z: 7.308838}
+  interactionPos: {x: 0, y: 0.3502744, z: 0}
   posePositions: []
   cashProduction: 0
   comfortPorduction: 0
@@ -1979,7 +1980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controller: {fileID: 0}
-  _stats: {fileID: 114000013719618876}
+  _stats: {fileID: 0}
   _savedIdlePosition: {x: -1.185515, y: 0.3666649, z: -8.913963}
   _curActivity: {fileID: 0}
   _nextActivity: {fileID: 0}
@@ -1991,10 +1992,12 @@ MonoBehaviour:
   - time: 07:00
     activity: {fileID: 11400000, guid: 06b1be30471c43a46b052cf354aca41d, type: 2}
   - time: 07:01
+    activity: {fileID: 11400000, guid: 12803f4e3181ba1439a0fdc7a230ae4c, type: 2}
+  - time: 07:10
+    activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
+  - time: 07:20
     activity: {fileID: 11400000, guid: bc7f187f4939a2c4f8897925a5fb744c, type: 2}
-  - time: 07:15
-    activity: {fileID: 11400000, guid: 4edaa14fc7ce8484ebb47c318e4c6e50, type: 2}
-  - time: 17:00
+  - time: 16:00
     activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
   _scheduleIndex: 0
   thingsInHands: []
@@ -2056,8 +2059,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e424426b3183249802db809d698863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knowledge: 0
-  attitude: 0
+  portrait: {fileID: 0}
+  knowledge: 0.75
+  attitude: 1
   normSensititvity: 0
   conviction: 100
   energy: 60
@@ -2218,6 +2222,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueId: e5d4add0-9aa4-4b1d-bb6a-14eda141839c
+--- !u!114 &114684005188211906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011262242068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 35b14537-5f4c-495f-ada4-37bc8ae8d027
 --- !u!136 &136000012680133070
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -2228,7 +2244,7 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.1
-  m_Height: 0.05
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!137 &137000010104317322

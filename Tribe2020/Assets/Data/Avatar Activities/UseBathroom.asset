@@ -14,7 +14,6 @@ MonoBehaviour:
   title: 
   sessions:
   - title: Walking to bathroom
-    probability: 1
     type: 0
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: ed51aa6006d7cfa46b1a6bbfde74f324,
@@ -22,11 +21,10 @@ MonoBehaviour:
     parameter: use_toilet
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Using toilet
-    probability: 1
     type: 5
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: ed51aa6006d7cfa46b1a6bbfde74f324,
@@ -34,11 +32,10 @@ MonoBehaviour:
     parameter: 1
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 1
+    mood: 7
   - title: Walking to sink
-    probability: 1
     type: 0
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 128f870dfa6a6f542bff16c173befabf,
@@ -46,11 +43,10 @@ MonoBehaviour:
     parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Washing hands
-    probability: 1
     type: 5
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 128f870dfa6a6f542bff16c173befabf,
@@ -58,11 +54,10 @@ MonoBehaviour:
     parameter: 1
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Walking to dryer
-    probability: 1
     type: 0
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642,
@@ -70,11 +65,10 @@ MonoBehaviour:
     parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Drying hands
-    probability: 1
     type: 4
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642,
@@ -82,11 +76,10 @@ MonoBehaviour:
     parameter: 1
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
   - title: Chilling in social space
-    probability: 1
     type: 0
     appliance: {fileID: 0}
     requiredAffordance: {fileID: 11400000, guid: ceb1598aa7d7e2445969cbfa6eff6a86,
@@ -94,8 +87,14 @@ MonoBehaviour:
     parameter: 
     avatarOwnsTarget: 0
     currentRoom: 0
-    relatedEfficieny: 0
-    checkType: 0
-    efficienyLevel: 0
+    setActivityAppliance: 0
+    setAvatarMood: 0
+    mood: 0
+  _currSession: 0
+  _curTargetObj: {fileID: 0}
+  _curAvatarState: 0
+  turnedOnDevices: []
+  _delay: 0
   startTime: 0
   hasStartTime: 1
+  isTemporary: 0
