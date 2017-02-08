@@ -66,7 +66,7 @@ public class AvatarMood : MonoBehaviour {
         //markovMood.LogProbabilities();
 
         markovMood.SetCurrentState(preferedMood);
-        UpdateFaceTextureByCurrentMood();
+        //UpdateFaceTextureByCurrentMood();
     }
 
     void Update() {
