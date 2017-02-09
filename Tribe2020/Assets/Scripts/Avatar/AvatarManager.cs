@@ -14,7 +14,7 @@ public class AvatarManager : MonoBehaviour {
 	[SerializeField]
 	private List<BehaviourAI> _avatars;
 	public AvatarConversation conversation;
-    public AvatarLooks looks;
+    public AvatarModels models;
 	public Sprite playerPortrait;
 
 	//

@@ -2,14 +2,14 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(Clothing))]
+[CustomEditor(typeof(AvatarModel))]
 public class ClothingEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        Clothing clothing = (Clothing)target;
+        AvatarModel clothing = (AvatarModel)target;
 
         //Set dirty, in order to save new data on game start
         EditorUtility.SetDirty(clothing);

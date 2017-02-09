@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Clothing : MonoBehaviour {
-
-    public AvatarLooks.LooksMale looksMale;
-    public AvatarLooks.LooksFemale looksFemale;
 
     void Awake() {
     }
@@ -14,39 +12,20 @@ public class Clothing : MonoBehaviour {
     public void RandomizeClothes()
     {
         AvatarManager am = FindObjectOfType<AvatarManager>();
+        int modelId = GetComponent<AvatarModel>().modelId;
+        AvatarModels.AvatarModelBundle modelBundle = am.models.models[modelId];
 
-        AvatarManager.Gender gender = gameObject.GetComponent<AvatarModel>().gender;
+        foreach(AvatarModels.TexturedBodyPart bodyPart in modelBundle.bodyParts) {
+            Material material = bodyPart.materials[Random.Range(0, bodyPart.materials.Count)];
 
-        if (gender == AvatarManager.Gender.Male) {
-            looksMale = am.looks.GenerateMaleLooks();
-            SetMaleMaterials();
+            Debug.Log(bodyPart.model.name);
+            SetMaterial(bodyPart.model.name, material);
         }
-        else if (gender == AvatarManager.Gender.Female) {
-            looksFemale = am.looks.GenerateFemaleLooks();
-            SetFemaleMaterials();
-        }
-    }
-
-    void SetMaleMaterials() {
-        SetMaterial("Hair", looksMale.hair);
-
-        SetMaterial("Head", looksMale.skin);
-        SetMaterial("Neck_Cube.016", looksMale.skin);
-        SetMaterial("Hands", looksMale.skin);
-
-        SetMaterial("Shirt_Cube.013", looksMale.shirt);
-        SetMaterial("Suit", looksMale.suit);
-        SetMaterial("Tie_Cube.012", looksMale.pants);
-
-        SetMaterial("Pants", looksMale.pants);
-        SetMaterial("Shoes", looksMale.shoes);
-    }
-
-    void SetFemaleMaterials() {
 
     }
 
     void SetMaterial(string modelName, Material material) {
         transform.FindChild("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().material = material;
     }
+
 }
