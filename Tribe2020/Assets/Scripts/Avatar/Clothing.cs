@@ -9,16 +9,6 @@ public class Clothing : MonoBehaviour {
     }
 
     void Start() {
-
-        AvatarManager.Gender gender = gameObject.GetComponent<AvatarModel>().gender;
-
-        if(gender == AvatarManager.Gender.Male) {
-            SetMaleMaterials();
-        }
-        else if(gender == AvatarManager.Gender.Female) {
-            SetFemaleMaterials();
-        }
-
     }
 
     public void RandomizeClothes()
@@ -29,11 +19,12 @@ public class Clothing : MonoBehaviour {
 
         if (gender == AvatarManager.Gender.Male) {
             looksMale = am.looks.GenerateMaleLooks();
+            SetMaleMaterials();
         }
         else if (gender == AvatarManager.Gender.Female) {
             looksFemale = am.looks.GenerateFemaleLooks();
+            SetFemaleMaterials();
         }
-
     }
 
     void SetMaleMaterials() {

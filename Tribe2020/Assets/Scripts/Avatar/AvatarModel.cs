@@ -10,16 +10,7 @@ public class AvatarModel : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        GameObject goModel = Instantiate(model);
-        Destroy(goModel.GetComponent<Animator>());
-        goModel.name = "Model";
-        SetLayerRecursive(goModel.transform);       
-        goModel.transform.parent = transform;
-        goModel.transform.localPosition = Vector3.zero;
-
-        //Set animator rig
-        Animator animator = gameObject.GetComponent<Animator>();
-        animator.avatar = avatar;
+        
     }
 
     void Start() {
@@ -36,6 +27,23 @@ public class AvatarModel : MonoBehaviour {
         foreach (Transform child in transform) {
             SetLayerRecursive(child);
         }
+    }
+
+    void OnValidate() {
+
+        Transform existingModel = transform.FindChild("Model");
+        if (existingModel == null && model != null) {
+            GameObject goModel = Instantiate(model);
+            goModel.name = "Model";
+            SetLayerRecursive(goModel.transform);
+            goModel.transform.parent = transform;
+            goModel.transform.localPosition = Vector3.zero;
+
+            //Set animator rig
+            Animator animator = gameObject.GetComponent<Animator>();
+            animator.avatar = avatar;
+        }
+
     }
 
 }
