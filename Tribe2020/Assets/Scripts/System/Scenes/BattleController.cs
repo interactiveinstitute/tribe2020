@@ -128,7 +128,8 @@ public class BattleController : Controller {
 		_isTouching = false;
 		_hasWon = true;
 
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
+		_narrationMgr.OnNarrativeEvent("BattleOver");
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
 		SaveGameState();
 	}
 

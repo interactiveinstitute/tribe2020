@@ -121,7 +121,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_firstUpdate = true;
 			LoadGameState();
 
-			_narrationMgr.Init();
+			//_narrationMgr.Init();
 			//_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 		}
 
@@ -174,7 +174,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
-		_view.UpdateQuestCount(_narrationMgr.GetQuests().Count);
+		_view.UpdateQuestCount(_narrationMgr.active.Count);
 
 		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
 		if(_timeMgr.time > endTime) {
@@ -229,8 +229,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private void OnTap(Vector3 pos) {
 		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_TAP) { return; }
 
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
-		_narrationMgr.OnNarrativeEvent("Tapped");
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
+		_instance._narrationMgr.OnNarrativeEvent("Tapped");
 	}
 
 	//
@@ -260,10 +260,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				_cameraMgr.GotoUpperView();
 			}
 
-			_narrationMgr.OnNarrativeEvent("Swiped");
+			_instance._narrationMgr.OnNarrativeEvent("Swiped");
+			_instance._narrationMgr.OnNarrativeEvent("SelectedView", _cameraMgr.GetCurrentViewpoint().title);
 
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _cameraMgr.GetCurrentViewpoint().title);
+			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
+			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _cameraMgr.GetCurrentViewpoint().title);
 		}
 	}
 
@@ -348,7 +349,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(_instance._curState == Controller.InputState.ALL || _instance._curState == Controller.InputState.ONLY_PROMPT) {
 			_instance._view.messageUI.SetActive(false);
 
-			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
+			//_instance._narrationMgr.OnNarrativeEvent("OKPressed");
+			//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
 			_instance._narrationMgr.OnNarrativeEvent("OKPressed");
 		}
 
@@ -372,19 +374,23 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(app.GetComponent<BehaviourAI>()) {
 			_instance._view.BuildAvatarPanel(app);
 			SetCurrentUI(_instance._view.characterPanel);
+			_instance._narrationMgr.OnNarrativeEvent("AvatarPanelOpened", app.title);
 		} else {
 			_instance._view.BuildDevicePanel(app);
 			SetCurrentUI(_instance._view.devicePanel);
+			_instance._narrationMgr.OnNarrativeEvent("DevicePanelOpened", app.title);
 		}
 
 		//_view.BuildInspector(appliance);
 		//SetCurrentUI(_view.inspector);
 
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
-		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
-		if(app.GetComponent<BehaviourAI>()) {
-			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
-		}
+		//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened, app.title);
+		//_instance._narrationMgr.OnNarrativeEvent("DevicePanelOpened", app.title);
+		//if(app.GetComponent<BehaviourAI>()) {
+		//	//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSelected, app.title);
+		//	_instance._narrationMgr.OnNarrativeEvent("AvatarPanelOpened", app.title);
+		//}
 	}
 
 	//Open mail with details of narrative
@@ -414,9 +420,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		if(controller._view.GetCurrentUI() != null) {
 			if(controller._view.GetCurrentUI() == controller._view.inspector) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
+				_instance._narrationMgr.OnNarrativeEvent("InspectorClosed");
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorClosed);
 			} else if(controller._view.GetCurrentUI() == controller._view.inbox) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
+				_instance._narrationMgr.OnNarrativeEvent("InboxClosed");
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxClosed);
 			}
 		}
 
@@ -425,18 +433,22 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		} else {
 			controller._view.SetCurrentUI(ui);
 			if(ui == controller._view.inspector) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
+				_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
 			} else if(ui == controller._view.inbox) {
-				controller._view.BuildInbox(controller._narrationMgr.GetQuests(), controller._narrationMgr.GetCompletedQuests());
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
-				_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
+				//controller._view.BuildInbox(controller._narrationMgr.GetQuests(), controller._narrationMgr.GetCompletedQuests());
+				_instance._narrationMgr.OnNarrativeEvent("InobxOpened");
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
+				//_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
 			} else if(ui == controller._view.energyPanel) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenEnergyPanel);
+				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
 				_instance._narrationMgr.OnNarrativeEvent("EnergyPanelOpened");
 			} else if(ui == controller._view.comfortPanel) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenComfortPanel);
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.OpenComfortPanel);
+				_instance._narrationMgr.OnNarrativeEvent("ComfortPanelOpened");
 			} else if(ui == controller._view.apocalypsometer) {
-				controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
+				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
 				_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerOpened");
 			}
 		}
@@ -447,7 +459,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Hide any open user interface
 	public void HideUI() {
 		if(_instance._view.GetCurrentUI() == _instance._view.apocalypsometer) {
-			_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ApocalypsometerClosed);
+			//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ApocalypsometerClosed);
+			_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerClosed");
 		}
 
 		_instance._view.SetCurrentUI(null);
@@ -457,33 +470,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
   //      _camMgr.ClearLookAtTarget();
 	}
 
-	//
-	public void SelectGridView() {
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_SELECT_GRIDVIEW) { return; }
-
-		_view.EnableEnergyPanel();
-		_view.EnableComfortPanel();
-		_view.HideApocalypsometer();
-
-		_cameraMgr.GoToGridView();
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedGridView);
-	}
-
-	//
-	public void SelectOverview() {
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_SELECT_OVERVIEW) { return; }
-
-		_view.DisableEnergyPanel();
-		_view.DisableComfortPanel();
-		_view.ShowApocalypsometer();
-
-		_cameraMgr.GoToOverview();
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.SelectedOverview);
-	}
-
 	//Request narration event for current view
 	public void RequestCurrentView() {
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _cameraMgr.GetCurrentViewpoint().title);
+		_instance._narrationMgr.OnNarrativeEvent("SelectedView", _cameraMgr.GetCurrentViewpoint().title);
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _cameraMgr.GetCurrentViewpoint().title);
 	}
 
 	//
@@ -495,7 +485,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		go.SetActive(false);
 
 		ResetTouch();
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested);
+		_instance._narrationMgr.OnNarrativeEvent("ResourceHarvested");
 	}
 
 	//
@@ -513,7 +504,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 
 		_instance._audioMgr.PlaySound("Press Button");
-		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested, "satisfaction");
+		//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ResourceHarvested, "satisfaction");
+		_instance._narrationMgr.OnNarrativeEvent("ResourceHarvested", "Satisfaction");
 	}
 
 	//
@@ -530,11 +522,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
                     _avatarMgr.OnLightToggled(zone, meter.GivesPower);
 
                     if (meter.GivesPower) {
-                        _narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
+                        //_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOn);
 						_narrationMgr.OnNarrativeEvent("TurnedOnLamp");
                     }
                     else {
-                        _narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOff);
+                        //_narrationMgr.OnQuestEvent(Quest.QuestEvent.LightSwitchedOff);
 						_narrationMgr.OnNarrativeEvent("TurnedOffLamp");
 					}
                 }
@@ -548,7 +540,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_instance._view.UpdateViewpointGuide(_instance._cameraMgr.GetViewpoints(), curView, overview);
 		_instance._view.UpdateViewpointTitle(curView.title);
 
-		_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
+		//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, curView.title);
+		_instance._narrationMgr.OnNarrativeEvent("SelectedView", curView.title);
 	}
 
 	//
@@ -566,8 +559,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			//_resourceMgr.RefreshProduction();
 
 			//actionObj.SetActive(false);
-
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
+			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
+			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MeasurePerformed, eem.name);
 		}
 
 	}
@@ -575,19 +568,22 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void OnAvatarReachedPosition(BehaviourAI avatar, Vector3 pos) {
 		//Debug.Log("OnAvatarReachedPosition");
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarArrived);
+		_instance._narrationMgr.OnNarrativeEvent("AvatarArrived");
 		avatar.ReleaseControlOfAvatar();
 	}
 
 	//
 	public void OnAvatarSessionComplete(string activityState) {
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSessionOver, activityState);
+		_instance._narrationMgr.OnNarrativeEvent("SessionOver", activityState);
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarSessionOver, activityState);
 	}
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
 		if(_narrationMgr != null) {
-			_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
+			_instance._narrationMgr.OnNarrativeEvent("ActivityOver", activity);
+			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
 		}
 	}
 
@@ -699,15 +695,19 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void ShowCongratualations(string text) {
+	public void ShowCongratualations(string cmd) {
+		JSONNode json = JSON.Parse(cmd);
+		string group = json["group"];
+		string key = json["key"];
+
 		_instance._audioMgr.PlaySound("Fireworks");
-		_instance._view.ShowCongratualations(_localMgr.GetPhrase(text));
+		_instance._view.ShowCongratualations(_instance._localMgr.GetPhrase(group, key));
 		_instance._cameraMgr.PlayFireworks();
 	}
 
 	//
 	public void ClearView() {
-		_view.ClearView();
+		_instance._view.ClearView();
 	}
 	#endregion
 
@@ -839,7 +839,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	public void OnAnimationEvent(string animationEvent) {
-		_narrationMgr.OnQuestEvent(Quest.QuestEvent.CameraAnimationEvent, animationEvent);
+		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.CameraAnimationEvent, animationEvent);
 		_narrationMgr.OnNarrativeEvent("AnimationEvent", animationEvent);
 	}
 }

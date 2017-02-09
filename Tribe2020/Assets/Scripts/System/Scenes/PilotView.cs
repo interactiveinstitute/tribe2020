@@ -27,6 +27,7 @@ public class PilotView : View{
 	public Transform power;
 	public Text energyCounter;
 	public RectTransform timeBar;
+	public RectTransform deviceContainer;
 
 	[Header("Inbox")]
 	public Text inboxTitle;
@@ -97,6 +98,7 @@ public class PilotView : View{
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
 	public GameObject EEMButtonPrefab;
+	public GameObject EnergyPanelDevice;
 
 	public GameObject FeedbackNumber;
 
@@ -430,6 +432,17 @@ public class PilotView : View{
 	//
 	public void HideMessage() {
 		messageUI.SetActive(false);
+	}
+
+	//Load device appliances into energy panel interface for current view
+	public void BuildEnergyPanel(List<ElectricDevice> devices) {
+		RemoveChildren(deviceContainer);
+
+		foreach(ElectricDevice device in devices) {
+			GameObject deviceCell = Instantiate(EnergyPanelDevice) as GameObject;
+			deviceCell.GetComponent<EnergyPanelDevice>().device = device;
+			deviceCell.transform.SetParent(deviceContainer, false);
+		}
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives

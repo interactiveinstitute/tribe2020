@@ -23,4 +23,22 @@ public class Viewpoint : MonoBehaviour {
 	void Update(){
 	
 	}
+
+	//Get appliances contained within all related zones
+	public List<Appliance> GetAppliaces() {
+		List<Appliance> appliances = new List<Appliance>();
+		foreach(Room r in relatedZones) {
+			appliances.AddRange(r.GetAppliances());
+		}
+		return appliances;
+	}
+
+	//Get electric devices contained within all related zones
+	public List<ElectricDevice> GetElectricDevices() {
+		List<ElectricDevice> eDevices = new List<ElectricDevice>();
+		foreach(Room r in relatedZones) {
+			eDevices.AddRange(r.GetElectricDevices());
+		}
+		return eDevices;
+	}
 }

@@ -7,6 +7,7 @@ using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
+	public string title;
 	public List<Step> steps = new List<Step>();
 	private int _curStep = 0;
 
@@ -15,6 +16,16 @@ public class Narrative : ScriptableObject {
 	//
 	public Step GetCurrentStep() {
 		return steps[_curStep];
+	}
+
+	//
+	public int GetCurrentStepIndex() {
+		return _curStep;
+	}
+
+	//
+	public void SetCurrentStepIndex(int i) {
+		_curStep = i;
 	}
 
 	//
@@ -36,14 +47,14 @@ public class Narrative : ScriptableObject {
 
 		public UnityEvent unityEvent;
 
-		//public string progressType;
-		//public string progressProp;
-		//public Type type;
-		//public string json;
-		
-
-		//public List<NarrativeCondition> conditions;
+		//
+		public bool IsCompletedBy(string eventType, string prop) {
+			return (conditionType == "" || conditionType == eventType) &&
+					(conditionProp == "" || conditionProp == prop);
+		}
 	}
+
+	
 
 	[Serializable]
 	public struct NarrativeCondition {
