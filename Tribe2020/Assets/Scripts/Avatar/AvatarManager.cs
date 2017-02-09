@@ -9,9 +9,12 @@ public class AvatarManager : MonoBehaviour {
 		return _instance;
 	}
 
+    public enum Gender { Male, Female }
+
 	[SerializeField]
 	private List<BehaviourAI> _avatars;
 	public AvatarConversation conversation;
+    public AvatarLooks looks;
 	public Sprite playerPortrait;
 
 	//

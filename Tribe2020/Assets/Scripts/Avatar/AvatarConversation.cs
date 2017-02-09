@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class AvatarConversation : MonoBehaviour
 {
-
     public enum EnvironmentLevel { negative, neutral, positive };
 
     [System.Serializable]

@@ -11,6 +11,8 @@ public class ClothingEditor : Editor
 
         Clothing clothing = (Clothing)target;
 
+        //Set dirty, in order to save new data on game start
+        EditorUtility.SetDirty(clothing);
 
         if (GUILayout.Button("Randomize clothes", GUILayout.Width(150)))
         {

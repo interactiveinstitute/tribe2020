@@ -6,6 +6,7 @@ public class AvatarModel : MonoBehaviour {
 
     public GameObject model;
     public Avatar avatar;
+    public AvatarManager.Gender gender;
 
 	// Use this for initialization
 	void Awake () {
