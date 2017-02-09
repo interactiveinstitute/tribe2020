@@ -41,6 +41,8 @@ public class DataSeriesModifier : DataSeries {
 		BasicDataSeriesCollection result = new BasicDataSeriesCollection ();
 		BasicDataSeries Series;
 
+		print ("GetPeriod");
+
 		if (SourceSeries.Count == 1)
 			return ApplyModifiers (SourceSeries [0].GetPeriod (From, To));
 
@@ -52,6 +54,10 @@ public class DataSeriesModifier : DataSeries {
 
 		if (operation == Manipulation.sum) {
 			return ApplyModifiers(result.GetStaircaseSumOfSeries().Data);
+		}
+
+		else if (operation == Manipulation.div) {
+			return ApplyModifiers(result.GetStaircaseDivOfSeries().Data);
 		}
 
 		return null;
