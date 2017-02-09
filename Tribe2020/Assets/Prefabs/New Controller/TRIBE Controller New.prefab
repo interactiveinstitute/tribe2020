@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 114605559596463978}
   - component: {fileID: 114568694404567128}
   - component: {fileID: 114355430836853836}
-  - component: {fileID: 114803951365774194}
+  - component: {fileID: 114607158080357560}
   m_Layer: 0
   m_Name: Content
   m_TagString: Untagged
@@ -873,17 +873,7 @@ MonoBehaviour:
   starters: []
   active: []
   archive: []
-  startQuest: {fileID: 11400000, guid: f49e8171e9d6aa140b68f73870e5eaba, type: 2}
-  quests:
-  - {fileID: 11400000, guid: f49e8171e9d6aa140b68f73870e5eaba, type: 2}
-  - {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
-  - {fileID: 11400000, guid: 5d6bbfea234f4c840a2bca8d6a51c331, type: 2}
-  - {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
-  - {fileID: 11400000, guid: c3114a175ad5ff947a1b93117e25726b, type: 2}
-  curQuests: []
-  activeNarrative: {fileID: 0}
-  listeningNarratives: []
-  completedQuests: []
+  allNarratives: []
   selectIndex: 0
 --- !u!114 &114181491290269560
 MonoBehaviour:
@@ -1074,8 +1064,104 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _avatars: []
   conversation: {fileID: 114355430836853836}
-  looks: {fileID: 114803951365774194}
+  models: {fileID: 114607158080357560}
   playerPortrait: {fileID: 0}
+--- !u!114 &114607158080357560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1048631608580628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 121758b23d0959146b57b4776ef1d6cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  models:
+  - gender: 0
+    model: {fileID: 100084, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+    avatar: {fileID: 9000000, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+    bodyParts:
+    - model: {fileID: 100004, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: fea29220275be0d4d92a8f6efe02f09f, type: 2}
+      - {fileID: 2100000, guid: 36b30fd9c4f85ab41ab0a0ce91d8ee23, type: 2}
+      - {fileID: 2100000, guid: 6786fa8c96a923d4f97133217a129e46, type: 2}
+    - model: {fileID: 100006, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: b9b4ca5799ae64d4fac7b7f962997b1e, type: 2}
+      - {fileID: 2100000, guid: 3db60b29078128540afa7c772f9e2df9, type: 2}
+      - {fileID: 2100000, guid: 39ab44c72cf7d8445a396b8eb9be5a76, type: 2}
+    - model: {fileID: 100008, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: b9b4ca5799ae64d4fac7b7f962997b1e, type: 2}
+      - {fileID: 2100000, guid: 3db60b29078128540afa7c772f9e2df9, type: 2}
+      - {fileID: 2100000, guid: 39ab44c72cf7d8445a396b8eb9be5a76, type: 2}
+    - model: {fileID: 100070, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: b9b4ca5799ae64d4fac7b7f962997b1e, type: 2}
+      - {fileID: 2100000, guid: 3db60b29078128540afa7c772f9e2df9, type: 2}
+      - {fileID: 2100000, guid: 39ab44c72cf7d8445a396b8eb9be5a76, type: 2}
+    - model: {fileID: 100072, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 50135fabd4c6470459f8f7cbcbb86ba4, type: 2}
+      - {fileID: 2100000, guid: 22f00faeefbb19c46b8d6ec4e389aa80, type: 2}
+      - {fileID: 2100000, guid: b4801b2f03fbe6a43812d9744ba54aa2, type: 2}
+    - model: {fileID: 100074, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 88c6dc45a2f20c643be77d8be069002f, type: 2}
+    - model: {fileID: 100076, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: f482a0ad5a0dc7e43aa6138be3a62cc0, type: 2}
+      - {fileID: 2100000, guid: afdafea3fcccc27428bcdd3a8ed6d655, type: 2}
+    - model: {fileID: 100078, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: a90033e04fa205f468128baacb41e3d2, type: 2}
+      - {fileID: 2100000, guid: 677061f9721b50642ad29d272e693bbb, type: 2}
+      - {fileID: 2100000, guid: ba3c43cb21edb2d47a06a590f873b655, type: 2}
+    - model: {fileID: 100080, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 3f30dc0892165e04ca9453780518a56e, type: 2}
+      - {fileID: 2100000, guid: 750c819afe3836e43a9dce333ed70381, type: 2}
+      - {fileID: 2100000, guid: 6518df90c29cd2f4c87970a3902d6643, type: 2}
+      - {fileID: 2100000, guid: d0847502478129246932ab81f3fd5145, type: 2}
+      - {fileID: 2100000, guid: 75dff2e332b8f1c4cb6b29449bdb3994, type: 2}
+      - {fileID: 2100000, guid: 283571a4f22b1e346897a772456103c1, type: 2}
+    - model: {fileID: 100082, guid: 4cb5469931a9d98458694e7b06f19e23, type: 3}
+      materials:
+      - {fileID: 2100000, guid: f2028f66a64d94848981cd4bdce8b449, type: 2}
+      - {fileID: 2100000, guid: f3436764cd3d9d945ae2d6bca913bbb5, type: 2}
+      - {fileID: 2100000, guid: cf769fda75bf8034f8a9ba3ef3377302, type: 2}
+      - {fileID: 2100000, guid: 1b1c65c896cd8474c9a8ee23aefee1b8, type: 2}
+      - {fileID: 2100000, guid: 538fe6e4e7281414bad72451db4aa492, type: 2}
+  - gender: 1
+    model: {fileID: 100082, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+    avatar: {fileID: 9000000, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+    bodyParts:
+    - model: {fileID: 100088, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 619270b4f7414f04880ee203dbd74697, type: 2}
+    - model: {fileID: 100004, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 2d3556ac7555e584ba83bdd016eb34e7, type: 2}
+    - model: {fileID: 100008, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 4704ea57362043644aa947596ca57438, type: 2}
+    - model: {fileID: 100090, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 4704ea57362043644aa947596ca57438, type: 2}
+    - model: {fileID: 100094, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: 4704ea57362043644aa947596ca57438, type: 2}
+    - model: {fileID: 100072, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: d30ff07b020ad7c4d86a011049ec33ee, type: 2}
+    - model: {fileID: 100074, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: f471b723ecad1424c9efd5035901bcd9, type: 2}
+    - model: {fileID: 100076, guid: 86ef6861c700d9d43abe8dfc6fe6504e, type: 3}
+      materials:
+      - {fileID: 2100000, guid: a1ebc2e3aa1b559438979025cd1c291e, type: 2}
 --- !u!114 &114649215555692092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1143,56 +1229,6 @@ MonoBehaviour:
   defaultContent: '{"San Pablo":"True", "IES Azucarera":"False", "CIRCE HQ":"False",
     "Emmeline de Pankhurst":"False", "Universidad Ouezygin":"False", "lastSlot":"-1",
     "slots":[{}, {}, {}]}'
---- !u!114 &114803951365774194
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1048631608580628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e2652947486aec4b816e99f2de0801c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  male:
-    hair:
-    - {fileID: 2100000, guid: fea29220275be0d4d92a8f6efe02f09f, type: 2}
-    - {fileID: 2100000, guid: 36b30fd9c4f85ab41ab0a0ce91d8ee23, type: 2}
-    - {fileID: 2100000, guid: 6786fa8c96a923d4f97133217a129e46, type: 2}
-    - {fileID: 2100000, guid: a570548847320274897befae097058f4, type: 2}
-    skin:
-    - {fileID: 2100000, guid: b9b4ca5799ae64d4fac7b7f962997b1e, type: 2}
-    - {fileID: 2100000, guid: 3db60b29078128540afa7c772f9e2df9, type: 2}
-    - {fileID: 2100000, guid: 39ab44c72cf7d8445a396b8eb9be5a76, type: 2}
-    shirts:
-    - {fileID: 2100000, guid: f482a0ad5a0dc7e43aa6138be3a62cc0, type: 2}
-    - {fileID: 2100000, guid: afdafea3fcccc27428bcdd3a8ed6d655, type: 2}
-    suits:
-    - {fileID: 2100000, guid: 3f30dc0892165e04ca9453780518a56e, type: 2}
-    - {fileID: 2100000, guid: 750c819afe3836e43a9dce333ed70381, type: 2}
-    - {fileID: 2100000, guid: 6518df90c29cd2f4c87970a3902d6643, type: 2}
-    - {fileID: 2100000, guid: d0847502478129246932ab81f3fd5145, type: 2}
-    - {fileID: 2100000, guid: 75dff2e332b8f1c4cb6b29449bdb3994, type: 2}
-    - {fileID: 2100000, guid: 283571a4f22b1e346897a772456103c1, type: 2}
-    ties:
-    - {fileID: 2100000, guid: f2028f66a64d94848981cd4bdce8b449, type: 2}
-    - {fileID: 2100000, guid: f3436764cd3d9d945ae2d6bca913bbb5, type: 2}
-    - {fileID: 2100000, guid: cf769fda75bf8034f8a9ba3ef3377302, type: 2}
-    - {fileID: 2100000, guid: 1b1c65c896cd8474c9a8ee23aefee1b8, type: 2}
-    - {fileID: 2100000, guid: 538fe6e4e7281414bad72451db4aa492, type: 2}
-    pants:
-    - {fileID: 2100000, guid: 50135fabd4c6470459f8f7cbcbb86ba4, type: 2}
-    - {fileID: 2100000, guid: 22f00faeefbb19c46b8d6ec4e389aa80, type: 2}
-    - {fileID: 2100000, guid: b4801b2f03fbe6a43812d9744ba54aa2, type: 2}
-    shoes:
-    - {fileID: 2100000, guid: a90033e04fa205f468128baacb41e3d2, type: 2}
-    - {fileID: 2100000, guid: 677061f9721b50642ad29d272e693bbb, type: 2}
-    - {fileID: 2100000, guid: ba3c43cb21edb2d47a06a590f873b655, type: 2}
-  female:
-    dress:
-    - {fileID: 2100000, guid: a1ebc2e3aa1b559438979025cd1c291e, type: 2}
-    shoes:
-    - {fileID: 2100000, guid: f471b723ecad1424c9efd5035901bcd9, type: 2}
 --- !u!114 &114824139346884546
 MonoBehaviour:
   m_ObjectHideFlags: 1
