@@ -380,7 +380,7 @@ public class PilotView : View{
 				if(eem.callback == "") {
 					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				} else {
-					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+					//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
 				}
 				//eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
@@ -483,64 +483,64 @@ public class PilotView : View{
 	}
 
 	//Fill INBOX interface with ongoing and completed narratives
-	public void BuildInbox(List<Quest> currentQuests, List<Quest> completedQuests) {
+	public void BuildInbox(List<Narrative> active, List<Narrative> archive) {
 		RemoveChildren(inboxList);
 
-		foreach(Quest quest in currentQuests) {
-			Quest curQuest = quest;
+		foreach(Narrative narrative in active) {
+			//Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
 			Mail mail = mailButtonObj.GetComponent<Mail>();
 			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
 			mail.content.SetActive(false);
 
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, curQuest, 0));
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, narrative));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[2].gameObject.SetActive(false);
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
-			texts[0].text = curQuest.title;
-			texts[1].text = curQuest.date;
+			texts[0].text = narrative.title;
+			//texts[1].text = curQuest.date;
 			mailButtonObj.transform.SetParent(inboxList, false);
 		}
 
-		foreach(Quest quest in completedQuests) {
-			Quest curQuest = quest;
+		foreach(Narrative narrative in archive) {
+			//Quest curQuest = quest;
 			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
 			Mail mail = mailButtonObj.GetComponent<Mail>();
 			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
 			mail.content.SetActive(false);
 
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, curQuest, 0));
+			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, narrative));
 
 			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 			images[1].color = Color.gray;
 			images[2].gameObject.SetActive(false);
 
 			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
-			texts[0].text = curQuest.title;
-			texts[1].text = curQuest.date;
+			texts[0].text = narrative.title;
+			//texts[1].text = curQuest.date;
 			mailButtonObj.transform.SetParent(inboxList, false);
 		}
 	}
 
 	//
-	public void BuildMail(Mail mail, Quest quest, int index) {
+	public void BuildMail(Mail mail, Narrative narrative) {
 		Transform contentTrans = mail.transform.GetChild(1);
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
 		Text description = contentTrans.GetComponentsInChildren<Text>()[1];
 		Text steps = contentTrans.GetComponentsInChildren<Text>()[2];
 
-		title.text = quest.title;
-		description.text = quest.description;
+		title.text = narrative.title;
+		//description.text = narrative.description;
 
-		string stepConcat = "";
-		foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
-			stepConcat += checkStep.description + "\n";
-		}
-		steps.text = stepConcat;
+		//string stepConcat = "";
+		//foreach(Quest.NarrativeCheck checkStep in narrative.checkList) {
+		//	stepConcat += checkStep.description + "\n";
+		//}
+		//steps.text = stepConcat;
 
 		mail.content.SetActive(!mail.content.activeSelf);
 

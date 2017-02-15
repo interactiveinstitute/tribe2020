@@ -436,7 +436,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
 				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InspectorOpened);
 			} else if(ui == controller._view.inbox) {
-				//controller._view.BuildInbox(controller._narrationMgr.GetQuests(), controller._narrationMgr.GetCompletedQuests());
+				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				_instance._narrationMgr.OnNarrativeEvent("InobxOpened");
 				//controller._narrationMgr.OnQuestEvent(Quest.QuestEvent.InboxOpened);
 				//_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
@@ -642,13 +642,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(avatarName != null) {
 			if(avatarName == "player") {
 				portrait = _instance._avatarMgr.playerPortrait;
+				avatarName = "F. Shaman: ";
 			} else {
 				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				avatarName = avatarName + ": ";
 			}
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(message, portrait, true, false);
+		_instance._view.ShowMessage(avatarName + message, portrait, true, false);
 	}
 
 	//
@@ -662,13 +664,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(avatarName != null) {
 			if(avatarName == "player") {
 				portrait = _instance._avatarMgr.playerPortrait;
+				avatarName = "F. Shaman: ";
 			} else {
 				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				avatarName = avatarName + ": ";
 			}
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(message, portrait, true, true);
+		_instance._view.ShowMessage(avatarName + message, portrait, true, true);
 	}
 
 	//
