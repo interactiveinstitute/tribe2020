@@ -90,12 +90,6 @@ public class MenuController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(animatedLogo.anchoredPosition.x < 166) {
-			float curX = animatedLogo.anchoredPosition.x;
-			curX = 166 + (curX - 166) * 0.75f;
-			animatedLogo.anchoredPosition = new Vector2(curX, animatedLogo.anchoredPosition.y);
-		}
-
 		foreach(RectTransform menu in menus) {
 			if(menu != _curMenu) {
 				if(menu.anchoredPosition.x < 200) {
@@ -110,6 +104,18 @@ public class MenuController : MonoBehaviour {
 					menu.anchoredPosition = new Vector2(curX, menu.anchoredPosition.y);
 				}
 			}
+		}
+
+		MainMenuPanel curMenuPanel = _curMenu.GetComponent<MainMenuPanel>();
+
+		if(!curMenuPanel.showTitle && animatedLogo.anchoredPosition.x > -200) {
+			float curX = animatedLogo.anchoredPosition.x;
+			curX = -200 + (curX + 200) * 0.75f;
+			animatedLogo.anchoredPosition = new Vector2(curX, animatedLogo.anchoredPosition.y);
+		} else if(animatedLogo.anchoredPosition.x < 166) {
+			float curX = animatedLogo.anchoredPosition.x;
+			curX = 166 + (curX - 166) * 0.75f;
+			animatedLogo.anchoredPosition = new Vector2(curX, animatedLogo.anchoredPosition.y);
 		}
 	}
 
