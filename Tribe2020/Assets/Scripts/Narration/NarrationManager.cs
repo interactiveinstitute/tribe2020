@@ -90,6 +90,8 @@ public class NarrationManager : MonoBehaviour {
 
 	//Callback for game event, progress narratives that are listening for the event
 	public void OnNarrativeEvent(string eventType = "", string prop = "") {
+		if(!autoStart) { return; }
+
 		bool didProgress = false;
 		//For every active narrative, going backwards
 		for(int i = active.Count - 1; i >= 0; i--) {
