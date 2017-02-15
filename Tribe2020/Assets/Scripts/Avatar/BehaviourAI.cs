@@ -1186,8 +1186,9 @@ public class BehaviourAI : SimulationObject {
 		AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
 
 		AvatarConversation.EmojiLine line = _avatarMgr.conversation.GenerateEmojiLine(environmentLevel, mood);
-		transform.FindChild("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
-		StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
+        transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = true;
+        transform.FindChild("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
+        StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
 	}
 
 	public System.Collections.IEnumerator ListenToOtherAvatarEmoji(BehaviourAI other, AvatarConversation.EnvironmentLevel environmentLevel, AvatarMood.Mood moodInput) {
@@ -1198,8 +1199,9 @@ public class BehaviourAI : SimulationObject {
 		bool continueTalking = HasAvailableAffordanceSlot(GetComponent<AvatarMood>().GetCurrentInteractionAffordance());
 
 		if(continueTalking) {
-			//Be polite, be quiet when other creatures are talking
-			transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
+            //Be polite, be quiet when other creatures are talking
+            transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
+            transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
 			yield return new WaitForSeconds(2);
 			AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
@@ -1213,7 +1215,8 @@ public class BehaviourAI : SimulationObject {
 
 	public void EndTalkToOtherAvatar() {
 		transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
-		GetComponent<AvatarMood>().EndInteraction();
+        transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<AvatarMood>().EndInteraction();
 	}
 
 	public void InitApplianceTemporaryActivity(Appliance appliance, AvatarActivity.SessionType sessionType, string parameter, bool walkTo, bool returnToPrevActivity) {

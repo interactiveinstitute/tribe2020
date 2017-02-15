@@ -5,12 +5,6 @@ using UnityEngine.UI;
 
 public class CharacterPanel : MonoBehaviour {
 
-    /*public GameObject moodImage;
-    public GameObject energyEffeciencyImage;
-    public GameObject satisfactionPanel;
-    public GameObject knowledgePanel;
-    public GameObject attitutePanel;
-    public GameObject normSensitivityPanel;*/
     PilotView _pilotView;
     AvatarManager _avatarManager;
 
@@ -27,9 +21,7 @@ public class CharacterPanel : MonoBehaviour {
 
     public void BuildPanel(GameObject goAvatar) {
         SetMood(goAvatar.GetComponent<AvatarMood>().GetCurrentMood());
-
         SetEnergyEffeciency(goAvatar.GetComponent<AvatarStats>().GetEnergyEfficiency());
-
         SetKnowledge(goAvatar.GetComponent<AvatarStats>().knowledge);
         SetAttitude(goAvatar.GetComponent<AvatarStats>().attitude);
         SetNormSensitivity(goAvatar.GetComponent<AvatarStats>().normSensititvity);
@@ -47,21 +39,17 @@ public class CharacterPanel : MonoBehaviour {
 
     public void SetSatisfaction(float value) {
         _pilotView.avatarSatisfaction.value = value * 100;
-        //satisfactionPanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetKnowledge(float value) {
         _pilotView.avatarKnowledge.value = value * 100;
-        //knowledgePanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetAttitude(float value) {
         _pilotView.avatarAttitude.value = value * 100;
-        //attitutePanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetNormSensitivity(float value) {
         _pilotView.avatarNorm.value = value * 100;
-        //normSensitivityPanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 }
