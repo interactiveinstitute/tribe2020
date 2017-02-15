@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: San Pablo Intro
   steps:
-  - description: Pause simulation
+  - description: Pause simulation and start
     conditionType: 
     conditionProp: 
     unityEvent:
@@ -21,7 +21,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: SetTimeScale
+          m_MethodName: SetSimulationTimeScale
           m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -31,14 +31,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Start camera animation
-    conditionType: 
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: MoveCamera
@@ -68,8 +60,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.In the
-              center of Spain li", button:False}'
+            m_StringArgument: '{g:N.SPI, k:0}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
@@ -109,8 +100,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Zaragoza,
-              being a roman c", button:False}'
+            m_StringArgument: '{g:N.SPI, k:1}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
@@ -150,8 +140,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Because
-              of the many ancie", button:False}'
+            m_StringArgument: '{g:N.SPI, k:2}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
@@ -191,8 +180,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{group:"Narrative.San Pablo Intro", key:"Popup.Zaragoza
-              Vivienda are try", button:False}'
+            m_StringArgument: '{g:N.SPI, k:3}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
@@ -217,7 +205,7 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Stop camera animation
+  - description: Stop camera and start simulation
     conditionType: AnimationEvent
     conditionProp: end
     unityEvent:
@@ -235,24 +223,16 @@ MonoBehaviour:
             m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Start simulation
-    conditionType: 
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: SetTimeScale
-          m_Mode: 3
+          m_MethodName: SetSimulationTimeScale
+          m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
+            m_IntArgument: 0
+            m_FloatArgument: 30
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,

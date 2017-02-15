@@ -14,7 +14,7 @@ public interface NarrationInterface{
 	void ShowCongratualations(string text);
 	void ClearView();
 	void SaveGameState();
-	void SetTimeScale(float timeScale);
+	void SetSimulationTimeScale(float timeScale);
 	void RequestCurrentView();
 	void MoveCamera(string animation);
 	void OnAnimationEvent(string animationEvent);

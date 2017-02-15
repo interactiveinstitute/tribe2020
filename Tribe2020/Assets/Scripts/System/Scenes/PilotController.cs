@@ -374,11 +374,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(app.GetComponent<BehaviourAI>()) {
 			_instance._view.BuildAvatarPanel(app);
 			SetCurrentUI(_instance._view.characterPanel);
-			_instance._narrationMgr.OnNarrativeEvent("AvatarPanelOpened", app.title);
+			_instance._narrationMgr.OnNarrativeEvent("AvatarSelected", app.title);
 		} else {
 			_instance._view.BuildDevicePanel(app);
 			SetCurrentUI(_instance._view.devicePanel);
-			_instance._narrationMgr.OnNarrativeEvent("DevicePanelOpened", app.title);
+			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
 
 		//_view.BuildInspector(appliance);
@@ -634,10 +634,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void ShowMessage(string cmd) {
 		JSONNode json = JSON.Parse(cmd);
-		string avatarName = json["avatar"];
-		string group = json["group"];
-		string key = json["key"];
-		bool button = json["button"].AsBool;
+		string avatarName = json["a"];
+		string group = json["g"];
+		string key = json["k"];
 
 		Sprite portrait = null;
 		if(avatarName != null) {
@@ -649,7 +648,32 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(message, portrait, true, button);
+		_instance._view.ShowMessage(message, portrait, true, false);
+	}
+
+	//
+	public void ShowPrompt(string cmd) {
+		JSONNode json = JSON.Parse(cmd);
+		string avatarName = json["a"];
+		string group = json["g"];
+		string key = json["k"];
+
+		Sprite portrait = null;
+		if(avatarName != null) {
+			if(avatarName == "player") {
+				portrait = _instance._avatarMgr.playerPortrait;
+			} else {
+				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+			}
+		}
+		string message = GetPhrase(group, key);
+
+		_instance._view.ShowMessage(message, portrait, true, true);
+	}
+
+	//
+	public void AddObjective(string cmd) {
+		JSONNode json = JSON.Parse(cmd);
 	}
 
 	//
@@ -712,6 +736,14 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	#endregion
 
 	//
+	public void ChallengeAvatar() {
+	}
+
+	//
+	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
+	}
+
+	//
 	public string GetPhrase(string groupKey, string key, int index) {
 		return _localMgr.GetPhrase(groupKey, key, index);
 	}
@@ -722,12 +754,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void SetTimeScale(int timeScale) {
+	public void SetVisualTimeScale(int timeScale) {
 		_instance._timeMgr.VisualTimeScale = timeScale;
 	}
 
 	//
-	public void SetTimeScale(float timeScale) {
+	public void SetSimulationTimeScale(float timeScale) {
 		_instance._timeMgr.SimulationTimeScaleFactor = timeScale;
 	}
 
