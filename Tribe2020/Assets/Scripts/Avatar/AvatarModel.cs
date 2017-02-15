@@ -5,9 +5,12 @@ using UnityEngine;
 public class AvatarModel : MonoBehaviour {
 
     public int modelId;
+    AvatarModels.AvatarModelBundle _modelBundle;
 
 	// Use this for initialization
-	void Awake () {     
+	void Awake () {
+        AvatarManager am = FindObjectOfType<AvatarManager>();
+        _modelBundle = am.models.models[modelId];
     }
 
     void Start() {  
@@ -18,17 +21,16 @@ public class AvatarModel : MonoBehaviour {
 		
 	}
 
-    void OnValidate() {
+    public void InstantiateModel() {
 
         Transform existingModel = transform.FindChild("Model");
+        AvatarManager am = FindObjectOfType<AvatarManager>();
 
-        if (existingModel == null) {
+        if (existingModel == null && (modelId >= 0 && modelId < am.models.models.Count)) {
 
-            AvatarManager am = FindObjectOfType<AvatarManager>();
-            AvatarModels models = am.models;
-            AvatarModels.AvatarModelBundle modelBundle = models.models[modelId];
+            _modelBundle = am.models.models[modelId];
 
-            GameObject goModel = Instantiate(modelBundle.model);
+            GameObject goModel = Instantiate(_modelBundle.model);
             goModel.name = "Model";
             SetLayerRecursive(goModel.transform);
             goModel.transform.parent = transform;
@@ -36,9 +38,8 @@ public class AvatarModel : MonoBehaviour {
 
             //Set animator rig
             Animator animator = gameObject.GetComponent<Animator>();
-            animator.avatar = modelBundle.avatar;
+            animator.avatar = _modelBundle.avatar;
         }
-
     }
 
     void SetLayerRecursive(Transform transform) {
@@ -49,19 +50,43 @@ public class AvatarModel : MonoBehaviour {
     }
 
     public void RandomizeClothes() {
-        AvatarManager am = FindObjectOfType<AvatarManager>();
-        int modelId = GetComponent<AvatarModel>().modelId;
-        AvatarModels.AvatarModelBundle modelBundle = am.models.models[modelId];
 
-        foreach (AvatarModels.TexturedBodyPart bodyPart in modelBundle.bodyParts) {
-            Material material = bodyPart.materials[Random.Range(0, bodyPart.materials.Count)];
-            SetMaterial(bodyPart.model.name, material);
+        Transform existingModel = transform.FindChild("Model");
+        if (existingModel != null) {
+            AvatarManager am = FindObjectOfType<AvatarManager>();
+            int modelId = GetComponent<AvatarModel>().modelId;
+            _modelBundle = am.models.models[modelId];
+
+            foreach (AvatarModels.TexturedBodyPart bodyPart in _modelBundle.bodyParts) {
+                Material material = bodyPart.materials[Random.Range(0, bodyPart.materials.Count)];
+                SetClothesMaterial(bodyPart.model.name, material);
+            }
         }
-
     }
 
-    void SetMaterial(string modelName, Material material) {
+    void SetClothesMaterial(string modelName, Material material) {
         transform.FindChild("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().material = material;
+    }
+
+    Texture2D GetFaceTextureByMood(AvatarMood.Mood mood) {
+        foreach(AvatarModels.FaceTexture faceTexture in _modelBundle.faceTextures) {
+            if(faceTexture.mood == mood) {
+                return faceTexture.texture;
+            }
+        }
+        return null;
+    }
+
+    public void SetFaceTexture(AvatarMood.Mood mood) {
+        Texture2D textureFace = GetFaceTextureByMood(mood);
+        if (textureFace != null) {
+            transform.FindChild("Model/" + _modelBundle.faceObject.name).GetComponent<SkinnedMeshRenderer>().material.mainTexture = textureFace;
+        }
+    }
+
+    public void UpdateFaceTextureByCurrentMood() {
+        AvatarMood.Mood mood = gameObject.GetComponent<AvatarMood>().GetCurrentMood();
+        SetFaceTexture(mood);
     }
 
 }

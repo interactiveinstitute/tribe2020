@@ -10,13 +10,20 @@ public class AvatarModels : MonoBehaviour {
         public GameObject model;
         public Avatar avatar;
         public List<TexturedBodyPart> bodyParts;
+        public GameObject faceObject;
+        public List<FaceTexture> faceTextures;
     }
 
     [System.Serializable]
     public struct TexturedBodyPart {
         public GameObject model;
-
         public List<Material> materials;
+    }
+
+    [System.Serializable]
+    public struct FaceTexture {
+        public AvatarMood.Mood mood;
+        public Texture2D texture;
     }
 
     public List<AvatarModelBundle> models;
