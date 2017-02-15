@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 
 [CustomEditor(typeof(AvatarModel))]
-public class ClothingEditor : Editor
+public class AvatarModelEditor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -13,6 +13,10 @@ public class ClothingEditor : Editor
 
         //Set dirty, in order to save new data on game start
         EditorUtility.SetDirty(clothing);
+
+        if (GUILayout.Button("Generate model", GUILayout.Width(150))) {
+            clothing.InstantiateModel();
+        }
 
         if (GUILayout.Button("Randomize clothes", GUILayout.Width(150)))
         {

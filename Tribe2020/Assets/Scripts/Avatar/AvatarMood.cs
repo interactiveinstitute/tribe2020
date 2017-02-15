@@ -77,14 +77,14 @@ public class AvatarMood : MonoBehaviour {
     public Mood TryChangeMood(Mood moodInput) {
         Mood moodNew = markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
         _timeLastMoodChange = _timeMgr.time;
-        UpdateFaceTextureByCurrentMood();
+        UpdateLooksByCurrentMood();
         return moodNew;
     }
 
     public void SetMood(Mood mood) {
         markovMood.SetCurrentState(mood);
         _timeLastMoodChange = _timeMgr.time;
-        UpdateFaceTextureByCurrentMood();
+        UpdateLooksByCurrentMood();
     }
 
     public Mood GetCurrentMood() {
@@ -146,8 +146,11 @@ public class AvatarMood : MonoBehaviour {
         _resourceMgr.comfortHarvestCount++;
     }
 
-    void UpdateFaceTextureByCurrentMood() {
-        gameObject.GetComponent<ComfortLevelExpressions>().UpdateFaceTextureByCurrentMood();
+    void UpdateLooksByCurrentMood() {
+        AvatarModel avatarModel = gameObject.GetComponent<AvatarModel>();
+        if (avatarModel != null) {
+            avatarModel.UpdateFaceTextureByCurrentMood();
+        }
         _charController.SetMood((int)GetCurrentMood());
     }
 }
