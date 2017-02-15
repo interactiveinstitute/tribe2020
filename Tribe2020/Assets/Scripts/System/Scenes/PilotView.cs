@@ -359,27 +359,60 @@ public class PilotView : View{
 		foreach(EnergyEfficiencyMeasure eem in eems) {
 			EnergyEfficiencyMeasure curEEM = eem;
 			GameObject buttonObj = Instantiate(EEMButtonPrefab);
-			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
-			Button button = buttonObj.GetComponent<Button>();
+			EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
 
+			eemButton.title.text = eem.title;
+
+			eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
+			eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
+			eemButton.comfortCost.text = eem.comfortCost.ToString();
+
+			eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
+			eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
+			eemButton.moneyCost.text = eem.cashCost.ToString();
+
+			eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
+			eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
+			eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
+
+			Button button = buttonObj.GetComponent<Button>();
 			if(!app.appliedEEMs.Contains(curEEM)) {
 				if(eem.callback == "") {
 					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				} else {
 					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
 				}
-				eemProps.SetCost(eem.cashCost, eem.comfortCost);
+				//eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
 				button.interactable = false;
 			}
 
-			string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
-			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
-			eemProps.title.text = eemTitle;
 
-			buttonObj.GetComponent<Image>().color = eem.color;
+			//Text label = buttonObj.GetComponentInChildren<Text>();
+			//label.text = eem.title;
 
-			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
+			//Text satisfactionCost = buttonObj
+			//EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
+			//Button button = buttonObj.GetComponent<Button>();
+
+			//if(!app.appliedEEMs.Contains(curEEM)) {
+			//	if(eem.callback == "") {
+			//		button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+			//	} else {
+			//		button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+			//	}
+			//	eemProps.SetCost(eem.cashCost, eem.comfortCost);
+			//} else {
+			//	button.interactable = false;
+			//}
+
+			//string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
+			//if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
+			//eemProps.title.text = eemTitle;
+
+			//buttonObj.GetComponent<Image>().color = eem.color;
+
+			//eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
 
 			buttonObj.transform.SetParent(container, false);
 		}
@@ -387,36 +420,36 @@ public class PilotView : View{
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
 	public void BuildEEMInterface(Appliance app) {
-		RemoveChildren(inspectorEEMContainer);
-		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
+		//RemoveChildren(inspectorEEMContainer);
+		//List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
 
-		foreach(EnergyEfficiencyMeasure eem in eems) {
-			EnergyEfficiencyMeasure curEEM = eem;
-			GameObject buttonObj = Instantiate(EEMButtonPrefab);
-			EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
-			Button button = buttonObj.GetComponent<Button>();
+		//foreach(EnergyEfficiencyMeasure eem in eems) {
+		//	EnergyEfficiencyMeasure curEEM = eem;
+		//	GameObject buttonObj = Instantiate(EEMButtonPrefab);
+		//	EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
+		//	Button button = buttonObj.GetComponent<Button>();
 
-			if(!app.appliedEEMs.Contains(curEEM)){
-				if(eem.callback == "") {
-					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-				} else {
-					button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-				}
-				eemProps.SetCost(eem.cashCost, eem.comfortCost);
-			} else {
-				button.interactable = false;
-			}
+		//	if(!app.appliedEEMs.Contains(curEEM)){
+		//		if(eem.callback == "") {
+		//			button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+		//		} else {
+		//			button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+		//		}
+		//		eemProps.SetCost(eem.cashCost, eem.comfortCost);
+		//	} else {
+		//		button.interactable = false;
+		//	}
 
-			string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
-			if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
-			eemProps.title.text = eemTitle;
+		//	string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
+		//	if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
+		//	eemProps.title.text = eemTitle;
 
-			buttonObj.GetComponent<Image>().color = eem.color;
+		//	buttonObj.GetComponent<Image>().color = eem.color;
 			
-			eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
+		//	eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
 
-			buttonObj.transform.SetParent(inspectorEEMContainer, false);
-		}
+		//	buttonObj.transform.SetParent(inspectorEEMContainer, false);
+		//}
 	}
 
 	//

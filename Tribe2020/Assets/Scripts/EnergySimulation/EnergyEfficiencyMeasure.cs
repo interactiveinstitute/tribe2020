@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "EEM", menuName = "TRIBE/EnergyEfficiencyMeasure", order = 1)]
 public class EnergyEfficiencyMeasure : ScriptableObject {
@@ -34,14 +35,4 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public bool performed;
 	public bool passive;
 	public bool hidden;
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

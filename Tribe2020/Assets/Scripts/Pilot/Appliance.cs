@@ -135,6 +135,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	//
 	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
 		appliedEEMs.Add(eem);
+		if(GetComponent<ElectricDevice>()) {
+			ElectricDevice device = GetComponent<ElectricDevice>();
+			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
+		}
 	}
 
 	//
