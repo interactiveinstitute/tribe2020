@@ -29,7 +29,10 @@ public class PilotView : View{
 	public RectTransform timeBar;
 	public RectTransform deviceContainer;
 
-	[Header("Inbox")]
+    [Header("Energy Effeciency Labels")]
+    public List<Sprite> EELabels;
+
+    [Header("Inbox")]
 	public Text inboxTitle;
 
 	[Header("Apocalypsometer")]
@@ -50,7 +53,8 @@ public class PilotView : View{
 	public Text avatarTemperature;
 	public Text avatarEfficiencyTitle;
 	public Image avatarEfficiency;
-	public Text avatarSatisfactionTitle;
+    public Image avatarEfficiencyLabel;
+    public Text avatarSatisfactionTitle;
 	public Slider avatarSatisfaction;
 	public Text avatarKnowledgeTitle;
 	public Slider avatarKnowledge;

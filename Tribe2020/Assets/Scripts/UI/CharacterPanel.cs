@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 public class CharacterPanel : MonoBehaviour {
 
-    public GameObject moodImage;
+    /*public GameObject moodImage;
+    public GameObject energyEffeciencyImage;
     public GameObject satisfactionPanel;
     public GameObject knowledgePanel;
     public GameObject attitutePanel;
-    public GameObject normSensitivityPanel;
+    public GameObject normSensitivityPanel;*/
+    PilotView _pilotView;
     AvatarManager _avatarManager;
 
 	// Use this for initialization
 	void Start () {
         _avatarManager = AvatarManager.GetInstance();
+        _pilotView = PilotView.GetInstance();
 	}
 	
 	// Update is called once per frame
@@ -24,28 +27,41 @@ public class CharacterPanel : MonoBehaviour {
 
     public void BuildPanel(GameObject goAvatar) {
         SetMood(goAvatar.GetComponent<AvatarMood>().GetCurrentMood());
+
+        SetEnergyEffeciency(goAvatar.GetComponent<AvatarStats>().GetEnergyEfficiency());
+
         SetKnowledge(goAvatar.GetComponent<AvatarStats>().knowledge);
         SetAttitude(goAvatar.GetComponent<AvatarStats>().attitude);
         SetNormSensitivity(goAvatar.GetComponent<AvatarStats>().normSensititvity);
     }
 
     void SetMood(AvatarMood.Mood mood) {
-        moodImage.GetComponent<Image>().sprite = _avatarManager.conversation.GetEmojiReaction(mood);
+        _pilotView.avatarMood.GetComponent<Image>().sprite = _avatarManager.conversation.GetEmojiReaction(mood);
+    }
+
+    public void SetEnergyEffeciency(float value) {
+        int nLabels = _pilotView.EELabels.Count;
+        int index = Mathf.Min(Mathf.FloorToInt(value * nLabels), nLabels - 1);
+        _pilotView.avatarEfficiencyLabel.GetComponent<Image>().sprite = _pilotView.EELabels[index];
     }
 
     public void SetSatisfaction(float value) {
-        satisfactionPanel.GetComponentInChildren<Slider>().value = value * 100;
+        _pilotView.avatarSatisfaction.value = value * 100;
+        //satisfactionPanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetKnowledge(float value) {
-        knowledgePanel.GetComponentInChildren<Slider>().value = value * 100;
+        _pilotView.avatarKnowledge.value = value * 100;
+        //knowledgePanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetAttitude(float value) {
-        attitutePanel.GetComponentInChildren<Slider>().value = value * 100;
+        _pilotView.avatarAttitude.value = value * 100;
+        //attitutePanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 
     public void SetNormSensitivity(float value) {
-        normSensitivityPanel.GetComponentInChildren<Slider>().value = value * 100;
+        _pilotView.avatarNorm.value = value * 100;
+        //normSensitivityPanel.GetComponentInChildren<Slider>().value = value * 100;
     }
 }
