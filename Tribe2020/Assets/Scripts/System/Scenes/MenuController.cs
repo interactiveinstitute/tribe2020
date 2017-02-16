@@ -16,7 +16,8 @@ public class MenuController : MonoBehaviour {
 
 	private CustomSceneManager _sceneMgr;
 	private SaveManager _saveMgr;
-	public LocalisationManager localMgr;
+	private LocalisationManager _localMgr;
+	private MainMenuCanvas _view;
 
 	[Header("UI Panels")]
 	public RectTransform mainMenu;
@@ -59,9 +60,10 @@ public class MenuController : MonoBehaviour {
 	void Start () {
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
-		localMgr = LocalisationManager.GetInstance();
+		_localMgr = LocalisationManager.GetInstance();
+		_view = MainMenuCanvas.GetInstance();
 
-		localMgr.SetLanguage(_saveMgr.GetData("language"));
+		_localMgr.SetLanguage(_saveMgr.GetData("language"));
 
 		_curMenu = mainMenu;
 		menus = new List<Transform>();
@@ -123,24 +125,24 @@ public class MenuController : MonoBehaviour {
 	public void OpenMenu(string menuState) {
 		switch(menuState) {
 			case "Main":
-				_curMenu = mainMenu;
+				_instance._curMenu = _instance.mainMenu;
 				break;
 			case "File":
-				_curMenu = fileMenu;
+				_instance._curMenu = _instance.fileMenu;
 				break;
 			case "Settings":
-				_curMenu = settingsMenu;
+				_instance._curMenu = _instance.settingsMenu;
 				break;
 			case "About":
-				_curMenu = aboutMenu;
+				_instance._curMenu = _instance.aboutMenu;
 				break;
 		}
 	}
 
 	//
 	public void OpenPilotMenu(int slot) {
-		pendingNewGameSlot = slot;
-		_curMenu = pilotMenu;
+		_instance.pendingNewGameSlot = slot;
+		_instance._curMenu = _instance.pilotMenu;
 	}
 
 	//
@@ -161,7 +163,7 @@ public class MenuController : MonoBehaviour {
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
-			button.GetComponentInChildren<Text>().text = GetPhrase("Interface", "main newgame");
+			button.GetComponentInChildren<Text>().text = GetPhrase("Interface", "main slot") + " " + (slot + 1);
 			pendingNewGameSlot = slot;
 			button.GetComponent<Button>().onClick.AddListener(() => OpenPilotMenu(slot));
 			removeButton.gameObject.SetActive(false);
@@ -185,7 +187,7 @@ public class MenuController : MonoBehaviour {
 		Dropdown dropdown = languageDropdown.GetComponent<Dropdown>();
 		List<string> langStrings = new List<string>();
 
-		foreach(Language lang in localMgr.languages) {
+		foreach(Language lang in _localMgr.languages) {
 			langStrings.Add(lang.name);
 		}
 
@@ -194,22 +196,22 @@ public class MenuController : MonoBehaviour {
 
 	//
 	public void NewGame(string pilot) {
-		SaveManager.currentSlot = pendingNewGameSlot;
-		_saveMgr.SetData("lastSlot", pendingNewGameSlot.ToString());
-		LoadScene(pilot);
+		SaveManager.currentSlot = _instance.pendingNewGameSlot;
+		_instance._saveMgr.SetData("lastSlot", _instance.pendingNewGameSlot.ToString());
+		_instance.LoadScene(pilot);
 	}
 
 	//
 	public void ClearSlots() {
-		DeleteSlot(0);
-		DeleteSlot(1);
-		DeleteSlot(2);
+		_instance.DeleteSlot(0);
+		_instance.DeleteSlot(1);
+		_instance.DeleteSlot(2);
 	}
 
 	//
 	public void ContinueGame(string scene, int slot) {
 		SaveManager.currentSlot = slot;
-		LoadScene(scene);
+		_instance.LoadScene(scene);
 	}
 
 	//
@@ -218,25 +220,25 @@ public class MenuController : MonoBehaviour {
 
 	//
 	public void DeleteSlot(int slot) {
-		_saveMgr.Delete(slot);
+		_instance._saveMgr.Delete(slot);
 		switch(slot) {
 			case 0:
-				InitSlotButton(file1, remove1, 0);
+				_instance.InitSlotButton(_instance.file1, _instance.remove1, 0);
 				break;
 			case 1:
-				InitSlotButton(file2, remove2, 1);
+				_instance.InitSlotButton(_instance.file2, _instance.remove2, 1);
 				break;
 			case 2:
-				InitSlotButton(file3, remove3, 2);
+				_instance.InitSlotButton(_instance.file3, _instance.remove3, 2);
 				break;
 		}
 
-		int lastSlot = _saveMgr.GetLastSlot();
+		int lastSlot = _instance._saveMgr.GetLastSlot();
 		if(lastSlot == slot) {
-			_saveMgr.ResetLastSlot();
+			_instance._saveMgr.ResetLastSlot();
 		}
 
-		RefreshContinue();
+		_instance.RefreshContinue();
 	}
 
 	//
@@ -310,6 +312,16 @@ public class MenuController : MonoBehaviour {
 
 	//
 	public string GetPhrase(string group, string key) {
-		return localMgr.GetPhrase(group, key);
+		return _localMgr.GetPhrase(group, key);
+	}
+
+	//
+	public void OnLanguagePicked(string language) {
+		_localMgr.SetLanguage(language);
+
+		_saveMgr.SetData("language", _localMgr.curLanguage.name);
+		_saveMgr.Save();
+
+		_view.Translate();
 	}
 }
