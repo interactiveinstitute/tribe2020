@@ -169,14 +169,14 @@ public class SaveManager : MonoBehaviour{
 		Save();
 	}
 
-	//
+	//Overwrite save file with current runtime serialization
 	public void Save() {
 		//if(currentSlot != -1) {
 			File.WriteAllText(_filePath, _dataClone.ToString());
 		//}
 	}
 
-	//
+	//Load data from file into runtime serialization
 	public void Load() {
 		if(debug) { Debug.Log("Load: " + currentSlot); }
 

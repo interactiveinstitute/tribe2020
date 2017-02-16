@@ -63,9 +63,14 @@ public class MainMenuCanvas : MonoBehaviour {
 		settingsText.text = _controller.GetPhrase("Interface", "main settings");
 		aboutText.text = _controller.GetPhrase("Interface", "main about");
 		fbText.text = _controller.GetPhrase("Interface", "main facebook");
-		slot1Text.text = _controller.GetPhrase("Interface", "main slot") + " 1";
-		slot2Text.text = _controller.GetPhrase("Interface", "main slot") + " 2";
-		slot3Text.text = _controller.GetPhrase("Interface", "main slot") + " 3";
+
+		_controller.InitSlotButton(slot1Text.transform.parent, slot1Text.transform.parent.parent.GetChild(0), 0);
+		_controller.InitSlotButton(slot2Text.transform.parent, slot2Text.transform.parent.parent.GetChild(0), 1);
+		_controller.InitSlotButton(slot3Text.transform.parent, slot3Text.transform.parent.parent.GetChild(0), 2);
+		//slot1Text.text = _controller.GetPhrase("Interface", "main slot") + " 1";
+		//slot2Text.text = _controller.GetPhrase("Interface", "main slot") + " 2";
+		//slot3Text.text = _controller.GetPhrase("Interface", "main slot") + " 3";
+
 		returnFileText.text = _controller.GetPhrase("Interface", "main back");
 		returnPilotText.text = _controller.GetPhrase("Interface", "main back");
 		returnSettingsText.text = _controller.GetPhrase("Interface", "main back");

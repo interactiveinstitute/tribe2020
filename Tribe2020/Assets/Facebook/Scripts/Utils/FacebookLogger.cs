@@ -18,70 +18,57 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Facebook.Unity
-{
-    using Facebook.Unity.Mobile.Android;
-    using UnityEngine;
+namespace Facebook.Unity {
+	using Facebook.Unity.Mobile.Android;
+	using UnityEngine;
 
-    internal static class FacebookLogger
-    {
-        private const string UnityAndroidTag = "Facebook.Unity.FBDebug";
+	internal static class FacebookLogger {
+		private const string UnityAndroidTag = "Facebook.Unity.FBDebug";
 
-        static FacebookLogger()
-        {
-            FacebookLogger.Instance = new CustomLogger();
-        }
+		static FacebookLogger() {
+			FacebookLogger.Instance = new CustomLogger();
+		}
 
-        internal static IFacebookLogger Instance { private get; set; }
+		internal static IFacebookLogger Instance { private get; set; }
 
-        public static void Log(string msg)
-        {
-            FacebookLogger.Instance.Log(msg);
-        }
+		public static void Log(string msg) {
+			FacebookLogger.Instance.Log(msg);
+		}
 
-        public static void Log(string format, params string[] args)
-        {
-            FacebookLogger.Log(string.Format(format, args));
-        }
+		public static void Log(string format, params string[] args) {
+			FacebookLogger.Log(string.Format(format, args));
+		}
 
-        public static void Info(string msg)
-        {
-            FacebookLogger.Instance.Info(msg);
-        }
+		public static void Info(string msg) {
+			FacebookLogger.Instance.Info(msg);
+		}
 
-        public static void Info(string format, params string[] args)
-        {
-            FacebookLogger.Info(string.Format(format, args));
-        }
+		public static void Info(string format, params string[] args) {
+			FacebookLogger.Info(string.Format(format, args));
+		}
 
-        public static void Warn(string msg)
-        {
-            FacebookLogger.Instance.Warn(msg);
-        }
+		public static void Warn(string msg) {
+			FacebookLogger.Instance.Warn(msg);
+		}
 
-        public static void Warn(string format, params string[] args)
-        {
-            FacebookLogger.Warn(string.Format(format, args));
-        }
+		public static void Warn(string format, params string[] args) {
+			FacebookLogger.Warn(string.Format(format, args));
+		}
 
-        public static void Error(string msg)
-        {
-            FacebookLogger.Instance.Error(msg);
-        }
+		public static void Error(string msg) {
+			FacebookLogger.Instance.Error(msg);
+		}
 
-        public static void Error(string format, params string[] args)
-        {
-            FacebookLogger.Error(string.Format(format, args));
-        }
+		public static void Error(string format, params string[] args) {
+			FacebookLogger.Error(string.Format(format, args));
+		}
 
-        private class CustomLogger : IFacebookLogger
-        {
-            private IFacebookLogger logger;
+		private class CustomLogger : IFacebookLogger {
+			private IFacebookLogger logger;
 
-            public CustomLogger()
-            {
+			public CustomLogger() {
 #if UNITY_EDITOR
-                this.logger = new EditorLogger();
+				this.logger = new EditorLogger();
 #elif UNITY_ANDROID
                 this.logger = new AndroidLogger();
 #elif UNITY_IOS
@@ -89,55 +76,45 @@ namespace Facebook.Unity
 #else
                 this.logger = new CanvasLogger();
 #endif
-            }
+			}
 
-            public void Log(string msg)
-            {
-                if (Debug.isDebugBuild)
-                {
-                    Debug.Log(msg);
-                    this.logger.Log(msg);
-                }
-            }
+			public void Log(string msg) {
+				if(Debug.isDebugBuild) {
+					//Debug.Log(msg);
+					this.logger.Log(msg);
+				}
+			}
 
-            public void Info(string msg)
-            {
-                Debug.Log(msg);
-                this.logger.Info(msg);
-            }
+			public void Info(string msg) {
+				//Debug.Log(msg);
+				this.logger.Info(msg);
+			}
 
-            public void Warn(string msg)
-            {
-                Debug.LogWarning(msg);
-                this.logger.Warn(msg);
-            }
+			public void Warn(string msg) {
+				Debug.LogWarning(msg);
+				this.logger.Warn(msg);
+			}
 
-            public void Error(string msg)
-            {
-                Debug.LogError(msg);
-                this.logger.Error(msg);
-            }
-        }
+			public void Error(string msg) {
+				Debug.LogError(msg);
+				this.logger.Error(msg);
+			}
+		}
 
 #if UNITY_EDITOR
-        private class EditorLogger : IFacebookLogger
-        {
-            public void Log(string msg)
-            {
-            }
+		private class EditorLogger : IFacebookLogger {
+			public void Log(string msg) {
+			}
 
-            public void Info(string msg)
-            {
-            }
+			public void Info(string msg) {
+			}
 
-            public void Warn(string msg)
-            {
-            }
+			public void Warn(string msg) {
+			}
 
-            public void Error(string msg)
-            {
-            }
-        }
+			public void Error(string msg) {
+			}
+		}
 
 #elif UNITY_ANDROID
         private class AndroidLogger : IFacebookLogger
@@ -221,5 +198,5 @@ namespace Facebook.Unity
             }
         }
 #endif
-    }
+	}
 }

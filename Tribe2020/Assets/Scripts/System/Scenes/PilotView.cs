@@ -380,39 +380,12 @@ public class PilotView : View{
 				if(eem.callback == "") {
 					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				} else {
+					//TODO: Can be used for battle when battle scene ready
 					//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
 				}
-				//eemProps.SetCost(eem.cashCost, eem.comfortCost);
 			} else {
 				button.interactable = false;
 			}
-
-
-			//Text label = buttonObj.GetComponentInChildren<Text>();
-			//label.text = eem.title;
-
-			//Text satisfactionCost = buttonObj
-			//EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
-			//Button button = buttonObj.GetComponent<Button>();
-
-			//if(!app.appliedEEMs.Contains(curEEM)) {
-			//	if(eem.callback == "") {
-			//		button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-			//	} else {
-			//		button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-			//	}
-			//	eemProps.SetCost(eem.cashCost, eem.comfortCost);
-			//} else {
-			//	button.interactable = false;
-			//}
-
-			//string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
-			//if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
-			//eemProps.title.text = eemTitle;
-
-			//buttonObj.GetComponent<Image>().color = eem.color;
-
-			//eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
 
 			buttonObj.transform.SetParent(container, false);
 		}

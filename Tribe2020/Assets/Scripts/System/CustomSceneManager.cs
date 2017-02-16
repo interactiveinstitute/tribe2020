@@ -11,6 +11,7 @@ public class CustomSceneManager : MonoBehaviour{
     }
 
     public RectTransform loadingBar;
+
     public static string nextScene = "";
     public string defaultNextScene;
     public bool autoLoad;
@@ -29,7 +30,7 @@ public class CustomSceneManager : MonoBehaviour{
         if (nextScene == ""){
             nextScene = defaultNextScene;
         }
-    }
+	}
 
     // Update is called once per frame
     void Update(){

@@ -10,6 +10,7 @@ public class MenuController : MonoBehaviour {
 		return _instance;
 	}
 
+	#region Fields
 	public GameObject animatedCharacter;
 	public Transform animatedPilot;
 	public RectTransform animatedLogo;
@@ -50,6 +51,7 @@ public class MenuController : MonoBehaviour {
 
 	[Header("Settings")]
 	public Transform languageDropdown;
+	#endregion
 
 	//
 	void Awake() {
@@ -221,6 +223,8 @@ public class MenuController : MonoBehaviour {
 	//
 	public void DeleteSlot(int slot) {
 		_instance._saveMgr.Delete(slot);
+		_instance._saveMgr.Save();
+
 		switch(slot) {
 			case 0:
 				_instance.InitSlotButton(_instance.file1, _instance.remove1, 0);
