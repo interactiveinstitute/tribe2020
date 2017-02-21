@@ -53,7 +53,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private const string TAP = "tap";
 	public const float TAP_TIMEOUT = 0.1f;
 	public const float D_TAP_TIMEOUT = 0.2f;
-	public const float SWIPE_THRESH = 50;
+	public const float SWIPE_THRESH = 200;
 
 	[Header("Save between sessions")]
 	public bool syncTime;
@@ -227,7 +227,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private void OnTap(Vector3 pos) {
 		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_TAP) { return; }
 
-		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.Tapped);
+		if((_view.GetCurrentUI() == _view.devicePanel || _view.GetCurrentUI() == _view.characterPanel) && pos.x < Screen.width / 2) {
+			HideUI();
+		}
+
 		_instance._narrationMgr.OnNarrativeEvent("Tapped");
 	}
 

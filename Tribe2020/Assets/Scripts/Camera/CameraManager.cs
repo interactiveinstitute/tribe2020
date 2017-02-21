@@ -108,20 +108,18 @@ public class CameraManager : MonoBehaviour {
 
 		if(journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
-			fracJourney = distCovered / journeyLength;
+			fracJourney = distCovered / 3;
 
-			{
-				//if(cameraState == CameraManager.CameraState.Idle) {
-				if(!_isLooking) {
-					gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
-					gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _targetRot, fracJourney);
-					gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _defaultFOV, fracJourney);
-				} else {
-					//gameCamera.transform.rotation = Quaternion.RotateTowards(Quaternion.Euler(_lastRot), Quaternion.Euler(_targetRot), 0.1f);
-					gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _lookAtRotation, fracJourney);
-					//gameCamera.transform.eulerAngles = Vector3.Slerp(_lastRot, _lookAtRotation, fracJourney);
-					gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _lookaAtFOV, fracJourney);
-				}
+			//if(cameraState == CameraManager.CameraState.Idle) {
+			if(!_isLooking) {
+				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
+				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _targetRot, fracJourney);
+				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _defaultFOV, fracJourney);
+			} else {
+				//gameCamera.transform.rotation = Quaternion.RotateTowards(Quaternion.Euler(_lastRot), Quaternion.Euler(_targetRot), 0.1f);
+				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _lookAtRotation, fracJourney);
+				//gameCamera.transform.eulerAngles = Vector3.Slerp(_lastRot, _lookAtRotation, fracJourney);
+				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _lookaAtFOV, fracJourney);
 			}
 		}
 	}
