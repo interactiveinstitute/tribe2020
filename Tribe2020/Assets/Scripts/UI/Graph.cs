@@ -32,13 +32,15 @@ public class Graph : DataNode {
 
 	public List<DataPoint> Data;
 
-    Mesh msh = new Mesh();
+    Mesh msh;
 
     GameTime _timeMgr = GameTime.GetInstance();
 
 	// Use this for initialization
 	void Start () {
 		_timeMgr = GameTime.GetInstance();
+
+        msh = new Mesh();
 
         Material pMat = new Material(_material);
         pMat.SetColor("_TintColor", color);
