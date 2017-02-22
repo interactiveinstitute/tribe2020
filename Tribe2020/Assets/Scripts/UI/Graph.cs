@@ -32,17 +32,35 @@ public class Graph : DataNode {
 
 	public List<DataPoint> Data;
 
-	GameTime _timeMgr = GameTime.GetInstance();
+    public bool active = false;
+
+    Mesh msh;
+
+    GameTime _timeMgr = GameTime.GetInstance();
 
 	// Use this for initialization
 	void Start () {
 		_timeMgr = GameTime.GetInstance();
-	}
+
+        msh = new Mesh();
+
+        Material pMat = new Material(_material);
+        pMat.SetColor("_TintColor", color);
+        pMat.SetColor("_Color", color);
+
+        CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
+        pCanvasRenderer.SetMaterial(pMat, null);
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		if (Relative)
-			Plot ();
+        if (Relative) {
+            //Only plot if graph is active
+            if (active) {
+                Plot();
+            }
+        }
 	}
 
 	public void InitParams(){
@@ -255,20 +273,12 @@ public class Graph : DataNode {
 			vertices3d[i] = new Vector3(newVerts[i].x, newVerts[i].y, -1 * alt);
 		}
 
-		//Create the mesh
-		Mesh msh = new Mesh();
+        //Create the mesh
+        msh.Clear();
 		msh.vertices = vertices3d;
 		msh.triangles = indices;
 		msh.RecalculateNormals();
 		msh.RecalculateBounds();
-
-		//_material = Resources.Load("BaseMaterial") as Material;
-		Material pMat = new Material(_material);
-		pMat.SetColor("_TintColor", color);
-		pMat.SetColor("_Color", color);
-
-		CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
-		pCanvasRenderer.SetMaterial(pMat, null);
 
 		RectTransform pRectTransform = GetComponent<RectTransform>();
 		if(pRectTransform == null) {
@@ -282,8 +292,9 @@ public class Graph : DataNode {
 			pRectTransform.localScale = scale;
 		}
 
-		//pCanvasRenderer.Clear();
-		pCanvasRenderer.SetMesh(msh);
+        //pCanvasRenderer.Clear();
+        CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
+        pCanvasRenderer.SetMesh(msh);
 
 	}
 }
