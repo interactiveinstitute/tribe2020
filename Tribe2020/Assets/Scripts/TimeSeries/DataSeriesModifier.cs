@@ -41,8 +41,6 @@ public class DataSeriesModifier : DataSeries {
 		BasicDataSeriesCollection result = new BasicDataSeriesCollection ();
 		BasicDataSeries Series;
 
-		print ("GetPeriod");
-
 		if (SourceSeries.Count == 1)
 			return ApplyModifiers (SourceSeries [0].GetPeriod (From, To));
 
