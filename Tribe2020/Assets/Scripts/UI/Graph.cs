@@ -127,7 +127,7 @@ public class Graph : DataNode {
 		float x=0, y,px,py,xnow;
 		List<Vector2> Verts = new List<Vector2>();
 
-		if (values.Count == 0)
+		if (values == null || values.Count == 0)
 			return Verts;
 
 		x = TimeToCoordinate (values[0].Timestamp);
