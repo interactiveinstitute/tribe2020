@@ -850,56 +850,60 @@ public class BehaviourAI : SimulationObject {
 	public void TurnOn(Affordance affordance, bool userOwnage = false) {
 		//Appliance targetAppliance = FindNearestAppliance(target, false);
 		Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
-		TurnOn(targetAppliance);
-		//TODO: temp solution
-		targetAppliance.OnUsage(affordance);
+
+        if (targetAppliance) {
+            TurnOn(targetAppliance);
+            //TODO: temp solution
+            targetAppliance.OnUsage(affordance);
+        }
 	}
 
 	public void TurnOn(Appliance appliance) {
 		DebugManager.Log("Turning on " + appliance, appliance, this);
 
-		GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        if (appliance) {
+            GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-		GameObject targetObject = appliance.gameObject;
-		if(targetObject == null) {
-			DebugManager.LogError("Didn't find device to turn on", this);
-			return;
-		}
-
-		ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
-		if(meter == null) {
-			DebugManager.LogError("Didn't find electric meter to turn on", this);
-			return;
-		}
-		meter.On();
+            ElectricMeter meter = appliance.GetComponent<ElectricMeter>();
+            if (meter == null) {
+                DebugManager.LogError("Didn't find electric meter to turn on", this);
+                return;
+            }
+            meter.On();
+        }
 
 	}
 
 	public void TurnOff(Affordance affordance, bool userOwnage = false) {
 		//Appliance targetAppliance = FindNearestAppliance(target, false);
 		Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
-		TurnOff(targetAppliance);
-		//TODO: temp solution
-		targetAppliance.OnUsage(affordance);
+        if (targetAppliance) {
+            TurnOff(targetAppliance);
+
+            //TODO: temp solution
+            targetAppliance.OnUsage(affordance);
+        }
 	}
 
 	public void TurnOff(Appliance appliance) {
 		DebugManager.Log("Turning off " + appliance, appliance, this);
 
-		GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
+        if (appliance) {
+            GetRunningActivity().SetCurrentTargetObject(appliance.gameObject);
 
-		GameObject targetObject = appliance.gameObject;
-		if(targetObject == null) {
-			DebugManager.LogError("Didn't find device to turn off", this);
-			return;
-		}
+            /*GameObject targetObject = appliance.gameObject;
+            if(targetObject == null) {
+                DebugManager.LogError("Didn't find device to turn off", this);
+                return;
+            }*/
 
-		ElectricMeter meter = targetObject.GetComponent<ElectricMeter>();
-		if(meter == null) {
-			DebugManager.LogError("Didn't find electric meter to turn off", this);
-			return;
-		}
-		meter.Off();
+            ElectricMeter meter = appliance.GetComponent<ElectricMeter>();
+            if (meter == null) {
+                DebugManager.LogError("Didn't find electric meter to turn off", this);
+                return;
+            }
+            meter.Off();
+        }
 
 	}
 
@@ -956,7 +960,7 @@ public class BehaviourAI : SimulationObject {
 		Appliance targetAppliance = null;
 
 		//If we want to find an appliance in the current room, we delegate the task to the current room, which hold a reference to all the appliances within it.
-		if(currentRoom) {
+		if(currentRoom && _curRoom) {
 			BehaviourAI owner = userOwnage ? this : null;
 			targetAppliance = _curRoom.GetApplianceWithAffordance(affordance, owner);
 		} else {
