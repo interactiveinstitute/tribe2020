@@ -610,13 +610,32 @@ public class PilotView : View{
 		if(ui && ui.GetComponent<UIPanel>().toggleButton) {
 			ui.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
 		}
-		if(_curMenu == ui) {
-			_curMenu = null;
+
+        //Set old panel inactive
+        if (_curMenu) {
+            UIPanel panelOld = _curMenu.GetComponent<UIPanel>();
+            if (panelOld) {
+                panelOld.SetActive(false);
+            }
+        }
+
+        if (_curMenu == ui) {
+            _curMenu = null;
 		} else {
 			if(_curMenu && _curMenu.GetComponent<UIPanel>().toggleButton) {
 				_curMenu.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
 			}
-			_curMenu = ui;
+
+            _curMenu = ui;
+
+            //Set new panel active
+            if (_curMenu) {
+                UIPanel panelNew = _curMenu.GetComponent<UIPanel>();
+                if (panelNew) {
+                    panelNew.SetActive(true);
+                }
+            }
+
 		}
 	}
 
