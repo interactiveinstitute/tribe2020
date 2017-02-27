@@ -362,15 +362,23 @@ public class PilotView : View{
 			EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
 
 			eemButton.title.text = eem.title;
+			eemButton.buttonImage.color = eem.color;
+			ColorBlock cb = eemButton.button.colors;
+			cb.normalColor = eem.color;
+			cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
+			eemButton.button.colors = cb;
 
+			//Comfort cost
 			eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
 			eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
 			eemButton.comfortCost.text = eem.comfortCost.ToString();
 
+			//Money cost
 			eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
 			eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
 			eemButton.moneyCost.text = eem.cashCost.ToString();
 
+			//Efficiency benefit
 			eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
 			eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
 			eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
