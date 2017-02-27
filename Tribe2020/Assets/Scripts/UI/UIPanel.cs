@@ -18,4 +18,12 @@ public class UIPanel : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void SetActive(bool state) {
+        Graph[] graphs = GetComponentsInChildren<Graph>();
+        foreach (Graph graph in graphs) {
+            graph.active = state;
+        }
+    }
+
 }

@@ -32,6 +32,8 @@ public class Graph : DataNode {
 
 	public List<DataPoint> Data;
 
+    public bool active = false;
+
     Mesh msh;
 
     GameTime _timeMgr = GameTime.GetInstance();
@@ -53,8 +55,12 @@ public class Graph : DataNode {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Relative)
-			Plot ();
+        if (Relative) {
+            //Only plot if graph is active
+            if (active) {
+                Plot();
+            }
+        }
 	}
 
 	public void InitParams(){
@@ -121,7 +127,7 @@ public class Graph : DataNode {
 		float x=0, y,px,py,xnow;
 		List<Vector2> Verts = new List<Vector2>();
 
-		if (values.Count == 0)
+		if (values == null || values.Count == 0)
 			return Verts;
 
 		x = TimeToCoordinate (values[0].Timestamp);
@@ -267,7 +273,8 @@ public class Graph : DataNode {
 			vertices3d[i] = new Vector3(newVerts[i].x, newVerts[i].y, -1 * alt);
 		}
 
-		//Create the mesh
+        //Create the mesh
+        msh.Clear();
 		msh.vertices = vertices3d;
 		msh.triangles = indices;
 		msh.RecalculateNormals();
