@@ -3,8 +3,8 @@ using System.Collections;
 
 public class DataText : DataNode {
 
-	public TextMesh textMesh = null;
-	public string Subproperty = null;
+	public TextMesh textMesh;
+	//public string Subproperty = null;
 	public int SubpropertyId = 0;
 
 
@@ -12,7 +12,8 @@ public class DataText : DataNode {
 	void Start () {
 		GameObject parentObject;
 		parentObject = this.transform.root.gameObject;
-		textMesh = parentObject.GetComponent<TextMesh>();
+        if (textMesh == null)
+		    textMesh = parentObject.GetComponent<TextMesh>();
 	}
 	
 	// Update is called once per frame
@@ -20,16 +21,16 @@ public class DataText : DataNode {
 	
 	}
 
-	override public void JsonUpdate(Connection Sub, JSONObject json) {
+	//override public void JsonUpdate(Subscription Sub, JSONObject json) {
 
-		if (Subproperty == null)
-			textMesh.text = json.str;
-		else {
-			textMesh.text = json.GetField (Subproperty).str;
-		}
-	}
+	//	if (Subproperty == null)
+	//		textMesh.text = json.str;
+	//	else {
+	//		textMesh.text = json.GetField (Subproperty).str;
+	//	}
+	//}
 
-	override public void TimeDataUpdate(Connection Sub, DataPoint data) {
+	override public void TimeDataUpdate(Subscription Sub, DataPoint data) {
 
 		if (data == null)
 			return;
@@ -40,10 +41,11 @@ public class DataText : DataNode {
 		if (SubpropertyId >= data.Values.Length)
 			return; 
 
-		Debug.Log (data.Values.Length);
-		Debug.Log (SubpropertyId);
+		//Debug.Log (data.Values.Length);
+		//Debug.Log (SubpropertyId);
 		if (data.Values [SubpropertyId] != null) {
-			textMesh.text = data.Values [SubpropertyId].ToString ();
+  
+            textMesh.text = data.Values[SubpropertyId].ToString();
 			return;
 		}
 

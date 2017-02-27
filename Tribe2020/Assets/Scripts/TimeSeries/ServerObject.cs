@@ -1,50 +1,188 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class ServerObject : MonoBehaviour {
-
-	[Header("General")]
-	public string Name;
-
-	[Header("Local clients")]
-//	public Subscription[] Subscriptions;
-	public string[] Payloads;
+public class ServerObject : DataNode {
 
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public class TopicMap {
+        public string Topic;
+        public bool Subscribed = false;
+        public DataPoint LastDataPoint = null;
+        public List<Subscription> Subscribers = new List<Subscription>();
+
+    }
+
+    [Header("Server properties")]
+    public List<TopicMap> TopicMapping = new List<TopicMap>();
 
 
-	public string Get(string Name,double StartTime,bool Absolute,int BufferSize)
-	{
-		//Add to query list. 
+    public void OnConnect() {
+        //Subscribe to all 
+        foreach (TopicMap tm in TopicMapping)
+        {
+            tm.Subscribed = SubscribeTopic(tm.Topic);
+        }
+    }
 
-		//Test
-		//ts.Values = new double[4] {1.0,2.0,3.0,4.0};
-		//ts.TimeStamps = new double[4] {1452691843.0,1452691849.0,1452691858.0,1452691890.0};
-		//ts.BufferValid = true;
-		//ts.CurrentSize = BufferSize;
-		return "TODO";
-	}
+    
 
-	public int Subscribe(DataSeriesBuffer ts,string Name,double StartTime,bool Absolute,int BufferSize) {
-		return -1;
-	}
+    override public void Subscribe(Subscription Sub)
+    {
+        base.Subscribe(Sub);
+        TopicMap NewMap;
 
-	//MQTT subscribe to the last incomming message. 
-	public int Subscribe(DataSeriesBuffer ts,string Name) {
-		return Subscribe( ts, Name, 0, false, 1);
-	}
+        //Search through all mappings
+        foreach (TopicMap tm in TopicMapping)
+        {
+            if (Sub.MatchesTopic(tm.Topic)) {
+                tm.Subscribers.Add(Sub);
 
-	public void Unsubscribe(int subscriptionID) {
-		
-	}
+                //Send last data recived
+                if (tm.LastDataPoint != null)
+                    Sub.TimeDataUpdate(tm.LastDataPoint);
+
+                return;
+            }
+        }
+
+        NewMap = new TopicMap();
+        NewMap.Topic = Sub.Topic;
+        NewMap.Subscribers.Add(Sub);
+        NewMap.Subscribed = SubscribeTopic(Sub.Topic);
+        TopicMapping.Add(NewMap);
+
+    }
+
+    virtual public bool SubscribeTopic(string Topic)
+    {
+        return false;
+    }
+
+    override public void Unsubscribe(Subscription Sub)
+    {
+        base.Unsubscribe(Sub);
+
+        foreach (TopicMap tm in TopicMapping)
+        {
+            tm.Subscribers.Remove(Sub);
+            if (tm.Subscribers.Count == 0) {
+                //TODO Unsubscribe topic
+                //..
+              TopicMapping.Remove(tm);
+              
+            }
+        }
+    }
+
+
+    public void UpdateAllTargets(string Event, JSONObject msg)
+    {
+        DataPoint Data = new DataPoint();
+        LastData = Data;
+
+        if (Event != "mqtt")
+            return;
+
+        string topic = (string) msg.GetField("topic").str;
+        string payload = msg.GetField("payload").str;
+        //payload = payload.Substring(1, payload.Length - 1);
+        payload = payload.Replace("\\\"", "\"");
+
+        JSONObject json_payload = new JSONObject(payload);
+        
+        //Only text  
+        if (json_payload.IsNull) {
+            //print("******************************");
+            Data.Texts[0] = payload;
+            //Data.Timestamp = GameTime.GetInstance().time;
+
+            foreach (TopicMap tm in TopicMapping)
+            {
+                if (topic == tm.Topic)
+                {
+                    //Send to all subscribers in the list. 
+                    foreach (Subscription Sub in tm.Subscribers)
+                    {
+                        Sub.TimeDataUpdate(Data);
+                    }
+                }
+
+            }
+
+            return;
+        }
+       
+
+        Data.Timestamp = json_payload.GetField("time").n;
+        //Data.Texts[0] = payload;
+
+        json_payload.RemoveField("time");
+
+
+
+        foreach (TopicMap tm in TopicMapping)
+        {
+            if (topic == tm.Topic)
+            {
+                //Send to all subscribers in the list. 
+                foreach (Subscription Sub in tm.Subscribers) {
+
+                    if (Sub.Target.Columns == null || Sub.Target.Columns.Count == 0)
+                    {
+                        
+                        Sub.Target.Columns = json_payload.keys;
+                        //Sub.Target.Columns.Remove("Time");
+                    }
+
+                    Data.Values = new double[Sub.Target.Columns.Count];
+
+                    for (int i =0; i < Sub.Target.Columns.Count; i++)
+                    {
+                        Data.Values[i] = json_payload.GetField(Sub.Target.Columns[i]).n;
+                    }
+
+                    
+                    Sub.TimeDataUpdate(Data);
+                }
+            }
+
+        }
+    }
+
+    void printdata(JSONObject obj)
+    {
+        switch (obj.type)
+        {
+            case JSONObject.Type.OBJECT:
+                for (int i = 0; i < obj.list.Count; i++)
+                {
+                    string key = (string)obj.keys[i];
+                    JSONObject j = (JSONObject)obj.list[i];
+                    Debug.Log("KEY: "+key);
+                    printdata(j);
+                }
+                break;
+            case JSONObject.Type.ARRAY:
+                foreach (JSONObject j in obj.list)
+                {
+                    printdata(j);
+                }
+                break;
+            case JSONObject.Type.STRING:
+                Debug.Log(obj.str);
+                break;
+            case JSONObject.Type.NUMBER:
+                Debug.Log(obj.n);
+                break;
+            case JSONObject.Type.BOOL:
+                Debug.Log(obj.b);
+                break;
+            case JSONObject.Type.NULL:
+                Debug.Log("NULL");
+                break;
+
+        }
+    }
 
 }

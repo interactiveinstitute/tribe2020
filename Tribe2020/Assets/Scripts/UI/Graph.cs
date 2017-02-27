@@ -4,15 +4,23 @@ using System.Collections.Generic;
 
 public class Graph : DataNode {
 
-	[Header("Parameters")]
+    public enum relative
+    {
+        None,
+        GameTime,
+        RealWorldTime
+    };
+
+
+    [Header("Parameters")]
 	public double StartTime;
 	public double StopTime;
-	public double Max,Min;
-	public bool Relative=false;
+	public relative Relative =relative.None;
+    [Space(10)]
+    public double Max, Min;
 
 
-
-	[Header("Source")]
+    [Header("Source")]
 	public DataSeries Source;
 	public  int ValueIndex = 0;
 
@@ -55,13 +63,13 @@ public class Graph : DataNode {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Relative) {
-            //Only plot if graph is active
-            if (active) {
-                Plot();
-            }
+        if (active) {
+            Plot();
         }
+        
 	}
+
+
 
 	public void InitParams(){
 
@@ -97,9 +105,11 @@ public class Graph : DataNode {
 	public double GetStartTime(){
 		double start;
 
-		if (Relative)
+        if (Relative == relative.GameTime)
 			start = Now + StartTime;
-		else
+        else if (Relative == relative.RealWorldTime)
+            start = _timeMgr.RealWorldTime + StartTime;
+        else
 			start = StartTime;
 
 		return start;
@@ -108,9 +118,11 @@ public class Graph : DataNode {
 	public double GetStopTime(){
 		double stop;
 
-		if (Relative)
-			stop = Now + StopTime;
-		else
+		if (Relative == relative.GameTime)
+            stop = Now + StopTime;
+        else if (Relative == relative.RealWorldTime)
+            stop = _timeMgr.RealWorldTime + StopTime;
+        else
 			stop = StopTime;
 
 		return stop;

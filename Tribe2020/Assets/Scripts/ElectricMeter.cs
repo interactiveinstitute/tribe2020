@@ -280,7 +280,7 @@ public class ElectricMeter : DataNode {
 		powering (!GivesPower);
 	}
 
-	override public void TimeDataUpdate(Connection Con,DataPoint data) {
+	override public void TimeDataUpdate(Subscription Con,DataPoint data) {
 		//Debug.Log ("Got data!");
 		update_power(data.Timestamp,(float)data.Values[0]);
 

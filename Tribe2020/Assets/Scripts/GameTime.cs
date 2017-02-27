@@ -35,14 +35,22 @@ public class GameTime : MonoBehaviour {
 		}
 	}
 
+   
+    public double RealWorldTime;
+    [Space(10)]
     [HideInInspector]
     public float simulationDeltaTime;
-	public double StartTime;
+    [Space(10)]
+    [Header("Game Time")]
+    public double StartTime;
 	public double offset;
 	public double time = Double.NaN;
 	public double VisualTime;
 	public string CurrentDate;
-	double lastupdate=0;
+
+    
+
+    double lastupdate=0;
 	public List<KeyAction> KeyActions = new List<KeyAction>();
 
 	[Range(0.0f, 100.0f)]
@@ -132,6 +140,10 @@ public class GameTime : MonoBehaviour {
 
 		lastupdate = now;
 
+        
+        TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+        RealWorldTime = t.TotalSeconds;
+        
 	}
 
 	private int DoKeyActions(double newtime) { 

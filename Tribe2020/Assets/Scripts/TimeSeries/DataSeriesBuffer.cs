@@ -61,7 +61,7 @@ public class DataSeriesBuffer : DataSeries {
 
 
 
-	private GameTime TTime = null;
+	//private GameTime TTime = null;
 
 
 
@@ -242,20 +242,22 @@ public class DataSeriesBuffer : DataSeries {
 		return ApplyModifiers(Data[i]).Values[0];
 	}
 
-	public double[] GetCurrentValues () {
-		double now = TTime.time;
+	
 
-		int i = GetIndex (now);
+    public DataPoint     GetDataAt(double ts)
+    {
+        int i = GetIndex(ts);
 
-		if (i == -1)
-			return null;
+        if (i == -1)
+            return null;
 
-		return ApplyModifiers(Data[i]).Values;
-	}
+        return ApplyModifiers(Data[i]);
+    }
 
 
-	//TODO 
-	public double InterpolateCurrentValue() {
+
+    //TODO 
+    public double InterpolateCurrentValue() {
 		double now = (double)TTime.time;
 
 		return Data[GetIndex(now)].Values[0];
@@ -270,10 +272,14 @@ public class DataSeriesBuffer : DataSeries {
 		//string fileData  = System.IO.File.ReadAllText(FileName);
 		string[] lines = File.text.Split("\n"[0]);
 
-		Columns = (lines[0].Trim()).Split(","[0]);
-		Units = (lines[1].Trim()).Split(","[0]);
+        Columns.Clear();
+        Columns.AddRange((lines[0].Trim()).Split(","[0]));
 
-		Name = File.name;
+        Units.Clear();
+        Units.AddRange((lines[1].Trim()).Split(","[0]));
+ 
+
+		NodeName = File.name;
 		Relative = false;
 
 

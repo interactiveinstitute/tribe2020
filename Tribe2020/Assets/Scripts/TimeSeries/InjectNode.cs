@@ -21,7 +21,7 @@ public class InjectNode : DataNode {
 	}
 
 	public void Inject() {
-		foreach (DataNode.Connection Sub in Targets) {
+		foreach (DataNode.Subscription Sub in Targets) {
 			Debug.Log("Injecting!");
 			DataPoint Data2 = Data.Clone ();
 

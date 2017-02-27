@@ -34,9 +34,26 @@ public class DataSeriesModifier : DataSeries {
 
 	}
 
+    public double[] GetDataAt(double ts)
+    {
+
+        BasicDataSeries Series;
+
+        if (SourceSeries.Count == 1)
+            return ApplyModifiers(SourceSeries[0].GetDataAt(ts)).Values;
+
+        foreach (DataSeries serie in SourceSeries)
+        {
+            Series = new BasicDataSeries();
+            Series.Data = serie.GetPeriod(ts, ts);
+            //result.Collection.Add(Series);
+        }
+
+        return null;
+    }
 
 
-	override public List<DataPoint> GetPeriod(double From, double To) {
+    override public List<DataPoint> GetPeriod(double From, double To) {
 
 		BasicDataSeriesCollection result = new BasicDataSeriesCollection ();
 		BasicDataSeries Series;
