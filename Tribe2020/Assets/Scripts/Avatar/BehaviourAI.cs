@@ -86,7 +86,9 @@ public class BehaviourAI : SimulationObject {
 
 		//Synchronise schedule to get current activity for time
 		SyncSchedule();
-		_curActivity.Start(); //Start this activity.
+        if (_curActivity) {
+            _curActivity.Start(); //Start this activity.
+        }
 
 		if(_nextActivity != null) {
 			//Add key point for _nextActivity.
