@@ -22,10 +22,10 @@ public class BehaviourAI : SimulationObject {
 	private Vector3 _savedIdlePosition;
 	private Appliance _poseAppliance = null;
 
-	//private Vector3 _curTargetPos;
-	public AvatarActivity _curActivity;
+    //private Vector3 _curTargetPos;
+    public AvatarActivity _prevActivity;
+    public AvatarActivity _curActivity;
 	public AvatarActivity _nextActivity;
-	public AvatarActivity _prevActivity;
 
 	private Stack<AvatarActivity> _tempActivities = new Stack<AvatarActivity>();
 	//private bool _isTemporarilyUnscheduled = false;
