@@ -4,6 +4,8 @@ using System.Collections;
 
 public class EEMButton : MonoBehaviour {
 	public Text title;
+	public Image buttonImage;
+	public Button button;
 	public Image comfortIcon;
 	public Text comfortCost;
 	public Image moneyIcon;

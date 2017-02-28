@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MainMenuPanel : MonoBehaviour {
 	public bool showTitle;
+	public Vector2 showPos;
+	public Vector2 hidePos;
 
 	// Use this for initialization
 	void Start () {

@@ -21,14 +21,9 @@ public class MenuController : MonoBehaviour {
 	private MainMenuCanvas _view;
 
 	[Header("UI Panels")]
-	public RectTransform mainMenu;
-	public RectTransform fileMenu;
-	public RectTransform pilotMenu;
-	public RectTransform settingsMenu;
-	public RectTransform aboutMenu;
-
 	private RectTransform _curMenu;
 	public List<Transform> menus;
+	private Dictionary<string, RectTransform> _menus;
 
 	public Transform continueButton;
 
@@ -67,13 +62,11 @@ public class MenuController : MonoBehaviour {
 
 		_localMgr.SetLanguage(_saveMgr.GetData("language"));
 
-		_curMenu = mainMenu;
-		menus = new List<Transform>();
-		menus.Add(mainMenu);
-		menus.Add(fileMenu);
-		menus.Add(pilotMenu);
-		menus.Add(settingsMenu);
-		menus.Add(aboutMenu);
+		_menus = new Dictionary<string, RectTransform>();
+		foreach(RectTransform menuPanel in menus) {
+			_menus.Add(menuPanel.name, menuPanel);
+		}
+		_curMenu = _menus["Menu Panel"];
 
 		RefreshContinue();
 
@@ -96,15 +89,17 @@ public class MenuController : MonoBehaviour {
 	void Update () {
 		foreach(RectTransform menu in menus) {
 			if(menu != _curMenu) {
-				if(menu.anchoredPosition.x < 200) {
+				float hideX = menu.GetComponent<MainMenuPanel>().hidePos.x;
+				if(menu.anchoredPosition.x < hideX) {
 					float curX = menu.anchoredPosition.x;
-					curX = 200 + (curX - 200) * 0.75f;
+					curX = hideX + (curX - hideX) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, menu.anchoredPosition.y);
 				}
 			} else {
-				if(menu.anchoredPosition.x > -180) {
+				float showX = menu.GetComponent<MainMenuPanel>().showPos.x;
+				if(menu.anchoredPosition.x > showX) {
 					float curX = menu.anchoredPosition.x;
-					curX = -180 + (curX + 180) * 0.75f;
+					curX = showX + (curX - showX) * 0.75f;
 					menu.anchoredPosition = new Vector2(curX, menu.anchoredPosition.y);
 				}
 			}
@@ -125,26 +120,13 @@ public class MenuController : MonoBehaviour {
 
 	//
 	public void OpenMenu(string menuState) {
-		switch(menuState) {
-			case "Main":
-				_instance._curMenu = _instance.mainMenu;
-				break;
-			case "File":
-				_instance._curMenu = _instance.fileMenu;
-				break;
-			case "Settings":
-				_instance._curMenu = _instance.settingsMenu;
-				break;
-			case "About":
-				_instance._curMenu = _instance.aboutMenu;
-				break;
-		}
+		_instance._curMenu = _instance._menus[menuState];
 	}
 
 	//
 	public void OpenPilotMenu(int slot) {
 		_instance.pendingNewGameSlot = slot;
-		_instance._curMenu = _instance.pilotMenu;
+		_instance._curMenu = _instance._menus["Pilot Menu"];
 	}
 
 	//
