@@ -36,7 +36,7 @@ public class AvatarStats : MonoBehaviour {
     public float GetEnergyEfficiency()
     {
         //INSERT algorithm for generating energy efficiency here! For now, just return attitude :-D
-        return 1.0f-attitude;
+        return attitude;
     }
 
     public bool RunEnergyEfficiencyTest() {

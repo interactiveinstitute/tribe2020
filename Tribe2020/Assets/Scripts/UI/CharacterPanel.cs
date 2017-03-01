@@ -31,25 +31,25 @@ public class CharacterPanel : MonoBehaviour {
         _pilotView.avatarMood.GetComponent<Image>().sprite = _avatarManager.conversation.GetEmojiReaction(mood);
     }
 
-    public void SetEnergyEffeciency(float value) {
+    void SetEnergyEffeciency(float value) {
         int nLabels = _pilotView.EELabels.Count;
-        int index = Mathf.Min(Mathf.FloorToInt(value * nLabels), nLabels - 1);
+        int index = Mathf.Min(Mathf.FloorToInt((1.0f - value) * nLabels), nLabels - 1);
         _pilotView.avatarEfficiencyLabel.GetComponent<Image>().sprite = _pilotView.EELabels[index];
     }
 
-    public void SetSatisfaction(float value) {
+    void SetSatisfaction(float value) {
         _pilotView.avatarSatisfaction.value = value * 100;
     }
 
-    public void SetKnowledge(float value) {
+    void SetKnowledge(float value) {
         _pilotView.avatarKnowledge.value = value * 100;
     }
 
-    public void SetAttitude(float value) {
+    void SetAttitude(float value) {
         _pilotView.avatarAttitude.value = value * 100;
     }
 
-    public void SetNormSensitivity(float value) {
+    void SetNormSensitivity(float value) {
         _pilotView.avatarNorm.value = value * 100;
     }
 }

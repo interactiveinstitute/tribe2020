@@ -70,8 +70,9 @@ public class PilotView : View{
 	public Text deviceDescription;
 	public Text deviceEEMTitle;
 	public Transform deviceEEMContainer;
+    public Image deviceEfficiencyLabel;
 
-	[Header("Quest UI")]
+    [Header("Quest UI")]
 	public GameObject inboxUI;
 	public Transform inboxList;
 	//public GameObject mailReadUI;
@@ -115,6 +116,7 @@ public class PilotView : View{
     #endregion
 
     CharacterPanel _characterPanel;
+    DevicePanel _devicePanel;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -132,6 +134,7 @@ public class PilotView : View{
 		apocalypsePercent.text = "0 %";
 
         _characterPanel = GetComponentInChildren<CharacterPanel>();
+        _devicePanel = GetComponentInChildren<DevicePanel>();
 
         //Clear inbox
         //RemoveChildren(inboxList);
@@ -348,7 +351,9 @@ public class PilotView : View{
 		deviceTitle.text = _controller.GetPhrase("Appliance", app.title + "_Title");
 		deviceDescription.text = _controller.GetPhrase("Appliance", app.title + "_Description");
 
-		BuildEEMInterface(deviceEEMContainer, app);
+        _devicePanel.BuildPanel(app.gameObject);
+
+        BuildEEMInterface(deviceEEMContainer, app);
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
