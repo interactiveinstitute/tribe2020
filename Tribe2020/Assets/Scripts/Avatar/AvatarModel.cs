@@ -57,7 +57,12 @@ public class AvatarModel : MonoBehaviour {
             int modelId = GetComponent<AvatarModel>().modelId;
             _modelBundle = am.models.models[modelId];
 
-            foreach (AvatarModels.TexturedBodyPart bodyPart in _modelBundle.bodyParts) {
+            Material materialSkin = _modelBundle.materialsSkin[Random.Range(0, _modelBundle.materialsSkin.Count)];
+            foreach (AvatarModels.BodyPartSkin bodyPartSkin in _modelBundle.bodyPartsSkin) {
+                SetClothesMaterial(bodyPartSkin.model.name, materialSkin);
+            }
+
+            foreach (AvatarModels.BodyPartClothes bodyPart in _modelBundle.bodyPartsClothes) {
                 Material material = bodyPart.materials[Random.Range(0, bodyPart.materials.Count)];
                 SetClothesMaterial(bodyPart.model.name, material);
             }

@@ -9,13 +9,20 @@ public class AvatarModels : MonoBehaviour {
         public AvatarManager.Gender gender;
         public GameObject model;
         public Avatar avatar;
-        public List<TexturedBodyPart> bodyParts;
+        public List<BodyPartSkin> bodyPartsSkin;
+        public List<Material> materialsSkin;
+        public List<BodyPartClothes> bodyPartsClothes;
         public GameObject faceObject;
         public List<FaceTexture> faceTextures;
     }
 
     [System.Serializable]
-    public struct TexturedBodyPart {
+    public struct BodyPartSkin {
+        public GameObject model;
+    }
+
+    [System.Serializable]
+    public struct BodyPartClothes {
         public GameObject model;
         public List<Material> materials;
     }
