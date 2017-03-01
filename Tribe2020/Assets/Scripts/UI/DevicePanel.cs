@@ -18,7 +18,10 @@ public class DevicePanel : MonoBehaviour {
     }
 
     public void BuildPanel(GameObject goDevice) {
-        SetPowerValue(goDevice.GetComponent<ElectricDevice>().Power);
+        ElectricDevice ed = goDevice.GetComponent<ElectricDevice>();
+        if (ed) {
+            SetPowerValue(ed.Power);
+        }
         SetEnergyEffeciency(goDevice.GetComponent<Appliance>().energyEffeciency);
     }
 
