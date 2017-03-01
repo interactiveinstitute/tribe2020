@@ -18,7 +18,12 @@ public class DevicePanel : MonoBehaviour {
     }
 
     public void BuildPanel(GameObject goDevice) {
+        SetPowerValue(goDevice.GetComponent<ElectricDevice>().Power);
         SetEnergyEffeciency(goDevice.GetComponent<Appliance>().energyEffeciency);
+    }
+
+    void SetPowerValue(float value) {
+        _pilotView.devicePowerValue.text = value + "W";
     }
 
     void SetEnergyEffeciency(float value) {

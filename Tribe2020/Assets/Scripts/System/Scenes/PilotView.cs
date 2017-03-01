@@ -68,6 +68,7 @@ public class PilotView : View{
 	[Header("Device Interface")]
 	public Text deviceTitle;
 	public Text deviceDescription;
+    public Text devicePowerValue;
 	public Text deviceEEMTitle;
 	public Transform deviceEEMContainer;
     public Image deviceEfficiencyLabel;
