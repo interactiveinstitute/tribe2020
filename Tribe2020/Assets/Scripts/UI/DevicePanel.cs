@@ -22,11 +22,18 @@ public class DevicePanel : MonoBehaviour {
         if (ed) {
             SetPowerValue(ed.Power);
         }
+        else {
+            SetPowerValueNotApplicable();
+        }
         SetEnergyEffeciency(goDevice.GetComponent<Appliance>().energyEffeciency);
     }
 
     void SetPowerValue(float value) {
         _pilotView.devicePowerValue.text = value + "W";
+    }
+
+    void SetPowerValueNotApplicable() {
+        _pilotView.devicePowerValue.text = "-";
     }
 
     void SetEnergyEffeciency(float value) {
