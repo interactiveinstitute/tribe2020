@@ -244,7 +244,7 @@ public class DataSeriesBuffer : DataSeries {
 
 	
 
-    public DataPoint     GetDataAt(double ts)
+    override public DataPoint GetDataAt(double ts)
     {
         int i = GetIndex(ts);
 

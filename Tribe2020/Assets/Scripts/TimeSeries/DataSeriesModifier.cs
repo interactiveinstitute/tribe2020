@@ -34,22 +34,35 @@ public class DataSeriesModifier : DataSeries {
 
 	}
 
-    public double[] GetDataAt(double ts)
+    override public DataPoint GetDataAt(double ts)
     {
-
-        BasicDataSeries Series;
+        BasicDataSeriesCollection result = new BasicDataSeriesCollection();
+        BasicDataSeries Series = new BasicDataSeries(); ;
+        DataPoint data;
 
         if (SourceSeries.Count == 1)
-            return ApplyModifiers(SourceSeries[0].GetDataAt(ts)).Values;
+            return ApplyModifiers(SourceSeries[0].GetDataAt(ts));
 
         foreach (DataSeries serie in SourceSeries)
         {
-            Series = new BasicDataSeries();
-            Series.Data = serie.GetPeriod(ts, ts);
-            //result.Collection.Add(Series);
+            Series.Data.Add( serie.GetDataAt(ts) );
         }
 
+        if (operation == Manipulation.sum)
+        {
+            return ApplyModifiers(Series.Sum());
+        }
+
+        else if (operation == Manipulation.div)
+        {
+            return ApplyModifiers(Series.Div());
+        }
+
+        print("Waring! Dataseries operation not implemented.");
+
         return null;
+        
+
     }
 
 
@@ -75,6 +88,7 @@ public class DataSeriesModifier : DataSeries {
 			return ApplyModifiers(result.GetStaircaseDivOfSeries().Data);
 		}
 
+        print("Waring! Dataseries operation not implemented.");
 		return null;
 
 	}

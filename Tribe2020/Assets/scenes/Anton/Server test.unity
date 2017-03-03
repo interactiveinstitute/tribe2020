@@ -174,7 +174,6 @@ MonoBehaviour:
       Data: []
       index: 0
   textMesh: {fileID: 517637131}
-  Subproperty: 
   SubpropertyId: 0
 --- !u!102 &517637131
 TextMesh:
@@ -237,7 +236,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 517637129}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -483.13, y: -272.86, z: 0}
+  m_LocalPosition: {x: -483.13, y: -268, z: 0}
   m_LocalScale: {x: 0.19628167, y: 0.1962817, z: 0.15420961}
   m_Children: []
   m_Father: {fileID: 1892548959}
@@ -580,9 +579,9 @@ MonoBehaviour:
       index: 0
   StartTime: -604800
   StopTime: 14400
+  Relative: 1
   Max: 70000
   Min: 0
-  Relative: 1
   Source: {fileID: 393235065}
   ValueIndex: 0
   color: {r: 0.959, g: 0.09558824, b: 0.24824521, a: 0.559}
@@ -793,9 +792,9 @@ MonoBehaviour:
       index: 0
   StartTime: -14400
   StopTime: 14400
+  Relative: 1
   Max: 70000
   Min: 0
-  Relative: 1
   Source: {fileID: 935896051}
   ValueIndex: 0
   color: {r: 0.07551282, g: 0.04617214, b: 0.89705884, a: 0.488}
@@ -1125,7 +1124,7 @@ MonoBehaviour:
   Units: []
   Columns: []
   Sources:
-  - Topic: test/signal
+  - Topic: test/signal2
     DataPeriod:
       Enabled: 0
       Relative: 0
@@ -1140,7 +1139,22 @@ MonoBehaviour:
       origin:
         Data: []
         index: 0
-  Targets: []
+  Targets:
+  - Topic: 
+    DataPeriod:
+      Enabled: 0
+      Relative: 0
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 0}
+    Target: {fileID: 1141676430}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
   LastData:
     Timestamp: 0
     Values: []
@@ -1237,12 +1251,12 @@ MonoBehaviour:
     origin:
       Data: []
       index: 0
-  StartTime: -43200
-  StopTime: 43200
-  Max: 70000
+  StartTime: -60
+  StopTime: 60
+  Relative: 2
+  Max: 5000
   Min: 0
-  Relative: 1
-  Source: {fileID: 0}
+  Source: {fileID: 1128715990}
   ValueIndex: 0
   color: {r: 0.04065744, g: 0.20665185, b: 0.6911765, a: 0.5882353}
   _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -2079,7 +2093,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1787804021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2105,9 +2119,9 @@ MonoBehaviour:
       index: 0
   StartTime: -604800
   StopTime: 0
+  Relative: 1
   Max: 70000
   Min: 0
-  Relative: 1
   Source: {fileID: 393235065}
   ValueIndex: 0
   color: {r: 1, g: 0, b: 0, a: 0.909}
