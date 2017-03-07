@@ -54,16 +54,21 @@ public class ElectricDevice : ElectricMeter {
 	private Material[] default_materials;
 
 
-	//var time_event = new Tuple<long, float>(0,0.0f);
+    PilotView _pilotView;
 
-	//public List<Tuple<long, float>> Pattern;
 
-	// Use this for initialization
-	void Start() {
+    //var time_event = new Tuple<long, float>(0,0.0f);
 
-		//This is used for replacing a material
-		//We initially save the gameobjects materials to the side in order to be able to switch back to them.
-		foreach(Runlevel rl in runlevels) {
+    //public List<Tuple<long, float>> Pattern;
+
+    // Use this for initialization
+    void Start() {
+
+        _pilotView = PilotView.GetInstance();
+
+        //This is used for replacing a material
+        //We initially save the gameobjects materials to the side in order to be able to switch back to them.
+        foreach (Runlevel rl in runlevels) {
 			//Materials 
 
 			//Maybe we have a specifically targeted renderer (of a gameObject) that we want to affect
@@ -151,7 +156,8 @@ public class ElectricDevice : ElectricMeter {
 			//Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
 			//runlevels [rl].Target.sharedMaterials = runlevel_materials;
 			rend.materials = runlevel_materials;
-		}
+
+        }
 
 
 		//Lights
@@ -163,16 +169,16 @@ public class ElectricDevice : ElectricMeter {
 			l.enabled = false;
 		}
 
-		//Eeeeeeh. This updateLighting function is legacy shit. Let's comment it out! Gunnar
-		//if(GetComponentInParent<Room>()) {
-		//	GetComponentInParent<Room>().UpdateLighting();
-		//}
+        //Eeeeeeh. This updateLighting function is legacy shit. Let's comment it out! Gunnar
+        //if(GetComponentInParent<Room>()) {
+        //	GetComponentInParent<Room>().UpdateLighting();
+        //}
 
-		//Sound
-		//TODO
+        //Sound
+        //TODO
 
 
-	}
+    }
 
 
 
@@ -212,7 +218,14 @@ public class ElectricDevice : ElectricMeter {
 			update_power(0);
 
 		ApplyEffects();
-	}
+
+        //Update device panel
+        Appliance app = GetComponent<Appliance>();
+        if (app) {
+            _pilotView.BuildDevicePanel(app);
+        }
+
+    }
 
 	//
 	public void SetEnergyMod(float mod) {

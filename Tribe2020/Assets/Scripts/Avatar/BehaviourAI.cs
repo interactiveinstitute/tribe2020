@@ -60,7 +60,6 @@ public class BehaviourAI : SimulationObject {
 	[SerializeField]
 	public bool showCoffeeCup = false;
 
-
 	//[SerializeField]
 	//private GameObject prefab;
 
@@ -1210,8 +1209,13 @@ public class BehaviourAI : SimulationObject {
             transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
 			yield return new WaitForSeconds(2);
+
+            //Update avatar mood & stats
 			AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
-			TalkToOtherAvatarEmoji(other);
+            GetComponent<AvatarStats>().ChallengeAttitude(other.GetComponent<AvatarStats>());
+            GetComponent<AvatarStats>().ChallengeKnowledge(other.GetComponent<AvatarStats>());
+
+            TalkToOtherAvatarEmoji(other);
 		} else {
 			AvatarMood.Mood moodNew = GetComponent<AvatarMood>().TryChangeMood(moodInput);
 			EndTalkToOtherAvatar();

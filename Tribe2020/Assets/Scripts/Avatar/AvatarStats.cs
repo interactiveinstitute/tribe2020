@@ -5,17 +5,50 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
-	public Sprite portrait;
+
+    //Dirty flag - for rendering character panel
+    bool _isUpdated;
+
+    public Sprite portrait;
+
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float _knowledge;
+    public float knowledge {
+        get { return _knowledge; }
+        set {
+            _knowledge = value;
+            SetUpdated();
+        }
+    }
+
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float _attitude;
+    public float attitude {
+        get { return _attitude; }
+        set {
+            _attitude = value;
+            SetUpdated();
+        }
+    }
+
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    float _normSensititvity;
+    public float normSensititvity {
+        get { return _normSensititvity; }
+        set {
+            _normSensititvity = value;
+            SetUpdated();
+        }
+    }
 
     [Range(0.0f, 1.0f)]
-    public float knowledge;
-    [Range(0.0f, 1.0f)]
-    public float attitude;
-    [Range(0.0f, 1.0f)]
-    public float normSensititvity;
-
     public float conviction;
-	public float energy;
+
+    [Range(0.0f, 1.0f)]
+    public float energy;
 
     /*public float maxEfficiencyValue;
 	public float lightingEfficiency;
@@ -33,6 +66,16 @@ public class AvatarStats : MonoBehaviour {
 	void Update () {
 	}
 
+    void SetUpdated() {
+        _isUpdated = true;
+    }
+
+    public bool IsUpdated() {
+        bool returnValue = _isUpdated;
+        _isUpdated = false;
+        return returnValue;
+    }
+
     public float GetEnergyEfficiency()
     {
         //INSERT algorithm for generating energy efficiency here! For now, just return attitude :-D
@@ -43,32 +86,7 @@ public class AvatarStats : MonoBehaviour {
         return GetEnergyEfficiency() >= Random.value;
     }
 
-    /*private bool RunEfficiencyTest(float value)
-    {
-        return value >= Random.value * maxEfficiencyValue;
-    }
-
-    private bool RunEfficiencyTest(Efficiencies efficiencies)
-    {
-        float value = 0.0f;
-        switch (efficiencies)
-        {
-            case Efficiencies.Cooling:
-                value = coolingEfficiency;
-                break;
-            case Efficiencies.Device:
-                value = deviceEfficiency;
-                break;
-            case Efficiencies.Lighting:
-                value = lightingEfficiency;
-                break;
-            case Efficiencies.Warming:
-                value = warmingEfficiency;
-                break;
-        }
-        return RunEfficiencyTest(value);
-    }*/
-
+    //TestEnergyEfficiency()
     //First argument is always parameter to test, following parameters are success callback with up to 4 arguments
     //Always return success flag
 
@@ -116,64 +134,25 @@ public class AvatarStats : MonoBehaviour {
         return true;
     }
 
-    /*public bool TestEnergyEfficiency(Efficiencies efficiencies)
-    {
-        return RunEfficiencyTest(efficiencies);
+    //Challenge
+
+    public void ChallengeAttitude(AvatarStats other) {
+        //High norm sensitivity and low own conviction && high other's conviction increase chance of updated value
+        if (Random.value < normSensititvity && Random.value > conviction && Random.value < other.conviction) {
+
+            float diff = other.attitude - attitude;
+            float randomEffect = 0.5f * (Random.value - 0.5f); //[-0.25, 0.25]
+            attitude += (diff + randomEffect) * Random.value * 0.1f;
+        }
     }
 
-    public bool TestEnergyEfficiency(Efficiencies efficiencies, System.Action successCallback)
-    {
-        if (!RunEfficiencyTest(efficiencies))
-        {
-            return false;
+    public void ChallengeKnowledge(AvatarStats other) {
+        //High norm sensitivity and low own conviction && high other's conviction and high other's knowledge increase chance of updated value
+        if (Random.value < normSensititvity && Random.value > conviction && Random.value < other.conviction && Random.value < other.knowledge) {
+            float diff = other.knowledge - knowledge;
+            float randomEffect = 0.5f * (Random.value - 0.5f); //[-0.25, 0.25]
+            knowledge += (diff + randomEffect) * Random.value * 0.1f;
         }
-
-        successCallback();
-        return true;
     }
-
-    public bool TestEnergyEfficiency<U1>(Efficiencies efficiencies, System.Action<U1> successCallback, U1 p1)
-    {
-        if (!RunEfficiencyTest(efficiencies))
-        {
-            return false;
-        }
-
-        successCallback(p1);
-        return true;
-    }
-
-    public bool TestEnergyEfficiency<U1,U2>(Efficiencies efficiencies, System.Action<U1, U2> successCallback, U1 p1, U2 p2)
-    {
-        if (!RunEfficiencyTest(efficiencies))
-        {
-            return false;
-        }
-
-        successCallback(p1, p2);
-        return true;
-    }
-
-    public bool TestEnergyEfficiency<U1,U2,U3>(Efficiencies efficiencies, System.Action<U1,U2,U3> successCallback, U1 p1, U2 p2, U3 p3)
-    {
-        if (!RunEfficiencyTest(efficiencies))
-        {
-            return false;
-        }
-
-        successCallback(p1, p2, p3);
-        return true;
-    }
-
-    public bool TestEnergyEfficiency<U1, U2, U3, U4>(Efficiencies efficiencies, System.Action<U1, U2, U3, U4> successCallback, U1 p1, U2 p2, U3 p3, U4 p4)
-    {
-        if (!RunEfficiencyTest(efficiencies))
-        {
-            return false;
-        }
-
-        successCallback(p1, p2, p3, p4);
-        return true;
-    }*/
 
 }

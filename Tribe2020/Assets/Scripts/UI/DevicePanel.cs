@@ -17,15 +17,17 @@ public class DevicePanel : MonoBehaviour {
 
     }
 
-    public void BuildPanel(GameObject goDevice) {
-        ElectricDevice ed = goDevice.GetComponent<ElectricDevice>();
+    public void BuildPanel(Appliance appliance) {
+        ElectricDevice ed = appliance.GetComponent<ElectricDevice>();
         if (ed) {
             SetPowerValue(ed.Power);
+            SetEnergyEffeciency(appliance.energyEffeciency);
         }
         else {
             SetPowerValueNotApplicable();
+            SetEnergyEffeciency(1.0f);
         }
-        SetEnergyEffeciency(goDevice.GetComponent<Appliance>().energyEffeciency);
+        
     }
 
     void SetPowerValue(float value) {
