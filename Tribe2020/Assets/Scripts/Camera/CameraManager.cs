@@ -24,8 +24,8 @@ public class CameraManager : MonoBehaviour {
 	private CameraInterface _interface;
 
 	[Header("Camera State")]
-	public CameraState cameraState = CameraState.Idle;
-	public enum CameraState { Idle, Full, Room, Panned };
+	public CameraState cameraState = CameraState.PlayerControl;
+	public enum CameraState { Idle, Full, Room, Panned, Animating, PlayerControl };
 
 	//Viewpoint variables
 	public Vector2 startCoordinates = Vector2.zero;
@@ -613,6 +613,8 @@ public class CameraManager : MonoBehaviour {
 	public void PlayAnimation(string animation) {
 		animator.enabled = true;
 		animator.Play(animation);
+
+		cameraState = CameraState.Animating;
 	}
 
 	//
@@ -625,6 +627,8 @@ public class CameraManager : MonoBehaviour {
 		animator.Stop();
 		overlayCanvas.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
 		animator.enabled = false;
+
+		cameraState = CameraState.PlayerControl;
 
 		//if(_inOverview) {
 		//	GoToOverview();

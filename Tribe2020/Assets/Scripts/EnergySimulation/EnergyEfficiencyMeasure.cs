@@ -11,6 +11,7 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public Color color;
 	public string category;
 
+	[Header("Effects")]
 	public int cashCost;
 	public int comfortCost;
 
@@ -24,11 +25,16 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public string callbackArgument;
 
 	public GameObject replacementPrefab;
-	public string targetSlot;
+	//public string targetSlot;
 
-	public string deactivateDeviceName;
-	public string activateDeviceName;
+	//public string deactivateDeviceName;
+	//public string activateDeviceName;
 
+	[Header("Time Limitation")]
+	public double discoveryTime;
+	public double obsoletionTime;
+
+	[Header("Dependencies")]
 	public List<EnergyEfficiencyMeasure> requires;
 	public List<EnergyEfficiencyMeasure> excludes;
 
