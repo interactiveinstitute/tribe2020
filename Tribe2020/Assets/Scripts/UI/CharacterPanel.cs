@@ -31,6 +31,10 @@ public class CharacterPanel : MonoBehaviour {
         SetNormSensitivity(goAvatar.GetComponent<AvatarStats>().normSensititvity);
     }
 
+    public void OnClose() {
+        currentAvatar = null;
+    }
+
     void SetMood(AvatarMood.Mood mood) {
         _pilotView.avatarMood.GetComponent<Image>().sprite = _avatarManager.conversation.GetEmojiReaction(mood);
     }

@@ -58,6 +58,9 @@ public class ElectricDevice : ElectricMeter {
 
     PilotView _pilotView;
 
+    //Dirty flag - for rendering character panel
+    bool _isUpdated;
+
 
     //var time_event = new Tuple<long, float>(0,0.0f);
 
@@ -106,7 +109,17 @@ public class ElectricDevice : ElectricMeter {
 
 	}
 
-	public override void On() {
+    void SetUpdated() {
+        _isUpdated = true;
+    }
+
+    public bool IsUpdated() {
+        bool returnValue = _isUpdated;
+        _isUpdated = false;
+        return returnValue;
+    }
+
+    public override void On() {
 
 		SetRunlevel(runlevelOn);
 	}
@@ -221,11 +234,8 @@ public class ElectricDevice : ElectricMeter {
 
 		ApplyEffects();
 
-        //Update device panel
-        Appliance app = GetComponent<Appliance>();
-        if (app) {
-            _pilotView.BuildDevicePanel(app);
-        }
+        //Set updated
+        SetUpdated();
 
     }
 

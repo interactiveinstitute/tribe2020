@@ -184,6 +184,15 @@ public class PilotView : View{
                 BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
             }
         }
+
+        //Device panel
+        ElectricDevice currentDevice = _devicePanel.currentDevice;
+        if (currentDevice != null) {
+            if (currentDevice.IsUpdated()) {
+                BuildDevicePanel(currentDevice.GetComponent<Appliance>());
+            }
+        }
+
     }
 
     //

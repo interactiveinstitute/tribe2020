@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DevicePanel : MonoBehaviour {
 
     PilotView _pilotView;
+    public ElectricDevice currentDevice = null;
 
     // Use this for initialization
     void Start() {
@@ -18,6 +19,9 @@ public class DevicePanel : MonoBehaviour {
     }
 
     public void BuildPanel(Appliance appliance) {
+
+        currentDevice = appliance.GetComponent<ElectricDevice>();
+
         ElectricDevice ed = appliance.GetComponent<ElectricDevice>();
         if (ed) {
             SetPowerValue(ed.Power);
@@ -30,6 +34,10 @@ public class DevicePanel : MonoBehaviour {
             SetEnergyEffeciency(EnergyEffeciencyLabels.Name.AAAA);
         }
         
+    }
+
+    public void OnClose() {
+        currentDevice = null;
     }
 
     void SetPowerValue(float value) {
