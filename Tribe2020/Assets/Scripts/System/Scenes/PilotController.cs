@@ -202,7 +202,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	private void OnTouchEnded(Vector3 pos) {
 		//Debug.Log("ontouchended");
-		_cameraMgr.cameraState = CameraManager.CameraState.Idle;
+		//_cameraMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
 
 		//Touch ended before tap timeout, trigger OnTap
@@ -518,7 +518,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
 		_instance._view.UpdateViewpointGuide(_instance._cameraMgr.GetViewpoints(), curView, overview);
-		_instance._view.UpdateViewpointTitle(curView.title);
+		if(_cameraMgr.cameraState == CameraManager.CameraState.PlayerControl) {
+			_instance._view.UpdateViewpointTitle(curView.title);
+		}
 
 		_instance._narrationMgr.OnNarrativeEvent("SelectedView", curView.title);
 	}
@@ -823,11 +825,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void MoveCamera(string animation) {
+		_instance._view.UpdateViewpointTitle("");
 		_instance._cameraMgr.PlayAnimation(animation);
 	}
 
 	//
 	public void StopCamera() {
+		_instance._view.UpdateViewpointTitle(_instance._cameraMgr.GetCurrentViewpoint().title);
 		_instance._cameraMgr.StopAnimation();
 	}
 
