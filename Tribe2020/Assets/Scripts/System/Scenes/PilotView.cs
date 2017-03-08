@@ -406,12 +406,13 @@ public class PilotView : View{
 
 			Button button = buttonObj.GetComponent<Button>();
 			if(!app.appliedEEMs.Contains(curEEM)) {
-				if(eem.callback == "") {
-					button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-				} else {
-					//TODO: Can be used for battle when battle scene ready
-					//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-				}
+				button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+				//if(eem.callback == "") {
+				//	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+				//} else {
+				//	//TODO: Can be used for battle when battle scene ready
+				//	//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+				//}
 			} else {
 				button.interactable = false;
 			}

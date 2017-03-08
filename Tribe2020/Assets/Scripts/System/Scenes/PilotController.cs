@@ -532,16 +532,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		ResetTouch();
 		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_APPLY_EEM) { return; }
 
-		if(_resourceMgr.cash >= eem.cashCost && _resourceMgr.comfort >= eem.comfortCost) {
+		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
 
+			if(eem.callback != "") {
+				_instance.SendMessage(eem.callback, eem.callbackArgument);
+			}
 			appliance.ApplyEEM(eem);
 			_view.BuildEEMInterface(appliance);
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
 		}
-
 	}
 
 	//
