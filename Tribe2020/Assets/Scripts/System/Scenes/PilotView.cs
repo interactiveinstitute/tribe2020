@@ -180,10 +180,8 @@ public class PilotView : View{
         //Character panel
         BehaviourAI currentAvatar = _characterPanel.currentAvatar;
         if (currentAvatar != null) {
-            //if (currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
-            if (currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
-
-                    BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
+            if (currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
+                BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
             }
         }
     }
