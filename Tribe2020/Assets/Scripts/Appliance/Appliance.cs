@@ -8,13 +8,17 @@ using System.Collections;
 public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
 
+	[Header("Properties")]
 	public string title;
 	public string description;
 	public Sprite icon;
     public float energyEffeciency;
+
+	[Header("Affordances")]
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	public List<AffordanceResource> avatarAffordances;
-	//public List<string> owners;
+
+	[Header("References")]
 	public List<BehaviourAI> owners;
 	private Room _zone;
 
@@ -68,13 +72,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
 	public List<PoseSlot> posePositions = new List<PoseSlot>();
-	public float cashProduction;
-	public float comfortPorduction;
+	//public float cashProduction;
+	//public float comfortPorduction;
 
-	public List<EEMMeta> possibleEEMs;
+	//public List<EEMMeta> possibleEEMs;
 
-	public GameObject harvestButtonRef;
-	private GameObject _harvestButton;
+	//public GameObject harvestButtonRef;
+	//private GameObject _harvestButton;
 
 	[System.Serializable]
 	public class EEMMeta {
@@ -97,25 +101,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	void Start() {
 		_ctrlMgr = PilotController.GetInstance();
 
-		//_harvestButton = Instantiate(harvestButtonRef) as GameObject;
-		//_harvestButton.transform.SetParent(transform, false);
-		//_harvestButton.transform.localPosition = Vector3.up * 0.5f;
-
-		//_harvestButton.GetComponentInChildren<Button>().
-		//		onClick.AddListener(() => _ctrlMgr.OnHarvestTap(_harvestButton));
-
 		_zone = GetComponentInParent<Room>();
-
-		//harvestButtonRef.SetActive(false);
-
-		appliedEEMs = new List<EnergyEfficiencyMeasure>();
 
 		//Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
 		PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
-		//if (posePositions == null)
-		//{
-		//    posePositions = new List<PoseSlot>();
-		//}
+
 		foreach(PosePoint point in poseArray) {
 			PoseSlot item = new PoseSlot();
 			item.position = point.transform.position;
@@ -139,13 +129,15 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
-			ElectricDevice removedDevice = slot.transform.GetComponent<ElectricDevice>();
+			ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
 			if(removedDevice) {
-				Destroy(removedDevice.gameObject);
+				DestroyImmediate(removedDevice.gameObject);
 			}
 
-			GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
-			newApp.transform.SetParent(slot.transform, false);
+			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
+				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
+				newApp.transform.SetParent(slot.transform, false);
+			}
 			//newApp.transform.position = slot.transform.position;
 			//newApp.transform.rotation = slot.transform.rotation;
 		}
@@ -160,8 +152,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			newApp.transform.SetParent(transform.parent, false);
 			Destroy(gameObject);
 		}
-		//transform.FindChild(eem.deactivateDeviceName).gameObject.SetActive(false);
-		//transform.FindChild(eem.activateDeviceName).gameObject.SetActive(true);
 
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
@@ -181,7 +171,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void AddHarvest() {
-		_harvestButton.SetActive(true);
+		//_harvestButton.SetActive(true);
 	}
 
 	public bool DecreaseNrOfAffordanceSlots(Affordance affordance, int count = 1) {
