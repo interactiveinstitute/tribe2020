@@ -14,6 +14,9 @@ public class AvatarMood : MonoBehaviour {
     ResourceManager _resourceMgr;
     Gems _gems;
 
+    //Dirty flag - for rendering character panel
+    bool _isUpdated;
+
     //Components
     private ThirdPersonCharacter _charController;
 
@@ -27,11 +30,6 @@ public class AvatarMood : MonoBehaviour {
     public Mood preferedMood;
     Markov<Mood> markovMood = new Markov<Mood>();
     Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
-
-    //Sort use instead of constructor
-    /*void Awake() {
-        _instance = this;
-    }*/
 
     //Constructor
     void Start() {
@@ -74,10 +72,21 @@ public class AvatarMood : MonoBehaviour {
         TryResetMood(_timeMgr.time);
     }
 
+    void SetUpdated() {
+        _isUpdated = true;
+    }
+
+    public bool IsUpdated() {
+        bool returnValue = _isUpdated;
+        _isUpdated = false;
+        return returnValue;
+    }
+
     public Mood TryChangeMood(Mood moodInput) {
         Mood moodNew = markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
         _timeLastMoodChange = _timeMgr.time;
         UpdateLooksByCurrentMood();
+        SetUpdated();
         return moodNew;
     }
 
@@ -85,6 +94,7 @@ public class AvatarMood : MonoBehaviour {
         markovMood.SetCurrentState(mood);
         _timeLastMoodChange = _timeMgr.time;
         UpdateLooksByCurrentMood();
+        SetUpdated();
     }
 
     public Mood GetCurrentMood() {
@@ -153,4 +163,5 @@ public class AvatarMood : MonoBehaviour {
         }
         _charController.SetMood((int)GetCurrentMood());
     }
+
 }

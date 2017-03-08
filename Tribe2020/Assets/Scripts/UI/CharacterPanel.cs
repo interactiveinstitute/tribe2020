@@ -7,6 +7,7 @@ public class CharacterPanel : MonoBehaviour {
 
     PilotView _pilotView;
     AvatarManager _avatarManager;
+    public BehaviourAI currentAvatar = null;
 
 	// Use this for initialization
 	void Start () {
@@ -20,11 +21,18 @@ public class CharacterPanel : MonoBehaviour {
 	}
 
     public void BuildPanel(GameObject goAvatar) {
+
+        currentAvatar = goAvatar.GetComponent<BehaviourAI>();
+
         SetMood(goAvatar.GetComponent<AvatarMood>().GetCurrentMood());
         SetEnergyEffeciency(goAvatar.GetComponent<AvatarStats>().GetEnergyEfficiency());
         SetKnowledge(goAvatar.GetComponent<AvatarStats>().knowledge);
         SetAttitude(goAvatar.GetComponent<AvatarStats>().attitude);
         SetNormSensitivity(goAvatar.GetComponent<AvatarStats>().normSensititvity);
+    }
+
+    public void OnClose() {
+        currentAvatar = null;
     }
 
     void SetMood(AvatarMood.Mood mood) {

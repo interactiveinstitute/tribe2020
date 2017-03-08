@@ -45,25 +45,35 @@ public class ElectricDevice : ElectricMeter {
 	[SerializeField]
 	private float _energyMod = 1;
 
-	//Removed: a single effency is used instead
-	//[Tooltip("What kind of avatar energyefficiency is this device relates to")]
-	//public AvatarStats.Efficiencies relatedEfficiency;
+    public EnergyEffeciencyLabels.Name energyEffeciency;
 
-	//[Header("Sound")]
-	private AudioSource noisesource;
+    //Removed: a single effency is used instead
+    //[Tooltip("What kind of avatar energyefficiency is this device relates to")]
+    //public AvatarStats.Efficiencies relatedEfficiency;
+
+    //[Header("Sound")]
+    private AudioSource noisesource;
 	private Material[] default_materials;
 
 
-	//var time_event = new Tuple<long, float>(0,0.0f);
+    PilotView _pilotView;
 
-	//public List<Tuple<long, float>> Pattern;
+    //Dirty flag - for rendering character panel
+    bool _isUpdated;
 
-	// Use this for initialization
-	void Start() {
 
-		//This is used for replacing a material
-		//We initially save the gameobjects materials to the side in order to be able to switch back to them.
-		foreach(Runlevel rl in runlevels) {
+    //var time_event = new Tuple<long, float>(0,0.0f);
+
+    //public List<Tuple<long, float>> Pattern;
+
+    // Use this for initialization
+    void Start() {
+
+        _pilotView = PilotView.GetInstance();
+
+        //This is used for replacing a material
+        //We initially save the gameobjects materials to the side in order to be able to switch back to them.
+        foreach (Runlevel rl in runlevels) {
 			//Materials 
 
 			//Maybe we have a specifically targeted renderer (of a gameObject) that we want to affect
@@ -99,7 +109,17 @@ public class ElectricDevice : ElectricMeter {
 
 	}
 
-	public override void On() {
+    void SetUpdated() {
+        _isUpdated = true;
+    }
+
+    public bool IsUpdated() {
+        bool returnValue = _isUpdated;
+        _isUpdated = false;
+        return returnValue;
+    }
+
+    public override void On() {
 
 		SetRunlevel(runlevelOn);
 	}
@@ -151,7 +171,8 @@ public class ElectricDevice : ElectricMeter {
 			//Debug.Log("Changing sharedMaterial of object " + this.name + ". Runlevel " + rl);
 			//runlevels [rl].Target.sharedMaterials = runlevel_materials;
 			rend.materials = runlevel_materials;
-		}
+
+        }
 
 
 		//Lights
@@ -163,16 +184,16 @@ public class ElectricDevice : ElectricMeter {
 			l.enabled = false;
 		}
 
-		//Eeeeeeh. This updateLighting function is legacy shit. Let's comment it out! Gunnar
-		//if(GetComponentInParent<Room>()) {
-		//	GetComponentInParent<Room>().UpdateLighting();
-		//}
+        //Eeeeeeh. This updateLighting function is legacy shit. Let's comment it out! Gunnar
+        //if(GetComponentInParent<Room>()) {
+        //	GetComponentInParent<Room>().UpdateLighting();
+        //}
 
-		//Sound
-		//TODO
+        //Sound
+        //TODO
 
 
-	}
+    }
 
 
 
@@ -212,7 +233,11 @@ public class ElectricDevice : ElectricMeter {
 			update_power(0);
 
 		ApplyEffects();
-	}
+
+        //Set updated
+        SetUpdated();
+
+    }
 
 	//
 	public void SetEnergyMod(float mod) {

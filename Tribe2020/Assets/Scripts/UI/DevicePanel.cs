@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DevicePanel : MonoBehaviour {
 
     PilotView _pilotView;
+    public ElectricDevice currentDevice = null;
 
     // Use this for initialization
     void Start() {
@@ -17,15 +18,26 @@ public class DevicePanel : MonoBehaviour {
 
     }
 
-    public void BuildPanel(GameObject goDevice) {
-        ElectricDevice ed = goDevice.GetComponent<ElectricDevice>();
+    public void BuildPanel(Appliance appliance) {
+
+        currentDevice = appliance.GetComponent<ElectricDevice>();
+
+        ElectricDevice ed = appliance.GetComponent<ElectricDevice>();
         if (ed) {
             SetPowerValue(ed.Power);
+            //SetEnergyEffeciency(appliance.energyEffeciency);
+            SetEnergyEffeciency(ed.energyEffeciency);
         }
         else {
             SetPowerValueNotApplicable();
+            //SetEnergyEffeciency(1.0f);
+            SetEnergyEffeciency(EnergyEffeciencyLabels.Name.AAAA);
         }
-        SetEnergyEffeciency(goDevice.GetComponent<Appliance>().energyEffeciency);
+        
+    }
+
+    public void OnClose() {
+        currentDevice = null;
     }
 
     void SetPowerValue(float value) {
@@ -36,9 +48,7 @@ public class DevicePanel : MonoBehaviour {
         _pilotView.devicePowerValue.text = "-";
     }
 
-    void SetEnergyEffeciency(float value) {
-        int nLabels = _pilotView.EELabels.Count;
-        int index = Mathf.Min(Mathf.FloorToInt((1.0f - value) * nLabels), nLabels - 1);
-        _pilotView.deviceEfficiencyLabel.GetComponent<Image>().sprite = _pilotView.EELabels[index];
+    void SetEnergyEffeciency(EnergyEffeciencyLabels.Name eeName) {
+        _pilotView.deviceEfficiencyLabel.GetComponent<Image>().sprite = _pilotView.EELabels[(int)eeName];
     }
 }

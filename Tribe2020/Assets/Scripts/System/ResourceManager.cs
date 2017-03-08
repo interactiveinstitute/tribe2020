@@ -21,9 +21,18 @@ public class ResourceManager : MonoBehaviour {
 	public float comfort;
 	public int temperature;
 	public int power;
-	public int co2;
+	public double CO2;
+    public double CO2Change;
+    public double Cost;
+    public double CostSavings;
 
-	[Header("Production")]
+    public DataSeries CO2Outcome;
+    public DataSeries CO2Baseline;
+    public DataSeries CostOutcome;
+    public DataSeries CostBaseline;
+
+
+    [Header("Production")]
 	public float cashProduction;
 	public float comfortProduction;
 
@@ -33,6 +42,8 @@ public class ResourceManager : MonoBehaviour {
     public float moodResetTime = 1000;
     public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
+
+
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -49,10 +60,45 @@ public class ResourceManager : MonoBehaviour {
 
 		RefreshProduction();
 	}
-	
-	// Update is called once per frame
-	void Update(){
-	}
+
+    void CalculateCo2(double ts)
+    {
+        DataPoint CO2DataOutcome, CO2DataBaseline;
+
+        if (CO2Outcome == null || CO2Baseline == null)
+            return;
+
+        CO2DataOutcome = CO2Outcome.GetDataAt(ts);
+        CO2DataBaseline = CO2Baseline.GetDataAt(ts);
+
+        CO2 = CO2DataOutcome.Values[1];
+        CO2Change = CO2DataOutcome.Values[1] / CO2DataBaseline.Values[1];
+
+    }
+
+    void CalculateCost(double ts)
+    {
+        DataPoint CostDataOutcome, CostDataBaseline;
+
+        if (CostOutcome == null || CostBaseline == null)
+            return;
+
+        CostDataOutcome = CostOutcome.GetDataAt(ts);
+        CostDataBaseline = CostBaseline.GetDataAt(ts);
+
+        Cost = CostDataOutcome.Values[1];
+        CostSavings = CostDataBaseline.Values[1] - CostDataOutcome.Values[1];
+
+    }
+
+    // Update is called once per frame
+    void Update(){
+        //co2 = 
+        double now = _timeMgr.time;
+        CalculateCo2(now);
+        CalculateCost(now);
+
+    }
 
 	//
 	public void RefreshProduction(){

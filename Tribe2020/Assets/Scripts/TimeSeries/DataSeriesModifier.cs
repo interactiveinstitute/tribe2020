@@ -30,7 +30,17 @@ public class DataSeriesModifier : DataSeries {
 	public void Test() {
 		double now = GameTime.GetInstance ().time;
 
-		result = GetPeriod (now - 3*3600, now);
+        //result = GetPeriod (now - 3*3600, now);
+
+        DataPoint a, b, c;
+
+        a = GetDataAt(now - 3 * 3600);
+        b = GetDataAt(now);
+
+
+   
+        print(a.Values);
+        print(b.Values);
 
 	}
 

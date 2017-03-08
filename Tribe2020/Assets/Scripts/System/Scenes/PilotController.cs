@@ -445,7 +445,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerClosed");
 		}
 
-		_instance._view.SetCurrentUI(null);
+        if (_instance._view.GetCurrentUI() == _instance._view.characterPanel) {
+            _instance._view._characterPanel.OnClose();
+        }
+
+        if (_instance._view.GetCurrentUI() == _instance._view.devicePanel) {
+            _instance._view._devicePanel.OnClose();
+        }
+
+        _instance._view.SetCurrentUI(null);
 		_instance._cameraMgr.ClearLookAtTarget();
 
 		//_view.SetCurrentUI(null);

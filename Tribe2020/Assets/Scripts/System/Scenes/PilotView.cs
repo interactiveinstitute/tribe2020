@@ -116,8 +116,8 @@ public class PilotView : View{
 	private bool _settingsIsVisible = false;
     #endregion
 
-    CharacterPanel _characterPanel;
-    DevicePanel _devicePanel;
+    public CharacterPanel _characterPanel;
+    public DevicePanel _devicePanel;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -176,10 +176,27 @@ public class PilotView : View{
 				}
 			}
 		}
-	}
 
-	//
-	public void SetController(PilotController controller) {
+        //Character panel
+        BehaviourAI currentAvatar = _characterPanel.currentAvatar;
+        if (currentAvatar != null) {
+            if (currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
+                BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
+            }
+        }
+
+        //Device panel
+        ElectricDevice currentDevice = _devicePanel.currentDevice;
+        if (currentDevice != null) {
+            if (currentDevice.IsUpdated()) {
+                BuildDevicePanel(currentDevice.GetComponent<Appliance>());
+            }
+        }
+
+    }
+
+    //
+    public void SetController(PilotController controller) {
 		_controller = controller;
 	}
 
@@ -337,22 +354,27 @@ public class PilotView : View{
 		BuildEEMInterface(app);
 	}
 
-	//
-	public void BuildAvatarPanel(Appliance app) {
-		avatarTitle.text = app.title;
-		avatarDescription.text = _controller.GetPhrase("Avatars", app.title);
+    //
+    public void BuildAvatarPanel(Appliance app) {
+        avatarTitle.text = app.title;
+        avatarDescription.text = _controller.GetPhrase("Avatars", app.title);
 
         _characterPanel.BuildPanel(app.gameObject);
 
-		BuildEEMInterface(avatarEEMContainer, app);
-	}
+        BuildEEMInterface(avatarEEMContainer, app);
+    }
 
 	//
 	public void BuildDevicePanel(Appliance app) {
-		deviceTitle.text = _controller.GetPhrase("Appliance", app.title + "_Title");
-		deviceDescription.text = _controller.GetPhrase("Appliance", app.title + "_Description");
 
-        _devicePanel.BuildPanel(app.gameObject);
+        if (_controller) {
+            deviceTitle.text = _controller.GetPhrase("Appliance", app.title + "_Title");
+            deviceDescription.text = _controller.GetPhrase("Appliance", app.title + "_Description");
+        }
+
+        if (_devicePanel) {
+            _devicePanel.BuildPanel(app);
+        }
 
         BuildEEMInterface(deviceEEMContainer, app);
 	}
