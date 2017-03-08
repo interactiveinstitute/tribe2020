@@ -11,7 +11,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public string title;
 	public string description;
 	public Sprite icon;
-    public float energyEffeciency;
 	public List<EnergyEfficiencyMeasure> playerAffordances;
 	public List<AffordanceResource> avatarAffordances;
 	//public List<string> owners;

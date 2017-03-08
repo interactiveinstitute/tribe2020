@@ -142,7 +142,7 @@ public class AvatarStats : MonoBehaviour {
 
             float diff = other.attitude - attitude;
             float randomEffect = 0.5f * (Random.value - 0.5f); //[-0.25, 0.25]
-            attitude += (diff + randomEffect) * Random.value * 0.1f;
+            attitude += (diff + randomEffect) * Random.value * 0.5f;
         }
     }
 
@@ -151,7 +151,7 @@ public class AvatarStats : MonoBehaviour {
         if (Random.value < normSensititvity && Random.value > conviction && Random.value < other.conviction && Random.value < other.knowledge) {
             float diff = other.knowledge - knowledge;
             float randomEffect = 0.5f * (Random.value - 0.5f); //[-0.25, 0.25]
-            knowledge += (diff + randomEffect) * Random.value * 0.1f;
+            knowledge += (diff + randomEffect) * Random.value;
         }
     }
 

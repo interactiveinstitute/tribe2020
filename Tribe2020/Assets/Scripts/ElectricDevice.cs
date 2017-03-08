@@ -45,12 +45,14 @@ public class ElectricDevice : ElectricMeter {
 	[SerializeField]
 	private float _energyMod = 1;
 
-	//Removed: a single effency is used instead
-	//[Tooltip("What kind of avatar energyefficiency is this device relates to")]
-	//public AvatarStats.Efficiencies relatedEfficiency;
+    public EnergyEffeciencyLabels.Name energyEffeciency;
 
-	//[Header("Sound")]
-	private AudioSource noisesource;
+    //Removed: a single effency is used instead
+    //[Tooltip("What kind of avatar energyefficiency is this device relates to")]
+    //public AvatarStats.Efficiencies relatedEfficiency;
+
+    //[Header("Sound")]
+    private AudioSource noisesource;
 	private Material[] default_materials;
 
 
