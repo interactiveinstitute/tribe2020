@@ -150,6 +150,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		if(eem.replacementPrefab != null) {
 			GameObject newApp = Instantiate(eem.replacementPrefab);
 			newApp.transform.SetParent(transform.parent, false);
+			newApp.transform.localPosition = transform.localPosition;
+			newApp.transform.localRotation = transform.localRotation;
+			newApp.gameObject.layer = gameObject.layer;
 			Destroy(gameObject);
 		}
 
@@ -270,6 +273,16 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			eemsJSON.Add(eemJSON);
 		}
 		json.Add("appliedEEMs", eemsJSON);
+
+		//ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
+		//JSONArray slotsJSON = new JSONArray();
+		//foreach(ApplianceSlot slot in slots) {
+		//	JSONClass slotJSON = new JSONClass();
+		//	slotJSON.Add("name", slot.name);
+		//	slotJSON.Add("curIndex", ""+slot.currentApplianceIndex);
+		//	slotsJSON.Add(slotJSON);
+		//}
+		//json.Add("slots", slotsJSON);
 
 		return json;
 	}
