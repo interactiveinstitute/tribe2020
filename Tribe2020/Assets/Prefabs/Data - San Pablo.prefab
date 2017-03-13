@@ -298,6 +298,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1210451996647434
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4322097720116542}
+  - component: {fileID: 114869755445586258}
+  m_Layer: 0
+  m_Name: CO2e Electricity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1212474431961614
 GameObject:
   m_ObjectHideFlags: 1
@@ -309,6 +325,22 @@ GameObject:
   - component: {fileID: 114424403105888106}
   m_Layer: 0
   m_Name: Change
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1322128795666398
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4875642579536822}
+  - component: {fileID: 114971135165490006}
+  m_Layer: 0
+  m_Name: CO2e Gas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -439,7 +471,9 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4599099949928746}
+  - {fileID: 4149202910192810}
   m_Father: {fileID: 4000013417908872}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -601,7 +635,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4206541375855502}
+  m_Father: {fileID: 4000011539015156}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4206541375855502
@@ -614,10 +648,23 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4599099949928746}
-  - {fileID: 4149202910192810}
+  - {fileID: 4875642579536822}
+  - {fileID: 4322097720116542}
   m_Father: {fileID: 4000012603302230}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4322097720116542
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1210451996647434}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4206541375855502}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4461079829520828
 Transform:
@@ -642,7 +689,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4206541375855502}
+  m_Father: {fileID: 4000011539015156}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4609088458417828
@@ -672,6 +719,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012603302230}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4875642579536822
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1322128795666398}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4206541375855502}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4932208058699710
 Transform:
@@ -142184,8 +142244,8 @@ MonoBehaviour:
   TTime: {fileID: 0}
   operation: 0
   SourceSeries:
-  - {fileID: 114000010584203272}
-  - {fileID: 114000010791178532}
+  - {fileID: 114955873686416548}
+  - {fileID: 114799074763282418}
   inspect:
     Data: []
     index: 0
@@ -142334,8 +142394,8 @@ MonoBehaviour:
   TTime: {fileID: 0}
   operation: 0
   SourceSeries:
-  - {fileID: 114955873686416548}
-  - {fileID: 114799074763282418}
+  - {fileID: 114869755445586258}
+  - {fileID: 114971135165490006}
   inspect:
     Data: []
     index: 0
@@ -142477,15 +142537,53 @@ MonoBehaviour:
       index: 0
   TimeOffset: 0
   Rescales:
-  - 1
-  - 1
+  - 0.252
+  - 0.252
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
   TTime: {fileID: 0}
   operation: 0
   SourceSeries:
-  - {fileID: 114000010674459418}
+  - {fileID: 114000010791178532}
+  inspect:
+    Data: []
+    index: 0
+  result: []
+--- !u!114 &114869755445586258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1210451996647434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: CO2e Electricity
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  TimeOffset: 0
+  Rescales:
+  - 0.331
+  - 0.331
+  Offsets: []
+  ScaleWithTimeSeries: {fileID: 0}
+  OffsetWithTimeSeries: {fileID: 0}
+  TTime: {fileID: 0}
+  operation: 0
+  SourceSeries:
+  - {fileID: 114000012434811560}
   inspect:
     Data: []
     index: 0
@@ -142515,15 +142613,53 @@ MonoBehaviour:
       index: 0
   TimeOffset: 0
   Rescales:
-  - 1
-  - 1
+  - 0.331
+  - 0.331
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
   TTime: {fileID: 0}
   operation: 0
   SourceSeries:
-  - {fileID: 114000012434811560}
+  - {fileID: 114000010584203272}
+  inspect:
+    Data: []
+    index: 0
+  result: []
+--- !u!114 &114971135165490006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1322128795666398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: CO2e Gas
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  TimeOffset: 0
+  Rescales:
+  - 0.252
+  - 0.252
+  Offsets: []
+  ScaleWithTimeSeries: {fileID: 0}
+  OffsetWithTimeSeries: {fileID: 0}
+  TTime: {fileID: 0}
+  operation: 0
+  SourceSeries:
+  - {fileID: 114000010674459418}
   inspect:
     Data: []
     index: 0
