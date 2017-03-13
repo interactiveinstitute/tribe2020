@@ -43,7 +43,8 @@ public class ResourceManager : MonoBehaviour {
     public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
 
-
+    [Header("DEBUG")]
+    public double c2outcome_debug, c2baseline_debug;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -72,6 +73,10 @@ public class ResourceManager : MonoBehaviour {
         CO2DataBaseline = CO2Baseline.GetDataAt(ts);
 
         CO2 = CO2DataOutcome.Values[1];
+
+        c2outcome_debug = CO2DataOutcome.Values[1];
+        c2baseline_debug = CO2DataBaseline.Values[1];
+
         CO2Change = CO2DataOutcome.Values[1] / CO2DataBaseline.Values[1];
 
     }

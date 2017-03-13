@@ -27,7 +27,14 @@ public class Acopalypsemeter : MonoBehaviour {
 	void Update () {
         double change_capped = change;
         change = Resources.CO2Change -1;
-        PercentText.text = (change  * 100).ToString("N0") + "%";
+        string text;
+
+        text = (change * 100).ToString("N0") + "%";
+
+        if (change > 0)
+            text = "+" + text;
+
+        PercentText.text = text;
 
         //Capp values
         if (change_capped > 0.05)
