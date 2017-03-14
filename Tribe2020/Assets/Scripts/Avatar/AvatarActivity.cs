@@ -60,6 +60,8 @@ public class AvatarActivity : ScriptableObject {
         public bool setActivityAppliance;
         public bool useActivityAppliance = true;
 
+        public bool testEnergyEffeciency;
+
         public enum SetMoodOptions { No, Try, Force }
         public SetMoodOptions setAvatarMood;
         public AvatarMood.Mood mood;
@@ -188,11 +190,9 @@ public class AvatarActivity : ScriptableObject {
 	public void StartSession(Session session) {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
 
-        //Add temporary avatar affordances
-        //Shouldn't it be possible to also have temporary affordances for non temporary activities? For example being available for discussion when chilling in the sofa? //Gunnar
-        /*if (!isTemporary) {
-            _ai.GetComponent<Appliance>().SetTemporaryAvatarAffordances(session.tempAvatarAffordances);
-        }*/
+        if(session.testEnergyEffeciency && !_ai.GetComponent<AvatarStats>().TestEnergyEfficiency()) {
+            return;
+        }
 
         //Set mood
         switch (session.setAvatarMood) {

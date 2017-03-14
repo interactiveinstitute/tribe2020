@@ -83,7 +83,9 @@ public class AvatarStats : MonoBehaviour {
     }
 
     public bool RunEnergyEfficiencyTest() {
-        return GetEnergyEfficiency() >= Random.value;
+        float val = GetEnergyEfficiency();
+        float r = Random.value;
+        return val >= r;
     }
 
     //TestEnergyEfficiency()
