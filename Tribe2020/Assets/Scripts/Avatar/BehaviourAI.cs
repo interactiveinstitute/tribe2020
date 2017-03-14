@@ -36,8 +36,6 @@ public class BehaviourAI : SimulationObject {
 	[SerializeField]
 	private bool _isSimulating = false;
 
-	//private GameObject[] _appliances;
-	private static Appliance[] _devices;
 	private Room _curRoom;
 	public int _nrOfActiveColliders = 0;
 
@@ -79,11 +77,6 @@ public class BehaviourAI : SimulationObject {
 		//added by Gunnar.
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
-
-		//Prepare collection of devices in pilot
-		//if(_devices.Length == 0) {
-		_devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
-		//}
 
 		//Synchronise schedule to get current activity for time
 		SyncSchedule();
