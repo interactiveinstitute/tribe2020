@@ -13,6 +13,7 @@ public class BehaviourAI : SimulationObject {
 	private PilotController _controller;
 	private GameTime _timeMgr;
 	private AvatarManager _avatarMgr;
+    private ApplianceManager _applianceManager;
 
 	[SerializeField]
 	private AvatarStats _stats;
@@ -68,8 +69,9 @@ public class BehaviourAI : SimulationObject {
 		_controller = PilotController.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 		_avatarMgr = AvatarManager.GetInstance();
+        _applianceManager = ApplianceManager.GetInstance();
 
-		_stats = GetComponent<AvatarStats>();
+        _stats = GetComponent<AvatarStats>();
 
 		_agent = GetComponent<NavMeshAgent>();
 		_charController = GetComponent<ThirdPersonCharacter>();
@@ -965,19 +967,20 @@ public class BehaviourAI : SimulationObject {
 			targetAppliance = _curRoom.GetApplianceWithAffordance(affordance, owner);
 		} else {
 			float minDist = float.MaxValue;
-			foreach(Appliance app in _devices) {
-				// TODO: Also retrieve temporary affordances
-				List<Appliance.AffordanceResource> affordances = app.avatarAffordances;
-				foreach(Appliance.AffordanceResource affordanceSlot in affordances) {
-					if(affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this))) {
-						float dist = Vector3.Distance(this.transform.position, app.transform.position);
-						if(dist < minDist) {
-							minDist = dist;
-							targetAppliance = app;
-						}
-					}
-				}
-			}
+            //foreach(Appliance app in _devices) {
+            foreach (Appliance app in _applianceManager.GetAppliances()) {
+                // TODO: Also retrieve temporary affordances
+                List<Appliance.AffordanceResource> affordances = app.avatarAffordances;
+                foreach (Appliance.AffordanceResource affordanceSlot in affordances) {
+                    if (affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this))) {
+                        float dist = Vector3.Distance(this.transform.position, app.transform.position);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            targetAppliance = app;
+                        }
+                    }
+                }
+            }
 		}
 
 		//if (targetAppliance == null)
