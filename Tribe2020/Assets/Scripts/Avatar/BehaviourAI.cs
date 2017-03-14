@@ -957,7 +957,6 @@ public class BehaviourAI : SimulationObject {
 	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership and currentRoom conditions
 	public Appliance GetApplianceWithAffordance(Affordance affordance, bool userOwnage, bool currentRoom = false) {
 
-
 		Appliance targetAppliance = null;
 
 		//If we want to find an appliance in the current room, we delegate the task to the current room, which hold a reference to all the appliances within it.

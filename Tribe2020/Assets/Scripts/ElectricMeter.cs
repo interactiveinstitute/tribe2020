@@ -81,7 +81,13 @@ public class ElectricMeter : DataNode {
 		}
 		parentObject = this.transform.parent.gameObject;
 
-		while (true) {
+        //Replaces commented section below
+        PowerSource = transform.parent.GetComponentInParent<ElectricMeter>();
+        if(PowerSource == null) {
+            PowerSource = MainMeter.GetInstance();
+        }
+
+		/*while (true) {
 
 			//No more parents and nothing found 
 			if (parentObject == null) {
@@ -104,7 +110,7 @@ public class ElectricMeter : DataNode {
 			}
 
 			parentObject = parentObject.transform.parent.gameObject;
-		}
+		}*/
 	}	
 
 	//Connects the meter to another meter. 
