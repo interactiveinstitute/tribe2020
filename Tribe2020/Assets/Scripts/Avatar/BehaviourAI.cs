@@ -840,7 +840,8 @@ public class BehaviourAI : SimulationObject {
 
 		device.SetRunlevel(level);
 		//Add this to the list of devices that the avatar turned on.
-		GetRunningActivity().turnedOnDevices.Add(device);
+
+		//GetRunningActivity().turnedOnDevices.Add(device);
 	}
 
 	public void TurnOn(Affordance affordance, bool userOwnage = false) {
@@ -1052,7 +1053,7 @@ public class BehaviourAI : SimulationObject {
 
 
 		//Check if we should turn off stuff when ending this activity.
-		if(GetRunningActivity().turnedOnDevices != null) {
+		/*if(GetRunningActivity().turnedOnDevices != null) {
 			foreach(ElectricDevice device in GetRunningActivity().turnedOnDevices) {
 				if(_stats.TestEnergyEfficiency()) {
 					DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
@@ -1061,7 +1062,7 @@ public class BehaviourAI : SimulationObject {
 					DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
 				}
 			}
-		}
+		}*/
 
 		//Notify the gamecontroller that we finished this activity!
 		_controller.OnAvatarActivityComplete(GetRunningActivity().title);
