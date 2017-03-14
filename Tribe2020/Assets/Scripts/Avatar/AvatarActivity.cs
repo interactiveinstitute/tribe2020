@@ -190,7 +190,9 @@ public class AvatarActivity : ScriptableObject {
 	public void StartSession(Session session) {
         DebugManager.Log(_ai.name + " started session " + session.title + " of type " + session.type + ". Part of activity " + this.name, this);
 
+        //Skip session if energy effeciency test fails
         if(session.testEnergyEffeciency && !_ai.GetComponent<AvatarStats>().TestEnergyEfficiency()) {
+            NextSession();
             return;
         }
 
