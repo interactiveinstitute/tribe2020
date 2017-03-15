@@ -28,6 +28,7 @@ public class ResourceManager : MonoBehaviour {
 
     public DataSeries CO2Outcome;
     public DataSeries CO2Baseline;
+    public DataSeries CO2ChangeSeries;
     public DataSeries CostOutcome;
     public DataSeries CostBaseline;
 
@@ -44,9 +45,13 @@ public class ResourceManager : MonoBehaviour {
 	public int comfortHarvestMax = 30;
 
 
+    [Header("DEBUG")]
+    public double c2outcome_debug, c2baseline_debug;
+    public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
 
-	//Sort use instead of constructor
-	void Awake(){
+
+    //Sort use instead of constructor
+    void Awake(){
 		_instance = this;
 	}
 
@@ -63,16 +68,43 @@ public class ResourceManager : MonoBehaviour {
 
     void CalculateCo2(double ts)
     {
-        DataPoint CO2DataOutcome, CO2DataBaseline;
+        
 
         if (CO2Outcome == null || CO2Baseline == null)
             return;
 
-        CO2DataOutcome = CO2Outcome.GetDataAt(ts);
-        CO2DataBaseline = CO2Baseline.GetDataAt(ts);
+        double now = GameTime.GetInstance().time;
+        List<DataPoint> data_oucome,data_baseline,data_change;
+
+        data_oucome = CO2Outcome.GetPeriod(now - 3 * 3600, now);
+        data_baseline = CO2Baseline.GetPeriod(now - 3 * 3600, now);
+        data_change = CO2ChangeSeries.GetPeriod(now - 3 * 3600, now);
+
+        //CO2DataOutcome = CO2Outcome.GetDataAt(ts);
+        //CO2DataBaseline = CO2Baseline.GetDataAt(ts);
+        if (data_oucome.Count > 0)
+            CO2DataOutcome = data_oucome[data_oucome.Count - 1];
+        else
+            print("no data!");
+
+        if (data_baseline.Count > 0)
+            CO2DataBaseline = data_baseline[data_baseline.Count - 1];
+        else
+            print("no data!");
+
+        if (data_change.Count > 0)
+            CO2DataChange = data_change[data_change.Count - 1];
+        else
+            print("no data!");
 
         CO2 = CO2DataOutcome.Values[1];
-        CO2Change = CO2DataOutcome.Values[1] / CO2DataBaseline.Values[1];
+       
+        c2outcome_debug = CO2DataOutcome.Values[1];
+        c2baseline_debug = CO2DataBaseline.Values[1];
+
+         
+        if (CO2DataChange.Values != null)
+            CO2Change = CO2DataChange.Values[1];
 
     }
 

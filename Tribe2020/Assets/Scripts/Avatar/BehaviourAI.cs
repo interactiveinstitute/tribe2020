@@ -13,6 +13,7 @@ public class BehaviourAI : SimulationObject {
 	private PilotController _controller;
 	private GameTime _timeMgr;
 	private AvatarManager _avatarMgr;
+    private ApplianceManager _applianceManager;
 
 	[SerializeField]
 	private AvatarStats _stats;
@@ -35,8 +36,6 @@ public class BehaviourAI : SimulationObject {
 	[SerializeField]
 	private bool _isSimulating = false;
 
-	//private GameObject[] _appliances;
-	private static Appliance[] _devices;
 	private Room _curRoom;
 	public int _nrOfActiveColliders = 0;
 
@@ -68,8 +67,9 @@ public class BehaviourAI : SimulationObject {
 		_controller = PilotController.GetInstance();
 		_timeMgr = GameTime.GetInstance();
 		_avatarMgr = AvatarManager.GetInstance();
+        _applianceManager = ApplianceManager.GetInstance();
 
-		_stats = GetComponent<AvatarStats>();
+        _stats = GetComponent<AvatarStats>();
 
 		_agent = GetComponent<NavMeshAgent>();
 		_charController = GetComponent<ThirdPersonCharacter>();
@@ -77,11 +77,6 @@ public class BehaviourAI : SimulationObject {
 		//added by Gunnar.
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
-
-		//Prepare collection of devices in pilot
-		//if(_devices.Length == 0) {
-		_devices = UnityEngine.Object.FindObjectsOfType<Appliance>();
-		//}
 
 		//Synchronise schedule to get current activity for time
 		SyncSchedule();
@@ -845,7 +840,8 @@ public class BehaviourAI : SimulationObject {
 
 		device.SetRunlevel(level);
 		//Add this to the list of devices that the avatar turned on.
-		GetRunningActivity().turnedOnDevices.Add(device);
+
+		//GetRunningActivity().turnedOnDevices.Add(device);
 	}
 
 	public void TurnOn(Affordance affordance, bool userOwnage = false) {
@@ -957,7 +953,6 @@ public class BehaviourAI : SimulationObject {
 	// Searches devices for device with nearest Euclidean distance which fullfill affordance and ownership and currentRoom conditions
 	public Appliance GetApplianceWithAffordance(Affordance affordance, bool userOwnage, bool currentRoom = false) {
 
-
 		Appliance targetAppliance = null;
 
 		//If we want to find an appliance in the current room, we delegate the task to the current room, which hold a reference to all the appliances within it.
@@ -966,19 +961,20 @@ public class BehaviourAI : SimulationObject {
 			targetAppliance = _curRoom.GetApplianceWithAffordance(affordance, owner);
 		} else {
 			float minDist = float.MaxValue;
-			foreach(Appliance app in _devices) {
-				// TODO: Also retrieve temporary affordances
-				List<Appliance.AffordanceResource> affordances = app.avatarAffordances;
-				foreach(Appliance.AffordanceResource affordanceSlot in affordances) {
-					if(affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this))) {
-						float dist = Vector3.Distance(this.transform.position, app.transform.position);
-						if(dist < minDist) {
-							minDist = dist;
-							targetAppliance = app;
-						}
-					}
-				}
-			}
+            //foreach(Appliance app in _devices) {
+            foreach (Appliance app in _applianceManager.GetAppliances()) {
+                // TODO: Also retrieve temporary affordances
+                List<Appliance.AffordanceResource> affordances = app.avatarAffordances;
+                foreach (Appliance.AffordanceResource affordanceSlot in affordances) {
+                    if (affordanceSlot.affordance == affordance && (!userOwnage || app.owners.Contains(this))) {
+                        float dist = Vector3.Distance(this.transform.position, app.transform.position);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            targetAppliance = app;
+                        }
+                    }
+                }
+            }
 		}
 
 		//if (targetAppliance == null)
@@ -1057,7 +1053,7 @@ public class BehaviourAI : SimulationObject {
 
 
 		//Check if we should turn off stuff when ending this activity.
-		if(GetRunningActivity().turnedOnDevices != null) {
+		/*if(GetRunningActivity().turnedOnDevices != null) {
 			foreach(ElectricDevice device in GetRunningActivity().turnedOnDevices) {
 				if(_stats.TestEnergyEfficiency()) {
 					DebugManager.Log("The Avatar was energy aware now and turned off the device", device, this);
@@ -1066,7 +1062,7 @@ public class BehaviourAI : SimulationObject {
 					DebugManager.Log("The Avatar was not energy aware now and skipped turning off device", device, this);
 				}
 			}
-		}
+		}*/
 
 		//Notify the gamecontroller that we finished this activity!
 		_controller.OnAvatarActivityComplete(GetRunningActivity().title);

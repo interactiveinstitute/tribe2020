@@ -10,7 +10,7 @@ public class DataSeriesModifier : DataSeries {
 	public enum Manipulation{
 		sum,
 		diff,
-		min,
+		min,    
 		max,
 		mult,
 		div
