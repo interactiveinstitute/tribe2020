@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 208000012746626698}
   - component: {fileID: 11415298}
   - component: {fileID: 11414528}
-  m_Layer: 0
+  - component: {fileID: 114894301383132768}
+  m_Layer: 9
   m_Name: Espresso Machine
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &165660
 GameObject:
@@ -29,12 +30,12 @@ GameObject:
   - component: {fileID: 492192}
   - component: {fileID: 3353334}
   - component: {fileID: 2370180}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CoffeMachine__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &192476
 GameObject:
@@ -45,12 +46,12 @@ GameObject:
   m_Component:
   - component: {fileID: 484400}
   - component: {fileID: 11427426}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Interaction Point
   m_TagString: Untagged
   m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &468340
 Transform:
@@ -59,7 +60,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 155868}
   m_LocalRotation: {x: -0.000000007450581, y: 0.7071069, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 11.488688, y: 0.3378323, z: 3.7535813}
+  m_LocalPosition: {x: 4.402, y: 0.32582554, z: -0.12914546}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 492192}
@@ -160,6 +161,7 @@ MonoBehaviour:
   title: Espresso Machine
   description: A compact version of the mythical spring of youth.
   icon: {fileID: 21300000, guid: 43c51c148fd914e4baed632b650686f1, type: 3}
+  energyEffeciency: 0
   playerAffordances:
   - {fileID: 11400000, guid: 7fd61deca41288a41bb624ec8097e8fe, type: 2}
   - {fileID: 11400000, guid: ddbabf9064ba80549b7aad45fd8978b6, type: 2}
@@ -176,10 +178,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: -0.5}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &11415298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -191,11 +189,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
@@ -224,7 +222,7 @@ MonoBehaviour:
     LightsOn: []
     LightsOff: []
   - Name: On
-    Power: 0
+    Power: 1000
     Target: {fileID: 2370180}
     materials: []
     sound: {fileID: 0}
@@ -237,6 +235,8 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 6
 --- !u!114 &11427426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,6 +293,18 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 155868}
   m_IsPrefabParent: 1
+--- !u!114 &114894301383132768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 14d3e792-0550-4591-a377-3306f4bdd64f
 --- !u!208 &208000012746626698
 NavMeshObstacle:
   m_ObjectHideFlags: 1

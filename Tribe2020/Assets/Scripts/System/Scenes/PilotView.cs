@@ -131,8 +131,8 @@ public class PilotView : View{
 		//Clear interface
 		_curMenu = null;
 
-		//apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
-		//apocalypsePercent.text = "0 %";
+		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
+		apocalypsePercent.text = "0 %";
 
         _characterPanel = GetComponentInChildren<CharacterPanel>();
         _devicePanel = GetComponentInChildren<DevicePanel>();

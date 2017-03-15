@@ -7,12 +7,13 @@ using System.Collections;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
+    private PilotView _pilotView;
+    private ApplianceManager _applianceManager;
 
 	[Header("Properties")]
 	public string title;
 	public string description;
 	public Sprite icon;
-    public float energyEffeciency;
 
 	[Header("Affordances")]
 	public List<EnergyEfficiencyMeasure> playerAffordances;
@@ -100,8 +101,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	// Use this for initialization
 	void Start() {
 		_ctrlMgr = PilotController.GetInstance();
+        _pilotView = PilotView.GetInstance();
+        _applianceManager = ApplianceManager.GetInstance();
 
-		_zone = GetComponentInParent<Room>();
+        _applianceManager.AddAppliance(GetComponent<Appliance>());
+
+        _zone = GetComponentInParent<Room>();
 
 		//Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
 		PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
@@ -115,6 +120,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		RefreshSlots();
 	}
+
+    void OnDestroy() {
+        _applianceManager.RemoveAppliance(GetComponent<Appliance>());
+    }
 
 	// Update is called once per frame
 	void Update() {
@@ -137,7 +146,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
 				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
 				newApp.transform.SetParent(slot.transform, false);
-			}
+                _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+            }
 			//newApp.transform.position = slot.transform.position;
 			//newApp.transform.rotation = slot.transform.rotation;
 		}
@@ -153,7 +163,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			newApp.transform.localPosition = transform.localPosition;
 			newApp.transform.localRotation = transform.localRotation;
 			newApp.gameObject.layer = gameObject.layer;
-			Destroy(gameObject);
+            _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+
+            //Remove
+            Destroy(gameObject);
 		}
 
 		if(GetComponent<ElectricDevice>()) {

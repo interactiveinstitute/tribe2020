@@ -19,7 +19,6 @@ public class ApplianceManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 	}
 	
 	// Update is called once per frame
@@ -82,4 +81,17 @@ public class ApplianceManager : MonoBehaviour {
 			//}
 		}
 	}
+
+    public void AddAppliance(Appliance appliance) {
+        _appliances.Add(appliance);
+    }
+
+    public void RemoveAppliance(Appliance appliance) {
+        _appliances.Remove(appliance);
+    }
+
+    public List<Appliance> GetAppliances() {
+        return _appliances;
+    }
+
 }

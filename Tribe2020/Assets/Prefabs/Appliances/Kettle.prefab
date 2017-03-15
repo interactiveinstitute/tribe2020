@@ -128,15 +128,17 @@ MonoBehaviour:
   description: 
   icon: {fileID: 21300000, guid: 43c51c148fd914e4baed632b650686f1, type: 3}
   playerAffordances: []
-  avatarAffordances: []
+  avatarAffordances:
+  - affordance: {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
+    nrOfSlots: 1
+    subscribingActivities: []
+  - affordance: {fileID: 11400000, guid: 0bb35b53769734644b8879649fe9b627, type: 2}
+    nrOfSlots: 1
+    subscribingActivities: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -180,11 +182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
@@ -203,10 +205,28 @@ MonoBehaviour:
   lastupdate: 0
   continous_updates: 0
   Unplugged: 0
-  runlevels: []
+  runlevels:
+  - Name: Off
+    Power: 0
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: On
+    Power: 500
+    Target: {fileID: 0}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
   runlevel: 0
   RetainsRunlevel: 0
   DefaultRunlevel: 0
-  runlevelOn: 0
+  runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 2

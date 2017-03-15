@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 public class Room : MonoBehaviour {
+
 	[SerializeField]
 	private List<Appliance> _devices;
 
