@@ -86,6 +86,15 @@ public class SaveManager : MonoBehaviour{
 		}
 	}
 
+	//
+	public JSONClass GetClass(string field) {
+		if(_dataClone[field] != null) {
+			return _dataClone[field].AsObject;
+		} else {
+			return null;
+		}
+	}
+
 	public void SetData(string key, string value) {
 		_dataClone.Add(key, value);
 	}
@@ -108,6 +117,11 @@ public class SaveManager : MonoBehaviour{
 	//
 	public void SetClass(int slot, string field, JSONClass value) {
 		_dataClone["slots"][slot].Add(field, value);
+	}
+
+	//
+	public void SetClass(string field, JSONClass value) {
+		_dataClone.Add(field, value);
 	}
 
 	//

@@ -20,7 +20,8 @@ public class Graph : DataNode {
     public double Max, Min;
 
 
-    [Header("Source")]
+	[Header("Source")]
+	public string findSourceByName;
 	public DataSeries Source;
 	public  int ValueIndex = 0;
 
@@ -59,7 +60,11 @@ public class Graph : DataNode {
         CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
         pCanvasRenderer.SetMaterial(pMat, null);
 
-    }
+		if(findSourceByName != "") {
+			DataContainer dataContainer = DataContainer.GetInstance();
+			Source = dataContainer.GetSeriesByName(findSourceByName);
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {

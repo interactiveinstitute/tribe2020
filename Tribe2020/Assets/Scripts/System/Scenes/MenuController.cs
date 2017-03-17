@@ -229,7 +229,7 @@ public class MenuController : MonoBehaviour {
 
 	//
 	public void LoadScene(string scene) {
-		_sceneMgr.LoadScene(scene);
+		_instance._sceneMgr.LoadScene(scene);
 	}
 
 	//

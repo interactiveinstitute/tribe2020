@@ -73,7 +73,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
-		_instance = this;
 	}
 
 	//

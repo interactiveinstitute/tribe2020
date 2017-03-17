@@ -64,6 +64,13 @@ public class ResourceManager : MonoBehaviour {
 		_appliances = new List<Appliance>();
 
 		RefreshProduction();
+
+		DataContainer dataContainer = DataContainer.GetInstance();
+		CO2Outcome = dataContainer.cO2Outcome;
+		CO2Baseline = dataContainer.cO2Baseline;
+		CO2ChangeSeries = dataContainer.cO2ChangeSeries;
+		CostOutcome = dataContainer.costOutcome;
+		CostBaseline = dataContainer.costBaseline;
 	}
 
     void CalculateCo2(double ts)
@@ -84,20 +91,20 @@ public class ResourceManager : MonoBehaviour {
         //CO2DataBaseline = CO2Baseline.GetDataAt(ts);
         if (data_oucome.Count > 0)
             CO2DataOutcome = data_oucome[data_oucome.Count - 1];
-        else
-            print("no data!");
+   //     else
+			//print("no data!");
 
-        if (data_baseline.Count > 0)
+		if (data_baseline.Count > 0)
             CO2DataBaseline = data_baseline[data_baseline.Count - 1];
-        else
-            print("no data!");
+   //     else
+			//print("no data!");
 
-        if (data_change.Count > 0)
+		if (data_change.Count > 0)
             CO2DataChange = data_change[data_change.Count - 1];
-        else
-            print("no data!");
+   //     else
+			//print("no data!");
 
-        CO2 = CO2DataOutcome.Values[1];
+		CO2 = CO2DataOutcome.Values[1];
        
         c2outcome_debug = CO2DataOutcome.Values[1];
         c2baseline_debug = CO2DataBaseline.Values[1];

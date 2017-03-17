@@ -73,13 +73,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public List<EnergyEfficiencyMeasure> appliedEEMs;
 	public Vector3 interactionPos;
 	public List<PoseSlot> posePositions = new List<PoseSlot>();
-	//public float cashProduction;
-	//public float comfortPorduction;
-
-	//public List<EEMMeta> possibleEEMs;
-
-	//public GameObject harvestButtonRef;
-	//private GameObject _harvestButton;
 
 	[System.Serializable]
 	public class EEMMeta {
@@ -122,7 +115,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	}
 
     void OnDestroy() {
-        _applianceManager.RemoveAppliance(GetComponent<Appliance>());
+		if(_applianceManager) {
+			_applianceManager.RemoveAppliance(GetComponent<Appliance>());
+		}
     }
 
 	// Update is called once per frame
@@ -158,15 +153,18 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		appliedEEMs.Add(eem);
 
 		if(eem.replacementPrefab != null) {
-			GameObject newApp = Instantiate(eem.replacementPrefab);
-			newApp.transform.SetParent(transform.parent, false);
-			newApp.transform.localPosition = transform.localPosition;
-			newApp.transform.localRotation = transform.localRotation;
-			newApp.gameObject.layer = gameObject.layer;
-            _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+			//TODO Temp guard against performing EEMs that replace appliance if appliance group
+			if(!GetComponentInChildren<ApplianceSlot>()) {
+				GameObject newApp = Instantiate(eem.replacementPrefab);
+				newApp.transform.SetParent(transform.parent, false);
+				newApp.transform.localPosition = transform.localPosition;
+				newApp.transform.localRotation = transform.localRotation;
+				newApp.gameObject.layer = gameObject.layer;
+				_pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
 
-            //Remove
-            Destroy(gameObject);
+				//Remove
+				Destroy(gameObject);
+			}
 		}
 
 		if(GetComponent<ElectricDevice>()) {
