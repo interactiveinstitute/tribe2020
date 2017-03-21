@@ -392,7 +392,7 @@ public class PilotView : View{
 			EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
 
 			eemButton.title.text = eem.title;
-			eemButton.buttonImage.color = _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
+            eemButton.buttonImage.color = eem.color;// _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
 			ColorBlock cb = eemButton.button.colors;
 			cb.normalColor = eem.color;
 			cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
@@ -414,7 +414,7 @@ public class PilotView : View{
 			eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
 
 			Button button = buttonObj.GetComponent<Button>();
-			if(!app.appliedEEMs.Contains(curEEM)) {
+			if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
 				button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
 				//if(eem.callback == "") {
 				//	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
