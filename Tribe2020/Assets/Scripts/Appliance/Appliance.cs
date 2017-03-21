@@ -135,19 +135,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		foreach(ApplianceSlot slot in slots) {
 
             ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
-			
-			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
-				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
-               /* if (removedDevice) {
-                    newApp.GetComponent<ElectricDevice>().SetRunlevel(removedDevice.runlevel);
-                }*/
-                
-				newApp.transform.SetParent(slot.transform, false);
-                _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
-            }
-
             if (removedDevice) {
                 DestroyImmediate(removedDevice.gameObject);
+            }
+
+            if (slot.appliancePrefabs[slot.currentApplianceIndex]) {
+				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);                
+				newApp.transform.SetParent(slot.transform, false);
             }
 
             //newApp.transform.position = slot.transform.position;

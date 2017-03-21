@@ -12,6 +12,7 @@ public class PilotView : View{
 	public bool debug = false;
 
 	private PilotController _controller;
+    ResourceManager _resourceMgr;
 
 	[Header("Header")]
 	public Transform cash;
@@ -127,9 +128,10 @@ public class PilotView : View{
 	//Use this for initialization
 	void Start(){
 		_controller = PilotController.GetInstance();
+        _resourceMgr = ResourceManager.GetInstance();
 
-		//Clear interface
-		_curMenu = null;
+        //Clear interface
+        _curMenu = null;
 
 		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
 		apocalypsePercent.text = "0 %";
@@ -390,7 +392,7 @@ public class PilotView : View{
 			EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
 
 			eemButton.title.text = eem.title;
-			eemButton.buttonImage.color = eem.color;
+			eemButton.buttonImage.color = _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
 			ColorBlock cb = eemButton.button.colors;
 			cb.normalColor = eem.color;
 			cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
