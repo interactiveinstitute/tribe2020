@@ -151,7 +151,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//
 	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
-		appliedEEMs.Add(eem);
+
+        if (!eem.multipleUse) {
+            appliedEEMs.Add(eem);
+        }
 
 		if(eem.replacementPrefab != null) {
 			//TODO Temp guard against performing EEMs that replace appliance if appliance group

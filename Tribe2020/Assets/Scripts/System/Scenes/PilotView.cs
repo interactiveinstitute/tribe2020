@@ -386,48 +386,63 @@ public class PilotView : View{
 		RemoveChildren(container);
 		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
 
-		foreach(EnergyEfficiencyMeasure eem in eems) {
-			EnergyEfficiencyMeasure curEEM = eem;
-			GameObject buttonObj = Instantiate(EEMButtonPrefab);
-			EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
+        foreach (EnergyEfficiencyMeasure eem in eems) {
 
-			eemButton.title.text = eem.title;
-            eemButton.buttonImage.color = eem.color;// _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
-			ColorBlock cb = eemButton.button.colors;
-			cb.normalColor = eem.color;
-			cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
-			eemButton.button.colors = cb;
+            bool doRenderButton = eem.shouldRenderCallback == "";
 
-			//Comfort cost
-			eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
-			eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
-			eemButton.comfortCost.text = eem.comfortCost.ToString();
+            if (!doRenderButton) {
+                if (eem.shouldRenderCallback != "") {
+                    CallbackResult result = new CallbackResult();
+                    app.SendMessage(eem.shouldRenderCallback, result);
+                    doRenderButton = result.result;
+                }
+            }
 
-			//Money cost
-			eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
-			eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
-			eemButton.moneyCost.text = eem.cashCost.ToString();
+            if (doRenderButton) {
 
-			//Efficiency benefit
-			eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
-			eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
-			eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
+                EnergyEfficiencyMeasure curEEM = eem;
+                GameObject buttonObj = Instantiate(EEMButtonPrefab);
+                EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
 
-			Button button = buttonObj.GetComponent<Button>();
-			if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
-				button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-				//if(eem.callback == "") {
-				//	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-				//} else {
-				//	//TODO: Can be used for battle when battle scene ready
-				//	//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-				//}
-			} else {
-				button.interactable = false;
-			}
+                eemButton.title.text = eem.title;
+                eemButton.buttonImage.color = eem.color;// _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
+                ColorBlock cb = eemButton.button.colors;
+                cb.normalColor = eem.color;
+                cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
+                eemButton.button.colors = cb;
 
-			buttonObj.transform.SetParent(container, false);
-		}
+                //Comfort cost
+                eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
+                eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
+                eemButton.comfortCost.text = eem.comfortCost.ToString();
+
+                //Money cost
+                eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
+                eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
+                eemButton.moneyCost.text = eem.cashCost.ToString();
+
+                //Efficiency benefit
+                eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
+                eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
+                eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
+
+                Button button = buttonObj.GetComponent<Button>();
+                if (!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
+                    button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+                    //if(eem.callback == "") {
+                    //	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+                    //} else {
+                    //	//TODO: Can be used for battle when battle scene ready
+                    //	//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
+                    //}
+                }
+                else {
+                    button.interactable = false;
+                }
+
+                buttonObj.transform.SetParent(container, false);
+            }
+        }
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance

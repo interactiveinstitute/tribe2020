@@ -542,10 +542,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_resourceMgr.comfort -= eem.comfortCost;
 
 			if(eem.callback != "") {
-				_instance.SendMessage(eem.callback, eem.callbackArgument);
-			}
+                //_instance.SendMessage(eem.callback, eem.callbackArgument);
+                appliance.SendMessage(eem.callback, eem.callbackArgument);
+            }
 			appliance.ApplyEEM(eem);
-			_view.BuildEEMInterface(appliance);
+
+            //Redraw device panel
+            _view.BuildDevicePanel(appliance);
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
 		}

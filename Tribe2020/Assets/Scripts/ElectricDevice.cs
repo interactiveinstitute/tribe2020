@@ -120,7 +120,6 @@ public class ElectricDevice : ElectricMeter {
     }
 
     public override void On() {
-
 		SetRunlevel(runlevelOn);
 	}
 
@@ -129,8 +128,23 @@ public class ElectricDevice : ElectricMeter {
 		SetRunlevel(runlevelOff);
 	}
 
+    public bool IsOn() {
+        return runlevel == runlevelOn;
+    }
 
-	public void ApplyEffects() {
+    public void IsOnCB(CallbackResult result) {
+        result.result = runlevel == runlevelOn;
+    }
+
+    public bool IsOff() {
+        return runlevel == runlevelOff;
+    }
+
+    public void IsOffCB(CallbackResult result) {
+        result.result = runlevel == runlevelOff;
+    }
+
+    public void ApplyEffects() {
 		//Debug.Log("Applying effects");
 
 		int rl = runlevel;
