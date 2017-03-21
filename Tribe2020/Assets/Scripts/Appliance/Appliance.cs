@@ -133,19 +133,26 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
-			ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
-			if(removedDevice) {
-				DestroyImmediate(removedDevice.gameObject);
-			}
 
+            ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
+			
 			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
 				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
+               /* if (removedDevice) {
+                    newApp.GetComponent<ElectricDevice>().SetRunlevel(removedDevice.runlevel);
+                }*/
+                
 				newApp.transform.SetParent(slot.transform, false);
                 _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
             }
-			//newApp.transform.position = slot.transform.position;
-			//newApp.transform.rotation = slot.transform.rotation;
-		}
+
+            if (removedDevice) {
+                DestroyImmediate(removedDevice.gameObject);
+            }
+
+            //newApp.transform.position = slot.transform.position;
+            //newApp.transform.rotation = slot.transform.rotation;
+        }
 	}
 
 	//
@@ -160,7 +167,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 				newApp.transform.localPosition = transform.localPosition;
 				newApp.transform.localRotation = transform.localRotation;
 				newApp.gameObject.layer = gameObject.layer;
-				_pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+
+                ElectricDevice edOld = GetComponent<ElectricDevice>();
+                ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
+                edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
+
+                _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
 
 				//Remove
 				Destroy(gameObject);
