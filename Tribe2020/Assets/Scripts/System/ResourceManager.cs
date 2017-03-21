@@ -215,6 +215,10 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 
+    public bool CanAfford(int costCash, int costComfort) {
+        return cash >= costCash && comfort >= costComfort;
+    }
+
 	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
