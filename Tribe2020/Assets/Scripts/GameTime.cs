@@ -11,6 +11,8 @@ public class GameTime : MonoBehaviour {
 		return _instance;
 	}
 
+	public enum TimeContext { None, GameTime, RealWorldTime };
+
 	[Serializable]
 	public class KeyAction:Event
 	{
