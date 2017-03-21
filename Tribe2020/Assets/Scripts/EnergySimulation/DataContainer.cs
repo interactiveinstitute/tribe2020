@@ -15,6 +15,8 @@ public class DataContainer : MonoBehaviour {
 	public DataSeries cO2ChangeSeries;
 	public DataSeries costOutcome;
 	public DataSeries costBaseline;
+	public DataSeries electricityOutcome;
+	public DataSeries gasOutcome;
 
 	//
 	void Awake() {
@@ -41,6 +43,8 @@ public class DataContainer : MonoBehaviour {
 			case "CO2ChangeSeries": return cO2ChangeSeries;
 			case "CostOutcome": return costOutcome;
 			case "CostBaseline": return costBaseline;
+			case "ElectricityOutcome": return electricityOutcome;
+			case "GasOutcome": return gasOutcome;
 			default: return null;
 		}
 	}

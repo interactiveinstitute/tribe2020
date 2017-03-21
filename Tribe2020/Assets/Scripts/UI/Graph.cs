@@ -60,6 +60,7 @@ public class Graph : DataNode {
         CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
         pCanvasRenderer.SetMaterial(pMat, null);
 
+		//If find source string is set, attempt getting series from singleton container using string as key
 		if(findSourceByName != "") {
 			DataContainer dataContainer = DataContainer.GetInstance();
 			Source = dataContainer.GetSeriesByName(findSourceByName);
@@ -70,12 +71,10 @@ public class Graph : DataNode {
 	void Update () {
         if (active) {
             Plot();
-        }
-        
+        } 
 	}
 
-
-
+	//Update current time, ui panel height and graph scale factor in relation to height
 	public void InitParams(){
 
 		if (_timeMgr == null)
@@ -98,6 +97,7 @@ public class Graph : DataNode {
 			
 	}
 
+	//
 	public float TimeToCoordinate(double TimeStamp) {
 
 		double start;
@@ -107,6 +107,7 @@ public class Graph : DataNode {
 		return (float)(TimeStamp - start) * scalefactorX;
 	}
 
+	//
 	public double GetStartTime(){
 		double start;
 
@@ -120,6 +121,7 @@ public class Graph : DataNode {
 		return start;
 	}
 
+	//
 	public double GetStopTime(){
 		double stop;
 
@@ -133,13 +135,13 @@ public class Graph : DataNode {
 		return stop;
 	}
 
-
-
+	//
 	public float ValueToCoordinate(double value) {
 		return (float)(value-Min) * scalefactorY;
 	}
 
-	public List<Vector2> Draw(List<DataPoint> values,bool staircase)  {
+	//Generate graph mesh vertices
+	public List<Vector2> Draw(List<DataPoint> values, bool staircase)  {
 
 		float x=0, y,px,py,xnow;
 		List<Vector2> Verts = new List<Vector2>();
@@ -245,6 +247,7 @@ public class Graph : DataNode {
 		return Verts;
 	}
 
+	//
 	public float interpolate(float x, float x0, float y0,float x1,float y1) {
 		float m,c;
 		m = (y0 - y1) / (x0 - x1);
@@ -254,6 +257,7 @@ public class Graph : DataNode {
 		return m * x + c;
 	}
 
+	//Update graph mesh
 	public void Plot() {
 
 		float alt = 1;
@@ -276,7 +280,7 @@ public class Graph : DataNode {
 		//if (Data.Count > 0 )
 		List<Vector2> newVerts;
 
-		newVerts = Draw (Data,Staircase);
+		newVerts = Draw (Data, Staircase);
 
 		//newVerts.Add(new Vector2(graphWidth, 0));
 
