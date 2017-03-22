@@ -545,10 +545,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
                 //_instance.SendMessage(eem.callback, eem.callbackArgument);
                 appliance.SendMessage(eem.callback, eem.callbackArgument);
             }
-			appliance.ApplyEEM(eem);
+			GameObject returnedGO = appliance.ApplyEEM(eem);
 
             //Redraw device panel
-            _view.BuildDevicePanel(appliance);
+            _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
 		}

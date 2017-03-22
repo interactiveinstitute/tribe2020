@@ -74,10 +74,14 @@ public class ElectricDevice : ElectricMeter {
         //This is used for replacing a material
         //We initially save the gameobjects materials to the side in order to be able to switch back to them.
         foreach (Runlevel rl in runlevels) {
-			//Materials 
 
-			//Maybe we have a specifically targeted renderer (of a gameObject) that we want to affect
-			Renderer rend = rl.Target;
+            //Energy effeciency runlevels
+            rl.SetPowerByEE(energyEffeciency);
+
+            //Materials 
+
+            //Maybe we have a specifically targeted renderer (of a gameObject) that we want to affect
+            Renderer rend = rl.Target;
 
 			//If target not set, use the gameobjects renderer
 			if(rend == null)
