@@ -228,11 +228,6 @@ public class ResourceManager : MonoBehaviour {
 
 		json.Add("electricity", SerializeDataseries(electricityOutcome));
 		json.Add("gas", SerializeDataseries(gasOutcome));
-		//json.Add("CO2Outcome", SerializeDataseries(CO2Outcome));
-		//json.Add("CO2Baseline", SerializeDataseries(CO2Baseline));
-		//json.Add("CO2ChangeSeries", SerializeDataseries(CO2ChangeSeries));
-		//json.Add("CostOutcome", SerializeDataseries(CostOutcome));
-		//json.Add("CostBaseline", SerializeDataseries(CostBaseline));
 
 		return json;
 	}
@@ -245,16 +240,6 @@ public class ResourceManager : MonoBehaviour {
 
 			DeserializeDataseries(json["electricity"].AsArray, electricityOutcome);
 			DeserializeDataseries(json["gas"].AsArray, gasOutcome);
-
-			//DeserializeDataseries(json["CO2Outcome"].AsArray, CO2Outcome);
-
-			//JSONArray co2outcomeJSON = json["CO2Outcome"].AsArray;
-			//foreach(JSONClass datapointJSON in co2outcomeJSON) {
-			//	DataPoint dp = new DataPoint();
-			//	dp.Timestamp = datapointJSON["ts"].AsDouble;
-			//	dp.Values.SetValue(datapointJSON["value"].AsDouble, 0);
-			//	CO2Outcome.InsertData(dp);
-			//}
 		}
 	}
 }

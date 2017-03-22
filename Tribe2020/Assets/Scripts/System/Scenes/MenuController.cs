@@ -302,6 +302,11 @@ public class MenuController : MonoBehaviour {
 	}
 
 	//
+	public string GetPhrase(string group, string key, int index) {
+		return _localMgr.GetPhrase(group, key, index);
+	}
+
+	//
 	public void OnLanguagePicked(string language) {
 		_localMgr.SetLanguage(language);
 
