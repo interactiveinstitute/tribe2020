@@ -1,12 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 [System.Serializable] 
 public class Runlevel {
 
+    [System.Serializable]
+    public struct EEPowerPair {
+        public EnergyEffeciencyLabels.Name energyEffeciency;
+        public float power;
+    }
+
 	public string Name;
 	public float Power;
+
+    [SerializeField]
+    public List<EEPowerPair> powerByEE;
 
 	[Header("Change materials")]
 	[Space(10)]
@@ -25,6 +35,15 @@ public class Runlevel {
     public Material[] Default_materials{
         get { return default_materials; }
         set { default_materials = value; }
+    }
+
+    public void SetPowerByEE(EnergyEffeciencyLabels.Name ee) {
+        foreach (EEPowerPair p in powerByEE) {
+            if (p.energyEffeciency == ee) {
+                Power = p.power;
+                return;
+            }
+        }
     }
 
 }

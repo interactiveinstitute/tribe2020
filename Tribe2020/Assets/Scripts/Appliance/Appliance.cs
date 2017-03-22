@@ -176,6 +176,19 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			}
 		}
 
+        if (eem.setEnergyEffeciency) {
+            ElectricDevice ed = GetComponent<ElectricDevice>();
+            if (ed) {
+                ed.energyEffeciency = eem.energyEffeciency;
+                foreach(Runlevel runlevel in ed.runlevels) {
+                    runlevel.SetPowerByEE(eem.energyEffeciency);
+                }
+                ed.SetRunlevel(ed.runlevel);
+
+                _pilotView.BuildDevicePanel(this);
+            }
+        }
+
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
 			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
