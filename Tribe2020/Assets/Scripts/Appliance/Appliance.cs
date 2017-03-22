@@ -144,13 +144,17 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 				newApp.transform.SetParent(slot.transform, false);
             }
 
+            
+
             //newApp.transform.position = slot.transform.position;
             //newApp.transform.rotation = slot.transform.rotation;
         }
 	}
 
 	//
-	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
+	public GameObject ApplyEEM(EnergyEfficiencyMeasure eem) {
+
+        GameObject returnGO = gameObject;
 
         if (!eem.multipleUse) {
             appliedEEMs.Add(eem);
@@ -169,10 +173,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
                 ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
                 edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
 
-                _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+                returnGO = newApp;
 
-				//Remove
-				Destroy(gameObject);
+                //Remove
+                Destroy(gameObject);
 			}
 		}
 
@@ -193,6 +197,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			ElectricDevice device = GetComponent<ElectricDevice>();
 			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
 		}
+
+        return returnGO;
 	}
 
 	//
