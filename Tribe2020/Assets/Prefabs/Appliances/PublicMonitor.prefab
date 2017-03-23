@@ -129,10 +129,8 @@ MonoBehaviour:
   description: 
   icon: {fileID: 21300000, guid: f5e03e9d5073a0c4dbfc257dd095e619, type: 3}
   playerAffordances:
-  - {fileID: 11400000, guid: fc70eaa6d5beef9469e7bff2e10ca402, type: 2}
   - {fileID: 11400000, guid: a7de8266286286549b277a66828073d8, type: 2}
   - {fileID: 11400000, guid: 4d0b86e39ea351b479b698577fedf878, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
   - affordance: {fileID: 0}
@@ -220,7 +218,11 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 200
-    powerByEE: []
+    powerByEE:
+    - energyEffeciency: 0
+      power: 150
+    - energyEffeciency: 4
+      power: 300
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -234,7 +236,7 @@ MonoBehaviour:
   runlevelOff: 0
   runlevelUnpowered: 0
   _energyMod: 1
-  energyEffeciency: 3
+  energyEffeciency: 4
 --- !u!114 &114383462494284254
 MonoBehaviour:
   m_ObjectHideFlags: 1

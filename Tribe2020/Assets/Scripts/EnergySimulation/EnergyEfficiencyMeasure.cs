@@ -23,6 +23,7 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 
 	public string callback;
 	public string callbackArgument;
+    public Affordance callbackAffordance;
 
     public GameObject replacementPrefab;
 

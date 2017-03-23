@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 208000011165712788}
   - component: {fileID: 114000013522905054}
   - component: {fileID: 11459902}
-  m_Layer: 0
+  - component: {fileID: 114626492919125820}
+  m_Layer: 10
   m_Name: Fridge
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &190622
 GameObject:
@@ -27,15 +28,14 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 478066}
-  - component: {fileID: 6572506}
   - component: {fileID: 3318558}
   - component: {fileID: 2344862}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fridge__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &464974
 Transform:
@@ -43,22 +43,23 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167936}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.157, y: 0.25011533, z: -3.5223503}
+  m_LocalRotation: {x: -0, y: 0.99725986, z: -0, w: 0.07397839}
+  m_LocalPosition: {x: 2.0264711, y: 0.30208635, z: 1.8948452}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 478066}
+  - {fileID: 4960526856032522}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 171.74, z: 0}
 --- !u!4 &478066
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 190622}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
-  m_LocalPosition: {x: -0.23, y: 0, z: 1.11}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 464974}
@@ -103,18 +104,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 190622}
   m_Mesh: {fileID: 4300010, guid: c0a1a970f2f328844a44284866fb2a3b, type: 3}
---- !u!65 &6572506
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 190622}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.79999995, y: 1.7995862, z: 0.6126515}
-  m_Center: {x: -0.00000047683716, y: 0.8996778, z: 0.29340032}
 --- !u!65 &6588910
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -125,8 +114,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.8164822, y: 1.7850523, z: 0.642112}
-  m_Center: {x: -0.23748446, y: 0.9190708, z: 0.79669714}
+  m_Size: {x: 0.8497651, y: 1.7786187, z: 0.6263448}
+  m_Center: {x: 0, y: 0.89797664, z: 0.28822887}
 --- !u!114 &11459902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,15 +130,8 @@ MonoBehaviour:
   title: Fridge
   description: The natural habitat of evening snacks, main source of food for the
     native office worker.
+  icon: {fileID: 0}
   playerAffordances:
-  - {fileID: 11400000, guid: 1563277ca0ae7444e8c04e5a1eda860e, type: 2}
-  - {fileID: 11400000, guid: 6487610bb4d9f134c8e9bb4a34bc2ad1, type: 2}
-  - {fileID: 11400000, guid: 6e0e5ed474f62564898daa3f91dbf3cf, type: 2}
-  - {fileID: 11400000, guid: 0b66a1822ff59f94b9fabf1809d34c85, type: 2}
-  - {fileID: 11400000, guid: b12ef5d162b18e5429b4fbd290675e85, type: 2}
-  - {fileID: 11400000, guid: 41aa575fc48a24a46bde149b6004d35e, type: 2}
-  - {fileID: 11400000, guid: e53b34a3cb87fa640a0026847dfff52a, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 0bb35b53769734644b8879649fe9b627, type: 2}
@@ -162,10 +144,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -198,6 +176,35 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 167936}
   m_IsPrefabParent: 1
+--- !u!1 &1900137425157086
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4960526856032522}
+  - component: {fileID: 114734410545153252}
+  m_Layer: 10
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: -6039275892498968547, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &4960526856032522
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1900137425157086}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 464974}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114000013522905054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -209,11 +216,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
@@ -233,16 +240,22 @@ MonoBehaviour:
   continous_updates: 0
   Unplugged: 1
   runlevels:
-  - Name: 
+  - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
     LoopSound: 0
     LightsOn: []
     LightsOff: []
-  - Name: 
+  - Name: On
     Power: 0
+    powerByEE:
+    - energyEffeciency: 0
+      power: 15
+    - energyEffeciency: 4
+      power: 50
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -255,6 +268,31 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 4
+--- !u!114 &114626492919125820
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: aad2cfb6-2529-4770-a121-f813181bf385
+--- !u!114 &114734410545153252
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1900137425157086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!208 &208000011165712788
 NavMeshObstacle:
   m_ObjectHideFlags: 1

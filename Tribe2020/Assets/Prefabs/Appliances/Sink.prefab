@@ -10,12 +10,12 @@ GameObject:
   - component: {fileID: 483434}
   - component: {fileID: 3342372}
   - component: {fileID: 2330692}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sink__DoorRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &145518
 GameObject:
@@ -27,12 +27,12 @@ GameObject:
   - component: {fileID: 474124}
   - component: {fileID: 3343604}
   - component: {fileID: 2343216}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sink__DoorLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &169146
 GameObject:
@@ -43,12 +43,12 @@ GameObject:
   m_Component:
   - component: {fileID: 412364}
   - component: {fileID: 11442350}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Interaction Point
   m_TagString: Untagged
   m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &181678
 GameObject:
@@ -60,12 +60,13 @@ GameObject:
   - component: {fileID: 453240}
   - component: {fileID: 6521080}
   - component: {fileID: 11408924}
-  m_Layer: 0
+  - component: {fileID: 114477088186929376}
+  m_Layer: 9
   m_Name: Sink
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &194502
 GameObject:
@@ -77,12 +78,12 @@ GameObject:
   - component: {fileID: 402456}
   - component: {fileID: 3367604}
   - component: {fileID: 2326018}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sink__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &402456
 Transform:
@@ -297,11 +298,8 @@ MonoBehaviour:
   title: Sink
   description: You can wash your hands of blood, but never carbodioxide emissions.
     Because it's gaseous.
-  playerAffordances:
-  - {fileID: 11400000, guid: 13cb4776c56c8d042be8155641bc0f13, type: 2}
-  - {fileID: 11400000, guid: c42b6cc4095aa7044956243b310054d1, type: 2}
-  - {fileID: 11400000, guid: ebcc7648a0121e54fb3af9868c923780, type: 2}
-  - {fileID: 11400000, guid: 12e501fe5c456a742998b400ccfc8268, type: 2}
+  icon: {fileID: 0}
+  playerAffordances: []
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 128f870dfa6a6f542bff16c173befabf, type: 2}
     nrOfSlots: 0
@@ -310,10 +308,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &11442350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -370,3 +364,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 181678}
   m_IsPrefabParent: 1
+--- !u!114 &114477088186929376
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: f32465f6-b931-4221-8aa4-77ff4d6e38e0

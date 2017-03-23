@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 208000013055306586}
   - component: {fileID: 114000012973624526}
   - component: {fileID: 114000012198612464}
+  - component: {fileID: 114990052853057960}
   m_Layer: 10
   m_Name: Dish Washer
   m_TagString: Appliance
@@ -240,14 +241,7 @@ MonoBehaviour:
   description: Washes your dishes. Notoriously known for being easier to fill than
     to empty.
   icon: {fileID: 0}
-  playerAffordances:
-  - {fileID: 11400000, guid: 502dbf5261eaa4f4aafe4c630eb29a33, type: 2}
-  - {fileID: 11400000, guid: 00f05500e762d5548b41f1d015deb85f, type: 2}
-  - {fileID: 11400000, guid: 09d653da42b362745882a757f924ff7c, type: 2}
-  - {fileID: 11400000, guid: 8b10571aab15e894abc2658b085ded4a, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
-  - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
-  - {fileID: 11400000, guid: b4ed401a55d02af43832a7a19fe49b95, type: 2}
+  playerAffordances: []
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 16be69c423a1a3f418696682569a7b7b, type: 2}
     nrOfSlots: 0
@@ -293,6 +287,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 1
+    powerByEE: []
     Target: {fileID: 0}
     materials:
     - {fileID: 2100000, guid: 91a14e3c7213f1f4f9e118c264e4c1c1, type: 2}
@@ -303,6 +298,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: Standby
     Power: 3
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -311,6 +307,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 1400
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -336,6 +333,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114990052853057960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012039282014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 20e7115f-8660-4087-8c39-7f01945a6c5e
 --- !u!208 &208000013055306586
 NavMeshObstacle:
   m_ObjectHideFlags: 1

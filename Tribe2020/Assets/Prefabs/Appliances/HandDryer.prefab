@@ -9,12 +9,12 @@ GameObject:
   m_Component:
   - component: {fileID: 458032}
   - component: {fileID: 11441240}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Interaction Point
   m_TagString: Untagged
   m_Icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &123774
 GameObject:
@@ -26,12 +26,12 @@ GameObject:
   - component: {fileID: 467642}
   - component: {fileID: 3346228}
   - component: {fileID: 2388912}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Handdryer__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &190636
 GameObject:
@@ -45,12 +45,13 @@ GameObject:
   - component: {fileID: 208000012191567596}
   - component: {fileID: 114000010453038570}
   - component: {fileID: 11479856}
-  m_Layer: 0
+  - component: {fileID: 114349047343097536}
+  m_Layer: 9
   m_Name: HandDryer
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &426034
 Transform:
@@ -170,9 +171,8 @@ MonoBehaviour:
   title: Hand Dryer
   description: Handy device for obfuscating disturbing sounds of colleagues standing
     next to you.
+  icon: {fileID: 0}
   playerAffordances:
-  - {fileID: 11400000, guid: 5c77ef3802859d940bfae237d2098280, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642, type: 2}
@@ -182,10 +182,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -234,11 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
@@ -260,6 +256,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 2388912}
     materials: []
     sound: {fileID: 0}
@@ -268,6 +265,11 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 0
+    powerByEE:
+    - energyEffeciency: 0
+      power: 800
+    - energyEffeciency: 5
+      power: 2700
     Target: {fileID: 2388912}
     materials: []
     sound: {fileID: 0}
@@ -280,6 +282,20 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 5
+--- !u!114 &114349047343097536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: c1fd02b9-893a-43a5-82d8-ac7fc0375f6b
 --- !u!208 &208000012191567596
 NavMeshObstacle:
   m_ObjectHideFlags: 1

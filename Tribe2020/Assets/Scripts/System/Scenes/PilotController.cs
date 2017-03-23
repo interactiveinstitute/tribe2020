@@ -543,7 +543,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 			if(eem.callback != "") {
                 //_instance.SendMessage(eem.callback, eem.callbackArgument);
-                appliance.SendMessage(eem.callback, eem.callbackArgument);
+                if (eem.callbackAffordance) {
+                    appliance.SendMessage(eem.callback, eem.callbackAffordance);
+                }
+                else {
+                    appliance.SendMessage(eem.callback, eem.callbackArgument);
+                }
             }
 			GameObject returnedGO = appliance.ApplyEEM(eem);
 

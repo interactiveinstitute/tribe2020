@@ -16,35 +16,36 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000010497426152}
-  - 33: {fileID: 33000010401787988}
-  - 23: {fileID: 23000014107135500}
-  m_Layer: 0
+  - component: {fileID: 4000010497426152}
+  - component: {fileID: 33000010401787988}
+  - component: {fileID: 23000014107135500}
+  m_Layer: 10
   m_Name: PrinterCommercial__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1000010614457878
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4000012470664540}
-  - 65: {fileID: 65000014196675608}
-  - 114: {fileID: 114000010174126168}
-  - 114: {fileID: 114000011145081138}
-  m_Layer: 0
+  - component: {fileID: 4000012470664540}
+  - component: {fileID: 65000014196675608}
+  - component: {fileID: 114000010174126168}
+  - component: {fileID: 114000011145081138}
+  - component: {fileID: 114779283434143644}
+  m_Layer: 10
   m_Name: Printer Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4000010497426152
 Transform:
@@ -55,10 +56,10 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000012470664540}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4000012470664540
 Transform:
   m_ObjectHideFlags: 1
@@ -66,13 +67,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010614457878}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.8808227, y: -0.61250424, z: 2.1750946}
+  m_LocalPosition: {x: 1.7636044, y: 0.301646, z: 0.9862437}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000010497426152}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23000014107135500
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -88,7 +89,9 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 3c7c42a72bcaddc45b97185b05735b02, type: 2}
   - {fileID: 2100000, guid: aedde9a1727d7614bbcfe8aa4b7bf21f, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
@@ -96,7 +99,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedWireframeHidden: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -133,15 +136,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
     Texts: []
+    origin:
+      Data: []
+      index: 0
   PowerSource: {fileID: 0}
   AutomaticallyFindSource: 1
   AlwaysPowered: 0
@@ -160,6 +166,8 @@ MonoBehaviour:
   runlevelOn: 0
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 0
 --- !u!114 &114000011145081138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -174,20 +182,25 @@ MonoBehaviour:
   title: Large Printer
   description: Feed it with paper and ink and it will give you error messages and
     paper mountains in return
-  playerAffordances:
-  - {fileID: 11400000, guid: 39671560b7cfe544db87f1cfe2f4939c, type: 2}
-  - {fileID: 11400000, guid: a8a18671398e5fc41b35b1859e1cb582, type: 2}
-  - {fileID: 11400000, guid: 6e7fc0caa7aabf74d8092782ed3fcebc, type: 2}
-  - {fileID: 11400000, guid: 291610d7ceda8b446820cb4d8b7c0d10, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
-  - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
-  - {fileID: 11400000, guid: cafe98329e043454aa8d6efe19df2c9f, type: 2}
+  icon: {fileID: 0}
+  playerAffordances: []
   avatarAffordances:
-  - {fileID: 11400000, guid: 19aeea7ff9e35a946ad72202944f494e, type: 2}
+  - affordance: {fileID: 0}
+    nrOfSlots: 0
+    subscribingActivities: []
   owners: []
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+  posePositions: []
+--- !u!114 &114779283434143644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010614457878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 3532d920-7efd-4c9f-b73d-40bace5537af
