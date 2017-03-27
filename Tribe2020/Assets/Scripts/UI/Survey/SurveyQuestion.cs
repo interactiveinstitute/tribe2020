@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class SurveyQuestion : MonoBehaviour {
 	public const string NO_ANSWER = "n/a";
-	public enum Type { Buttons, Write, Dropdown, Grade, Info };
+	public enum Type { Buttons, Write, Dropdown, Grade, Info, Summary };
 
 	public Type type;
 	public bool required = true;
 	public bool include = true;
 	public string question;
 	public string answer = NO_ANSWER;
+	public int answerIndex = -1;
 
 	// Use this for initialization
 	void Start () {

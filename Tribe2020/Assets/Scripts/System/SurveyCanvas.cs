@@ -9,6 +9,8 @@ public class SurveyCanvas : MonoBehaviour {
 		return _instance;
 	}
 
+	private SurveyController _controller;
+
 	private List<SurveyQuestion> _questions;
 	private int _curQuestion;
 
@@ -25,6 +27,8 @@ public class SurveyCanvas : MonoBehaviour {
 	public Transform summaryListContainer;
 	public GameObject summaryRowPrefab;
 
+	private bool _firstUpdate = true;
+
 	//
 	public void Awake() {
 		_questions = new List<SurveyQuestion>(GetQuestions());
@@ -32,7 +36,9 @@ public class SurveyCanvas : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
+		_controller = SurveyController.GetInstance();
+
 		progress.Init(_questions.Count);
 		progress.SetCurrent(0);
 
@@ -41,12 +47,54 @@ public class SurveyCanvas : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
+		if(_firstUpdate) {
+			Translate();
+			_firstUpdate = false;
+		}
+
 		for(int i = 0; i < _questions.Count; i++) {
 			if(i == _curQuestion) {
 				_questions[i].transform.position = _inPos + (_questions[i].transform.position - _inPos) * 0.95f;
 			} else {
 				_questions[i].transform.position = _outPos + (_questions[i].transform.position - _outPos) * 0.95f;
+			}
+		}
+	}
+
+	//Translate all survey questions
+	public void Translate() {
+		foreach(SurveyQuestion sq in _questions) {
+			//Translate main text
+			if(sq.GetComponentInChildren<Text>()) {
+				sq.GetComponentInChildren<Text>().text = _controller.GetPhrase("Survey", sq.name);
+			}
+
+			//Translate components depending on survey slide type
+			switch(sq.type) {
+				case SurveyQuestion.Type.Buttons:
+					Button[] buttons = sq.GetComponentsInChildren<Button>();
+					for(int i = 0; i < buttons.Length; i++) {
+						buttons[i].GetComponentInChildren<Text>().text = _controller.GetPhrase("Survey", sq.name, i);
+					}
+					break;
+				case SurveyQuestion.Type.Dropdown:
+					Dropdown dropdown = sq.GetComponentInChildren<Dropdown>();
+					dropdown.GetComponentInChildren<Text>().text = _controller.GetPhrase("Survey", sq.name, 0);
+					for(int i = 0; i < dropdown.options.Count; i++) {
+						dropdown.options[i].text = _controller.GetPhrase("Survey", sq.name, i);
+					}
+					break;
+				case SurveyQuestion.Type.Grade:
+					sq.GetComponentsInChildren<Text>()[1].text = _controller.GetPhrase("Survey", sq.name, 0);
+					sq.GetComponentsInChildren<Text>()[3].text = _controller.GetPhrase("Survey", sq.name, 1);
+					break;
+				case SurveyQuestion.Type.Info:
+					break;
+				case SurveyQuestion.Type.Write:
+					break;
+				case SurveyQuestion.Type.Summary:
+					break;
 			}
 		}
 	}
@@ -57,8 +105,24 @@ public class SurveyCanvas : MonoBehaviour {
 			if(answers[i].include) {
 				GameObject row = Instantiate(summaryRowPrefab);
 				row.transform.SetParent(summaryListContainer);
-				row.GetComponentsInChildren<Text>()[0].text = answers[i].question;
-				row.GetComponentsInChildren<Text>()[1].text = answers[i].answer;
+				row.GetComponentsInChildren<Text>()[0].text = _controller.GetPhrase("Survey", answers[i].name);
+				//answers[i].question;
+				switch(answers[i].type) {
+					case SurveyQuestion.Type.Buttons:
+						Button[] buttons = answers[i].GetComponentsInChildren<Button>();
+						for(int b = 0; b < buttons.Length; b++) {
+							if(buttons[b].GetComponentInChildren<Text>().text == answers[i].answer) {
+								row.GetComponentsInChildren<Text>()[1].text = _controller.GetPhrase("Survey", answers[i].name, b);
+							}
+						}
+						break;
+					case SurveyQuestion.Type.Dropdown:
+						row.GetComponentsInChildren<Text>()[1].text = answers[i].answer;
+						break;
+					default:
+						row.GetComponentsInChildren<Text>()[1].text = answers[i].answer;
+						break;
+				}
 			}
 		}
 	}

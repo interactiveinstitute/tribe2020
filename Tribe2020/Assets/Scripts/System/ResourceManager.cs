@@ -80,11 +80,11 @@ public class ResourceManager : MonoBehaviour {
 	}
 
 	//
-	void CalculateCo2(double ts) {
+	void CalculateCo2(double now) {
 		if(CO2Outcome == null || CO2Baseline == null)
 			return;
 
-		double now = GameTime.GetInstance().time;
+		//double now = _timeMgr.time;
 		List<DataPoint> data_oucome, data_baseline, data_change;
 
 		data_oucome = CO2Outcome.GetPeriod(now - 3 * 3600, now);

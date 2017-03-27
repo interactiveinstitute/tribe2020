@@ -5,6 +5,11 @@ using UnityEngine.UI;
 using SimpleJSON;
 
 public class SurveyController : MonoBehaviour {
+	private static SurveyController _instance;
+	public static SurveyController GetInstance() {
+		return _instance;
+	}
+
 	private List<SurveyQuestion> _questions;
 	private List<string> _answers;
 	private int _curQuestion;
@@ -15,8 +20,13 @@ public class SurveyController : MonoBehaviour {
 	private LocalisationManager _localMgr;
 	private SurveyCanvas _canvas;
 
+	//Used before Start, initializes singleton instance. Dependencies cannot call GetInstance earlier than Start
+	public void Awake() {
+		_instance = this;
+	}
+
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		_saveMgr = SaveManager.GetInstance();
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_monitorMgr = MonitorManager.GetInstance();
@@ -32,15 +42,26 @@ public class SurveyController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		
+	}
+
+	//Get translation for phrase group and key
+	public string GetPhrase(string group, string key) {
+		string trans = _localMgr.GetPhrase(group, key);
+		return _localMgr.GetPhrase(group, key);
+	}
+
+	//Get translateion for phrase group, key and index of value
+	public string GetPhrase(string group, string key, int index) {
+		return _localMgr.GetPhrase(group, key, index);
 	}
 
 	//
 	public void OnAnswer(string answer) {
 		_monitorMgr.AddAnswer(_curQuestion, _questions[_curQuestion].name, answer);
 		Next();
-	}
+	}	
 
 	//
 	public void OnAnswer(Text answer) {

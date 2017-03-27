@@ -28,33 +28,79 @@ public class LocalisationManagerEditor : Editor {
 		if(!script.template) { return; }
 
 		foreach(Language l in script.languages) {
+			//Don't apply on template
 			if(l != script.template) {
 				List<Language.ValueGroup> tmpGroups = script.template.groups;
 				for(int i = 0; i < tmpGroups.Count; i++) {
-					if(i < l.groups.Count && tmpGroups[i].title != l.groups[i].title) {
-						//matching group does not exist on same index as template
-						l.groups.Insert(i, tmpGroups[i]);
-					} else if(i > l.groups.Count - 1) {
-						//groups ended before iterating all template groups
+					if(i > l.groups.Count - 1) {
+						//Language too small, add template group
 						l.groups.Add(tmpGroups[i]);
-					} else if(tmpGroups[i].title == l.groups[i].title) {
-						//group exists, check values
-						List<Language.KeyValue> tmpValues = tmpGroups[i].values;
-						List<Language.KeyValue> lngValues = l.groups[i].values;
-						for(int v = 0; v < tmpValues.Count; v++) {
-							if(v < lngValues.Count && tmpValues[v].value != lngValues[v].value) {
-								//language value does not match template
-								lngValues.Insert(v, tmpValues[v]);
-							} else if(i > l.groups.Count - 1) {
-								//values ended before iterating all template values
-								lngValues.Add(tmpValues[v]);
+					} else if(tmpGroups[i].title != l.groups[i].title) {
+						//No matching group at index, search and replace or insert, then check values
+						bool groupExisted = false;
+						foreach(Language.ValueGroup g in l.groups) {
+							if(tmpGroups[i].title == g.title) {
+								Language.ValueGroup tmpG = g;
+								l.groups.Remove(g);
+								l.groups.Insert(i, tmpG);
+								groupExisted = true;
 							}
 						}
+						if(!groupExisted) {
+							l.groups.Insert(i, tmpGroups[i]);
+						}
+						ApplyTemplateGroup(tmpGroups[i], l.groups[i]);
+					} else if(tmpGroups[i].title == l.groups[i].title) {
+						//Group exists, just check values
+						ApplyTemplateGroup(tmpGroups[i], l.groups[i]);
 					}
 				}
 
 				EditorUtility.SetDirty(l);
 				AssetDatabase.SaveAssets();
+			}
+		}
+	}
+
+	//Modify a valuegroup to match a template
+	public void ApplyTemplateGroup(Language.ValueGroup template, Language.ValueGroup other) {
+		List<Language.KeyValue> tValues = template.values;
+		List<Language.KeyValue> oValues = other.values;
+		for(int i = 0; i < tValues.Count; i++) {
+			if(i > oValues.Count - 1) {
+				//Values ended before iterating all template values
+				oValues.Add(tValues[i]);
+			} else if(tValues[i].key != oValues[i].key) {
+				//No matching keyvalue at index, search and replace or insert, then check values
+				bool valueExisted = false;
+				foreach(Language.KeyValue kv in oValues) {
+					if(tValues[i].key == kv.key) {
+						Language.KeyValue tmpKV = kv;
+						oValues.Remove(kv);
+						oValues.Insert(i, tmpKV);
+						valueExisted = true;
+					}
+				}
+				if(!valueExisted) {
+					oValues.Insert(i, tValues[i]);
+				}
+				ApplyTemplateValues(tValues[i], oValues[i]);
+				//||s
+				//tValues[i].values.Count != oValues[i].values.Count) {
+				////Language value does not match template
+				//oValues.Insert(i, tValues[i]);
+			} else if(tValues[i].key == oValues[i].key) {
+				ApplyTemplateValues(tValues[i], oValues[i]);
+			}
+		}
+	}
+
+	//Modify values to match template valuegroups
+	public void ApplyTemplateValues(Language.KeyValue template, Language.KeyValue other) {
+		//Add fields to values if missing
+		for(int i = 0; i < template.values.Count; i++) {
+			if(i > other.values.Count) {
+				other.values.Add("");
 			}
 		}
 	}
@@ -65,6 +111,7 @@ public class LocalisationManagerEditor : Editor {
 		Language template = script.template;
 
 		foreach(Language l in script.languages) {
+			//Don't translate the template
 			if(l != template) {
 				foreach(Language.ValueGroup g in l.groups) {
 					if(!g.translated) {
