@@ -25,12 +25,10 @@ public class DevicePanel : MonoBehaviour {
         ElectricDevice ed = appliance.GetComponent<ElectricDevice>();
         if (ed) {
             SetPowerValue(ed.Power);
-            //SetEnergyEffeciency(appliance.energyEffeciency);
             SetEnergyEffeciency(ed.energyEffeciency);
         }
         else {
             SetPowerValueNotApplicable();
-            //SetEnergyEffeciency(1.0f);
             SetEnergyEffeciency(EnergyEffeciencyLabels.Name.AAAA);
         }
         

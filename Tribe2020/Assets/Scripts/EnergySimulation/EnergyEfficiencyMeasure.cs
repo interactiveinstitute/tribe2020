@@ -23,14 +23,20 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 
 	public string callback;
 	public string callbackArgument;
+    public Affordance callbackAffordance;
 
-	public GameObject replacementPrefab;
-	//public string targetSlot;
+    public GameObject replacementPrefab;
 
-	//public string deactivateDeviceName;
-	//public string activateDeviceName;
+    [Header("Energy effeciency")]
+    public bool setEnergyEffeciency;
+    public EnergyEffeciencyLabels.Name energyEffeciency;
 
-	[Header("Time Limitation")]
+    //public string targetSlot;
+
+    //public string deactivateDeviceName;
+    //public string activateDeviceName;
+
+    [Header("Time Limitation")]
 	public double discoveryTime;
 	public double obsoletionTime;
 
@@ -45,7 +51,11 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public bool passive;
 	public bool hidden;
 
-	public bool IsAffordable(float money, float comfort) {
+    public string shouldRenderCallback;
+
+    public bool multipleUse;
+
+    public bool IsAffordable(float money, float comfort) {
 		return cashCost <= money && comfortCost <= comfort;
 	}
 }

@@ -133,24 +133,32 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 	public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
-			ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
-			if(removedDevice) {
-				DestroyImmediate(removedDevice.gameObject);
-			}
 
-			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
-				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
-				newApp.transform.SetParent(slot.transform, false);
-                _pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
+            ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
+            if (removedDevice) {
+                DestroyImmediate(removedDevice.gameObject);
             }
-			//newApp.transform.position = slot.transform.position;
-			//newApp.transform.rotation = slot.transform.rotation;
-		}
+
+            if (slot.appliancePrefabs[slot.currentApplianceIndex]) {
+				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);                
+				newApp.transform.SetParent(slot.transform, false);
+            }
+
+            
+
+            //newApp.transform.position = slot.transform.position;
+            //newApp.transform.rotation = slot.transform.rotation;
+        }
 	}
 
 	//
-	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
-		appliedEEMs.Add(eem);
+	public GameObject ApplyEEM(EnergyEfficiencyMeasure eem) {
+
+        GameObject returnGO = gameObject;
+
+        if (!eem.multipleUse) {
+            appliedEEMs.Add(eem);
+        }
 
 		if(eem.replacementPrefab != null) {
 			//TODO Temp guard against performing EEMs that replace appliance if appliance group
@@ -160,17 +168,37 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 				newApp.transform.localPosition = transform.localPosition;
 				newApp.transform.localRotation = transform.localRotation;
 				newApp.gameObject.layer = gameObject.layer;
-				_pilotView.BuildDevicePanel(newApp.GetComponent<Appliance>());
 
-				//Remove
-				Destroy(gameObject);
+                ElectricDevice edOld = GetComponent<ElectricDevice>();
+                ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
+                edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
+
+                returnGO = newApp;
+
+                //Remove
+                Destroy(gameObject);
 			}
 		}
+
+        if (eem.setEnergyEffeciency) {
+            ElectricDevice ed = GetComponent<ElectricDevice>();
+            if (ed) {
+                ed.energyEffeciency = eem.energyEffeciency;
+                foreach(Runlevel runlevel in ed.runlevels) {
+                    runlevel.SetPowerByEE(eem.energyEffeciency);
+                }
+                ed.SetRunlevel(ed.runlevel);
+
+                _pilotView.BuildDevicePanel(this);
+            }
+        }
 
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
 			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
 		}
+
+        return returnGO;
 	}
 
 	//

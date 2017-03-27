@@ -88,4 +88,13 @@ public class DataSeriesModifier : DataSeries {
 		print("Waring! Dataseries operation not implemented.");
 		return null;
 	}
+
+	//TODO
+	public override List<DataPoint> GetData() {
+		return null;
+	}
+
+	//TODO
+	public override void InsertData(DataPoint datapoint) {
+	}
 }

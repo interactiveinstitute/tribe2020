@@ -871,7 +871,11 @@ public class BehaviourAI : SimulationObject {
 
 	}
 
-	public void TurnOff(Affordance affordance, bool userOwnage = false) {
+    public void TurnOff(Affordance affordance) {
+        TurnOff(affordance, false);
+    }
+
+    public void TurnOff(Affordance affordance, bool userOwnage = false) {
 		//Appliance targetAppliance = FindNearestAppliance(target, false);
 		Appliance targetAppliance = GetApplianceWithAffordance(affordance, userOwnage);
         if (targetAppliance) {

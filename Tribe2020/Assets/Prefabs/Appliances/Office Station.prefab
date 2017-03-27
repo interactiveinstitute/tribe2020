@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 6595094}
   - component: {fileID: 114387955278274066}
   - component: {fileID: 11400008}
+  - component: {fileID: 114538723285529076}
   m_Layer: 10
   m_Name: Office Station
   m_TagString: Appliance
@@ -85,8 +86,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 181940}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -3.6, y: 0.3, z: -5}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -3.6513047, y: 0.30181193, z: -4.2691193}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4542793437295980}
@@ -192,14 +193,7 @@ MonoBehaviour:
   description: The modern version of a carpenter's workshop. Except less is crafted
     and more is modern.
   icon: {fileID: 21300000, guid: 73148946e2d747947b8d0e20fb46e015, type: 3}
-  energyEffeciency: 0
-  playerAffordances:
-  - {fileID: 11400000, guid: 23b35dc57bca03647845d9a866f8e2a6, type: 2}
-  - {fileID: 11400000, guid: 23f25107a4ae7ab4cbb8ec1d9839987d, type: 2}
-  - {fileID: 11400000, guid: 94e4a0249f520bb45be25f4a44698902, type: 2}
-  - {fileID: 11400000, guid: 3e99b0fbb776c1348b4cd18912e00939, type: 2}
-  - {fileID: 11400000, guid: 0292db39ee412524ca0cb9c9bddbe372, type: 2}
-  - {fileID: 11400000, guid: 838921d9fdf24a74bb83332e190f7035, type: 2}
+  playerAffordances: []
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 2b674d384f0bae645832a8a43aab1549, type: 2}
     nrOfSlots: 0
@@ -211,10 +205,6 @@ MonoBehaviour:
   - position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0, w: 0}
     occupant: {fileID: 0}
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &11491318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -292,7 +282,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 571167235653111936, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1459805628328138
 GameObject:
@@ -308,7 +298,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1561187749369854
 GameObject:
@@ -341,7 +331,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4320005319165014
 Transform:
@@ -507,6 +497,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acaa54903aa00f43a7686195b08e3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114538723285529076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 1ac73fae-28dc-4750-bd73-9a7eabdec073
 --- !u!114 &114594028121097538
 MonoBehaviour:
   m_ObjectHideFlags: 1

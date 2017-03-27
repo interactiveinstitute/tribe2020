@@ -13,6 +13,15 @@ public class DataSeries : DataModifier {
 	}
 
 	//
+	public virtual List<DataPoint> GetData() {
+		return null;
+	}
+
+	//
+	public virtual void InsertData(DataPoint datapoint) {
+	}
+
+	//
 	virtual public DataPoint GetDataAt(double ts) {
 		return null;
 	}

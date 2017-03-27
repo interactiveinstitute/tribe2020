@@ -11,6 +11,8 @@ public class GameTime : MonoBehaviour {
 		return _instance;
 	}
 
+	public enum TimeContext { None, GameTime, RealWorldTime };
+
 	[Serializable]
 	public class KeyAction:Event
 	{
@@ -225,7 +227,8 @@ public class GameTime : MonoBehaviour {
     //offset by dayoffset.
 	public double ScheduleToTS(double referenceStamp, int dayOffset, string hourMinute) {
 		DateTime curTime = TimestampToDateTime(referenceStamp); //Ok we want a stamp from this day (+- dayoffset) corresponding to the hour:minute string
-		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day + dayOffset, hourMinute);
+		curTime = curTime.AddDays(dayOffset);
+		return ScheduleToTS(curTime.Year, curTime.Month, curTime.Day, hourMinute);
 	}
 
 	public DateTime TimestampToDateTime(double value)
@@ -233,7 +236,6 @@ public class GameTime : MonoBehaviour {
 		//create Timespan by subtracting the value provided from
 		//the Unix Epoch
 		DateTime date = ( new DateTime(1970, 1, 1, 0, 0, 0, 0) + new TimeSpan(0,0,(int)value));
-
 		//return the total seconds (which is a UNIX timestamp)
 		return date;
 	}

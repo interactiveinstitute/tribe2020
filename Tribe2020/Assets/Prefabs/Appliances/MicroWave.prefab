@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 6518112}
   - component: {fileID: 114000011583822320}
   - component: {fileID: 11492776}
-  m_Layer: 0
+  - component: {fileID: 114250378264108988}
+  m_Layer: 10
   m_Name: MicroWave
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &142152
 GameObject:
@@ -28,12 +29,12 @@ GameObject:
   - component: {fileID: 415520}
   - component: {fileID: 3343558}
   - component: {fileID: 2367128}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Microwave__Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &161840
 GameObject:
@@ -45,12 +46,12 @@ GameObject:
   - component: {fileID: 491460}
   - component: {fileID: 3316142}
   - component: {fileID: 2318690}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Microwave__Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &415520
 Transform:
@@ -71,15 +72,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 130056}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
-  m_LocalPosition: {x: 6.633, y: 1.031, z: -2.891}
+  m_LocalRotation: {x: -0, y: 0.9834655, z: -0, w: 0.181096}
+  m_LocalPosition: {x: -1.2810001, y: 1.1055598, z: -0.513}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 415520}
   - {fileID: 491460}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 159.40302, z: 0}
 --- !u!4 &491460
 Transform:
   m_ObjectHideFlags: 1
@@ -197,9 +198,8 @@ MonoBehaviour:
   title: Microwave Oven
   description: Heats and cooks food by exposing it to microwave radiation in the electromagnetic
     spectrum.
-  playerAffordances:
-  - {fileID: 11400000, guid: 51af2e78cf3bf1c42956845a9024fcd4, type: 2}
-  - {fileID: 11400000, guid: 7b0c528d33544e64d9fe71a2e1467ed9, type: 2}
+  icon: {fileID: 0}
+  playerAffordances: []
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: 5e963c9903b9c7742b29414b68d3c746, type: 2}
     nrOfSlots: 0
@@ -208,10 +208,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -255,11 +251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
+  NodeName: 
   Units: []
   Columns: []
-  Targets: []
   Sources: []
+  Targets: []
   LastData:
     Timestamp: 0
     Values: []
@@ -281,6 +277,7 @@ MonoBehaviour:
   runlevels:
   - Name: 
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -289,6 +286,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: 
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -297,6 +295,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: 
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -309,3 +308,17 @@ MonoBehaviour:
   runlevelOn: 1
   runlevelOff: 0
   runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 0
+--- !u!114 &114250378264108988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 99c322d4-b491-4eed-a959-483b10e2e878

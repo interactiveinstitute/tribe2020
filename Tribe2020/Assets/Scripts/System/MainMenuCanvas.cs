@@ -30,6 +30,23 @@ public class MainMenuCanvas : MonoBehaviour {
 	public GameObject localisationButtonPrefab;
 	public Transform localisationButtonContainer;
 
+	[Header("Pilot Panel")]
+	public Text[] pilotPlayButtonTexts;
+	public Text[] energyDistributionTexts;
+	public Text[] hotWaterTexts;
+	public Text[] coolingTexts;
+	public Text[] heatingTexts;
+	public Text[] lightingTexts;
+	public Text[] fanTexts;
+	public Text[] appliancesTexts;
+	public Text[] statsTitleTexts;
+	public Text[] statsDescriptionTexts;
+	public Text[] statsTexts;
+	public Text[] aboutTitleTexts;
+	public Text[] aboutTexts;
+	private string[] pilots = 
+		new string[] { "San Pablo", "CIRCE", "Emmeline de Pankhurst", "IES Azucarera", "Ozyegin University" };
+
 	//
 	void Awake() {
 		_instance = this;
@@ -76,5 +93,44 @@ public class MainMenuCanvas : MonoBehaviour {
 		returnSettingsText.text = _controller.GetPhrase("Interface", "main back");
 		clearSavesText.text = _controller.GetPhrase("Interface", "main clearsaves");
 		returnAboutText.text = _controller.GetPhrase("Interface", "main back");
+
+		foreach(Text t in pilotPlayButtonTexts) {
+			t.text = _controller.GetPhrase("Interface", "main play level");
+		}
+		foreach(Text t in energyDistributionTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution");
+		}
+		foreach(Text t in hotWaterTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 0);
+		}
+		foreach(Text t in coolingTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 1);
+		}
+		foreach(Text t in heatingTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 2);
+		}
+		foreach(Text t in lightingTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 3);
+		}
+		foreach(Text t in fanTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 4);
+		}
+		foreach(Text t in appliancesTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 5);
+		}
+		foreach(Text t in statsTitleTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot stat title");
+		}
+		foreach(Text t in statsDescriptionTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot stat description");
+		}
+		foreach(Text t in aboutTitleTexts) {
+			t.text = _controller.GetPhrase("Interface", "main pilot about title");
+		}
+
+		for(int i = 0; i < pilots.Length; i++) {
+			statsTexts[i].text = _controller.GetPhrase(pilots[i], "Stats");
+			aboutTexts[i].text = _controller.GetPhrase(pilots[i], "Info");
+		}
 	}
 }

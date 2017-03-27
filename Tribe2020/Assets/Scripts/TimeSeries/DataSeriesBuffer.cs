@@ -375,33 +375,42 @@ public class DataSeriesBuffer : DataSeries {
 
 	}
 
-	public List<DataPoint> GetRange(int index,int count){
+	//
+	public List<DataPoint> GetRange(int index, int count) {
 
 		List<DataPoint> rawdata, newdata;
 
-		if (index >= Data.Count)
-			index = Data.Count-1;
+		if(index >= Data.Count)
+			index = Data.Count - 1;
 
-		if ((count + index ) > Data.Count)
+		if((count + index) > Data.Count)
 			count = Data.Count - index;
 
-		if (index < 0)
+		if(index < 0)
 			return new List<DataPoint>();
 
 
 		//Debug.Log ("I: " + index.ToString());
 		//Debug.Log ("C: " + count.ToString());
 
-		rawdata = Data.GetRange(index,count);
-		newdata = ApplyModifiers (rawdata);
+		rawdata = Data.GetRange(index, count);
+		newdata = ApplyModifiers(rawdata);
 
 		return newdata;
 
 	}
 
+	//Get list of datapoints
+	public override List<DataPoint> GetData() {
+		return Data;
+	}
 
+	//Set list of datapoints
+	public override void InsertData(DataPoint datapoint) {
+		Data.Add(datapoint);
+	}
 
-
+	//Clear list of datapoints
 	public void Clear() {
 		Data.Clear ();
 	}
