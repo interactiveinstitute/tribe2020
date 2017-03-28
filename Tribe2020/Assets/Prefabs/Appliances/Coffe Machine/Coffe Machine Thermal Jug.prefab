@@ -197,7 +197,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 43c51c148fd914e4baed632b650686f1, type: 3}
   playerAffordances:
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
-  - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
     nrOfSlots: 1
@@ -246,6 +245,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 23394771869133704}
     materials: []
     sound: {fileID: 0}
@@ -253,7 +253,12 @@ MonoBehaviour:
     LightsOn: []
     LightsOff: []
   - Name: On
-    Power: 1000
+    Power: 500
+    powerByEE:
+    - energyEffeciency: 0
+      power: 150
+    - energyEffeciency: 2
+      power: 500
     Target: {fileID: 23394771869133704}
     materials: []
     sound: {fileID: 0}

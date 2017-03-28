@@ -162,10 +162,8 @@ MonoBehaviour:
   description: A compact version of the mythical spring of youth.
   icon: {fileID: 21300000, guid: 43c51c148fd914e4baed632b650686f1, type: 3}
   playerAffordances:
-  - {fileID: 11400000, guid: 7fd61deca41288a41bb624ec8097e8fe, type: 2}
-  - {fileID: 11400000, guid: ddbabf9064ba80549b7aad45fd8978b6, type: 2}
-  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
   - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
+  - {fileID: 11400000, guid: ddbabf9064ba80549b7aad45fd8978b6, type: 2}
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
     nrOfSlots: 1
@@ -214,6 +212,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 2370180}
     materials: []
     sound: {fileID: 0}
@@ -221,7 +220,12 @@ MonoBehaviour:
     LightsOn: []
     LightsOff: []
   - Name: On
-    Power: 1000
+    Power: 0
+    powerByEE:
+    - energyEffeciency: 0
+      power: 300
+    - energyEffeciency: 6
+      power: 1000
     Target: {fileID: 2370180}
     materials: []
     sound: {fileID: 0}
