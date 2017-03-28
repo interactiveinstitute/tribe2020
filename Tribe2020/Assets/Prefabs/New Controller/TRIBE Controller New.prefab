@@ -1298,8 +1298,14 @@ MonoBehaviour:
   CostSavings: 0
   CO2Outcome: {fileID: 0}
   CO2Baseline: {fileID: 0}
+  CO2ChangeSeries: {fileID: 0}
   CostOutcome: {fileID: 0}
   CostBaseline: {fileID: 0}
+  electricityOutcome: {fileID: 0}
+  gasOutcome: {fileID: 0}
+  timeContext: 0
+  cashSalary: 1000
+  comfortSalary: 500
   cashProduction: 0
   comfortProduction: 0
   happyComfortInterval: 500
@@ -1307,6 +1313,29 @@ MonoBehaviour:
   moodResetTime: 1000
   comfortHarvestCount: 0
   comfortHarvestMax: 30
+  c2outcome_debug: 0
+  c2baseline_debug: 0
+  CO2DataOutcome:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  CO2DataBaseline:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  CO2DataChange:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
 --- !u!114 &114825703768719794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1369,7 +1398,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1826864137982002}
   serializedVersion: 5
   lengthInSec: 5
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -3994,7 +4023,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1505711593783160}
   serializedVersion: 5
   lengthInSec: 2
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
