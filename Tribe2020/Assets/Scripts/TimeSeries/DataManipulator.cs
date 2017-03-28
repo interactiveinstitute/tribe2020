@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class DataManipulator : DataModifier
 {
-    
-        
+
+
     public List<Manipulation> Manipulations;
     [Header("Debug")]
     public int selected = 0;
@@ -35,7 +35,6 @@ public class DataManipulator : DataModifier
 
         if (selected < Manipulations.Count) {
             double now = GameTime.GetInstance().time;
-
             Manipulations[selected].Activate(now);
         }
     }
