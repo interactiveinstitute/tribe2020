@@ -207,6 +207,8 @@ public class ResourceManager : MonoBehaviour {
 		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
 	}
 
+    //New month test
+
 	//
 	public JSONArray SerializeDataseries(DataSeries ds) {
 		JSONArray dsJSON = new JSONArray();
