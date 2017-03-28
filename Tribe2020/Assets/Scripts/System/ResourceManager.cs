@@ -187,20 +187,24 @@ public class ResourceManager : MonoBehaviour {
 		return cash >= costCash && comfort >= costComfort;
 	}
 
-	//TODO: Gas multiplier
-	public void ScaleGas(float scaleFactor) {
+	//TODO: Multiply given DataSeries
+	public void ScaleData(string series, double scale, double timestamp) {
+		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
 	}
 
-	//TODO: Gas offset
-	public void OffsetGas(float offsetFactor) {
+	//TODO: Absolute offset given DataSeries
+	public void AbsoluteOffsetData(string series, double offset, double timestamp) {
+		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
 	}
 
-	//TODO: Electricity multiplier
-	public void ScaleElectricity(float scaleFactor) {
+	//TODO: Relative offset given DataSeries
+	public void RelativeOffsetData(string series, double offset, double timestamp) {
+		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
 	}
 
-	//TODO: Electricity offset
-	public void OffsetElectricity(float offsetFactor) {
+	//TODO: Manipulate given DataSeries
+	public void ManipulateData(string series, double scale, double absoluteOffset, double relativeOffset, double timestamp) {
+		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
 	}
 
 	//
