@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1270608781345068}
+  m_IsPrefabParent: 1
+--- !u!1 &1270608781345068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4452223424310558}
+  - component: {fileID: 108230346422288778}
+  - component: {fileID: 114306208447121760}
+  m_Layer: 0
+  m_Name: San Pablo Sun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4452223424310558
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1270608781345068}
+  m_LocalRotation: {x: 0.20833842, y: 0, z: 0, w: 0.97805685}
+  m_LocalPosition: {x: 0, y: 19.76, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 24.05, y: 0, z: 0}
+--- !u!108 &108230346422288778
+Light:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1270608781345068}
+  m_Enabled: 1
+  serializedVersion: 7
+  m_Type: 1
+  m_Color: {r: 0.8455882, g: 0.7805313, b: 0.60310334, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 1
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 122880
+  m_Lightmapping: 1
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!114 &114306208447121760
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1270608781345068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d26835930ba0849882a66d12dbe864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dayCycleInMinutes: 1440
+  Altitude: 0
+  Azimuth: 0
+  longitude: 41.647453
+  latitude: -1.0350633
+  AutoUpdate: 1
+  currentPhase: 0
+  nightColor: {r: 0.18382353, g: 0.11445659, b: 0.037846025, a: 1}
+  dawnColor: {r: 0.8455882, g: 0.52945477, b: 0.18030927, a: 1}
+  dayColor: {r: 0.8455882, g: 0.7805313, b: 0.60310334, a: 1}
+  duskColor: {r: 0.8455882, g: 0.52945477, b: 0.18030927, a: 1}
+  nightAmbience: {r: 0.1102941, g: 0.1046172, b: 0.1046172, a: 0.16000001}
+  dayAmbience: {r: 0.41911763, g: 0.40987238, b: 0.40987238, a: 0.16000001}
+  daySkybox: {fileID: 2100000, guid: 7e4024464a7f63a408ac3c1225f094f9, type: 2}
+  nightSkybox: {fileID: 2100000, guid: 5ce75119787234e4aae0598fcc619b45, type: 2}
+  light: {fileID: 108230346422288778}
