@@ -14,6 +14,8 @@ public class LocalisationManager : MonoBehaviour {
 		return _instance;
 	}
 
+	public bool debug = false;
+
 	//
 	public List<Language> languages;
 	public Language curLanguage;
@@ -136,6 +138,8 @@ public class LocalisationManager : MonoBehaviour {
 
 		JSONNode json = JSON.Parse(html);
 		string result = json["data"]["translations"][0]["translatedText"];
+
+		Debug.Log(from + ": " + text + " -> " + to + ": " + result);
 
 		return result;
 	}

@@ -4,11 +4,12 @@ using UnityEditor;
 
 [CustomEditor(typeof(LocalisationManager))]
 public class LocalisationManagerEditor : Editor {
+
+	//
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 
 		LocalisationManager script = (LocalisationManager)target;
-
 
 		if(GUILayout.Button("Apply Template", GUILayout.Width(100))) {
 			ApplyTemplate();
@@ -17,11 +18,9 @@ public class LocalisationManagerEditor : Editor {
 		if(GUILayout.Button("Translate", GUILayout.Width(100))) {
 			Translate();
 		}
-
-
 	}
 
-	//
+	//Foreach non-template language, adapt to value format of chosen template
 	public void ApplyTemplate() {
 		LocalisationManager script = (LocalisationManager)target;
 
@@ -54,8 +53,12 @@ public class LocalisationManagerEditor : Editor {
 						//Group exists, just check values
 						ApplyTemplateGroup(tmpGroups[i], l.groups[i]);
 					}
-				}
 
+					if(script.debug) {
+						Debug.Log("Applied template to " + l.groups[i].title + " in " + l.name);
+					}
+				}
+				//Refresh files
 				EditorUtility.SetDirty(l);
 				AssetDatabase.SaveAssets();
 			}
@@ -85,13 +88,13 @@ public class LocalisationManagerEditor : Editor {
 					oValues.Insert(i, tValues[i]);
 				}
 				ApplyTemplateValues(tValues[i], oValues[i]);
-				//||s
-				//tValues[i].values.Count != oValues[i].values.Count) {
-				////Language value does not match template
-				//oValues.Insert(i, tValues[i]);
 			} else if(tValues[i].key == oValues[i].key) {
 				ApplyTemplateValues(tValues[i], oValues[i]);
 			}
+		}
+		//Remove superfluous values
+		if(oValues.Count > tValues.Count) {
+			oValues.RemoveRange(tValues.Count, oValues.Count - tValues.Count);
 		}
 	}
 
@@ -113,24 +116,30 @@ public class LocalisationManagerEditor : Editor {
 		foreach(Language l in script.languages) {
 			//Don't translate the template
 			if(l != template) {
-				foreach(Language.ValueGroup g in l.groups) {
-					if(!g.translated) {
-						for(int i = 0; i < g.values.Count; i++) {
-							Language.KeyValue translatedValue = g.values[i];
-
-							translatedValue.value = script.Translate(g.values[i].value, template.code, l.code);
-
-							translatedValue.values = new List<string>();
-							foreach(string v in g.values[i].values) {
-								translatedValue.values.Add(script.Translate(v, template.code, l.code));
+				for(int g = 0; g < l.groups.Count; g++) {
+					Language.ValueGroup group = l.groups[g];
+					//Ignore groups tagged as translated
+					if(!group.translated) {
+						for(int v = 0; v < group.values.Count; v++) {
+							//Clone existing format
+							Language.KeyValue translation = group.values[v];
+							//Replace value field with translation of template's
+							translation.value = script.Translate(template.groups[g].values[v].value, template.code, l.code);
+							//Replace values array with translations of template's
+							translation.values = new List<string>();
+							foreach(string value in template.groups[g].values[v].values) {
+								translation.values.Add(script.Translate(value, template.code, l.code));
 							}
-
-							g.values[i] = translatedValue;
+							//Replace value with translated value
+							group.values[v] = translation;
 						}
-						g.translated = true;
+						group.translated = true;
+						if(script.debug) {
+							Debug.Log("Translated " + group.title + " from " + template.name + " to " + l.name);
+						}
 					}
 				}
-
+				//Refresh files
 				EditorUtility.SetDirty(l);
 				AssetDatabase.SaveAssets();
 			}
