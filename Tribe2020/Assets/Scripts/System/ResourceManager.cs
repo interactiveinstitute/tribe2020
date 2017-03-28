@@ -183,6 +183,27 @@ public class ResourceManager : MonoBehaviour {
 	}
 
 	//
+	public bool CanAfford(int costCash, int costComfort) {
+		return cash >= costCash && comfort >= costComfort;
+	}
+
+	//TODO: Gas multiplier
+	public void ScaleGas(float scaleFactor) {
+	}
+
+	//TODO: Gas offset
+	public void OffsetGas(float offsetFactor) {
+	}
+
+	//TODO: Electricity multiplier
+	public void ScaleElectricity(float scaleFactor) {
+	}
+
+	//TODO: Electricity offset
+	public void OffsetElectricity(float offsetFactor) {
+	}
+
+	//
 	public JSONArray SerializeDataseries(DataSeries ds) {
 		JSONArray dsJSON = new JSONArray();
 		if(ds.GetData() != null) {
@@ -214,10 +235,6 @@ public class ResourceManager : MonoBehaviour {
 			ds.InsertData(dp);
 		}
 	}
-
-    public bool CanAfford(int costCash, int costComfort) {
-        return cash >= costCash && comfort >= costComfort;
-    }
 
 	//
 	public JSONClass SerializeAsJSON() {
