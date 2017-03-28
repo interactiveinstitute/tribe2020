@@ -36,7 +36,11 @@ public class ResourceManager : MonoBehaviour {
 	public GameTime.TimeContext timeContext;
 	private double _currentTime = 0;
 
-	[Header("Production")]
+    [Header("Salary")]
+    public int cashSalary;
+    public int comfortSalary;
+
+    [Header("Production")]
 	public float cashProduction;
 	public float comfortProduction;
 
@@ -141,6 +145,7 @@ public class ResourceManager : MonoBehaviour {
 		CalculateCo2(now);
 		CalculateCost(now);
 
+        NewMonthTest();
 	}
 
 	//
@@ -208,6 +213,13 @@ public class ResourceManager : MonoBehaviour {
 	}
 
     //New month test
+    void NewMonthTest() {
+        int months = _timeMgr.GetNewMonths();
+        if(months > 0) {
+            AddCash(cashSalary * months);
+            AddComfort(comfortSalary * months);
+        }
+    }
 
 	//
 	public JSONArray SerializeDataseries(DataSeries ds) {

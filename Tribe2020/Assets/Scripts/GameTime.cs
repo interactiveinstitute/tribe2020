@@ -50,7 +50,8 @@ public class GameTime : MonoBehaviour {
 	public double VisualTime;
 	public string CurrentDate;
 
-    
+    DateTime dateTimeCurrent;
+    DateTime dateTimeLastUpdate;
 
     double lastupdate=0;
 	public List<KeyAction> KeyActions = new List<KeyAction>();
@@ -138,7 +139,10 @@ public class GameTime : MonoBehaviour {
 
         simulationDeltaTime = (float) (new_time - time);
 		time = new_time;
-		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
+
+        dateTimeLastUpdate = dateTimeCurrent;
+        dateTimeCurrent = TimestampToDateTime(time);
+        CurrentDate = dateTimeCurrent.ToString("yyyy-MM-dd HH:mm:ss");
 
 		lastupdate = now;
 
@@ -294,6 +298,12 @@ public class GameTime : MonoBehaviour {
 	public string GetTimeWithFormat(string format) {
 		return TimestampToDateTime(time).ToString(format);
 	}
+
+    public int GetNewMonths() {
+        if(dateTimeCurrent.Year == 1 || dateTimeLastUpdate.Year == 1) {
+            return 0;
+        }
+        return (dateTimeCurrent.Year - dateTimeLastUpdate.Year) * 12 + (dateTimeCurrent.Month - dateTimeLastUpdate.Month);
+    }
 }
 
-	
