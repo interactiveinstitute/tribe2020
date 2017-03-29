@@ -126,6 +126,7 @@ public class NarrationManager : MonoBehaviour {
 			ActivateNarrative(fn);
 		}
 		//Save game due to progress
+		_interface.LimitInteraction("all");
 		_interface.SaveGameState();
 	}
 

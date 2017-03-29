@@ -3,7 +3,7 @@ using System.Collections;
 
 public interface NarrationInterface{
 	string GetCurrentDate();
-	void SetControlState(Controller.InputState state);
+	void LimitInteraction(string limitation);
 	void ControlInterface(string id, string action);
 	void PlaySound(string sound);
 	void ShowMessage(string key, string message, Sprite portrait, bool showButton);
