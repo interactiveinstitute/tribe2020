@@ -10,12 +10,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public static PilotController GetInstance() {
 		return _instance as PilotController;
 	}
-	//public enum InputState {
-	//	ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
-	//	ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
-	//	ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
-	//};
-	private Controller.InputState _curState = Controller.InputState.ALL;
+	public enum InputState {
+		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT, ONLY_APOCALYPSE,
+		ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
+		ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
+	};
+	private InputState _curState = InputState.ALL;
 
 	#region Fields
 	public bool debug = false;
@@ -122,39 +122,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			//_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
 		}
 
-		//Mobile interaction
-		//		UpdatePan(_camMgr.camera);
+		UpdateTouch();
 		UpdatePinch();
-
-		//		if(!InspectorUI.activeSelf){
-		//if(IsOutsideUI(Input.mousePosition) && !_touchReset) {
-		if(!_touchReset) {
-			//Touch start
-			if(Input.GetMouseButtonDown(0)) {
-				OnTouchStart(Input.mousePosition);
-			}
-
-			//Touch ongoing
-			if(Input.GetMouseButton(0)) {
-				OnTouch(Input.mousePosition);
-			}
-
-			//Touch end
-			if(Input.GetMouseButtonUp(0)) {
-				OnTouchEnded(Input.mousePosition);
-			}
-
-			if(_touchState == TAP) {
-				_doubleTimer += Time.unscaledDeltaTime;
-				if(_doubleTimer > D_TAP_TIMEOUT) {
-					OnTap(_startPos);
-					_doubleTimer = 0;
-					_touchState = IDLE;
-				}
-			}
-		} else {
-			_touchReset = false;
-		}
 
 		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
@@ -179,72 +148,98 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
-	//
+	//Updates basic onStart, onTouch, onEnd, tap, double tap and swipe interaction
+	private void UpdateTouch() {
+		if(!_touchReset) {
+			//Touch start
+			if(Input.GetMouseButtonDown(0)) {
+				OnTouchStart(Input.mousePosition);
+			}
+
+			//Touch ongoing
+			if(Input.GetMouseButton(0)) {
+				OnTouch(Input.mousePosition);
+			}
+
+			//Touch end
+			if(Input.GetMouseButtonUp(0)) {
+				OnTouchEnded(Input.mousePosition);
+			}
+
+			//Delay tap for possibility to double tap
+			if(_touchState == TAP) {
+				_doubleTimer += Time.unscaledDeltaTime;
+				if(_doubleTimer > D_TAP_TIMEOUT) {
+					OnTap(_startPos);
+					ResetTouch();
+				}
+			}
+		} else {
+			_touchReset = false;
+		}
+	}
+
+	//New touch started
 	private void OnTouchStart(Vector3 pos) {
-		//Debug.Log("OnTouchStart");
-		_touchTimer = 0;
 		if(_touchState == IDLE) {
+			_touchTimer = 0;
 			_startPos = pos;
 		}
 	}
 
-	//
+	//Touch ongoing
 	private void OnTouch(Vector3 pos) {
-		//_camMgr.cameraState = CameraManager.PANNED;
 		_touchTimer += Time.unscaledDeltaTime;
-
-		//if(Application.platform == RuntimePlatform.Android){
-		//	_camMgr.UpdatePan(Input.GetTouch(0).deltaPosition);
-		//}
 	}
 
-	//
+	//Touch ended
 	private void OnTouchEnded(Vector3 pos) {
-		//Debug.Log("ontouchended");
-		//_cameraMgr.cameraState = CameraManager.CameraState.Idle;
 		float dist = Vector3.Distance(_startPos, pos);
-
-		//Touch ended before tap timeout, trigger OnTap
 		if(!_touchReset) {
 			if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH) {
-				_touchTimer = 0;
 				if(_touchState == IDLE) {
+					//First tap, start double tap timer
 					_touchState = TAP;
+					_touchTimer = 0;
 				} else if(_touchState == TAP) {
-					_touchState = IDLE;
-					_doubleTimer = 0;
+					//Second tap before double tap timer ran out, trigger double tap
 					OnDoubleTap(pos);
+					ResetTouch();
 				}
 			} else if(dist >= SWIPE_THRESH) {
-				//Debug.Log("swipe");
+				//Swipe distance greater than threshold, trigger swipe
 				OnSwipe(_startPos, pos);
+				ResetTouch();
 			}
 		}
 	}
 
-	//
+	//Callback for when tap is triggered
 	private void OnTap(Vector3 pos) {
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_TAP) { return; }
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
-		if((_view.GetCurrentUI() == _view.devicePanel || _view.GetCurrentUI() == _view.characterPanel) && pos.x < Screen.width / 2) {
+		if((_view.GetCurrentUI() == _view.devicePanel || 
+			_view.GetCurrentUI() == _view.characterPanel) && pos.x < Screen.width / 2) {
 			HideUI();
 		}
 
+		_touchState = IDLE;
 		_instance._narrationMgr.OnNarrativeEvent("Tapped");
 	}
 
-	//
+	//Callback for when double tap triggered
 	private void OnDoubleTap(Vector3 pos) {
-		//Debug.Log("Double tapped at " + pos);
+		_touchState = IDLE;
+		_instance._narrationMgr.OnNarrativeEvent("DoubleTapped");
 	}
 
-	//
+	//Callback for when swipe triggered
 	private void OnSwipe(Vector3 start, Vector3 end) {
 		if(_view.IsAnyOverlayActive()) {
 			return;
 		}
 
-		if(_curState == Controller.InputState.ALL || _curState == Controller.InputState.ONLY_SWIPE) {
+		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
 			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
 			dir = (dir * Mathf.Rad2Deg + 360) % 360;
 			float dist = Vector3.Distance(start, end);
@@ -262,22 +257,20 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 			_instance._narrationMgr.OnNarrativeEvent("Swiped");
 			_instance._narrationMgr.OnNarrativeEvent("SelectedView", _cameraMgr.GetCurrentViewpoint().title);
-
-			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.Swiped);
-			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.FindView, _cameraMgr.GetCurrentViewpoint().title);
 		}
+		_touchState = IDLE;
 	}
 
 	//
 	public void OnPinchIn() {
-		if(_curState == Controller.InputState.ALL) {
+		if(_curState == InputState.ALL) {
 			_cameraMgr.GotoUpperView();
 		}
 	}
 
 	//
 	public void OnPinchOut() {
-		if(_curState == Controller.InputState.ALL) {
+		if(_curState == InputState.ALL) {
 			_cameraMgr.GotoLowerView();
 		}
 	}
@@ -290,7 +283,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void ResetTouch() {
 		_touchTimer = 0;
 		_doubleTimer = 0;
-		_startPos = Input.mousePosition;
+		//_startPos = Input.mousePosition;
 		_touchState = IDLE;
 		_touchReset = true;
 		//Debug.Log("cotroller.resetSwipe " + _startPos);
@@ -346,7 +339,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void OnOkPressed() {
 		_instance.ResetTouch();
 
-		if(_instance._curState == Controller.InputState.ALL || _instance._curState == Controller.InputState.ONLY_PROMPT) {
+		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
 			_instance._view.messageUI.SetActive(false);
 
 			//_instance._narrationMgr.OnNarrativeEvent("OKPressed");
@@ -364,12 +357,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_APPLIANCE_SELECT) { return; }
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
 
 		_instance._cameraMgr.SetLookAtTarget(app);
 
-		string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
-		string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
+		//string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
+		//string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
 
 		if(app.GetComponent<BehaviourAI>()) {
 			_instance._view.BuildAvatarPanel(app);
@@ -393,48 +386,44 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
 	}
 
-	//
-	public void SetCurrentUI(RectTransform ui) {
-		SetCurrentUI(_instance, ui);
-	}
-
 	//Open user interface
-	public void SetCurrentUI(PilotController controller, RectTransform ui) {
+	public void SetCurrentUI(RectTransform ui) {
 		if(debug) { Debug.Log(name + ": SetCurrentUI(" + ui.name + ")"); }
-		if(_curState != Controller.InputState.ALL) {
-			if(ui == controller._view.energyPanel && controller._curState != Controller.InputState.ONLY_ENERGY) { return; }
-			if(ui == controller._view.comfortPanel && controller._curState != Controller.InputState.ONLY_COMFORT) { return; }
-			if(ui == controller._view.inbox && controller._curState != Controller.InputState.ONLY_OPEN_INBOX) { return; }
+		if(_curState != InputState.ALL) {
+			if(ui == _instance._view.energyPanel && _instance._curState != InputState.ONLY_ENERGY) { return; }
+			if(ui == _instance._view.comfortPanel && _instance._curState != InputState.ONLY_COMFORT) { return; }
+			if(ui == _instance._view.inbox && _instance._curState != InputState.ONLY_OPEN_INBOX) { return; }
+			if(ui == _instance._view.inbox && _instance._curState != InputState.ONLY_APOCALYPSE) { return; }
 		}
 
-		if(controller._view.GetCurrentUI() != null) {
-			if(controller._view.GetCurrentUI() == controller._view.inspector) {
+		if(_instance._view.GetCurrentUI() != null) {
+			if(_instance._view.GetCurrentUI() == _instance._view.inspector) {
 				_instance._narrationMgr.OnNarrativeEvent("InspectorClosed");
-			} else if(controller._view.GetCurrentUI() == controller._view.inbox) {
+			} else if(_instance._view.GetCurrentUI() == _instance._view.inbox) {
 				_instance._narrationMgr.OnNarrativeEvent("InboxClosed");
 			}
 		}
 
-		if(ui == controller._view.GetCurrentUI()) {
+		if(ui == _instance._view.GetCurrentUI()) {
 			HideUI();
 		} else {
-			controller._view.SetCurrentUI(ui);
-			if(ui == controller._view.inspector) {
+			_instance._view.SetCurrentUI(ui);
+			if(ui == _instance._view.inspector) {
 				_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
-			} else if(ui == controller._view.inbox) {
+			} else if(ui == _instance._view.inbox) {
 				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
-			} else if(ui == controller._view.energyPanel) {
+			} else if(ui == _instance._view.energyPanel) {
 				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
 				_instance._narrationMgr.OnNarrativeEvent("EnergyPanelOpened");
-			} else if(ui == controller._view.comfortPanel) {
+			} else if(ui == _instance._view.comfortPanel) {
 				_instance._narrationMgr.OnNarrativeEvent("ComfortPanelOpened");
-			} else if(ui == controller._view.apocalypsometer) {
+			} else if(ui == _instance._view.apocalypsometer) {
 				_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerOpened");
 			}
 		}
 
-		controller.ResetTouch();
+		_instance.ResetTouch();
 	}
 
 	//Hide any open user interface
@@ -466,7 +455,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnHarvestTap(GameObject go) {
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_HARVEST) { return; }
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
 
 		_resourceMgr.cash += 10;
 		_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
@@ -535,7 +524,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
-		if(_curState != Controller.InputState.ALL && _curState != Controller.InputState.ONLY_APPLY_EEM) { return; }
+		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
@@ -583,16 +572,17 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	#region Narrative Methods
 	//
-	public void SetControlState(Controller.InputState state) {
+	public void SetControlState(InputState state) {
 		_curState = state;
 	}
 
 	//
 	public void LimitInteraction(string interactionLimit) {
 		switch(interactionLimit) {
-			case "only_ok": _curState = Controller.InputState.ONLY_PROMPT; break;
-			case "only_swipe": _curState = Controller.InputState.ONLY_SWIPE; break;
-			default: _curState = Controller.InputState.ALL; break;
+			case "only_ok": _curState = InputState.ONLY_PROMPT; break;
+			case "only_swipe": _curState = InputState.ONLY_SWIPE; break;
+			case "only_tap": _curState = InputState.ONLY_TAP; break;
+			default: _curState = InputState.ALL; break;
 		}
 	}
 
