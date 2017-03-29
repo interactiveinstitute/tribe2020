@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
+using System.Net.NetworkInformation;
 
 public class MonitorManager : MonoBehaviour {
 	private static MonitorManager _instance;
@@ -9,6 +10,8 @@ public class MonitorManager : MonoBehaviour {
 		return _instance;
 	}
 
+	[SerializeField]
+	private string _macAddress;
 	[SerializeField]
 	private List<SurveyQuestion> _questions;
 	[SerializeField]
@@ -23,12 +26,34 @@ public class MonitorManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		
+		if(_macAddress == "") {
+			_macAddress = GetMACAddress();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update() {
 		playTime += Time.unscaledDeltaTime;
+	}
+
+	//
+	public string GetMACAddress() {
+		IPGlobalProperties computerProperties = IPGlobalProperties.GetIPGlobalProperties();
+		NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+		string mac = null;
+
+		foreach(NetworkInterface adapter in nics) {
+			PhysicalAddress address = adapter.GetPhysicalAddress();
+			byte[] bytes = address.GetAddressBytes();
+			
+			for(int i = 0; i < bytes.Length; i++) {
+				mac = string.Concat(mac + (string.Format("{0}", bytes[i].ToString("X2"))));
+				if(i != bytes.Length - 1) {
+					mac = string.Concat(mac + "-");
+				}
+			}
+		}
+		return mac;
 	}
 
 	//
