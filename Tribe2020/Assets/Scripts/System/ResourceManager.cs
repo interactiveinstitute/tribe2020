@@ -51,8 +51,13 @@ public class ResourceManager : MonoBehaviour {
 	public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
 
+    [Header("Messures")]
+    public List<DataManipulator> ManipulationPoints;
+    
 
-	[Header("DEBUG")]
+
+
+    [Header("DEBUG")]
 	public double c2outcome_debug, c2baseline_debug;
 	public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
 
@@ -193,23 +198,59 @@ public class ResourceManager : MonoBehaviour {
 	}
 
 	//TODO: Multiply given DataSeries
-	public void ScaleData(string series, double scale, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
-	}
+	public void ScaleData(string ManipulationPointName, double scale, double timestamp) {
+        ManipulateData(ManipulationPointName, scale, double.NaN, double.NaN, timestamp);
+    }
 
 	//TODO: Absolute offset given DataSeries
-	public void AbsoluteOffsetData(string series, double offset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
-	}
+	public void AbsoluteOffsetData(string ManipulationPointName, double offset, double timestamp) {
+        ManipulateData(ManipulationPointName, double.NaN, offset, double.NaN, timestamp);
+    }
 
 	//TODO: Relative offset given DataSeries
-	public void RelativeOffsetData(string series, double offset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
-	}
+	public void RelativeOffsetData(string ManipulationPointName, double offset, double timestamp) {
+        ManipulateData(ManipulationPointName, double.NaN, double.NaN, offset, timestamp);
+    }
 
 	//TODO: Manipulate given DataSeries
-	public void ManipulateData(string series, double scale, double absoluteOffset, double relativeOffset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
+	public Manipulation ManipulateData(string ManipulationPointName, double scale, double absoluteOffset, double relativeOffset, double timestamp) {
+        Manipulation manipulation;
+
+        foreach (DataManipulator ManipulationPoint in ManipulationPoints)
+        {
+            if (ManipulationPoint.name == ManipulationPointName)
+            {
+                manipulation = new Manipulation();
+
+                if (scale != double.NaN)
+                {
+                    manipulation.rescale = new double[1];
+                    manipulation.rescale[0] = scale;
+                }
+
+                if (absoluteOffset != double.NaN)
+                {
+                    manipulation.absoluteoffsets = new double[1];
+                    manipulation.absoluteoffsets[0] = absoluteOffset;
+                }
+
+                if (relativeOffset != double.NaN)
+                {
+                    manipulation.relativeoffsets = new double[1];
+                    manipulation.relativeoffsets[0] = relativeOffset;
+                }
+
+
+                ManipulationPoint.Manipulations.Add(manipulation);
+                manipulation.Activate(timestamp);
+
+                return manipulation;
+            }
+
+        }
+
+        return null;
+
 	}
 
     //New month test
