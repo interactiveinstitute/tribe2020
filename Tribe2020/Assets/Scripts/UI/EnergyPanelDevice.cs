@@ -5,13 +5,20 @@ using UnityEngine.UI;
 
 public class EnergyPanelDevice : MonoBehaviour {
 	public ElectricDevice device;
+	public Text deviceName;
 	public Text energyText;
 	public Image icon;
 
+	private PilotController _controller;
+
 	// Use this for initialization
 	void Start () {
+		_controller = PilotController.GetInstance();
+
 		if(device.GetComponent<Appliance>()) {
-			icon.sprite = device.GetComponent<Appliance>().icon;
+			Appliance app = device.GetComponent<Appliance>();
+			deviceName.text = _controller.GetPhrase("Appliance", app.title + "_Title");
+			icon.sprite = app.icon;
 		}
 	}
 	
