@@ -39,6 +39,8 @@ GameObject:
   - component: {fileID: 114568694404567128}
   - component: {fileID: 114355430836853836}
   - component: {fileID: 114607158080357560}
+  - component: {fileID: 114290566845683782}
+  - component: {fileID: 114784165226372590}
   m_Layer: 0
   m_Name: Content
   m_TagString: Untagged
@@ -102,6 +104,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
+--- !u!1 &1256709560347248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4919006965841086}
+  - component: {fileID: 114494944923467888}
+  m_Layer: 0
+  m_Name: Monitor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1262839201326088
 GameObject:
   m_ObjectHideFlags: 1
@@ -128,6 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4183823448105464}
   - component: {fileID: 114162581859543708}
+  - component: {fileID: 114195159365817324}
   m_Layer: 0
   m_Name: Narration
   m_TagString: Untagged
@@ -339,7 +358,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4544216337889830}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4216367978950622
 Transform:
@@ -352,7 +371,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4544216337889830}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4284246017126488
 Transform:
@@ -417,7 +436,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4544216337889830}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4544216337889830
 Transform:
@@ -435,6 +454,7 @@ Transform:
   - {fileID: 4756781257506826}
   - {fileID: 4319388052847184}
   - {fileID: 4179894275516232}
+  - {fileID: 4919006965841086}
   - {fileID: 4183823448105464}
   - {fileID: 4711439761473836}
   - {fileID: 4518328447098360}
@@ -454,7 +474,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4544216337889830}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4756781257506826
 Transform:
@@ -469,6 +489,19 @@ Transform:
   m_Father: {fileID: 4544216337889830}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4919006965841086
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256709560347248}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4544216337889830}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4979118328984254
 Transform:
   m_ObjectHideFlags: 1
@@ -480,7 +513,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4544216337889830}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &20210233651050784
 Camera:
@@ -877,6 +910,10 @@ MonoBehaviour:
   allNarratives:
   - {fileID: 11400000, guid: f834e78f0796b734dace008fa16e4a9b, type: 2}
   - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}
+  - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}
+  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
+  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
+  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
   selectIndex: 0
 --- !u!114 &114181491290269560
 MonoBehaviour:
@@ -892,6 +929,450 @@ MonoBehaviour:
   m_EventMask:
     serializedVersion: 2
     m_Bits: 4294967035
+--- !u!114 &114195159365817324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1292341244473218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 938db65971e2ea9428314a431c4e04f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: Narratives
+  source: {fileID: 1292341244473218}
+  groups:
+  - title: Narrative.San Pablo Intro
+    values:
+    - key: In the center of Spain
+      value: 
+      values: []
+    - key: Being a roman city
+      value: 
+      values: []
+    - key: Because of the many
+      value: 
+      values: []
+    - key: Zaragoza Vivienda
+      value: 
+      values: []
+    translated: 0
+  - title: Narrative.Baby Steps
+    values:
+    - key: So this is San Pablo
+      value: Finally, I made it to San Pablo offices. As a Shaman I'll have to make
+        this place energy efficient.
+      values: []
+    - key: Learn to swipe
+      value: Let's have a look around. Swipe the screen to move to another view.
+      values: []
+    - key: What a view
+      value: What a view! There are also other floors of this building.
+      values: []
+    - key: Energy is difficult
+      value: Energy efficiency is a difficult subject. There are so many ways to think
+        about it.
+      values: []
+    - key: CO2 emissions
+      value: One such thing is carbon dioxide, or CO2, emissions caused directly or
+        indirectly by a building.
+      values: []
+    - key: Burning
+      value: CO2 is emitted whenever we burn something.
+      values: []
+    - key: Power stations
+      value: In power stations we burn things like coal and oil to generate electricity.
+      values: []
+    - key: Burners
+      value: In houses we use burners to keep rooms warm and to heat water.
+      values: []
+    - key: Open the apocalypsometer
+      value: Let's have a look at the CO2 emissions of this building.
+      values: []
+    - key: Oh no
+      value: Oh no! We are currently emitting a lot of CO2.
+      values: []
+    - key: CO2 is gaseous
+      value: CO2 emissions are gaseous and will rise to the sky and atmosphere.
+      values: []
+    - key: Global warming
+      value: In the atmosphere CO2 functions as an isolation for the warmth emitted
+        by the sun.
+      values: []
+    - key: We need CO2
+      value: Without any CO2 in the atmosphere, our world would have been very cold.
+      values: []
+    - key: But not too much
+      value: On the other hand, more CO2 in the atmosphere will make it too hot.
+      values: []
+    - key: Decrease CO2
+      value: Therefore, we need to decrease our CO2 emissions as much as possible
+        to keep the world at a good temperature.
+      values: []
+    - key: 20% by 2020
+      value: We have until the year 2020 to decrease the emissions by 20%. This panel
+        shows us how well we are doing.
+      values: []
+    - key: Aha, the lamps
+      value: Aha, look at all these lamps that are turned on. Someone must have forgot
+        to turn them off yesterday.
+      values: []
+    - key: Find a switch
+      value: Now, where is the power switch for the lamps...
+      values: []
+    - key: Find another
+      value: Great, let's turn off the rest of the lamps on this floor.
+      values: []
+    - key: Find a third
+      value: Great, let's turn off the rest of the lamps on this floor.
+      values: []
+    - key: Turn off 3rd lamp
+      value: There we go! I'll really have to teach people around here to turn off
+        the light after themselves.
+      values: []
+    translated: 0
+  - title: Narrative.Explaining the Game
+    values:
+    - key: What can you do
+      value: Hi there children!
+      values: []
+    - key: Learn to swipe
+      value: 
+      values: []
+    - key: Energy consumption
+      value: 
+      values: []
+    - key: Let's open the Apocalysometer
+      value: 
+      values: []
+    - key: Explain CO2
+      value: 
+      values: []
+    - key: Open Energy Panel
+      value: 
+      values: []
+    - key: Explain Energy Panel
+      value: 
+      values: []
+    - key: Turn off 1st lamp
+      value: 
+      values: []
+    - key: Turn off 2nd lamp
+      value: 
+      values: []
+    - key: Turn off 3rd lamp
+      value: 
+      values: []
+    translated: 0
+  - title: Narrative.Javier in the Dark
+    values:
+    - key: Yoghurt was selected
+      value: 
+      values: []
+    - key: Yoghurt was selected
+      value: 
+      values: []
+    translated: 0
+  - title: Narrative.Yoghurts Coffee Cravings
+    values:
+    - key: Yoghurt was selected
+      value: 
+      values: []
+    - key: What's the problem
+      value: 
+      values: []
+    - key: Coffee is always cold
+      value: 
+      values: []
+    - key: Recommed thermal jug
+      value: 
+      values: []
+    - key: Is that some kind of bird
+      value: 
+      values: []
+    - key: I'll have a look
+      value: 
+      values: []
+    translated: 0
+  - title: Narrative.Bobs Restroom Request
+    values:
+    - key: Bob was selected
+      value: 
+      values: []
+    - key: Yoghurt was selected
+      value: 
+      values: []
+    translated: 0
+--- !u!114 &114290566845683782
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1048631608580628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecbda54f80f34e247acabfb755cc6254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  envelope:
+  - {fileID: 11400000, guid: c11997c846e3f3a42bcffb2da7f2fef1, type: 2}
+  - {fileID: 11400000, guid: 98ec9a93a2f147347ad8c767a0a03fdf, type: 2}
+  - {fileID: 11400000, guid: 7c0269c1f0770be48b134f13827e5452, type: 2}
+  - {fileID: 11400000, guid: dd9a901add3f0c7499dfcbd9aa59f821, type: 2}
+  - {fileID: 11400000, guid: e29877fb5190f784f9c8fd7cef148565, type: 2}
+  - {fileID: 11400000, guid: 157af72cdd5c8584a9ba6cf6fc830d7f, type: 2}
+  - {fileID: 11400000, guid: 11661d5954845cc43a241b3ac4846bac, type: 2}
+  - {fileID: 11400000, guid: ed1647d1d8485594f8479fd71245a3d0, type: 2}
+  - {fileID: 11400000, guid: 89eda550ef63cc64fbe347830f9aa89d, type: 2}
+  - {fileID: 11400000, guid: e7353c617c85fea47a734406b4bd0df3, type: 2}
+  - {fileID: 11400000, guid: f7ca5d3a9bb6e0145b3b4cc3d4a1d45c, type: 2}
+  - {fileID: 11400000, guid: c4c04d571f68ada4b845c69990f6993b, type: 2}
+  - {fileID: 11400000, guid: ef29880ff9fd6a4459f1ee6b9f7200c6, type: 2}
+  - {fileID: 11400000, guid: af9e058c899db8b448a76ec8684d64e0, type: 2}
+  - {fileID: 11400000, guid: 6278811edfc5a564bad756ba6512716b, type: 2}
+  - {fileID: 11400000, guid: c4af60b41a0d7e447a251f3067159ea0, type: 2}
+  - {fileID: 11400000, guid: c5dd869029b19a54bb50a198f54bcf4d, type: 2}
+  - {fileID: 11400000, guid: d955abf316e9b8142a0268d009ff913c, type: 2}
+  - {fileID: 11400000, guid: eb4d841a1c7d1554aac4d776e2be9559, type: 2}
+  - {fileID: 11400000, guid: a0ceca5e3c564a34093396b7a841f0c1, type: 2}
+  - {fileID: 11400000, guid: e7429b4b247bb2f4d873bd186ba39fc8, type: 2}
+  - {fileID: 11400000, guid: 5c84783dc12007247939ac47dcd40d7f, type: 2}
+  - {fileID: 11400000, guid: 22d84c90c14128041bc5adc4fa1b591a, type: 2}
+  - {fileID: 11400000, guid: d059a7ee1bc56ca47a9ca7e52ad22867, type: 2}
+  - {fileID: 11400000, guid: 8537495e00a89d546bd2eb76bfd8c8df, type: 2}
+  - {fileID: 11400000, guid: 53c78c2c5dafa72428902d7ef2fc625d, type: 2}
+  - {fileID: 11400000, guid: 0f84aabfc9d09ae4e9aeb165cd779feb, type: 2}
+  - {fileID: 11400000, guid: 271f0f104fbf62942bfc21e70d87bee0, type: 2}
+  - {fileID: 11400000, guid: 918f92121aeb75c4ba866d2587838207, type: 2}
+  - {fileID: 11400000, guid: a5d2e4c8725ae994fb1ee021f7b393aa, type: 2}
+  - {fileID: 11400000, guid: 9a9f4aa8afc7bc645b71a4fcb810d400, type: 2}
+  - {fileID: 11400000, guid: 0726d9b980fab5842820b00a4b0db5ec, type: 2}
+  - {fileID: 11400000, guid: ffff64af2a9ad524cb25b9827d7ce0ab, type: 2}
+  - {fileID: 11400000, guid: d97c1acba285106489c3afc667e36fbd, type: 2}
+  - {fileID: 11400000, guid: bb6d63c32caffae4b813e11f080074a6, type: 2}
+  - {fileID: 11400000, guid: 8d4728e611cba8a4194505df15120c3c, type: 2}
+  - {fileID: 11400000, guid: 34877cd4cb2e25943940bbc201de2466, type: 2}
+  - {fileID: 11400000, guid: 39c871065dbada54d9c7ab6843bd93aa, type: 2}
+  - {fileID: 11400000, guid: 0701d710ab7f90142ae2b05f00c96570, type: 2}
+  - {fileID: 11400000, guid: 9e63ad1c88afa9441abbe103b4de8080, type: 2}
+  - {fileID: 11400000, guid: 43ea8300bc54a4240a3c8ba85ab9d7a4, type: 2}
+  - {fileID: 11400000, guid: 1d3e0f092365454488c9383ac024a3de, type: 2}
+  - {fileID: 11400000, guid: 4c572fe901d97624b91da3a075d37a27, type: 2}
+  - {fileID: 11400000, guid: 4ac545a8366b39847af6011b06593194, type: 2}
+  - {fileID: 11400000, guid: 2e345548e31bfce469410d07bf82065f, type: 2}
+  - {fileID: 11400000, guid: 7cb722fe9d2db5d4ebf3a9a7aafcc3f7, type: 2}
+  - {fileID: 11400000, guid: 45fa1718a87d07a48b6a7b3adf400181, type: 2}
+  - {fileID: 11400000, guid: 4c02a6ae0cbb75d4289c1669d310282f, type: 2}
+  - {fileID: 11400000, guid: d44b7311fb77f9246bf06ff61ec0d3fc, type: 2}
+  - {fileID: 11400000, guid: 905eb438d63064e41824c73aca640cc4, type: 2}
+  - {fileID: 11400000, guid: 16a94e1ee91ea04478a4df1fc8e442db, type: 2}
+  - {fileID: 11400000, guid: d9da6f23eef082747ab33ad6ee1c8dfd, type: 2}
+  - {fileID: 11400000, guid: a1eb15f8ebab40740bca0f45a2f10d99, type: 2}
+  - {fileID: 11400000, guid: e33855549a17ca342b1ebce17ae7b7b5, type: 2}
+  - {fileID: 11400000, guid: dc353f6a9efd56d43a4e72d50b6d71b8, type: 2}
+  - {fileID: 11400000, guid: c647f142176a6a84b964df700ddb901f, type: 2}
+  - {fileID: 11400000, guid: a210b9cd2bc3c9b4c84244a9c3808849, type: 2}
+  - {fileID: 11400000, guid: 4f1858b3ccc51e4438d896d759b7b1cf, type: 2}
+  - {fileID: 11400000, guid: 63002a8b520796e4baa2cc00f3f8245f, type: 2}
+  - {fileID: 11400000, guid: 2ab342d4a2cad4744950058a75d363f4, type: 2}
+  - {fileID: 11400000, guid: b9d7cae209f91164db3c42d4178d0de5, type: 2}
+  - {fileID: 11400000, guid: f8ae0f5189c36b5468a8241a50d53ace, type: 2}
+  - {fileID: 11400000, guid: 1813ce08895103d45bcdba22078e89d1, type: 2}
+  - {fileID: 11400000, guid: e11b69c31959dfe4caf20a9c544b6f5a, type: 2}
+  - {fileID: 11400000, guid: 3d519b85776e6c24498074a7fa51778f, type: 2}
+  - {fileID: 11400000, guid: b8e484b7b84b91246b9c4a321e4b2cdf, type: 2}
+  - {fileID: 11400000, guid: 796020d175cfa154abf81a899c958ce7, type: 2}
+  HVAC:
+  - {fileID: 11400000, guid: 5caae2cc63aa1644d8934aade0f2e66d, type: 2}
+  - {fileID: 11400000, guid: 88c778d3c39d38a4998d3215a8ee14fc, type: 2}
+  - {fileID: 11400000, guid: 9253a994d7a74c54099ba0ce9c0c7985, type: 2}
+  - {fileID: 11400000, guid: ca1174cc64730cb46bb3c637a477677f, type: 2}
+  - {fileID: 11400000, guid: 30051c3fed68e0a458dfd7cd0541c028, type: 2}
+  - {fileID: 11400000, guid: 645daa8fe601d2b489a10e187da4fffb, type: 2}
+  - {fileID: 11400000, guid: 4535ddc5f4c14bd448ff98f0d9574d92, type: 2}
+  - {fileID: 11400000, guid: 525d91681208c174d8607f14a59a39ef, type: 2}
+  - {fileID: 11400000, guid: f0b23b4f31d84f94ab40e807fa6e4194, type: 2}
+  - {fileID: 11400000, guid: 27ab4217a1ae14a4eada09dae7fd2800, type: 2}
+  - {fileID: 11400000, guid: b2bd272d13e75c644856707e5db112f9, type: 2}
+  - {fileID: 11400000, guid: 85f94bc406307a041ba765ed2aa8a8dd, type: 2}
+  - {fileID: 11400000, guid: 4b52c144300a78441a043836ba8448a2, type: 2}
+  - {fileID: 11400000, guid: 912a97b5524d76c4292d7bf78e0c558d, type: 2}
+  - {fileID: 11400000, guid: 44004f09b5cb14f48af09c2728765ec3, type: 2}
+  - {fileID: 11400000, guid: 29c94f4b0594e804aa66e81fb2a8bcf2, type: 2}
+  - {fileID: 11400000, guid: daa50ecfe928a064690c7ddf7ff55d47, type: 2}
+  - {fileID: 11400000, guid: 1fcbed79b289ac140925465cf03fd190, type: 2}
+  - {fileID: 11400000, guid: 48b7618a070840f408c9f0ded7855ec4, type: 2}
+  - {fileID: 11400000, guid: 3cf255232f7f88c429fd7367b3a5529f, type: 2}
+  - {fileID: 11400000, guid: b69d31964c05685488cc0500cbb0028b, type: 2}
+  - {fileID: 11400000, guid: 353c27d4904aedb4b9dd831d4580436b, type: 2}
+  - {fileID: 11400000, guid: 31fe0721f4a3c9e4fb55db5dbb9d07ec, type: 2}
+  - {fileID: 11400000, guid: 51326189ad5cec94fbf9d75f98c15886, type: 2}
+  - {fileID: 11400000, guid: aebbc587e671cde45a3e2ab290591f42, type: 2}
+  - {fileID: 11400000, guid: af8a9dd2da7a189468446777cb23dc4e, type: 2}
+  - {fileID: 11400000, guid: 2aa6cbe587767134bbecca09d2bb1554, type: 2}
+  - {fileID: 11400000, guid: 8ce0469f9b7690049ad1239b9868e93e, type: 2}
+  - {fileID: 11400000, guid: 5dd32d69998eb8d408eb005276e45c2d, type: 2}
+  - {fileID: 11400000, guid: 9bd5b6de28aa9144bbb7e1dc35998091, type: 2}
+  - {fileID: 11400000, guid: 84bded0eeba3a6648b6939ea28606678, type: 2}
+  - {fileID: 11400000, guid: d1e5fd4ceb57072409a29dbdf8186d44, type: 2}
+  - {fileID: 11400000, guid: 08c59b888fb2e0d45b38e5c6dd3791f7, type: 2}
+  - {fileID: 11400000, guid: c16532012c501b94aa0f7f07c7718fed, type: 2}
+  - {fileID: 11400000, guid: 7261629c60d724c4893602d009b5e779, type: 2}
+  - {fileID: 11400000, guid: a49e4f22191be4140bc89d7cda5b9f31, type: 2}
+  - {fileID: 11400000, guid: c238c5b332755a94eb7c619246f8daf6, type: 2}
+  - {fileID: 11400000, guid: 1fbace4ddfe787b408bb3c7e5598f5be, type: 2}
+  - {fileID: 11400000, guid: 1b3e25506641a1942bace117ec1ea04b, type: 2}
+  - {fileID: 11400000, guid: 7ad3e4fc6e6694f4cafc16dd156b90e6, type: 2}
+  - {fileID: 11400000, guid: 34673b58ca8443849a7708aa395adbed, type: 2}
+  - {fileID: 11400000, guid: 1516509dcb953134f99caafc4b73eccd, type: 2}
+  - {fileID: 11400000, guid: c0e99bbc352ec4645a9f9673f77417e0, type: 2}
+  - {fileID: 11400000, guid: c3c5b4d8f64ffba4cbd5ca0d1fe313d2, type: 2}
+  - {fileID: 11400000, guid: 7ce30bebbc2fdb044bfa8988724221ea, type: 2}
+  - {fileID: 11400000, guid: e4cd8738dd58f7640a7073b130a99e9d, type: 2}
+  - {fileID: 11400000, guid: b31c720435c728840a13bbc57dfaea02, type: 2}
+  - {fileID: 11400000, guid: a2bf67802880bd94887094266c783995, type: 2}
+  - {fileID: 11400000, guid: 0823c3b1951b1ec4aaaa8e8e9f563245, type: 2}
+  - {fileID: 11400000, guid: 62845e380882e7a4b94b95ab61b4a74d, type: 2}
+  - {fileID: 11400000, guid: 0ceba27e4e7d4c74fb618db44ca9ff9b, type: 2}
+  - {fileID: 11400000, guid: a9de298babc20654da35a7bd22500194, type: 2}
+  - {fileID: 11400000, guid: 40e2c67272fb56f4db32802af3c796ce, type: 2}
+  - {fileID: 11400000, guid: 969dcff2fadcfce43aafdd8de9c3bd2e, type: 2}
+  DHW:
+  - {fileID: 11400000, guid: 269df4887543f9b4fa7f9ed5ef3cb651, type: 2}
+  - {fileID: 11400000, guid: 4ef719f015c511d468b414cb95aa4cb5, type: 2}
+  - {fileID: 11400000, guid: 92f72fda0f765a94b89065ac239f0282, type: 2}
+  - {fileID: 11400000, guid: b223409b65e6509439eff465c37c43a7, type: 2}
+  - {fileID: 11400000, guid: 594ed8bdb30e06e45892749376871158, type: 2}
+  - {fileID: 11400000, guid: 3dc394a56448155499aa1ad9a51216da, type: 2}
+  - {fileID: 11400000, guid: 560b06651ea93f844a3ec151f7a46108, type: 2}
+  - {fileID: 11400000, guid: 6daa54f7f2d100b44bd0f62412b35d3e, type: 2}
+  - {fileID: 11400000, guid: 0efd370056e24cc4eadfb9bc640cd1a1, type: 2}
+  - {fileID: 11400000, guid: da2516e42258b2c4c92e17cbb499076c, type: 2}
+  - {fileID: 11400000, guid: 103c3839ab7c44449b16a0a3fb969868, type: 2}
+  - {fileID: 11400000, guid: db0ecec64e76a3242956ba48881a2d1b, type: 2}
+  - {fileID: 11400000, guid: 8580645c6795a5c4d816b5b2819f6af6, type: 2}
+  - {fileID: 11400000, guid: 11ebb51179c61fd44ab8d7a8cab3b11d, type: 2}
+  - {fileID: 11400000, guid: dbf3eb33ccfa29e4484dfebfb37b276f, type: 2}
+  - {fileID: 11400000, guid: 956228e3cba19594380c3a41ed3cbd28, type: 2}
+  - {fileID: 11400000, guid: 41e482999067e7840b888c1b8b334d52, type: 2}
+  - {fileID: 11400000, guid: c3f4bb46c67821d48bf83f7fff5d67ca, type: 2}
+  - {fileID: 11400000, guid: 13cb4776c56c8d042be8155641bc0f13, type: 2}
+  - {fileID: 11400000, guid: c42b6cc4095aa7044956243b310054d1, type: 2}
+  - {fileID: 11400000, guid: ebcc7648a0121e54fb3af9868c923780, type: 2}
+  - {fileID: 11400000, guid: 6eec38869ddb9dc4799b4eb87829332d, type: 2}
+  - {fileID: 11400000, guid: db174980bb1c96d4d9e71518f0c738a6, type: 2}
+  - {fileID: 11400000, guid: 3861cb2471ba7334a85e2a3ff0841154, type: 2}
+  - {fileID: 11400000, guid: 12e501fe5c456a742998b400ccfc8268, type: 2}
+  lighting:
+  - {fileID: 11400000, guid: 83ba968ba8ebce14082eea0fd23139b6, type: 2}
+  - {fileID: 11400000, guid: 65031f56b41b8ab41bc6c0007b9f79ae, type: 2}
+  - {fileID: 11400000, guid: 813ff6e685aa0f04d93be2c4af65cf47, type: 2}
+  - {fileID: 11400000, guid: 6c3023898f08e4a40ac847031f264c29, type: 2}
+  - {fileID: 11400000, guid: d9ec0d0275307184c8a284a17118633d, type: 2}
+  - {fileID: 11400000, guid: 3ae62d9561f602a4f8a64646c3e53f7e, type: 2}
+  - {fileID: 11400000, guid: 4583bb2d180cf6e4f88cf03ea53039e3, type: 2}
+  - {fileID: 11400000, guid: 283d11253342e0c4d99f9363973e9d02, type: 2}
+  - {fileID: 11400000, guid: bbd953e285a0ae548a8765c24b04f33f, type: 2}
+  - {fileID: 11400000, guid: 60751beec773a2b49ba3cd6b2e2bf8ec, type: 2}
+  - {fileID: 11400000, guid: fa1f48271091a4144bc325673476a9a7, type: 2}
+  - {fileID: 11400000, guid: 71b6e167b658140498129434d4dec8a4, type: 2}
+  - {fileID: 11400000, guid: 6a70863ec66544e42bb7dd47e76d3828, type: 2}
+  - {fileID: 11400000, guid: 58b3952488f37a248b185bf85e870084, type: 2}
+  - {fileID: 11400000, guid: 91ed9e4435978c04080fd7ac8d12416d, type: 2}
+  - {fileID: 11400000, guid: ef5cf2e45ac80c841990148fd1035f12, type: 2}
+  - {fileID: 11400000, guid: cf51541bf2c385342bc1717e16646417, type: 2}
+  - {fileID: 11400000, guid: 9c302dd600754b34086efa100162db32, type: 2}
+  - {fileID: 11400000, guid: 25b79886a538d0742b9dbe693fc66752, type: 2}
+  - {fileID: 11400000, guid: f131111106685754c8879a3d4ba1c01d, type: 2}
+  - {fileID: 11400000, guid: 4cfdc1467a7df1747a863145922fd74e, type: 2}
+  - {fileID: 11400000, guid: 632634fecb3d9f9408af4d9e35f6752b, type: 2}
+  - {fileID: 11400000, guid: e7968388bafcc8c4d9dbc5d6e27c410c, type: 2}
+  - {fileID: 11400000, guid: a83faccd471a1c24f8b0ab832ff7732d, type: 2}
+  - {fileID: 11400000, guid: 4fec2e544b7a2a841aaea047f648e628, type: 2}
+  - {fileID: 11400000, guid: 6525cb1fae92fe44cbaaab665c0ceff4, type: 2}
+  electricDevices:
+  - {fileID: 11400000, guid: 3d8c511234ae95d42bf345a61bb64f09, type: 2}
+  - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
+  - {fileID: 11400000, guid: 0292db39ee412524ca0cb9c9bddbe372, type: 2}
+  - {fileID: 11400000, guid: 838921d9fdf24a74bb83332e190f7035, type: 2}
+  - {fileID: 11400000, guid: cafe98329e043454aa8d6efe19df2c9f, type: 2}
+  - {fileID: 11400000, guid: b7f216431a1d91c46807cf2206147c0a, type: 2}
+  - {fileID: 11400000, guid: b4ed401a55d02af43832a7a19fe49b95, type: 2}
+  - {fileID: 11400000, guid: ed0c5b00c1d52594286fdf9c4cfcd4ec, type: 2}
+  - {fileID: 11400000, guid: 9a4720e8127a4cf47831edb273bca403, type: 2}
+  - {fileID: 11400000, guid: 29591f9bc8bd8d14aa8f63ee05dd8f30, type: 2}
+  - {fileID: 11400000, guid: ce202b5a037184c40a2b1298989d1335, type: 2}
+  - {fileID: 11400000, guid: dae856e4e034b144c8d88dbbdbf05b55, type: 2}
+  - {fileID: 11400000, guid: 23b35dc57bca03647845d9a866f8e2a6, type: 2}
+  - {fileID: 11400000, guid: 23f25107a4ae7ab4cbb8ec1d9839987d, type: 2}
+  - {fileID: 11400000, guid: fc70eaa6d5beef9469e7bff2e10ca402, type: 2}
+  - {fileID: 11400000, guid: 94e4a0249f520bb45be25f4a44698902, type: 2}
+  - {fileID: 11400000, guid: 3e99b0fbb776c1348b4cd18912e00939, type: 2}
+  - {fileID: 11400000, guid: 39671560b7cfe544db87f1cfe2f4939c, type: 2}
+  - {fileID: 11400000, guid: a7de8266286286549b277a66828073d8, type: 2}
+  - {fileID: 11400000, guid: 4d0b86e39ea351b479b698577fedf878, type: 2}
+  - {fileID: 11400000, guid: 8014eb22c7e19c442b0e6e1e71ac7ccb, type: 2}
+  - {fileID: 11400000, guid: 502dbf5261eaa4f4aafe4c630eb29a33, type: 2}
+  - {fileID: 11400000, guid: ba5f03bc36ce75341ae833539c8b9e72, type: 2}
+  - {fileID: 11400000, guid: 1563277ca0ae7444e8c04e5a1eda860e, type: 2}
+  - {fileID: 11400000, guid: f6e10af4c7bbec349ab2827d3bf8d1b2, type: 2}
+  - {fileID: 11400000, guid: a8a18671398e5fc41b35b1859e1cb582, type: 2}
+  - {fileID: 11400000, guid: b82bbd70c90017242aecaa2ea2a5b74c, type: 2}
+  - {fileID: 11400000, guid: 51af2e78cf3bf1c42956845a9024fcd4, type: 2}
+  - {fileID: 11400000, guid: 994ae853b7d3b7645a0ce6326dff2ba4, type: 2}
+  - {fileID: 11400000, guid: 00f05500e762d5548b41f1d015deb85f, type: 2}
+  - {fileID: 11400000, guid: 09d653da42b362745882a757f924ff7c, type: 2}
+  - {fileID: 11400000, guid: d1422768836b9c3469d086464b9cea18, type: 2}
+  - {fileID: 11400000, guid: 65e8ed974f6a8fe4fb8a18e7bf02c4e2, type: 2}
+  - {fileID: 11400000, guid: 6487610bb4d9f134c8e9bb4a34bc2ad1, type: 2}
+  - {fileID: 11400000, guid: 6e0e5ed474f62564898daa3f91dbf3cf, type: 2}
+  - {fileID: 11400000, guid: 0b66a1822ff59f94b9fabf1809d34c85, type: 2}
+  - {fileID: 11400000, guid: 34cb2822e9ba5044fb4ee24c71e9d982, type: 2}
+  - {fileID: 11400000, guid: 36d772a4b55cebb4ab042fac0cd4ec6b, type: 2}
+  - {fileID: 11400000, guid: 37b25bce758a96248b2ef5ca5e5ae917, type: 2}
+  - {fileID: 11400000, guid: b12ef5d162b18e5429b4fbd290675e85, type: 2}
+  - {fileID: 11400000, guid: 86566b4a54bfb344fa3f72b364cc7295, type: 2}
+  - {fileID: 11400000, guid: 354e77598cc6173459601fe9d4cad856, type: 2}
+  - {fileID: 11400000, guid: 5c77ef3802859d940bfae237d2098280, type: 2}
+  - {fileID: 11400000, guid: 6e7fc0caa7aabf74d8092782ed3fcebc, type: 2}
+  - {fileID: 11400000, guid: 41aa575fc48a24a46bde149b6004d35e, type: 2}
+  - {fileID: 11400000, guid: 291610d7ceda8b446820cb4d8b7c0d10, type: 2}
+  - {fileID: 11400000, guid: 7fd61deca41288a41bb624ec8097e8fe, type: 2}
+  - {fileID: 11400000, guid: 8b10571aab15e894abc2658b085ded4a, type: 2}
+  - {fileID: 11400000, guid: ddbabf9064ba80549b7aad45fd8978b6, type: 2}
+  - {fileID: 11400000, guid: 357a63715b14e2c478779cbe49f74cea, type: 2}
+  - {fileID: 11400000, guid: 7b0c528d33544e64d9fe71a2e1467ed9, type: 2}
+  - {fileID: 11400000, guid: e53b34a3cb87fa640a0026847dfff52a, type: 2}
+  - {fileID: 11400000, guid: ea064106e26a74b4d9b5bfd6c2610052, type: 2}
+  other:
+  - {fileID: 11400000, guid: 7593cd941770c714da0ac80a6dcf08f0, type: 2}
+  - {fileID: 11400000, guid: e1458af8a1fa6a6479c7b19cab5c53cf, type: 2}
+  - {fileID: 11400000, guid: c3529e7c8f95fab4886d47a06576bb75, type: 2}
+  - {fileID: 11400000, guid: 92ec652ca632e9444b71f047e26f2b7f, type: 2}
+  - {fileID: 11400000, guid: 965f5ad2c7d4dfb49b6f5456a24c672a, type: 2}
+  - {fileID: 11400000, guid: f0c8938db8d60224fb03dd13251c0887, type: 2}
+  - {fileID: 11400000, guid: 26476ce342642b948b955c95338dbac5, type: 2}
+  - {fileID: 11400000, guid: 3888d531930d68040bc4628e6f7b65be, type: 2}
+  - {fileID: 11400000, guid: 2fe3623437160b841b412c2e5d7a7499, type: 2}
+  - {fileID: 11400000, guid: aa1b4d3d7c63ac04ba6b0e469163d472, type: 2}
+  - {fileID: 11400000, guid: 0a39826e01e94ca4eaae55c5013e1b94, type: 2}
+  - {fileID: 11400000, guid: db3e520356ff577408c856af3f59ba99, type: 2}
+  - {fileID: 11400000, guid: 7455f2ec9db9ace449a63194c7008214, type: 2}
+  - {fileID: 11400000, guid: d0b52ab44a0bfa143852d5c3b178c6ca, type: 2}
+  - {fileID: 11400000, guid: 4958ab94cbff1b9499ea4007f774ce28, type: 2}
+  - {fileID: 11400000, guid: 6ed45d53f39bfbb46bf20ed58d228cc9, type: 2}
+  - {fileID: 11400000, guid: 0facea46293836b499f14bd5dc548221, type: 2}
+  - {fileID: 11400000, guid: cd7b1c309746d814a9fd9a10a0215321, type: 2}
+  - {fileID: 11400000, guid: 62dd379d89d42114ab6d0ac01812ac05, type: 2}
+  - {fileID: 11400000, guid: 415871cc94fe7c24082e0b4500fcb201, type: 2}
+  - {fileID: 11400000, guid: 586f4a3986d8b8c4d9a933a7d9378abd, type: 2}
+  - {fileID: 11400000, guid: c68a9bdcdbc6a2b4eba00f81bde44a8d, type: 2}
+  - {fileID: 11400000, guid: df5ab862966ca7f4b8cb49dd00da1413, type: 2}
+  - {fileID: 11400000, guid: 0d0b047f7adc931408d5568b07c3659e, type: 2}
+  - {fileID: 11400000, guid: 742c216828e5f374589728bd89b27c18, type: 2}
+  special:
+  - {fileID: 11400000, guid: 757237e10395d394ba0f110a1f090a3b, type: 2}
 --- !u!114 &114355430836853836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1024,6 +1505,21 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
+--- !u!114 &114494944923467888
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256709560347248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da45375e0c2aa7e4b950557705daa455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _macAddress: 
+  _questions: []
+  _surveyCompleted: 0
+  playTime: 0
 --- !u!114 &114568694404567128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1221,14 +1717,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97d61e1d21665ee4ba9d4e693cc7776b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   languages:
-  - {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
+  - {fileID: 11400000, guid: 85fb0329f465b5141b3108bfc09e2de0, type: 2}
   - {fileID: 11400000, guid: 857ab495458b85348a390fe58e86687d, type: 2}
   - {fileID: 11400000, guid: e7af61774e1e01843a890e3d3a23a4bd, type: 2}
   - {fileID: 11400000, guid: ba7747d6d75886c4fb36566a95919e72, type: 2}
   - {fileID: 11400000, guid: cf92e20d4e54c204a84d6802116a11a9, type: 2}
   curLanguage: {fileID: 0}
-  template: {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
+  template: {fileID: 11400000, guid: 85fb0329f465b5141b3108bfc09e2de0, type: 2}
   APIKey: AIzaSyAo04V4xlUTXCADRppahd2tf_kD1n1-_jo
 --- !u!114 &114713591135269798
 MonoBehaviour:
@@ -1270,13 +1767,1472 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bfb1c9fbaa262419180bc7292666b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overrideSlot: 0
+  overrideSlot: 1
   saveSlot: 0
   debug: 0
   fileName: tribeSave.gd
   defaultContent: '{"San Pablo":"True", "IES Azucarera":"False", "CIRCE HQ":"False",
     "Emmeline de Pankhurst":"False", "Universidad Ouezygin":"False", "lastSlot":"-1",
     "slots":[{}, {}, {}]}'
+--- !u!114 &114784165226372590
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1048631608580628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 938db65971e2ea9428314a431c4e04f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 
+  source: {fileID: 1048631608580628}
+  groups:
+  - title: EEM.Envelope
+    values:
+    - key: EL1
+      value: Add external insulation
+      values:
+      - Add external insulation
+      - Adding or increasing external insulation in walls
+    - key: EL2
+      value: Add internal insulation
+      values:
+      - Add internal insulation
+      - Adding or increasing internal insulation in walls
+    - key: EL3
+      value: Inject insulation in air chambers
+      values:
+      - Inject insulation in air chambers
+      - Adding insulation in air chambers of walls through inyection
+    - key: EL4
+      value: "Install ventilated fa\xE7ade"
+      values:
+      - "Install ventilated fa\xE7ade"
+      - "Installation of a ventilated fa\xE7ade"
+    - key: EL5
+      value: Add external insulation
+      values:
+      - Add external insulation
+      - Adding or increasing external insulation in roofs
+    - key: EL6
+      value: Add internal insulation
+      values:
+      - Add internal insulation
+      - Adding or increasing internal insulation in roofs
+    - key: EL7
+      value: Add external insulation
+      values:
+      - Add external insulation
+      - Adding or increasing external insulation in floors
+    - key: EL8
+      value: Add internal insulation
+      values:
+      - Add internal insulation
+      - Adding or increasing internal insulation in floors
+    - key: EL9
+      value: Install double glazing with aluminium
+      values:
+      - Install double glazing with aluminium
+      - Installation of efficient windows (double glazing with aluminium frames with
+        thermal break)
+    - key: EL10
+      value: Install double glazing with wood
+      values:
+      - Install double glazing with wood
+      - Installation of efficient windows (double glazing with wood frames)
+    - key: EL11
+      value: Install double glazing with PVC
+      values:
+      - Install double glazing with PVC
+      - Installation of efficient windows (double glazing with PVC frames)
+    - key: EL12
+      value: Install low-E double glazing with aluminium
+      values:
+      - Install low-E double glazing with aluminium
+      - Installation of efficient windows (low-E double glazing with aluminium frames
+        with thermal break)
+    - key: EL13
+      value: Install low-E double glazing with wood
+      values:
+      - Install low-E double glazing with wood
+      - Installation of efficient windows (low-E double glazing with wood frames)
+    - key: EL14
+      value: Install low-E double glazing with PVC
+      values:
+      - Install low-E double glazing with PVC
+      - Installation of efficient windows (low-E double glazing with PVC frames)
+    - key: EL15
+      value: Install solar control double glazing with aluminium
+      values:
+      - Install solar control double glazing with aluminium
+      - Installation of efficient windows (solar control double glazing with aluminium
+        frames with thermal break)
+    - key: EL16
+      value: Install solar control double glazing with wood
+      values:
+      - Install solar control double glazing with wood
+      - Installation of efficient windows (solar control double glazing with wood
+        frames)
+    - key: EL17
+      value: Install solar control double glazing with PVC
+      values:
+      - Install solar control double glazing with PVC
+      - Installation of efficient windows (solar control double glazing with PVC frames)
+    - key: EL18
+      value: Install triple glazing with aluminium
+      values:
+      - Install triple glazing with aluminium
+      - Installation of efficient windows (triple glazing with aluminium frames with
+        thermal break)
+    - key: EL19
+      value: Install triple glazing with wood
+      values:
+      - Install triple glazing with wood
+      - Installation of efficient windows (triple glazing with wood frames)
+    - key: EL20
+      value: Install triple glazing with PVC
+      values:
+      - Install triple glazing with PVC
+      - Installation of efficient windows (triple glazing with PVC frames)
+    - key: EL21
+      value: Install double windows
+      values:
+      - Install double windows
+      - Installation of double windows
+    - key: EL22
+      value: Convert into gallery
+      values:
+      - Convert into gallery
+      - Convert balconies into galleries
+    - key: EL23
+      value: Build a greenhouse
+      values:
+      - Build a greenhouse
+      - Build a greenhouse
+    - key: EL24
+      value: 'Install green roof '
+      values:
+      - 'Install green roof '
+      - 'Installation of a green roof '
+    - key: EL25
+      value: Upgrade exposed surfaces
+      values:
+      - Upgrade exposed surfaces
+      - Use of appropiate materials for increasing the thermal inertia of the exposed
+        surfaces to radiation
+    - key: EL26
+      value: Improve insulation
+      values:
+      - Improve insulation
+      - Improve insulation in thermal bridge areas
+    - key: EL27
+      value: Install false ceiling
+      values:
+      - Install false ceiling
+      - Installation of false ceiling to reduce internal height
+    - key: EL28
+      value: Apply reflectance coating
+      values:
+      - Apply reflectance coating
+      - Application of an appropriate solar reflectance coating for the roof
+    - key: EL29
+      value: Apply reflectance coating
+      values:
+      - Apply reflectance coating
+      - Application of an appropriate solar reflectance coating for the external walls
+    - key: EL30
+      value: Apply reflectance coating
+      values:
+      - Apply reflectance coating
+      - Application of an appropriate solar reflectance coating for the internal walls
+    - key: EL31
+      value: Increase transparent envelope
+      values:
+      - Increase transparent envelope
+      - Improvement of the percentage of transparent envelope
+    - key: EL32
+      value: Substitute transparent for opaque envelope
+      values:
+      - Substitute transparent for opaque envelope
+      - Substitution of transparent for opaque insulated envelope
+    - key: EL33
+      value: Install solar tubes
+      values:
+      - Install solar tubes
+      - Installation of solar tubes
+    - key: EL34
+      value: Build trombe wall
+      values:
+      - Build trombe wall
+      - Build a trombe wall
+    - key: EL35
+      value: Install basement windows
+      values:
+      - Install basement windows
+      - Installation of basement windows
+    - key: EL36
+      value: Install revolving doors
+      values:
+      - Install revolving doors
+      - Installation of revolving doors
+    - key: EL37
+      value: Create double door entrance
+      values:
+      - Create double door entrance
+      - Create entrance vestibule with two doors
+    - key: EL38
+      value: Install air-barrier
+      values:
+      - Install air-barrier
+      - Installation of an air-barrier system
+    - key: EL39
+      value: Add electrochromic film
+      values:
+      - Add electrochromic film
+      - Adding a electrochromic window film
+    - key: EL40
+      value: Install louvres
+      values:
+      - Install louvres
+      - Installation of fixed external systems for solar shading (louvres)
+    - key: EL41
+      value: Install overhangs
+      values:
+      - Install overhangs
+      - Installation of fixed external systems for solar shading (overhangs)
+    - key: EL42
+      value: Install mobile louvres
+      values:
+      - Install mobile louvres
+      - Installation of mobile external systems for solar shading (louvres)
+    - key: EL43
+      value: Installation mobile shutters
+      values:
+      - Installation mobile shutters
+      - Installation of mobile external systems for solar shading (shutters)
+    - key: EL44
+      value: Install flexible awnings and blinds
+      values:
+      - Install flexible awnings and blinds
+      - Installation of flexible external systems for solar shading (awnings and blinds)
+    - key: EL45
+      value: Install curtains and blinds
+      values:
+      - Install curtains and blinds
+      - Installation of internal solar shading (curtains and blinds)
+    - key: EL46
+      value: Install solar shelf
+      values:
+      - Install solar shelf
+      - Installation of solar shelf
+    - key: EL47
+      value: Use argon in chambers
+      values:
+      - Use argon in chambers
+      - Use of argon in chambers of double and triple glazing
+    - key: EL48
+      value: Automate external devices
+      values:
+      - Automate external devices
+      - Automatic control of  mobile and flexible external devices
+    - key: EL49
+      value: Use PCM
+      values:
+      - Use PCM
+      - Use of Phase Change Materials (PCMs)
+    - key: EL50
+      value: Install green wall
+      values:
+      - Install green wall
+      - Installation of a green wall
+    - key: EL51
+      value: Convert into atrium
+      values:
+      - Convert into atrium
+      - Convert courtyards into atriums
+    - key: EL52
+      value: Convert to electric
+      values:
+      - Convert to electric
+      - Convert traditional into electric blinds to avoid thermal bridges
+    - key: EL53
+      value: Install transpired air collectors
+      values:
+      - Install transpired air collectors
+      - Installation of transpired air collectors for ventilation preheating
+    - key: ES1
+      value: Reduce air infiltrations
+      values:
+      - Reduce air infiltrations
+      - 'Use silicone, putty or draught excluder to reduce air infiltrations through
+        windows and doors '
+    - key: ES2
+      value: Seal Air Leaks
+      values:
+      - Seal Air Leaks
+      - Seal air leaks located in all cavities presented in the building
+    - key: ES3
+      value: Close windows and doors
+      values:
+      - Close windows and doors
+      - Close windows and doors when HVAC systems are operating
+    - key: ES4
+      value: Manage natural ventilation
+      values:
+      - Manage natural ventilation
+      - Manage properly the opening of windows and doors for natural ventilation
+    - key: ES5
+      value: Clean window glass
+      values:
+      - Clean window glass
+      - Periodic and suitable cleaning of windows glass
+    - key: ES6
+      value: External solar shading
+      values:
+      - External solar shading
+      - Correct use of external solar shading
+    - key: ES7
+      value: Internal solar shading
+      values:
+      - Internal solar shading
+      - Correct use of internal solar shading
+    - key: ES8
+      value: Improve insulation
+      values:
+      - Improve insulation
+      - Improve insulation of roller shutter box
+    - key: ES9
+      value: Substitute
+      values:
+      - Substitute
+      - Substitution of roller tape guide
+    - key: ES10
+      value: Perform maintenance
+      values:
+      - Perform maintenance
+      - Maintenance of wood and steel windows frame
+    - key: ES11
+      value: Add low E film
+      values:
+      - Add low E film
+      - Adding a low Emissivity (E) window film
+    - key: ES12
+      value: 'Add solar control film '
+      values:
+      - 'Add solar control film '
+      - 'Adding a solar control window film '
+    - key: ES13
+      value: Put foil behind radiators
+      values:
+      - Put foil behind radiators
+      - Put foil behind radiators to avoid heating the wall
+    - key: ES14
+      value: Maintenance of room surfaces
+      values:
+      - Maintenance of room surfaces
+      - Maintenance of room surfaces
+    translated: 0
+  - title: EEM.HVAC
+    values:
+    - key: HL1
+      value: Install Condensing Boiler
+      values:
+      - Install Condensing Boiler
+      - Installation of a condensing boiler
+    - key: HL2
+      value: Install Biomass Boiler
+      values:
+      - Install Biomass Boiler
+      - Installation of a biomass boiler
+    - key: HL3
+      value: 'Install Evaporative Condenser '
+      values:
+      - 'Install Evaporative Condenser '
+      - 'Installation of an evaporative condenser '
+    - key: HL4
+      value: Install Heat Recovery
+      values:
+      - Install Heat Recovery
+      - Installation of heat recovery in the ventilation air
+    - key: HL5
+      value: Install Variable Frequency Drives
+      values:
+      - Install Variable Frequency Drives
+      - Installation of Variable Frequency Drives (VFDs) on motors
+    - key: HL6
+      value: Install High Efficient Motors
+      values:
+      - Install High Efficient Motors
+      - Installation of high efficient motors for fans and pumps
+    - key: HL7
+      value: Install Wireless Room Energy Control
+      values:
+      - Install Wireless Room Energy Control
+      - 'Installation of a wireless room energy control system '
+    - key: HL8
+      value: Install Desiccant Dehumidification
+      values:
+      - Install Desiccant Dehumidification
+      - Installation of a desiccant dehumidification system
+    - key: HL9
+      value: Install Pollutant Detectors
+      values:
+      - Install Pollutant Detectors
+      - 'Installation of pollutant detectors '
+    - key: HL10
+      value: Install Earth-air Heat Exchangers
+      values:
+      - Install Earth-air Heat Exchangers
+      - Installation of earth-air heat exchangers
+    - key: HL11
+      value: Install Radiant Heating
+      values:
+      - Install Radiant Heating
+      - Installation of radiant floor heating
+    - key: HL12
+      value: Install Radiant Cooling
+      values:
+      - Install Radiant Cooling
+      - Installation of radiant ceiling cooling
+    - key: HL13
+      value: Install Absorption Cooling
+      values:
+      - Install Absorption Cooling
+      - Installation of an absorption cooling system
+    - key: HL14
+      value: Install Variable Refrigerant Flow
+      values:
+      - Install Variable Refrigerant Flow
+      - Installation of Variable Refrigerant Flow (VRF) system
+    - key: HL15
+      value: Install Micro-cogenerative Boilers
+      values:
+      - Install Micro-cogenerative Boilers
+      - Installation of micro-cogeneration boilers
+    - key: HL16
+      value: Upgrade to Cogged Belt Drives
+      values:
+      - Upgrade to Cogged Belt Drives
+      - Replace V-belts with cogged or synchronous belt drives
+    - key: HL17
+      value: Install Low Temperature Boiler
+      values:
+      - Install Low Temperature Boiler
+      - Installation of a low temperature boiler
+    - key: HL18
+      value: Replace Electric Radiators
+      values:
+      - Replace Electric Radiators
+      - Replacement of electric radiators or unit heaters by heat pumps
+    - key: HL19
+      value: Install Electronic Expansion Valves
+      values:
+      - Install Electronic Expansion Valves
+      - Installation of electronic expansion valves (EEVs) in the cooling equipment
+    - key: HL20
+      value: Install Modulating Burners
+      values:
+      - Install Modulating Burners
+      - Installation of modulating burners and oxygen sensors
+    - key: HL21
+      value: 'Upgrade to Natural Gas '
+      values:
+      - 'Upgrade to Natural Gas '
+      - 'Replacement of diesel and fuel oil per natural gas '
+    - key: HL22
+      value: Upgrade to Variable Air Volume
+      values:
+      - Upgrade to Variable Air Volume
+      - Convert the constant volume system to a Variable Air Volume (VAV) system
+    - key: HL23
+      value: Install Small Modular Boilers
+      values:
+      - Install Small Modular Boilers
+      - Install small modular boilers
+    - key: HL24
+      value: 'Upgrade to Variable Flow Primary '
+      values:
+      - 'Upgrade to Variable Flow Primary '
+      - 'Convert the primary/secondary chilled water plant to variable flow primary '
+    - key: HL25
+      value: Install Thermally Active Building System
+      values:
+      - Install Thermally Active Building System
+      - Installation of a thermally active building system (TABS)
+    - key: HL26
+      value: Install Aerothermal Energy
+      values:
+      - Install Aerothermal Energy
+      - Installation of aerothermal energy
+    - key: HL27
+      value: Install Zoning Valves
+      values:
+      - Install Zoning Valves
+      - Installation of zoning valves with time and temperature controls
+    - key: HL28
+      value: Install Air Curtains
+      values:
+      - Install Air Curtains
+      - Installation of air curtains
+    - key: HL29
+      value: 'Install Gas Powered Heat Pump '
+      values:
+      - 'Install Gas Powered Heat Pump '
+      - 'Installation of a gas powered heat pump '
+    - key: HL30
+      value: Install Capacitor Banks
+      values:
+      - Install Capacitor Banks
+      - Eliminate reactive power with the installation of capacitor banks
+    - key: HS1
+      value: Turning Off
+      values:
+      - Turning Off
+      - Turning off air conditioning systems when rooms are empty
+    - key: HS2
+      value: Upgrade Filters
+      values:
+      - Upgrade Filters
+      - Upgrade and maintenance of the filters of the HVAC system
+    - key: HS3
+      value: Adjust Temperature Properly
+      values:
+      - Adjust Temperature Properly
+      - Adjust the temperature of the thermostat properly
+    - key: HS4
+      value: Repair Distribution Insulation
+      values:
+      - Repair Distribution Insulation
+      - Adding or repairing HVAC distribution system insulation
+    - key: HS5
+      value: Verify Timers
+      values:
+      - Verify Timers
+      - Verify the appropriate operation of timers of the ventilation system
+    - key: HS6
+      value: Use Free-cooling
+      values:
+      - Use Free-cooling
+      - Use of free-cooling
+    - key: HS7
+      value: Analyse Heating Boilers
+      values:
+      - Analyse Heating Boilers
+      - Analysis of the combustion and maintenance of heating boilers
+    - key: HS8
+      value: Replace Refrigerants Fluids
+      values:
+      - Replace Refrigerants Fluids
+      - 'Replacement of the refrigerants fluids in heating and cooling equipment '
+    - key: HS9
+      value: Repair Boilers Insulation
+      values:
+      - Repair Boilers Insulation
+      - Adding or repairing boilers insulation
+    - key: HS10
+      value: Set Proper Temperature
+      values:
+      - Set Proper Temperature
+      - Proper operation of the regulatory systems of the temperature of the heating
+        and cooling equipment
+    - key: HS11
+      value: Clean Surfaces
+      values:
+      - Clean Surfaces
+      - Cleaning the radiator surfaces
+    - key: HS12
+      value: Place Condenser Unit
+      values:
+      - Place Condenser Unit
+      - Place the condenser unit in a ventilated area without solar radiation
+    - key: HS13
+      value: Install Programmable Thermostat
+      values:
+      - Install Programmable Thermostat
+      - Installation of a programmable thermostat
+    - key: HS14
+      value: Purge at Beginning of Heating Season
+      values:
+      - Purge at Beginning of Heating Season
+      - Purge radiators at the beginning of the heating season
+    - key: HS15
+      value: Use Ceiling Fans
+      values:
+      - Use Ceiling Fans
+      - Use ceiling fans instead of air conditioning when possible
+    - key: HS16
+      value: Relocate Thermostats
+      values:
+      - Relocate Thermostats
+      - 'Relocate thermostats to appropriate areas '
+    - key: HS17
+      value: Remove Personal Heaters
+      values:
+      - Remove Personal Heaters
+      - Avoid using personal heaters in air-conditioned spaces
+    - key: HS18
+      value: Turn Off
+      values:
+      - Turn Off
+      - Turn off kitchen and bath fans immediately after use
+    - key: HS19
+      value: Clean Heat Exchangers
+      values:
+      - Clean Heat Exchangers
+      - Cleaning heat exchangers of chillers
+    - key: HS20
+      value: Install Dampers
+      values:
+      - Install Dampers
+      - Installation of dampers on flue gas ducts
+    - key: HS21
+      value: Install Motion Sensors
+      values:
+      - Install Motion Sensors
+      - 'Installation of motion sensors for HVAC systems '
+    - key: HS22
+      value: Install Humidity Sensors
+      values:
+      - Install Humidity Sensors
+      - Installation of humidity sensors
+    - key: HS23
+      value: Install Efficient Destratification System
+      values:
+      - Install Efficient Destratification System
+      - Installation of an efficient destratification fan system
+    - key: HS24
+      value: Install Tthermostatic Radiator Valves
+      values:
+      - Install Tthermostatic Radiator Valves
+      - Installation of an efficient destratification fan system
+    translated: 0
+  - title: EEM.DHW
+    values:
+    - key: DL1
+      value: Substitute Instant System
+      values:
+      - Substitute Instant System
+      - Substitution of instant system for accumulation system
+    - key: DL2
+      value: 'Install Hot Water Return Circuit '
+      values:
+      - 'Install Hot Water Return Circuit '
+      - 'Installation of a hot water return circuit '
+    - key: DL3
+      value: Install Heat Recovery
+      values:
+      - Install Heat Recovery
+      - Installation of heat recovery in the condensers of the air conditioning system
+    - key: DL4
+      value: Install CO2 Heat Pump
+      values:
+      - Install CO2 Heat Pump
+      - Installation of a CO2 heat pump
+    - key: DL5
+      value: 'Change to Collective System '
+      values:
+      - 'Change to Collective System '
+      - 'Change from an individual to a collective DHW system '
+    - key: DL6
+      value: Install Drain Water Heat Recovery
+      values:
+      - Install Drain Water Heat Recovery
+      - Installation of Drain Water Heat Recovery (DWHR) systems
+    - key: DL7
+      value: Upgrade to Heat Pump Water Heaters
+      values:
+      - Upgrade to Heat Pump Water Heaters
+      - Replace existing DHW system with heat pump water heaters
+    - key: DS1
+      value: Lower Temperature Setpoint
+      values:
+      - Lower Temperature Setpoint
+      - Lower the DHW temperature setpoint
+    - key: DS2
+      value: Add Tank Insulation
+      values:
+      - Add Tank Insulation
+      - Adding or repairing tank insulation
+    - key: DS3
+      value: Add Distribution Systems
+      values:
+      - Add Distribution Systems
+      - Adding or repairing DHW distribution systems
+    - key: DS4
+      value: Pump Maintenance
+      values:
+      - Pump Maintenance
+      - Maintenance and inspection of DHW pumps
+    - key: DS5
+      value: Install Timer for Recirculation Pump
+      values:
+      - Install Timer for Recirculation Pump
+      - Installation of a timer for the DHW recirculation pump
+    - key: DS6
+      value: Install Timer for Boiler
+      values:
+      - Install Timer for Boiler
+      - Installation of a timer for the DHW boiler
+    - key: DS7
+      value: Install Mixing Valves
+      values:
+      - Install Mixing Valves
+      - Installation of mixing valves in the outlet of the DHW tank
+    - key: DS8
+      value: Install Taps with Flow Reduction
+      values:
+      - Install Taps with Flow Reduction
+      - Installation of taps with flow reduction (faucet aerator)
+    - key: DS9
+      value: Add Water Heater Insulation
+      values:
+      - Add Water Heater Insulation
+      - Adding or repairing water heaters insulation
+    - key: DS10
+      value: Install Low-flow Showerheads
+      values:
+      - Install Low-flow Showerheads
+      - Installation of low-flow showerheads
+    - key: DS11
+      value: Use Shower over Bath
+      values:
+      - Use Shower over Bath
+      - Use shower instead of bath
+    - key: DS12
+      value: Fix Dripping Taps
+      values:
+      - Fix Dripping Taps
+      - Fix dripping taps
+    - key: DS13
+      value: Install Thermostatic Taps
+      values:
+      - Install Thermostatic Taps
+      - Installation of thermostatic taps
+    - key: DS14
+      value: Install Motion Sensor
+      values:
+      - Install Motion Sensor
+      - Installation of motion sensor faucets
+    - key: DS15
+      value: Limit Shower Duration
+      values:
+      - Limit Shower Duration
+      - "Limit shower length to 5\u20137 minutes"
+    - key: DS16
+      value: Clean Tank
+      values:
+      - Clean Tank
+      - 'Cleaning the DHW tank to avoid sediments '
+    - key: DS17
+      value: Disconnect Tank
+      values:
+      - Disconnect Tank
+      - 'Disconnect the DHW tank in case it is not working for more than three days '
+    - key: DS18
+      value: Wash Hands with Cold Water
+      values:
+      - Wash Hands with Cold Water
+      - Wash hands with cold water instead of warm water
+    translated: 0
+  - title: EEM.Lighting
+    values:
+    - key: LL1
+      value: 'Install Program Warm-start Ballast '
+      values:
+      - 'Install Program Warm-start Ballast '
+      - 'Installation of program warm-start ballast '
+    - key: LL2
+      value: Installation Electronic Ballast
+      values:
+      - Installation Electronic Ballast
+      - Installation of electronic ballast
+    - key: LL3
+      value: Upgrade to Infrared Reflective Coating
+      values:
+      - Upgrade to Infrared Reflective Coating
+      - Replacement of conventional halogen lamps by Infrared Reflective Coating (IRC)
+        halogen lamps
+    - key: LL4
+      value: Upgrade to Compact Fluorescent Lamps
+      values:
+      - Upgrade to Compact Fluorescent Lamps
+      - 'Replacement of incandescent lamps by Compact fluorescent lamps (CFLs) '
+    - key: LL5
+      value: Upgrade to Light Emitting Diode
+      values:
+      - Upgrade to Light Emitting Diode
+      - Installation of Lighting Emitting Diode (LED) lamps
+    - key: LL6
+      value: Upgrade to Smaller Tubes
+      values:
+      - Upgrade to Smaller Tubes
+      - Replacement of fluorescent tubes by others with less diameter
+    - key: LL7
+      value: Upgrade to Triphosphorous
+      values:
+      - Upgrade to Triphosphorous
+      - Replacement of standard fluorescent tubes by triphosphorous fluorescent tubes
+    - key: LL8
+      value: Install Efficient Luminaires
+      values:
+      - Install Efficient Luminaires
+      - Installation of more efficient luminaires with suitable light distribution
+    - key: LL9
+      value: Install Presence Detectors
+      values:
+      - Install Presence Detectors
+      - Installation of presence detectors in sporadic use zones
+    - key: LL10
+      value: Install Time Delay Switches
+      values:
+      - Install Time Delay Switches
+      - Installation of time delay switches in sporadic use zones
+    - key: LL11
+      value: 'Install Manual Potentiometric Switches '
+      values:
+      - 'Install Manual Potentiometric Switches '
+      - 'Installation of manual potentiometric switches '
+    - key: LL12
+      value: Install Programmable Timer Switches
+      values:
+      - Install Programmable Timer Switches
+      - Installation of programmable timer switches
+    - key: LL13
+      value: Install Daylight Switch
+      values:
+      - Install Daylight Switch
+      - Installation of daylighting sensors (on/off)
+    - key: LL14
+      value: Install Daylighting Dimmer
+      values:
+      - Install Daylighting Dimmer
+      - Installation of daylighting sensors (dimmer)
+    - key: LL15
+      value: Reduce Illuminance
+      values:
+      - Reduce Illuminance
+      - Reduce lamps wattage or illuminance where there is over-illumination
+    - key: LS1
+      value: Change to Task Lighting
+      values:
+      - Change to Task Lighting
+      - Change to task lighting method when required
+    - key: LS2
+      value: Change to Accent Lighting
+      values:
+      - Change to Accent Lighting
+      - Change to accent lighting when required
+    - key: LS3
+      value: Clean Lamps & Luminaries
+      values:
+      - Clean Lamps & Luminaries
+      - Cleaning and maintenance of lamps and luminaires regularly
+    - key: LS4
+      value: Reduce Number of Lamps
+      values:
+      - Reduce Number of Lamps
+      - Reduce the number of lamps
+    - key: LS5
+      value: Reduce Number of Luminaires
+      values:
+      - Reduce Number of Luminaires
+      - Reduce the number of luminaires
+    - key: LS6
+      value: Turn Off Light
+      values:
+      - Turn Off Light
+      - Turn off lighting in unused rooms or zones
+    - key: LS7
+      value: Appropiate Orientation
+      values:
+      - Appropiate Orientation
+      - Appropiate orientation of the work place
+    - key: LS8
+      value: Light Zoning
+      values:
+      - Light Zoning
+      - Lighting zoning through manual switches
+    - key: LS9
+      value: Program Scenarios
+      values:
+      - Program Scenarios
+      - Programming different scenarios for the same place
+    - key: LS10
+      value: Turn Off Luminaires during Daylighting
+      values:
+      - Turn Off Luminaires during Daylighting
+      - Turn off the luminaires close to windows when there is enough daylighting
+    - key: LS11
+      value: Optimize Security Lighting
+      values:
+      - Optimize Security Lighting
+      - Optimized interior security lighting
+    translated: 0
+  - title: EEM.ElectDevices
+    values:
+    - key: EDL1
+      value: Upgrade to Energy Star Label
+      values:
+      - Upgrade to Energy Star Label
+      - 'Purchase of Energy Star label devices '
+    - key: EDL2
+      value: Upgrade to A+++
+      values:
+      - Upgrade to A+++
+      - Purchase of A+++ electrical appliances
+    - key: EDL3
+      value: Upgrade to Laptop
+      values:
+      - Upgrade to Laptop
+      - Purchase of laptops instead of desktop computers
+    - key: EDL4
+      value: Upgrade to LCD
+      values:
+      - Upgrade to LCD
+      - Purchase of monitors with LCD screen
+    - key: EDL5
+      value: Upgrade to Double-sided
+      values:
+      - Upgrade to Double-sided
+      - 'Purchase double-sided copiers and printers '
+    - key: EDL6
+      value: Upgrade to Bithermic
+      values:
+      - Upgrade to Bithermic
+      - Purchase bithermic washing machines
+    - key: EDL7
+      value: Upgrade to Bithermic
+      values:
+      - Upgrade to Bithermic
+      - Purchase bithermic dishwashers
+    - key: EDL8
+      value: Install Misers
+      values:
+      - Install Misers
+      - 'Install vending machine misers '
+    - key: EDL9
+      value: De-lamp
+      values:
+      - De-lamp
+      - De-lamp vending machines
+    - key: EDL10
+      value: Upgrade to Inductive
+      values:
+      - Upgrade to Inductive
+      - Purchase of induction plates
+    - key: EDL11
+      value: Consider Common Laundry
+      values:
+      - Consider Common Laundry
+      - Consider the use of a common laundry instead of in-unit washing machine
+    - key: EDS1
+      value: Install Programmable Plugs
+      values:
+      - Install Programmable Plugs
+      - Use of multiple power strips with switch and/or programmable plugs
+    - key: EDS2
+      value: Set the Energy Saving Mode
+      values:
+      - Set the Energy Saving Mode
+      - Set the energy saving mode of the electrical equipment
+    - key: EDS3
+      value: Turn Off
+      values:
+      - Turn Off
+      - Turning off the screen of the monitor
+    - key: EDS4
+      value: Lower Brightness
+      values:
+      - Lower Brightness
+      - Adjusting the brightness of the TV or monitor screen to a medium level
+    - key: EDS5
+      value: Use Properly
+      values:
+      - Use Properly
+      - Using the desktop screen in a proper way
+    - key: EDS6
+      value: Use Screensaver Properly
+      values:
+      - Use Screensaver Properly
+      - Using the screensaver in a proper way
+    - key: EDS7
+      value: Use Properly
+      values:
+      - Use Properly
+      - Use and manage properly the energy consumption of printers and photocopiers
+    - key: EDS8
+      value: Turn Off
+      values:
+      - Turn Off
+      - Turning off the TV
+    - key: EDS8 - On
+      value: Turn On
+      values:
+      - Turn On
+      - Turning off the TV
+    - key: EDS9
+      value: Set Economic Program
+      values:
+      - Set Economic Program
+      - Set the economic program of the washing machine
+    - key: EDS10
+      value: Set Economic Program
+      values:
+      - Set Economic Program
+      - Set the economic program of the dishwasher
+    - key: EDS11
+      value: Set the Economic Program
+      values:
+      - Set the Economic Program
+      - 'Set the economic program of the oven '
+    - key: EDS12
+      value: Adjust Temperature
+      values:
+      - Adjust Temperature
+      - Set the appropriate temperatures of refrigerator and freezer
+    - key: EDS13
+      value: Unplug
+      values:
+      - Unplug
+      - Unplug battery chargers when their use is not necessary
+    - key: EDS14
+      value: Upgrade to Networking
+      values:
+      - Upgrade to Networking
+      - Use of networking printers
+    - key: EDS15
+      value: Upgrade to Pressure Cooker
+      values:
+      - Upgrade to Pressure Cooker
+      - Use pressure cookers
+    - key: EDS16
+      value: Upgrade to Microwave
+      values:
+      - Upgrade to Microwave
+      - Use a toaster oven or microwave instead of the oven
+    - key: EDS17
+      value: Turn Off
+      values:
+      - Turn Off
+      - Turning off communal equipment at the end of the day
+    - key: EDS18
+      value: Deactivate the Drying Cycle
+      values:
+      - Deactivate the Drying Cycle
+      - "Air dry dishes instead of using the dishwasher\u2019s drying cycle."
+    - key: EDS19
+      value: Only Use when Full
+      values:
+      - Only Use when Full
+      - Wash only full loads of dishes and clothes
+    - key: EDS20
+      value: Turn Off
+      values:
+      - Turn Off
+      - Turn off the oven or the electric cooker before finishing
+    - key: EDS21
+      value: Air dry clothes
+      values:
+      - Air dry clothes
+      - Air dry clothes
+    - key: EDS22
+      value: Defrost
+      values:
+      - Defrost
+      - Regularly defrost manual defrost refrigerators and freezers
+    - key: EDS23
+      value: Wrap food
+      values:
+      - Wrap food
+      - Cover liquids and wrap foods stored in the refrigerator
+    - key: EDS24
+      value: Repair door seals
+      values:
+      - Repair door seals
+      - Repair refrigerator door seals
+    - key: EDS25
+      value: Match pan to heating element
+      values:
+      - Match pan to heating element
+      - Match the size of the pan to the heating element
+    - key: EDS26
+      value: Use lid or electric kettle
+      values:
+      - Use lid or electric kettle
+      - Use a covered kettle or pan or electric kettle to boil water
+    - key: EDS27
+      value: Use cold water
+      values:
+      - Use cold water
+      - Use the washing machine with cold water
+    - key: EDS28
+      value: Clean backside
+      values:
+      - Clean backside
+      - Cleaning of the backside of the fridge
+    - key: EDS29
+      value: Use lid
+      values:
+      - Use lid
+      - When cooking on the range, use pot lids to help food cook faster
+    - key: EDS30
+      value: Promote solar chargers
+      values:
+      - Promote solar chargers
+      - Promote the use of solar chargers
+    - key: EDS31
+      value: Replace with non-electrical
+      values:
+      - Replace with non-electrical
+      - Using hand cleaners instead of electrical ones
+    - key: EDS32
+      value: Build delivery of print jobs
+      values:
+      - Build delivery of print jobs
+      - Try to build up the delivery of print jobs or photocopies
+    - key: EDS33
+      value: Move away from heat sources
+      values:
+      - Move away from heat sources
+      - Remove refrigerators from places next to heat sources
+    - key: EDS34
+      value: Only necessary documents
+      values:
+      - Only necessary documents
+      - Print only necessary documents
+    - key: EDS35
+      value: Decalcify
+      values:
+      - Decalcify
+      - Decalcify home appliances
+    - key: EDS36
+      value: Use dishwasher
+      values:
+      - Use dishwasher
+      - Use dishwasher instead of hand wash of dishes
+    - key: EDS37
+      value: Upgrade to Thermal Jug
+      values:
+      - Upgrade to Thermal Jug
+      - Install coffee machines with thermal jug
+    - key: EDS38
+      value: Iron efficiently
+      values:
+      - Iron efficiently
+      - Ironing efficiently
+    - key: EDS39
+      value: Defrost food naturally
+      values:
+      - Defrost food naturally
+      - Defrost food naturally instead of using microwave
+    - key: EDS40
+      value: Disconnect the fridge
+      values:
+      - Disconnect the fridge
+      - Disconnect the fridge in case it is not working for long times
+    - key: EDS41
+      value: Dry hair naturally
+      values:
+      - Dry hair naturally
+      - Dry hair naturally
+    translated: 0
+  - title: EEM.Other
+    values:
+    - key: OL1
+      value: Install Solar Thermal Panels
+      values:
+      - Install Solar Thermal Panels
+      - Installation of solar thermal panels
+    - key: OL2
+      value: Install Photovoltaic Panels
+      values:
+      - Install Photovoltaic Panels
+      - Installation of photovoltaic panels
+    - key: OL3
+      value: Install Direct Traction Electric Lift
+      values:
+      - Install Direct Traction Electric Lift
+      - Installation of direct traction electric lifts
+    - key: OL4
+      value: Install Selective Manoeuvre
+      values:
+      - Install Selective Manoeuvre
+      - Installation of mechanisms of selective manoeuvre for several lifts
+    - key: OL5
+      value: Install Building Energy Management System
+      values:
+      - Install Building Energy Management System
+      - 'Installation of a building energy management system (BEMS) '
+    - key: OL6
+      value: Install Variable Frequency Drive
+      values:
+      - Install Variable Frequency Drive
+      - Installation of variable frequency drive for multi-voltage lifts
+    - key: OL7
+      value: Install ICT System
+      values:
+      - Install ICT System
+      - Installation of an ICT system
+    - key: OL8
+      value: 'Install Smart Meters '
+      values:
+      - 'Install Smart Meters '
+      - 'Installation of smart meters '
+    - key: OL9
+      value: Install Geothermal Heat Pump
+      values:
+      - Install Geothermal Heat Pump
+      - Installation of Geothermal Heat Pump (GHP)
+    - key: OL10
+      value: Install Micro Wind Turbines
+      values:
+      - Install Micro Wind Turbines
+      - Installation of micro wind turbines
+    - key: OL11
+      value: Conduct Energy Audit
+      values:
+      - Conduct Energy Audit
+      - Hire a qualified company to conduct an energy audit of the building
+    - key: OL12
+      value: Install Energy Storage System
+      values:
+      - Install Energy Storage System
+      - Installation of an Energy Storage System (ESS)
+    - key: OL13
+      value: Install Fuel Cells
+      values:
+      - Install Fuel Cells
+      - Installation of fuel cells
+    - key: OL14
+      value: Install Photovoltaic Thermal Hybrid Solar Collectors
+      values:
+      - Install Photovoltaic Thermal Hybrid Solar Collectors
+      - Integration of Photovoltaic Thermal hybrid solar collectors (PVT)
+    - key: OS1
+      value: Only use one Button
+      values:
+      - Only use one Button
+      - Pressing one button to call the lift in case there are several ones
+    - key: OS2
+      value: Use Stairs before Lifts
+      values:
+      - Use Stairs before Lifts
+      - Use stairs instead of lifts
+    - key: OS3
+      value: Lift Maintenance
+      values:
+      - Lift Maintenance
+      - Inspection and maintenance of lifts
+    - key: OS4
+      value: Hold Workshop
+      values:
+      - Hold Workshop
+      - Sensitizing of occupants through workshops
+    - key: OS5
+      value: Wear Adequate Clothing
+      values:
+      - Wear Adequate Clothing
+      - Wear adequate clothing
+    - key: OS6
+      value: Optimize Conditions of Electric Bill
+      values:
+      - Optimize Conditions of Electric Bill
+      - Optimization of the conditions of the electric bill
+    - key: OS7
+      value: Raise Awareness
+      values:
+      - Raise Awareness
+      - Create reminders and promotional materials to raise awareness
+    - key: OS8
+      value: Unblock Natural Light
+      values:
+      - Unblock Natural Light
+      - Move the furniture or objects that block the natural light
+    - key: OS9
+      value: Unblock HVAC Unit
+      values:
+      - Unblock HVAC Unit
+      - Remove furniture from the front of HVAC terminal units
+    - key: OS10
+      value: Compressed Work Schedule
+      values:
+      - Compressed Work Schedule
+      - Implementation of a compressed work schedule
+    - key: OS11
+      value: Allow Working from Home
+      values:
+      - Allow Working from Home
+      - Allow employees to work from home on alternate days
+    translated: 0
+  - title: EEM.Special
+    values:
+    - key: Battle
+      value: Challenge to Join TRIBE
+      values:
+      - Challenge to Join TRIBE
+      - Challenge the avatar to join your TRIBE of energy efficient behaviour
+    translated: 0
+  - title: Content.Avatars
+    values:
+    - key: Josep Visitante
+      value: Josep Visitante
+      values:
+      - 
+    - key: Javier Rough
+      value: Javier Rough
+      values:
+      - 
+    - key: Isac Jobton
+      value: Isac Jobton
+      values:
+      - 
+    - key: Sofia Agua
+      value: Sofia Agua
+      values:
+      - 
+    - key: Bob Alison
+      value: Bob Alison
+      values:
+      - Bob wouldn't hurt a fly if you told her to, but what about other aspects of
+        the nature?
+    - key: Raquel Turista
+      value: Raquel Turista
+      values:
+      - 
+    - key: Camila Potter
+      value: Camila Potter
+      values:
+      - 
+    - key: Yoghurt Ableton
+      value: Yoghurt Ableton
+      values:
+      - Yoghurt is an able worker. She can do a ton of work in fact.
+    - key: "Jos\xE9 Temporado"
+      value: "Jos\xE9 Temporado"
+      values:
+      - 
+    - key: Valentine Rapido
+      value: Valentine Rapido
+      values:
+      - 
+    translated: 0
+  - title: Content.Appliances
+    values:
+    - key: Office Workstation
+      value: Office Workstation
+      values:
+      - The modern version of a carpenter's workshop. Except less is crafted and more
+        is modern.
+    - key: Bookshelf
+      value: Bookshelf
+      values:
+      - 
+    - key: Large Plant
+      value: Large Plant
+      values:
+      - 
+    - key: Lamp
+      value: Lamp
+      values:
+      - 
+    - key: Light Switch
+      value: Light Switch
+      values:
+      - 
+    - key: Floor Lamp
+      value: Floor Lamp
+      values:
+      - Lightbulb on a stick
+    - key: Sink
+      value: Sink
+      values:
+      - You can wash your hands of blood, but never carbodioxide emissions. Because
+        it's gaseous.
+    - key: Toilet
+      value: Toilet
+      values:
+      - This is where people go to unsupply the surplus of life. A waterhole in reverse
+        so to say.
+    - key: Public Monitor
+      value: Public Monitor
+      values:
+      - 
+    - key: Sofa
+      value: Sofa
+      values:
+      - A place to chillax and perform DIY time & space travel
+    - key: Help Desk
+      value: Help Desk
+      values:
+      - This is where the clients can come and get helpz
+    - key: Vending Machine
+      value: Vending Machine
+      values:
+      - Common hunting ground for the late night worker
+    - key: Trashbin
+      value: Trashbin
+      values:
+      - Magically transforms your waste into someone else's problem
+    - key: Hand Dryer
+      value: Hand Dryer
+      values:
+      - Handy device for obfuscating disturbing sounds of colleagues standing next
+        to you.
+    - key: Fire_Extinguisher
+      value: Fire_Extinguisher
+      values:
+      - 
+    - key: Small Printer
+      value: Small Printer
+      values:
+      - Feed it with paper and ink and it will give you error messages and paper mountains
+        in return
+    - key: Microwave Oven
+      value: Microwave Oven
+      values:
+      - Heats and cooks food by exposing it to microwave radiation in the electromagnetic
+        spectrum.
+    - key: Fridge
+      value: Fridge
+      values:
+      - The natural habitat of evening snacks, main source of food for the native
+        office worker.
+    - key: Espresso Machine
+      value: Espresso Machine
+      values:
+      - A compact version of the mythical spring of youth.
+    - key: Meeting Table
+      value: Meeting Table
+      values:
+      - 
+    - key: Dishwasher
+      value: Dishwasher
+      values:
+      - Washes your dishes. Notoriously known for being easier to fill than to empty.
+    - key: Water Dispenser
+      value: Water Dispenser
+      values:
+      - The pinacle of engineering, carefully designed to make small plastic mugs
+        magically disappear.
+    - key: Lunch Table
+      value: Lunch Table
+      values:
+      - 
+    - key: Large Printer
+      value: Large Printer
+      values:
+      - Feed it with paper and ink and it will give you error messages and paper mountains
+        in return
+    - key: Avatar Home
+      value: Avatar Home
+      values:
+      - 
+    - key: 
+      value: 
+      values:
+      - 
+    translated: 0
 --- !u!114 &114824139346884546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1356,7 +3312,7 @@ MonoBehaviour:
   CurrentDate: 
   KeyActions: []
   VisualTimeScale: 1
-  SimulationTimeScaleFactor: 50
+  SimulationTimeScaleFactor: 360
   LockScales: 0
 --- !u!114 &114951931450549782
 MonoBehaviour:
@@ -1398,7 +3354,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1826864137982002}
   serializedVersion: 5
   lengthInSec: 5
-  simulationSpeed: 1
+  speed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -4023,7 +5979,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1505711593783160}
   serializedVersion: 5
   lengthInSec: 2
-  simulationSpeed: 1
+  speed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
