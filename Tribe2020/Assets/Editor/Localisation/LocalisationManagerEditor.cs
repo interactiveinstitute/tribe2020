@@ -156,6 +156,7 @@ public class LocalisationManagerEditor : Editor {
 							//Clone existing format
 							Language.KeyValue translation = group.values[v];
 							//Replace value field with translation of template's
+							Debug.Log(template.code + " -> " + l.code);
 							translation.value = script.Translate(template.groups[g].values[v].value, template.code, l.code);
 							//Replace values array with translations of template's
 							translation.values = new List<string>();
