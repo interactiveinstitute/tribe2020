@@ -5,11 +5,16 @@ using UnityEditor;
 [CustomEditor(typeof(LocalisationManager))]
 public class LocalisationManagerEditor : Editor {
 
-	//
+	//Add elements while drawing the inspector
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 
 		LocalisationManager script = (LocalisationManager)target;
+
+
+		if(GUILayout.Button("Extract Text to Template", GUILayout.Width(175))) {
+			ExtractTextToTemplate();
+		}
 
 		if(GUILayout.Button("Apply Template", GUILayout.Width(100))) {
 			ApplyTemplate();
@@ -20,10 +25,37 @@ public class LocalisationManagerEditor : Editor {
 		}
 	}
 
+	//Find all localization extractor in the scene and add their value groups to the template language
+	public void ExtractTextToTemplate() {
+		LocalisationManager script = (LocalisationManager)target;
+		if(!script.template) { return; }
+
+		LocalisationExtractor[] extractors = Object.FindObjectsOfType<LocalisationExtractor>();
+		foreach(LocalisationExtractor le in extractors) {
+			le.ExtractText();
+			foreach(Language.ValueGroup eg in le.groups) {
+				//bool groupExisted = false;
+				for(int i = script.template.groups.Count - 1; i >= 0; i--) {
+					if(eg.title == script.template.groups[i].title) {
+						script.template.groups.Remove(script.template.groups[i]);
+					}
+				}
+				//foreach(Language.ValueGroup g in script.template.groups) {
+				//	if(eg.title == g.title) {
+				//		script.template.groups.Remove(g);
+				//	}
+				//}
+				script.template.groups.Add(eg);
+			}
+		}
+		//Refresh template file
+		EditorUtility.SetDirty(script.template);
+		AssetDatabase.SaveAssets();
+	}
+
 	//Foreach non-template language, adapt to value format of chosen template
 	public void ApplyTemplate() {
 		LocalisationManager script = (LocalisationManager)target;
-
 		if(!script.template) { return; }
 
 		foreach(Language l in script.languages) {

@@ -19,7 +19,7 @@ MonoBehaviour:
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -28,7 +28,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:0}'
+            m_StringArgument: '{a:player, g:Baby Steps, k:So this is San Pablo}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -45,13 +45,16 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    textType: 1
+    textValue: Finally, I made it to San Pablo offices. As a Shaman I'll have to make
+      this place energy efficient.
   - description: Learn to swipe
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowMessage
           m_Mode: 5
@@ -60,7 +63,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:1}'
+            m_StringArgument: '{a:player, g:Baby Steps, k:Learn to swipe}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -89,13 +92,15 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Energy consumption
+    textType: 0
+    textValue: Let's have a look around. Swipe the screen to move to another view.
+  - description: What a view
     conditionType: Swiped
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -104,7 +109,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:2}'
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -133,13 +138,187 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Let's open the Apocalysometer
+    textType: 1
+    textValue: What a view! There are also other floors of this building.
+  - description: Energy is difficult
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: Energy efficiency is a difficult subject. There are so many ways to
+      think about it.
+  - description: CO2 emissions
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: One such thing is carbon dioxide, or CO2, emissions caused directly
+      or indirectly by a building.
+  - description: Burning
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: CO2 is emitted whenever we burn something.
+  - description: Power stations
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: In power stations we burn things like coal and oil to generate electricity.
+  - description: Burners
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:Baby Steps, k:2}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: In houses we use burners to keep rooms warm and to heat water.
+  - description: Open the apocalypsometer
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowMessage
           m_Mode: 5
@@ -148,7 +327,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:3}'
+            m_StringArgument: '{a:player, g:Baby Steps, k:3}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -177,13 +356,15 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Explain CO2
+    textType: 0
+    textValue: Let's have a look at the CO2 emissions of this building.
+  - description: Oh no
     conditionType: ApocalypsometerOpened
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -221,24 +402,221 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Explain Apocalypsometer
+    textType: 1
+    textValue: Oh no! We are currently emitting a lot of CO2.
+  - description: CO2 is gaseous
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
+          m_MethodName: ShowPrompt
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{group:San Pablo Intro, key:2, button:true}'
+            m_StringArgument: '{a:player, g:N.BS, k:4}'
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: CO2 emissions are gaseous and will rise to the sky and atmosphere.
+  - description: Global warming
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:N.BS, k:4}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: In the atmosphere CO2 functions as an isolation for the warmth emitted
+      by the sun.
+  - description: We need CO2
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:N.BS, k:4}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: Without any CO2 in the atmosphere, our world would have been very cold.
+  - description: But not too much
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:N.BS, k:13}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: On the other hand, more CO2 in the atmosphere will make it too hot.
+  - description: Decrease CO2
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:N.BS, k:14}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: Therefore, we need to decrease our CO2 emissions as much as possible
+      to keep the world at a good temperature.
+  - description: 20% by 2020
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: ShowPrompt
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: '{a:player, g:N.BS, k:15}'
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
+          m_MethodName: LimitInteraction
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: only_ok
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    textValue: We have until the year 2020 to decrease the emissions by 20%. This
+      panel shows us how well we are doing.
+  - description: Open the energy panel
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: HideUI
@@ -260,7 +638,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:5}'
+            m_StringArgument: '{a:player, g:N.BS, k:16}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -289,13 +667,16 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Open Energy Panel
+    textType: 0
+    textValue: In order to figure out what is causing all our CO2 emissions, we have
+      to take a look at the building's energy usage.
+  - description: Aha, the lamps
     conditionType: EnergyPanelOpened
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -304,7 +685,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:"N.BS", k:"6"}'
+            m_StringArgument: '{a:player, g:N.BS, k:17}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -321,13 +702,16 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Explain Energy Panel
+    textType: 1
+    textValue: Aha, look at all these lamps that are turned on. Someone must have
+      forgot to turn them off yesterday.
+  - description: Find a switch
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -336,27 +720,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:7}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: There are lamps on
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: HideUI
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
+            m_StringArgument: '{a:player, g:N.BS, k:18}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -373,6 +737,28 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
+          m_MethodName: HideUI
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    textValue: Now, where is the power switch for the lamps...
+  - description: Find another
+    conditionType: TurnedOffLamp
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+            type: 2}
           m_MethodName: ShowMessage
           m_Mode: 5
           m_Arguments:
@@ -380,58 +766,42 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:8}'
+            m_StringArgument: '{a:player, g:N.BS, k:19}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Turn off 1st lamp
+    textType: 0
+    textValue: Great, let's turn off the rest of the lamps on this floor.
+  - description: Find a third
     conditionType: TurnedOffLamp
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowMessage
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
+            m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:9}'
+            m_StringArgument: '{a:player, g:N.BS, k:19}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Turn off 2nd lamp
-    conditionType: TurnedOffLamp
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:10}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
+    textType: 0
+    textValue: Great, let's turn off the rest of the lamps on this floor.
   - description: Turn off 3rd lamp
     conditionType: TurnedOffLamp
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowPrompt
           m_Mode: 5
@@ -440,18 +810,21 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 30
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:11}'
+            m_StringArgument: '{a:player, g:N.BS, k:20}'
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    textType: 1
+    textValue: There we go! I'll really have to teach people around here to turn off
+      the light after themselves.
   - description: Congratulations
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: ShowCongratualations
           m_Mode: 5
@@ -460,7 +833,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 30
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:12}'
+            m_StringArgument: '{a:player, g:N.BS, k:21}'
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
@@ -475,7 +848,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
+        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: LimitInteraction
           m_Mode: 5
@@ -489,6 +862,8 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    textType: 2
+    textValue: No need for lights when nobody is around.
   - description: Tap to continue
     conditionType: Tapped
     conditionProp: 
@@ -509,7 +884,7 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    textType: 0
+    textValue: 
   followingNarratives:
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
+  - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}

@@ -515,7 +515,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void OnNewViewpoint(Viewpoint curView, Viewpoint[][] viewMatrix, bool overview) {
 		_instance._view.UpdateViewpointGuide(_instance._cameraMgr.GetViewpoints(), curView, overview);
 		if(_cameraMgr.cameraState == CameraManager.CameraState.PlayerControl) {
-			_instance._view.UpdateViewpointTitle(curView.title);
+			_instance._view.UpdateViewpointTitle(curView);
 		}
 
 		_instance._narrationMgr.OnNarrativeEvent("SelectedView", curView.title);
@@ -632,7 +632,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				avatarName = avatarName + ": ";
 			}
 		}
-		string message = GetPhrase(group, key);
+		string message = GetPhrase("Narrative." + group, key);
 
 		_instance._view.ShowMessage(avatarName + message, portrait, true, false);
 	}
@@ -654,7 +654,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				avatarName = avatarName + ": ";
 			}
 		}
-		string message = GetPhrase(group, key);
+		string message = GetPhrase("Narrative." + group, key);
 
 		_instance._view.ShowMessage(avatarName + message, portrait, true, true);
 	}
@@ -836,7 +836,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void StopCamera() {
-		_instance._view.UpdateViewpointTitle(_instance._cameraMgr.GetCurrentViewpoint().title);
+		_instance._view.UpdateViewpointTitle(_instance._cameraMgr.GetCurrentViewpoint());
 		_instance._cameraMgr.StopAnimation();
 	}
 

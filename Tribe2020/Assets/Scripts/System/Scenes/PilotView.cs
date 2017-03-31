@@ -218,9 +218,14 @@ public class PilotView : View{
 		return fb;
 	}
 
-	//
+	//TODO: Make pilot name dyanmic
 	public void UpdateViewpointTitle(string viewTitle) {
-		title.GetComponent<Text>().text = viewTitle;
+		title.GetComponent<Text>().text = _controller.GetPhrase("Viewpoints." + "San Pablo", viewTitle);
+	}
+
+	//TODO: Make pilot name dyanmic
+	public void UpdateViewpointTitle(Viewpoint view) {
+		title.GetComponent<Text>().text = _controller.GetPhrase("Viewpoints." + "San Pablo", view.name);
 	}
 
 	//
@@ -326,23 +331,45 @@ public class PilotView : View{
 
 	//
 	public void TranslateInterface() {
-		satisfactionTitle.text = _controller.GetPhrase("Interface", "comfort panel title");
-		energyTitle.text = _controller.GetPhrase("Interface", "energy panel title");
-		inboxTitle.text = _controller.GetPhrase("Interface", "inbox panel title");
-		apocalypsometerTitle.text = _controller.GetPhrase("Interface", "apocalypse panel title");
-		menuTitle.text = _controller.GetPhrase("Interface", "menu panel title");
-		settingsButtonText.text = _controller.GetPhrase("Interface", "menu settings");
-		quitButtonText.text = _controller.GetPhrase("Interface", "menu quit");
+		TranslateText(satisfactionTitle);
+		TranslateText(energyTitle);
+		TranslateText(inboxTitle);
+		TranslateText(apocalypsometerTitle);
+		TranslateText(menuTitle);
+		TranslateText(settingsButtonText);
+		TranslateText(quitButtonText);
 
-		avatarTemperatureTitle.text = _controller.GetPhrase("Interface", "avatar temperature");
-		avatarEfficiencyTitle.text = _controller.GetPhrase("Interface", "avatar efficiency");
-		avatarSatisfactionTitle.text = _controller.GetPhrase("Interface", "avatar satisfaction");
-		avatarKnowledgeTitle.text = _controller.GetPhrase("Interface", "avatar knowledge");
-		avatarAttitudeTitle.text = _controller.GetPhrase("Interface", "avatar attitude");
-		avatarNormTitle.text = _controller.GetPhrase("Interface", "avatar norm");
-		avatarEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+		TranslateText(avatarTemperatureTitle);
+		TranslateText(avatarEfficiencyTitle);
+		TranslateText(avatarSatisfactionTitle);
+		TranslateText(avatarKnowledgeTitle);
+		TranslateText(avatarAttitudeTitle);
+		TranslateText(avatarNormTitle);
+		TranslateText(avatarEEMTitle);
 
-		deviceEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+		TranslateText(deviceEEMTitle);
+		//satisfactionTitle.text = _controller.GetPhrase("Interface", "comfort panel title");
+		//energyTitle.text = _controller.GetPhrase("Interface", "energy panel title");
+		//inboxTitle.text = _controller.GetPhrase("Interface", "inbox panel title");
+		//apocalypsometerTitle.text = _controller.GetPhrase("Interface", "apocalypse panel title");
+		//menuTitle.text = _controller.GetPhrase("Interface", "menu panel title");
+		//settingsButtonText.text = _controller.GetPhrase("Interface", "menu settings");
+		//quitButtonText.text = _controller.GetPhrase("Interface", "menu quit");
+
+		//avatarTemperatureTitle.text = _controller.GetPhrase("Interface", "avatar temperature");
+		//avatarEfficiencyTitle.text = _controller.GetPhrase("Interface", "avatar efficiency");
+		//avatarSatisfactionTitle.text = _controller.GetPhrase("Interface", "avatar satisfaction");
+		//avatarKnowledgeTitle.text = _controller.GetPhrase("Interface", "avatar knowledge");
+		//avatarAttitudeTitle.text = _controller.GetPhrase("Interface", "avatar attitude");
+		//avatarNormTitle.text = _controller.GetPhrase("Interface", "avatar norm");
+		//avatarEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+
+		//deviceEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+	}
+
+	//Given a UI text, look for translation using object name as key
+	public void TranslateText(Text text) {
+		text.text = _controller.GetPhrase("Interface", text.name);
 	}
 
 	//Fill INSPECTOR with details and eem options for selected appliance
@@ -356,22 +383,22 @@ public class PilotView : View{
 		BuildEEMInterface(app);
 	}
 
-    //
+    //Prepare and show interface for inspecting and avatar
     public void BuildAvatarPanel(Appliance app) {
         avatarTitle.text = app.title;
-        avatarDescription.text = _controller.GetPhrase("Avatars", app.title);
+        avatarDescription.text = _controller.GetPhrase("Avatars", app.title, 0);
 
         _characterPanel.BuildPanel(app.gameObject);
 
         BuildEEMInterface(avatarEEMContainer, app);
     }
 
-	//
+	//Prepare and show interface for inspecting a device
 	public void BuildDevicePanel(Appliance app) {
 
         if (_controller) {
-            deviceTitle.text = _controller.GetPhrase("Appliance", app.title + "_Title");
-            deviceDescription.text = _controller.GetPhrase("Appliance", app.title + "_Description");
+            deviceTitle.text = _controller.GetPhrase("Content.Appliances", app.title);
+            deviceDescription.text = _controller.GetPhrase("Content.Appliances", app.title, 0);
         }
 
         if (_devicePanel) {

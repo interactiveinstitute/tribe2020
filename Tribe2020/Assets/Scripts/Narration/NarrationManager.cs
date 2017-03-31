@@ -83,9 +83,22 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//
-	public void ActivateNarrative(Narrative narrative) {
+	public Narrative ActivateNarrative(Narrative narrative) {
 		Narrative n = Object.Instantiate(narrative) as Narrative;
+		foreach(Narrative.Step s in n.steps) {
+			if(s.textType == Narrative.Step.TextType.Message) {
+				s.unityEvent.AddListener(
+					() => _interface.ShowMessage("{a:player, g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
+			} else if(s.textType == Narrative.Step.TextType.Prompt) {
+				s.unityEvent.AddListener(
+					() => _interface.ShowPrompt("{a:player, g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
+			} else if(s.textType == Narrative.Step.TextType.Completion) {
+				s.unityEvent.AddListener(
+					() => _interface.ShowCongratualations("{g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
+			}
+		}
 		active.Add(n);
+		return n;
 	}
 
 	//Callback for game event, progress narratives that are listening for the event
@@ -166,6 +179,7 @@ public class NarrationManager : MonoBehaviour {
 		int step = narrativeJSON["step"].AsInt;
 
 		Narrative narrative = Object.Instantiate(allNarratives[index]) as Narrative;
+		//Narrative narrative = ActivateNarrative(allNarratives[index]);
 		narrative.SetCurrentStepIndex(step);
 		return narrative;
 	}
@@ -213,7 +227,8 @@ public class NarrationManager : MonoBehaviour {
 
 			JSONArray activeJSON = json["active"].AsArray;
 			foreach(JSONClass narrativeJSON in activeJSON) {
-				active.Add(DeserializeNarrative(narrativeJSON));
+				ActivateNarrative(DeserializeNarrative(narrativeJSON));
+				//active.Add(DeserializeNarrative(narrativeJSON));
 			}
 
 			JSONArray archiveJSON = json["archive"].AsArray;

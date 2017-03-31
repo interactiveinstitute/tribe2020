@@ -17,6 +17,18 @@ public class Language : ScriptableObject {
 		[TextArea(3, 3)]
 		public string value;
 		public List<string> values;
+
+		public KeyValue(string key, string value) {
+			this.key = key;
+			this.value = value;
+			values = new List<string>();
+		}
+
+		public KeyValue(string key, string value, List<string> values) {
+			this.key = key;
+			this.value = value;
+			this.values = values;
+		}
 	}
 
 	//Definition of a quest step
@@ -25,6 +37,11 @@ public class Language : ScriptableObject {
 		public string title;
 		public List<KeyValue> values;
 		public bool translated = false;
+
+		public ValueGroup(string title, List<KeyValue> values) {
+			this.title = title;
+			this.values = values;
+		}
 	}
 
 	public List<Language.ValueGroup> groups; 

@@ -38,6 +38,7 @@ public class Narrative : ScriptableObject {
 		return _curStep >= steps.Count;
 	}
 
+	//
 	[Serializable]
 	public struct Step {
 		public string description;
@@ -47,6 +48,11 @@ public class Narrative : ScriptableObject {
 
 		public UnityEvent unityEvent;
 
+		public enum TextType { Message, Prompt, Completion };
+		public TextType textType;
+		[TextArea(3, 10)]
+		public string textValue;
+
 		//
 		public bool IsCompletedBy(string eventType, string prop) {
 			return (conditionType == "" || conditionType == eventType) &&
@@ -54,8 +60,7 @@ public class Narrative : ScriptableObject {
 		}
 	}
 
-	
-
+	//
 	[Serializable]
 	public struct NarrativeCondition {
 		public enum Condition {
