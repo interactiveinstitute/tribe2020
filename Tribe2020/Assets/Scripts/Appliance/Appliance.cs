@@ -201,6 +201,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
         return returnGO;
 	}
 
+	//If Avatar, challenge to a battle
+	public void Challenge() {
+		_ctrlMgr.LoadScene("BattleScene");
+	}
+
 	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
 		return playerAffordances;
