@@ -34,17 +34,11 @@ public class LocalisationManagerEditor : Editor {
 		foreach(LocalisationExtractor le in extractors) {
 			le.ExtractText();
 			foreach(Language.ValueGroup eg in le.groups) {
-				//bool groupExisted = false;
 				for(int i = script.template.groups.Count - 1; i >= 0; i--) {
 					if(eg.title == script.template.groups[i].title) {
 						script.template.groups.Remove(script.template.groups[i]);
 					}
 				}
-				//foreach(Language.ValueGroup g in script.template.groups) {
-				//	if(eg.title == g.title) {
-				//		script.template.groups.Remove(g);
-				//	}
-				//}
 				script.template.groups.Add(eg);
 			}
 		}
@@ -61,29 +55,40 @@ public class LocalisationManagerEditor : Editor {
 		foreach(Language l in script.languages) {
 			//Don't apply on template
 			if(l != script.template) {
-				List<Language.ValueGroup> tmpGroups = script.template.groups;
-				for(int i = 0; i < tmpGroups.Count; i++) {
+				List<Language.ValueGroup> tGroups = script.template.groups;
+				for(int i = 0; i < tGroups.Count; i++) {
 					if(i > l.groups.Count - 1) {
 						//Language too small, add template group
-						l.groups.Add(tmpGroups[i]);
-					} else if(tmpGroups[i].title != l.groups[i].title) {
+						l.groups.Add(tGroups[i]);
+					} else if(tGroups[i].title != l.groups[i].title) {
 						//No matching group at index, search and replace or insert, then check values
 						bool groupExisted = false;
-						foreach(Language.ValueGroup g in l.groups) {
-							if(tmpGroups[i].title == g.title) {
-								Language.ValueGroup tmpG = g;
-								l.groups.Remove(g);
+						for(int g = l.groups.Count - 1; g >= 0; g--) {
+							if(tGroups[i].title == l.groups[g].title) {
+								Language.ValueGroup tmpG = l.groups[g];
+								//groupsToRemove.Add(g);
+								l.groups.RemoveAt(g);
 								l.groups.Insert(i, tmpG);
 								groupExisted = true;
 							}
 						}
+						//List<Language.ValueGroup> groupsToRemove = new List<Language.ValueGroup>();
+						//foreach(Language.ValueGroup g in l.groups) {
+						//	if(tGroups[i].title == g.title) {
+						//		Language.ValueGroup tmpG = g;
+						//		//groupsToRemove.Add(g);
+						//		l.groups.Remove(g);
+						//		l.groups.Insert(i, tmpG);
+						//		groupExisted = true;
+						//	}
+						//}
 						if(!groupExisted) {
-							l.groups.Insert(i, tmpGroups[i]);
+							l.groups.Insert(i, tGroups[i]);
 						}
-						ApplyTemplateGroup(tmpGroups[i], l.groups[i]);
-					} else if(tmpGroups[i].title == l.groups[i].title) {
+						ApplyTemplateGroup(tGroups[i], l.groups[i]);
+					} else if(tGroups[i].title == l.groups[i].title) {
 						//Group exists, just check values
-						ApplyTemplateGroup(tmpGroups[i], l.groups[i]);
+						ApplyTemplateGroup(tGroups[i], l.groups[i]);
 					}
 
 					if(script.debug) {
@@ -108,14 +113,22 @@ public class LocalisationManagerEditor : Editor {
 			} else if(tValues[i].key != oValues[i].key) {
 				//No matching keyvalue at index, search and replace or insert, then check values
 				bool valueExisted = false;
-				foreach(Language.KeyValue kv in oValues) {
-					if(tValues[i].key == kv.key) {
-						Language.KeyValue tmpKV = kv;
-						oValues.Remove(kv);
+				for(int v = oValues.Count - 1; v >= 0; v--) {
+					if(tValues[i].key == oValues[v].key) {
+						Language.KeyValue tmpKV = oValues[v];
+						oValues.Remove(oValues[v]);
 						oValues.Insert(i, tmpKV);
 						valueExisted = true;
 					}
 				}
+				//foreach(Language.KeyValue kv in oValues) {
+				//	if(tValues[i].key == kv.key) {
+				//		Language.KeyValue tmpKV = kv;
+				//		oValues.Remove(kv);
+				//		oValues.Insert(i, tmpKV);
+				//		valueExisted = true;
+				//	}
+				//}
 				if(!valueExisted) {
 					oValues.Insert(i, tValues[i]);
 				}

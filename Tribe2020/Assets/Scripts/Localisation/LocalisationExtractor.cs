@@ -37,11 +37,18 @@ public class LocalisationExtractor : MonoBehaviour {
 		if(source.GetComponent<NarrationManager>()) {
 			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().allNarratives) {
 				List<Language.KeyValue> values = new List<Language.KeyValue>();
+				values.Add(new Language.KeyValue("Description", n.description));
+				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
+				values.Add(checklist);
 				foreach(Narrative.Step ns in n.steps) {
-					if(ns.unityEvent.GetPersistentMethodName(0) == "ShowPrompt" ||
+					if(ns.textValue != "" ||
+						ns.unityEvent.GetPersistentMethodName(0) == "ShowPrompt" ||
 						ns.unityEvent.GetPersistentMethodName(0) == "ShowMessage" ||
 						ns.unityEvent.GetPersistentMethodName(0) == "ShowCongratulations") {
 						values.Add(new Language.KeyValue(ns.description, ns.textValue));
+					}
+					if(ns.inChecklist) {
+						checklist.values.Add(ns.description);
 					}
 				}
 				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
@@ -57,6 +64,7 @@ public class LocalisationExtractor : MonoBehaviour {
 			groups.Add(new Language.ValueGroup(key, values));
 		}
 
+		#region EEMs
 		//EEM wrapper
 		if(source.GetComponent<EnergyEfficiencyMeasureContainer>()) {
 			EnergyEfficiencyMeasureContainer eemContainer = source.GetComponent<EnergyEfficiencyMeasureContainer>();
@@ -124,6 +132,7 @@ public class LocalisationExtractor : MonoBehaviour {
 			}
 			groups.Add(new Language.ValueGroup("EEM.Special", specialValues));
 		}
+		#endregion
 
 		//Appliance & Avatar wrapper
 		if(source.GetComponent<ApplianceManager>()) {
@@ -137,15 +146,25 @@ public class LocalisationExtractor : MonoBehaviour {
 					List<string> values = new List<string>();
 					values.Add(a.description);
 					avatarValues.Add(new Language.KeyValue(a.title, a.title, values));
-				} else {
-					if(!appInventory.Contains(a.title)) {
-						appInventory.Add(a.title);
-						List<string> values = new List<string>();
-						values.Add(a.description);
-						appValues.Add(new Language.KeyValue(a.title, a.title, values));
-					}
+				} 
+				//else {
+				//	if(!appInventory.Contains(a.title)) {
+				//		appInventory.Add(a.title);
+				//		List<string> values = new List<string>();
+				//		values.Add(a.description);
+				//		appValues.Add(new Language.KeyValue(a.title, a.title, values));
+				//	}
+				//}
+			}
+			foreach(Appliance a in source.GetComponent<ApplianceManager>().allDevices) {
+				if(!appInventory.Contains(a.title)) {
+					appInventory.Add(a.title);
+					List<string> values = new List<string>();
+					values.Add(a.description);
+					appValues.Add(new Language.KeyValue(a.title, a.title, values));
 				}
 			}
+
 			groups.Add(new Language.ValueGroup("Content.Avatars", avatarValues));
 			groups.Add(new Language.ValueGroup("Content.Appliances", appValues));
 		}
