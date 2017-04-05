@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Name: Jaivar in the Dark
   m_EditorClassIdentifier: 
   title: Javier in the Dark
+  description: Get to know Javier Rouch and see what's his problem.
   steps:
-  - description: Yoghurt was selected
+  - description: Javier was selected
     conditionType: AvatarSelected
-    conditionProp: Yoghurt Ableton
+    conditionProp: Javier Rough
     unityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -31,26 +32,34 @@ MonoBehaviour:
             m_StringArgument: '{a:"Javier Rough", g:"Javier in the Dark", k:0, b:true}'
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Yoghurt was selected
-    conditionType: ApplianceSelected
-    conditionProp: Yoghurt Ableton
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: ShowMessage
+          m_MethodName: LimitInteraction
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:"player", g:"Javier in the Dark", k:1, b:true}'
+            m_StringArgument: ok_pressed
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    textType: 1
+    character: Javier Rough
+    textValue: Aargh! Too dark!
+    inChecklist: 0
+  - description: What's the problem
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 1
+    character: player
+    textValue: What seems to be problem?
+    inChecklist: 0
   followingNarratives: []

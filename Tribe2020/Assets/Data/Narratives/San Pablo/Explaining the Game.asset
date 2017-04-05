@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Name: Explaining the Game
   m_EditorClassIdentifier: 
   title: Explaining the Game
+  description: Get to know the people.
   steps:
-  - description: What can you do
+  - description: If we cannot decrease
     conditionType: 
     conditionProp: 
     unityEvent:
@@ -21,16 +22,28 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: ShowPrompt
+          m_MethodName: LimitInteraction
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.EG, k:0}'
+            m_StringArgument: only_ok
             m_BoolArgument: 0
           m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 2
+    character: player
+    textValue: If we cannot decrease the CO2 emissions of San Pablo we are doomed!
+    inChecklist: 0
+  - description: When private house
+    conditionType: OKPressed
+    conditionProp: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: LimitInteraction
@@ -45,176 +58,17 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
-    textValue: Hi there children!
-  - description: Learn to swipe
+    textType: 2
+    character: player
+    textValue: When people pay for their own energy use they can be motivated to save
+      energy in order to save money.
+    inChecklist: 0
+  - description: No such luck here
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:1}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: LimitInteraction
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: only_swipe
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: PlayUIAnimation
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: SwipeInstruction
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Energy consumption
-    conditionType: Swiped
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:2}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: LimitInteraction
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: only_ok
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: StopUIAnimation
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Let's open the Apocalysometer
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:3}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: LimitInteraction
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: only_apocalypsometer
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: PlayUIAnimation
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: MarkApocalypsometer
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Explain CO2
-    conditionType: ApocalypsometerOpened
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:4}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: StopUIAnimation
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: LimitInteraction
@@ -229,62 +83,17 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Explain Apocalypsometer
+    textType: 2
+    character: player
+    textValue: I don't think we will have that luck here. Nobody sees their energy
+      use and no single person pays for it neither.
+    inChecklist: 0
+  - description: I think I will have to
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{group:San Pablo Intro, key:2, button:true}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: HideUI
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:5}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: PlayUIAnimation
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: MarkEnergyPanel
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: LimitInteraction
@@ -294,87 +103,22 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: only_energy_panel
+            m_StringArgument: only_ok
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Open Energy Panel
-    conditionType: EnergyPanelOpened
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:"N.BS", k:"6"}'
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: StopUIAnimation
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Explain Energy Panel
+    textType: 2
+    character: player
+    textValue: If I am to change peoples habits here I have to understand them better,
+      and challenge them to do better!
+    inChecklist: 0
+  - description: Let's ask around
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:7}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: There are lamps on
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: HideUI
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{group:San Pablo Intro, key:3, button:true}'
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
           m_MethodName: LimitInteraction
@@ -384,122 +128,23 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:8}'
+            m_StringArgument: only_ok
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Turn off 1st lamp
-    conditionType: TurnedOffLamp
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:9}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Turn off 2nd lamp
-    conditionType: TurnedOffLamp
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:10}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Turn off 3rd lamp
-    conditionType: TurnedOffLamp
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:11}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
-  - description: Congratulations
+    textType: 2
+    character: player
+    textValue: I think I should start with observing the people who use this building
+      and also talk to them to see what can be done.
+    inChecklist: 1
+  - description: New quests
     conditionType: OKPressed
     conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
-            type: 2}
-          m_MethodName: ShowCongratualations
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 30
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.BS, k:12}'
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114040745391660008, guid: 5a943b3032374c74d80b32982d1cc510,
             type: 2}
           m_MethodName: LimitInteraction
           m_Mode: 5
@@ -514,29 +159,9 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
+    character: 
     textValue: 
-  - description: Tap to continue
-    conditionType: Tapped
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ClearView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    textType: 0
-    textValue: 
+    inChecklist: 0
   followingNarratives:
   - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
   - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}

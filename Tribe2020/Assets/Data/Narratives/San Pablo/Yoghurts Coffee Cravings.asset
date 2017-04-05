@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Yoghurts Coffee Cravings
   m_EditorClassIdentifier: 
   title: Yoghurts Coffee Cravings
+  description: Figure out who Yoghurt Ableton is and see to her needs.
   steps:
   - description: Yoghurt was selected
     conditionType: AvatarSelected
@@ -31,126 +32,22 @@ MonoBehaviour:
             m_StringArgument: '{a:"Yoghurt Ableton", g:N.YCC, k:0}'
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: What's the problem
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: ShowPrompt
+          m_MethodName: LimitInteraction
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.YCC, k:1}'
+            m_StringArgument: ok_pressed
             m_BoolArgument: 0
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - description: Coffee is always cold
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:"Yoghurt Ableton", g:N.YCC, k:2}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Recommed thermal jug
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.YCC, k:3}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Is that some kind of bird
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:"Yoghurt Ableton", g:N.YCC, k:4}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: I'll have a look
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowPrompt
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:player, g:N.YCC, k:5}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-  - description: Add objective
-    conditionType: OKPressed
-    conditionProp: 
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: AddObjective
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{g:N.YCC, k:5}'
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
+    textType: 1
+    character: Yoghurt Ableton
+    textValue: I'm sooo tired!
+    inChecklist: 0
   followingNarratives: []

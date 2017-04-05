@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Baby Steps
   m_EditorClassIdentifier: 
   title: Baby Steps
+  description: Learn the basics of being a fire shaman.
   steps:
   - description: So this is San Pablo
     conditionType: 
@@ -45,9 +46,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Finally, I made it to San Pablo offices. As a Shaman I'll have to make
       this place energy efficient.
+    inChecklist: 0
   - description: Learn to swipe
     conditionType: OKPressed
     conditionProp: 
@@ -92,8 +95,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: Let's have a look around. Swipe the screen to move to another view.
+    inChecklist: 0
   - description: What a view
     conditionType: Swiped
     conditionProp: 
@@ -138,8 +143,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: What a view! There are also other floors of this building.
+    inChecklist: 0
   - description: Energy is difficult
     conditionType: OKPressed
     conditionProp: 
@@ -172,9 +179,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Energy efficiency is a difficult subject. There are so many ways to
       think about it.
+    inChecklist: 0
   - description: CO2 emissions
     conditionType: OKPressed
     conditionProp: 
@@ -207,9 +216,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: One such thing is carbon dioxide, or CO2, emissions caused directly
       or indirectly by a building.
+    inChecklist: 0
   - description: Burning
     conditionType: OKPressed
     conditionProp: 
@@ -242,8 +253,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: CO2 is emitted whenever we burn something.
+    inChecklist: 0
   - description: Power stations
     conditionType: OKPressed
     conditionProp: 
@@ -276,8 +289,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: In power stations we burn things like coal and oil to generate electricity.
+    inChecklist: 0
   - description: Burners
     conditionType: OKPressed
     conditionProp: 
@@ -310,8 +325,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: In houses we use burners to keep rooms warm and to heat water.
+    inChecklist: 0
   - description: Open the apocalypsometer
     conditionType: OKPressed
     conditionProp: 
@@ -356,8 +373,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: Let's have a look at the CO2 emissions of this building.
+    inChecklist: 0
   - description: Oh no
     conditionType: ApocalypsometerOpened
     conditionProp: 
@@ -402,8 +421,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Oh no! We are currently emitting a lot of CO2.
+    inChecklist: 0
   - description: CO2 is gaseous
     conditionType: OKPressed
     conditionProp: 
@@ -436,8 +457,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: CO2 emissions are gaseous and will rise to the sky and atmosphere.
+    inChecklist: 0
   - description: Global warming
     conditionType: OKPressed
     conditionProp: 
@@ -470,9 +493,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: In the atmosphere CO2 functions as an isolation for the warmth emitted
       by the sun.
+    inChecklist: 0
   - description: We need CO2
     conditionType: OKPressed
     conditionProp: 
@@ -505,8 +530,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Without any CO2 in the atmosphere, our world would have been very cold.
+    inChecklist: 0
   - description: But not too much
     conditionType: OKPressed
     conditionProp: 
@@ -539,8 +566,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: On the other hand, more CO2 in the atmosphere will make it too hot.
+    inChecklist: 0
   - description: Decrease CO2
     conditionType: OKPressed
     conditionProp: 
@@ -573,9 +602,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Therefore, we need to decrease our CO2 emissions as much as possible
       to keep the world at a good temperature.
+    inChecklist: 0
   - description: 20% by 2020
     conditionType: OKPressed
     conditionProp: 
@@ -608,9 +639,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: We have until the year 2020 to decrease the emissions by 20%. This
       panel shows us how well we are doing.
+    inChecklist: 0
   - description: Open the energy panel
     conditionType: OKPressed
     conditionProp: 
@@ -667,9 +700,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: In order to figure out what is causing all our CO2 emissions, we have
       to take a look at the building's energy usage.
+    inChecklist: 0
   - description: Aha, the lamps
     conditionType: EnergyPanelOpened
     conditionProp: 
@@ -702,9 +737,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: Aha, look at all these lamps that are turned on. Someone must have
       forgot to turn them off yesterday.
+    inChecklist: 0
   - description: Find a switch
     conditionType: OKPressed
     conditionProp: 
@@ -749,8 +786,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: Now, where is the power switch for the lamps...
+    inChecklist: 0
   - description: Find another
     conditionType: TurnedOffLamp
     conditionProp: 
@@ -771,8 +810,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: Great, let's turn off the rest of the lamps on this floor.
+    inChecklist: 0
   - description: Find a third
     conditionType: TurnedOffLamp
     conditionProp: 
@@ -793,8 +834,10 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
+    textType: 1
+    character: player
     textValue: Great, let's turn off the rest of the lamps on this floor.
+    inChecklist: 0
   - description: Turn off 3rd lamp
     conditionType: TurnedOffLamp
     conditionProp: 
@@ -815,9 +858,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 1
+    textType: 2
+    character: player
     textValue: There we go! I'll really have to teach people around here to turn off
       the light after themselves.
+    inChecklist: 0
   - description: Congratulations
     conditionType: OKPressed
     conditionProp: 
@@ -863,7 +908,9 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 2
+    character: 
     textValue: No need for lights when nobody is around.
+    inChecklist: 0
   - description: Tap to continue
     conditionType: Tapped
     conditionProp: 
@@ -885,6 +932,8 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
+    character: 
     textValue: 
+    inChecklist: 0
   followingNarratives:
   - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}
