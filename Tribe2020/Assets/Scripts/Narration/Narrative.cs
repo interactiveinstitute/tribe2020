@@ -8,6 +8,8 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
 	public string title;
+	[TextArea(3, 10)]
+	public string description;
 	public List<Step> steps = new List<Step>();
 	private int _curStep = 0;
 
@@ -48,10 +50,12 @@ public class Narrative : ScriptableObject {
 
 		public UnityEvent unityEvent;
 
-		public enum TextType { Message, Prompt, Completion };
+		public enum TextType { None, Message, Prompt, Completion };
 		public TextType textType;
+		public string character;
 		[TextArea(3, 10)]
 		public string textValue;
+		public bool inChecklist;
 
 		//
 		public bool IsCompletedBy(string eventType, string prop) {

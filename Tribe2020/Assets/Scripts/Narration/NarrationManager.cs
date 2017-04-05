@@ -86,12 +86,16 @@ public class NarrationManager : MonoBehaviour {
 	public Narrative ActivateNarrative(Narrative narrative) {
 		Narrative n = Object.Instantiate(narrative) as Narrative;
 		foreach(Narrative.Step s in n.steps) {
+			string character = "";
+			if(s.character != "") {
+				character = "a:" + s.character + ",";
+			}
 			if(s.textType == Narrative.Step.TextType.Message) {
 				s.unityEvent.AddListener(
-					() => _interface.ShowMessage("{a:player, g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
+					() => _interface.ShowMessage("{" + character + " g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
 			} else if(s.textType == Narrative.Step.TextType.Prompt) {
 				s.unityEvent.AddListener(
-					() => _interface.ShowPrompt("{a:player, g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
+					() => _interface.ShowPrompt("{" + character + " g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
 			} else if(s.textType == Narrative.Step.TextType.Completion) {
 				s.unityEvent.AddListener(
 					() => _interface.ShowCongratualations("{g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
