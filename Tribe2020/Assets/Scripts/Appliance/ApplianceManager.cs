@@ -11,6 +11,7 @@ public class ApplianceManager : MonoBehaviour {
 
 	[SerializeField]
 	private List<Appliance> _appliances;
+	public List<Appliance> allDevices;
 
 	//
 	void Awake() {
