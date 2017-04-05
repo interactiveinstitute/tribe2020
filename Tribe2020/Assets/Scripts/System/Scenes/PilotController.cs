@@ -397,9 +397,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 
 		if(_instance._view.GetCurrentUI() != null) {
-			if(_instance._view.GetCurrentUI() == _instance._view.inspector) {
-				_instance._narrationMgr.OnNarrativeEvent("InspectorClosed");
-			} else if(_instance._view.GetCurrentUI() == _instance._view.inbox) {
+			//if(_instance._view.GetCurrentUI() == _instance._view.inspector) {
+			//	_instance._narrationMgr.OnNarrativeEvent("InspectorClosed");
+			//} else 
+			if(_instance._view.GetCurrentUI() == _instance._view.inbox) {
 				_instance._narrationMgr.OnNarrativeEvent("InboxClosed");
 			}
 		}
@@ -408,9 +409,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			HideUI();
 		} else {
 			_instance._view.SetCurrentUI(ui);
-			if(ui == _instance._view.inspector) {
-				_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
-			} else if(ui == _instance._view.inbox) {
+			//if(ui == _instance._view.inspector) {
+			//	_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
+			//} else
+			if(ui == _instance._view.inbox) {
 				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
 			} else if(ui == _instance._view.energyPanel) {
@@ -531,14 +533,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_resourceMgr.comfort -= eem.comfortCost;
 
 			if(eem.callback != "") {
-                //_instance.SendMessage(eem.callback, eem.callbackArgument);
-                if (eem.callbackAffordance) {
-                    appliance.SendMessage(eem.callback, eem.callbackAffordance);
-                }
-                else {
-                    appliance.SendMessage(eem.callback, eem.callbackArgument);
-                }
-            }
+				//_instance.SendMessage(eem.callback, eem.callbackArgument);
+				if (eem.callbackAffordance) {
+					appliance.SendMessage(eem.callback, eem.callbackAffordance);
+				} else {
+					appliance.SendMessage(eem.callback, eem.callbackArgument);
+				}
+			}
 			GameObject returnedGO = appliance.ApplyEEM(eem);
 
             //Redraw device panel
@@ -646,7 +647,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		Sprite portrait = null;
 		if(avatarName != null) {
-			if(avatarName == "player") {
+			if(avatarName == "Player" || avatarName == "player") {
 				portrait = _instance._avatarMgr.playerPortrait;
 				avatarName = "F. Shaman: ";
 			} else {

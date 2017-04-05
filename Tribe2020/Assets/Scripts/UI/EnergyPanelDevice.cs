@@ -17,7 +17,7 @@ public class EnergyPanelDevice : MonoBehaviour {
 
 		if(device.GetComponent<Appliance>()) {
 			Appliance app = device.GetComponent<Appliance>();
-			deviceName.text = _controller.GetPhrase("Appliance", app.title + "_Title");
+			deviceName.text = _controller.GetPhrase("Content.Appliances", app.title);
 			icon.sprite = app.icon;
 		}
 	}

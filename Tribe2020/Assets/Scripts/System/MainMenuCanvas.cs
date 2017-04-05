@@ -75,62 +75,64 @@ public class MainMenuCanvas : MonoBehaviour {
 
 	//
 	public void Translate() {
-		playText.text = _controller.GetPhrase("Interface", "main play");
-		continueText.text = _controller.GetPhrase("Interface", "main continue");
-		settingsText.text = _controller.GetPhrase("Interface", "main settings");
-		aboutText.text = _controller.GetPhrase("Interface", "main about");
-		fbText.text = _controller.GetPhrase("Interface", "main facebook");
+		TranslateText(playText);
+		TranslateText(continueText);
+		TranslateText(settingsText);
+		TranslateText(aboutText);
+		TranslateText(fbText);
 
 		_controller.InitSlotButton(slot1Text.transform.parent, slot1Text.transform.parent.parent.GetChild(0), 0);
 		_controller.InitSlotButton(slot2Text.transform.parent, slot2Text.transform.parent.parent.GetChild(0), 1);
 		_controller.InitSlotButton(slot3Text.transform.parent, slot3Text.transform.parent.parent.GetChild(0), 2);
-		//slot1Text.text = _controller.GetPhrase("Interface", "main slot") + " 1";
-		//slot2Text.text = _controller.GetPhrase("Interface", "main slot") + " 2";
-		//slot3Text.text = _controller.GetPhrase("Interface", "main slot") + " 3";
 
-		returnFileText.text = _controller.GetPhrase("Interface", "main back");
-		returnPilotText.text = _controller.GetPhrase("Interface", "main back");
-		returnSettingsText.text = _controller.GetPhrase("Interface", "main back");
-		clearSavesText.text = _controller.GetPhrase("Interface", "main clearsaves");
-		returnAboutText.text = _controller.GetPhrase("Interface", "main back");
+		TranslateText(returnFileText);
+		TranslateText(returnPilotText);
+		TranslateText(returnSettingsText);
+		TranslateText(clearSavesText);
+		TranslateText(returnAboutText);
 
 		foreach(Text t in pilotPlayButtonTexts) {
-			t.text = _controller.GetPhrase("Interface", "main play level");
+			TranslateText(t);
 		}
 		foreach(Text t in energyDistributionTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution");
+			TranslateText(t);
 		}
 		foreach(Text t in hotWaterTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 0);
+			TranslateText(t);
 		}
 		foreach(Text t in coolingTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 1);
+			TranslateText(t);
 		}
 		foreach(Text t in heatingTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 2);
+			TranslateText(t);
 		}
 		foreach(Text t in lightingTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 3);
+			TranslateText(t);
 		}
 		foreach(Text t in fanTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 4);
+			TranslateText(t);
 		}
 		foreach(Text t in appliancesTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot distribution", 5);
+			TranslateText(t);
 		}
 		foreach(Text t in statsTitleTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot stat title");
+			TranslateText(t);
 		}
 		foreach(Text t in statsDescriptionTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot stat description");
+			TranslateText(t);
 		}
 		foreach(Text t in aboutTitleTexts) {
-			t.text = _controller.GetPhrase("Interface", "main pilot about title");
+			TranslateText(t);
 		}
 
 		for(int i = 0; i < pilots.Length; i++) {
 			statsTexts[i].text = _controller.GetPhrase(pilots[i], "Stats");
 			aboutTexts[i].text = _controller.GetPhrase(pilots[i], "Info");
 		}
+	}
+
+	//Given a UI text, look for translation using object name as key
+	public void TranslateText(Text text) {
+		text.text = _controller.GetPhrase("MainMenu", text.name);
 	}
 }

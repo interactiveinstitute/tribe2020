@@ -87,11 +87,12 @@ public class PilotView : View{
 	public Sprite lockIcon;
 	public Color currentColor;
 
-	[Header("Overlay")]
-	public GameObject inspectorUI;
-	public Transform inspectorEEMContainer;
-	public Transform inspectorActionList;
 
+	//public GameObject inspectorUI;
+	//public Transform inspectorEEMContainer;
+	//public Transform inspectorActionList;
+
+	[Header("Overlay")]
 	public GameObject messageUI;
 	public GameObject messageButton;
 	public GameObject victoryUI;
@@ -113,7 +114,7 @@ public class PilotView : View{
 	private RectTransform _curMenu;
 	public List<Transform> menus;
 
-	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, inspector, apocalypsometer, characterPanel, devicePanel;
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, apocalypsometer, characterPanel, devicePanel;
 	private bool _settingsIsVisible = false;
     #endregion
 
@@ -522,6 +523,7 @@ public class PilotView : View{
 
 	//
 	public void HideMessage() {
+		Debug.Log("hide message");
 		messageUI.SetActive(false);
 	}
 

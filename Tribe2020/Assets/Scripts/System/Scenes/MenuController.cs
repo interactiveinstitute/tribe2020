@@ -147,7 +147,7 @@ public class MenuController : MonoBehaviour {
 	public void InitSlotButton(Transform button, Transform removeButton, int slot) {
 		button.GetComponent<Button>().onClick.RemoveAllListeners();
 		if(_saveMgr.IsSlotVacant(slot)) {
-			button.GetComponentInChildren<Text>().text = GetPhrase("Interface", "main slot") + " " + (slot + 1);
+			button.GetComponentInChildren<Text>().text = GetPhrase("MainMenu", "main slot") + " " + (slot + 1);
 			pendingNewGameSlot = slot;
 			button.GetComponent<Button>().onClick.AddListener(() => OpenPilotMenu(slot));
 			removeButton.gameObject.SetActive(false);
