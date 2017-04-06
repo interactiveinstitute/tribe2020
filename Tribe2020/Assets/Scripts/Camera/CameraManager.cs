@@ -97,29 +97,32 @@ public class CameraManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		//if(_lookAtRotation)
-		//_lookAtEuler = _lookAtRotation.eulerAngles;
-
+		//Initialization after start
 		if(_firstLoop) {
 			SetViewpoint((int)startCoordinates.x, (int)startCoordinates.y, Vector2.zero);
 			OnFloorChange(startCoordinates);
 			_firstLoop = false;
 		}
 
+		//If on it's way somewhere, update motion
 		if(journeyLength > 0) {
 			float distCovered = (Time.unscaledTime - startTime) * 10;
 			fracJourney = distCovered / 3;
 
-			//if(cameraState == CameraManager.CameraState.Idle) {
 			if(!_isLooking) {
 				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
 				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _targetRot, fracJourney);
 				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _defaultFOV, fracJourney);
 			} else {
-				//gameCamera.transform.rotation = Quaternion.RotateTowards(Quaternion.Euler(_lastRot), Quaternion.Euler(_targetRot), 0.1f);
 				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _lookAtRotation, fracJourney);
-				//gameCamera.transform.eulerAngles = Vector3.Slerp(_lastRot, _lookAtRotation, fracJourney);
 				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _lookaAtFOV, fracJourney);
+			}
+
+			if(fracJourney > 0.99f) {
+				gameCamera.transform.position = _targetPos;
+				gameCamera.transform.rotation = _targetRot;
+				journeyLength = 0;
+				OnCameraArrived();
 			}
 		}
 	}
@@ -249,10 +252,7 @@ public class CameraManager : MonoBehaviour {
 
 		SaveCurrentAsLastCameraState();
 
-		//_lastPos = gameCamera.transform.position;
 		_targetPos = _curView.transform.position;
-
-		//_lastRot = gameCamera.transform.eulerAngles;
 		_targetRot = _curView.transform.rotation;
 
 		startTime = Time.unscaledTime;
@@ -410,7 +410,6 @@ public class CameraManager : MonoBehaviour {
 		_isLooking = false;
 		startTime = Time.unscaledTime;
 		SaveCurrentAsLastCameraState();
-		//_lookAtRotation = null;
 	}
 
 	//
@@ -453,9 +452,7 @@ public class CameraManager : MonoBehaviour {
 			SaveCurrentAsLastCameraState();
 
 			//Set to state
-			//_lastPos = gameCamera.transform.position;
 			_targetPos = _curView.transform.position;
-			//_lastRot = gameCamera.transform.eulerAngles;
 			_targetRot = _curView.transform.rotation;
 
 			startTime = Time.unscaledTime;
@@ -470,6 +467,7 @@ public class CameraManager : MonoBehaviour {
 		return targetCoordinates.y != currentCoordinates.y;
 	}
 
+	//
 	void OnFloorChange(Vector2 targetCoordinates) {
 		//Turn off lights on current floor
 		Floor currentFloor = _curView.relatedZones[0].GetFloor();
@@ -478,6 +476,11 @@ public class CameraManager : MonoBehaviour {
 		//Turn on lights on new floor
 		Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
 		newFloor.ToggleLightActive(true);
+	}
+
+	//Callback for when lerping between views is over and camera is still
+	public void OnCameraArrived() {
+		_interface.OnCameraArrived(_curView);
 	}
 
 	//
