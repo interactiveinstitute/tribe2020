@@ -520,7 +520,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_instance._view.UpdateViewpointTitle(curView);
 		}
 
+		//Debug.Log("SelectedView:" + curView.title);
 		_instance._narrationMgr.OnNarrativeEvent("SelectedView", curView.title);
+	}
+
+	//
+	public void OnCameraArrived(Viewpoint viewpoint) {
+		_instance._narrationMgr.OnNarrativeEvent("CameraArrived", viewpoint.title);
 	}
 
 	//
@@ -565,9 +571,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnAvatarActivityComplete(string activity) {
-		if(_narrationMgr != null) {
+		if(_instance._narrationMgr != null) {
 			_instance._narrationMgr.OnNarrativeEvent("ActivityOver", activity);
-			//_narrationMgr.OnQuestEvent(Quest.QuestEvent.AvatarActivityOver, activity);
 		}
 	}
 
@@ -833,6 +838,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void MoveCamera(string animation) {
 		_instance._view.UpdateViewpointTitle("");
 		_instance._cameraMgr.PlayAnimation(animation);
+	}
+
+	//
+	public void GotoViewpoint(string title) {
+		Viewpoint[][] vps = _instance._cameraMgr.GetViewpoints();
+		for(int y = 0; y < vps.Length; y++) {
+			for(int x = 0; x < vps[y].Length; x++) {
+				if(vps[y][x].title == title) {
+					_instance._cameraMgr.SetViewpoint(x, y, Vector2.zero);
+				}
+			}
+		}
 	}
 
 	//

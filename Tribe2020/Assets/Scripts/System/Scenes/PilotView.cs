@@ -507,7 +507,7 @@ public class PilotView : View{
 		//}
 	}
 
-	//
+	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
 	public void ShowMessage(string message, Sprite portrait, bool showAtBottom, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
@@ -521,9 +521,8 @@ public class PilotView : View{
 		messageButton.SetActive(showOkButton);
 	}
 
-	//
+	//Hide the message UI
 	public void HideMessage() {
-		Debug.Log("hide message");
 		messageUI.SetActive(false);
 	}
 
