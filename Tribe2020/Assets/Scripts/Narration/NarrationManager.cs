@@ -82,13 +82,13 @@ public class NarrationManager : MonoBehaviour {
 		CompleteNarrative(active[selectIndex]);
 	}
 
-	//
+	//Clone narrative as own instance and create text related callback if step contains such values
 	public Narrative ActivateNarrative(Narrative narrative) {
 		Narrative n = Object.Instantiate(narrative) as Narrative;
 		foreach(Narrative.Step s in n.steps) {
 			string character = "";
 			if(s.character != "") {
-				character = "a:" + s.character + ",";
+				character = "a:\"" + s.character + "\",";
 			}
 			if(s.textType == Narrative.Step.TextType.Message) {
 				s.unityEvent.AddListener(
