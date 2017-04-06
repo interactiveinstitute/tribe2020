@@ -14,40 +14,28 @@ MonoBehaviour:
   title: Bobs Restroom Request
   description: Find Bob Alison and help him out.
   steps:
-  - description: Bob was selected
+  - description: Talk to Bob
     conditionType: AvatarSelected
     conditionProp: Bob Alison
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
-            type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:"Bob Alison", g:"Bobs Restroom Request", k:0, b:true}'
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 0
-    character: 
-    textValue: 
-    inChecklist: 0
-  - description: Yoghurt was selected
-    conditionType: ApplianceSelected
-    conditionProp: Yoghurt Ableton
+    textType: 2
+    character: Bob Alison
+    textValue: Hello!
+    inChecklist: 1
+  - description: TODO
+    conditionType: OKPressed
+    conditionProp: 
     unityEvent:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
             type: 2}
-          m_MethodName: ShowMessage
-          m_Mode: 5
+          m_MethodName: HideMessage
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
