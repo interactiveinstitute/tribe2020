@@ -56,6 +56,11 @@ public class BattleController : Controller {
 		if(!_isLoaded) {
 			_isLoaded = true;
 			LoadGameState();
+
+			Debug.Log("app: "   + _saveMgr.GetData("pendingChallenge")["appliance"]);
+			Debug.Log("title: " + _saveMgr.GetData("pendingChallenge")["appliance"]["title"]);
+
+			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
 		}
 
 		_view.foeCPNumber.text = foeCP + "/100";
@@ -100,10 +105,24 @@ public class BattleController : Controller {
 	}
 
 	//
+	public void LoadOpponent(JSONNode json) {
+		Appliance foeAppliance = foeObject.GetComponent<Appliance>();
+		AvatarModel foeModel = foeObject.GetComponent<AvatarModel>();
+		AvatarStats foeStats = foeObject.GetComponent<AvatarStats>();
+
+		foeStats.DeserializeFromJSON(json);
+		foeAppliance.title = json["appliance"]["title"];
+		foeModel.DeserializeFromJSON(json["avatarModel"]);
+
+		_view.foeName.text = foeAppliance.title;
+	}
+
+	//
 	public void OnArguePressed(int answerIndex) {
 		if(answerIndex == quizzes[_curQuiz].rightChoice) {
 			int damage = Random.Range(10, 20);
 			_view.CreateFeedback(foeObject.transform.position, "" + damage);
+			foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
 			foeCP = Mathf.Max(foeCP - damage, 0);
 			if(foeCP == 0) {
 				OnWin();
