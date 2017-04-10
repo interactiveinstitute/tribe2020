@@ -114,6 +114,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		RefreshSlots();
 	}
 
+	//Called before destroyed
     void OnDestroy() {
 		if(_applianceManager) {
 			_applianceManager.RemoveAppliance(GetComponent<Appliance>());
@@ -203,7 +204,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//If Avatar, challenge to a battle
 	public void Challenge() {
-		_ctrlMgr.LoadScene("BattleScene");
+		_ctrlMgr.ChallengeAvatar(this);
+		//_ctrlMgr.PrepareForBattle(this);
+		//_ctrlMgr.LoadScene("BattleScene");
 	}
 
 	//
@@ -221,6 +224,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		//_harvestButton.SetActive(true);
 	}
 
+	//
 	public bool DecreaseNrOfAffordanceSlots(Affordance affordance, int count = 1) {
 		for(int i = 0; i < avatarAffordances.Count; i++) {
 			if(avatarAffordances[i].affordance == affordance) {
@@ -247,6 +251,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		return false;
 	}
 
+	//
 	public bool IncreaseNrOfAffordanceSlots(Affordance affordance, int count = 1) {
 		for(int i = 0; i < avatarAffordances.Count; i++) {
 			if(avatarAffordances[i].affordance == affordance) {
@@ -257,6 +262,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		return false;
 	}
 
+	//
 	public bool RemoveAllUsersOfAffordance(Affordance affordance) {
 		foreach(AffordanceResource affordanceResource in avatarAffordances) {
 			if(affordanceResource.affordance == affordance) {
@@ -267,6 +273,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		return false;
 	}
 
+	//
 	public bool TakeAffordanceSlot(Affordance affordance, AvatarActivity activity) {
 		foreach(AffordanceResource affordanceResource in avatarAffordances) {
 			if(affordanceResource.affordance == affordance) {
@@ -276,6 +283,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		return false;
 	}
 
+	//
 	public bool ReleaseAffordanceSlot(Affordance affordance, AvatarActivity activity) {
 		foreach(AffordanceResource affordanceResource in avatarAffordances) {
 			if(affordanceResource.affordance == affordance) {
@@ -299,6 +307,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		return _zone;
 	}
 
+	//
 	public bool IsEEMApplied(EnergyEfficiencyMeasure eem) {
 		return appliedEEMs.Contains(eem);
 	}
