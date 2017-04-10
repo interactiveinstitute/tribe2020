@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using SimpleJSON;
 
 [System.Serializable]
 public class AvatarStats : MonoBehaviour {
@@ -157,4 +158,29 @@ public class AvatarStats : MonoBehaviour {
         }
     }
 
+	//
+	public JSONClass SerializeAsJSON() {
+		JSONClass json = new JSONClass();
+
+		json.Add("knowledge", "" + _knowledge);
+		json.Add("attitude", "" + _attitude);
+		json.Add("norm", "" + _normSensititvity);
+		json.Add("conviction", "" + conviction);
+		json.Add("energy", "" + energy);
+
+		JSONClass appJSON = GetComponent<Appliance>().SerializeAsJSON();
+		json.Add("appliance", appJSON);
+		JSONClass modelJSON = GetComponent<AvatarModel>().SerializeAsJSON();
+		json.Add("avatarModel", modelJSON);
+		return json;
+	}
+
+	//
+	public void DeserializeFromJSON(JSONNode json) {
+		_knowledge = json["knowledge"].AsFloat;
+		_attitude = json["attitude"].AsFloat;
+		_normSensititvity = json["norm"].AsFloat;
+		conviction = json["conviction"].AsFloat;
+		energy = json["energy"].AsFloat;
+	}
 }
