@@ -734,6 +734,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		JSONClass challengeData = app.GetComponent<AvatarStats>().SerializeAsJSON();
 		_instance._saveMgr.SetClass("pendingChallenge", challengeData);
 
+		SaveGameState();
+
 		_instance.LoadScene("BattleScene");
 	}
 

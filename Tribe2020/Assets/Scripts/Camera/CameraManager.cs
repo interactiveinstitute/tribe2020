@@ -82,14 +82,9 @@ public class CameraManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		//_controller = PilotController.GetInstance();
-
 		_lastFOV = _defaultFOV = gameCamera.fieldOfView;
-
 		_lastPos = _targetPos = gameCamera.transform.position;
-		//_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 		_lastRot = _targetRot = gameCamera.transform.rotation;
-
 
 		//Populate collection of viewpoints
 		PopulateViewpoints();
@@ -198,8 +193,8 @@ public class CameraManager : MonoBehaviour {
 			if(vp.overview) {
 				_overview = vp;
 			} else {
-				int curY = vp.yIndex;
-				if(maxY <= curY) { maxY = curY + 1; }
+				float curY = vp.coordinates.y;
+				if(maxY <= curY) { maxY = (int)curY + 1; }
 			}
 		}
 		//_viewpoints = new Transform[maxY][];
@@ -210,9 +205,9 @@ public class CameraManager : MonoBehaviour {
 			int maxX = 0;
 
 			foreach(Viewpoint vp in viewPoints) {
-				if(!vp.overview && vp.yIndex == y) {
-					int curX = vp.xIndex;
-					if(maxX <= curX) { maxX = curX + 1; }
+				if(!vp.overview && vp.coordinates.y == y) {
+					float curX = vp.coordinates.x;
+					if(maxX <= curX) { maxX = (int)curX + 1; }
 				}
 			}
 
@@ -221,7 +216,7 @@ public class CameraManager : MonoBehaviour {
 
 			int x = 0;
 			foreach(Viewpoint vp in viewPoints) {
-				if(!vp.overview && vp.yIndex == y) {
+				if(!vp.overview && vp.coordinates.y == y) {
 					_views[y][x++] = vp;
 				}
 			}
@@ -230,8 +225,8 @@ public class CameraManager : MonoBehaviour {
 		//Add viewpoints to camera manager
 		foreach(Viewpoint vp in viewPoints) {
 			if(!vp.overview) {
-				int curX = vp.xIndex;
-				int curY = vp.yIndex;
+				int curX = (int)vp.coordinates.x;
+				int curY = (int)vp.coordinates.y;
 
 				//_viewpoints[curY][curX] = vp.transform;
 				_views[curY][curX] = vp;
@@ -463,19 +458,32 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
+	public void SetViewpoint(string viewpoint) {
+		for(int y = 0; y < _views.Length; y++) {
+			for(int x = 0; x < _views[y].Length; x++) {
+				if(_views[y][x].title == viewpoint) {
+					SetViewpoint(x, y, Vector2.zero);
+				}
+			}
+		}
+	}
+
 	bool TryFloorChange(Vector2 targetCoordinates) {
 		return targetCoordinates.y != currentCoordinates.y;
 	}
 
 	//
 	void OnFloorChange(Vector2 targetCoordinates) {
-		//Turn off lights on current floor
-		Floor currentFloor = _curView.relatedZones[0].GetFloor();
-		currentFloor.ToggleLightActive(false);
+		if(_curView.relatedZones.Count > 0) {
+			//Turn off lights on current floor
+			Floor currentFloor = _curView.relatedZones[0].GetFloor();
+			currentFloor.ToggleLightActive(false);
 
-		//Turn on lights on new floor
-		Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
-		newFloor.ToggleLightActive(true);
+			//Turn on lights on new floor
+			Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
+			newFloor.ToggleLightActive(true);
+		}
 	}
 
 	//Callback for when lerping between views is over and camera is still
@@ -505,7 +513,7 @@ public class CameraManager : MonoBehaviour {
 	void GotoUnlockedViewPointOnFloor(int y, Vector2 dir) {
 		foreach(Viewpoint viewpoint in _views[y]) {
 			if(!viewpoint.locked) {
-				SetViewpoint(viewpoint.xIndex, viewpoint.yIndex, dir);
+				SetViewpoint((int)viewpoint.coordinates.x, (int)viewpoint.coordinates.y, dir);
 				return;
 			}
 		}

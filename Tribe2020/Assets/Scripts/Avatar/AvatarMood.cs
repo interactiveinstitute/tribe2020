@@ -152,8 +152,10 @@ public class AvatarMood : MonoBehaviour {
     }
 
     public void ReleaseSatisfactionGem() {
-        _gems.Instantiate(_gems.satisfactionGem, transform.position + 2.1f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
-        _resourceMgr.comfortHarvestCount++;
+		if(_gems) {
+			_gems.Instantiate(_gems.satisfactionGem, transform.position + 2.1f * Vector3.up, ResourceManager.GetInstance().AddComfort, 1, 0.1f);
+			_resourceMgr.comfortHarvestCount++;
+		}
     }
 
     void UpdateLooksByCurrentMood() {

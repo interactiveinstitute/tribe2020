@@ -144,11 +144,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);                
 				newApp.transform.SetParent(slot.transform, false);
             }
-
-            
-
-            //newApp.transform.position = slot.transform.position;
-            //newApp.transform.rotation = slot.transform.rotation;
         }
 	}
 
@@ -204,9 +199,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 	//If Avatar, challenge to a battle
 	public void Challenge() {
-		_ctrlMgr.ChallengeAvatar(this);
-		//_ctrlMgr.PrepareForBattle(this);
-		//_ctrlMgr.LoadScene("BattleScene");
+		if(GetComponent<BehaviourAI>()) {
+			_ctrlMgr.ChallengeAvatar(this);
+			//_ctrlMgr.PrepareForBattle(this);
+			//_ctrlMgr.LoadScene("BattleScene");
+		}
 	}
 
 	//

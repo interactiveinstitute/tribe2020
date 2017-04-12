@@ -10,16 +10,27 @@ public class BattleView : View {
 
 	public GameObject RisingNumberPrefab;
 
+	public GameObject dialogueUI;
+	public GameObject barsUI;
+	public GameObject actionsUI;
+	public GameObject levelUpUI;
+
 	public Text foeName;
 	public Text foeCPNumber;
-	public Text foeEPNumber;
+	//public Text foeEPNumber;
 	public Image foeCPBar;
-	public Image foeEPBar;
+	//public Image foeEPBar;
 
 	public Text allyCPNumber;
-	public Text allyEPNumber;
+	//public Text allyEPNumber;
 	public Image allyCPBar;
-	public Image allyEPBar;
+	//public Image allyEPBar;
+
+	public Text levelUpName;
+	public Slider avatarSatisfaction;
+	public Slider avatarKnowledge;
+	public Slider avatarAttitude;
+	public Slider avatarNorm;
 
 	public Text question;
 	public Text[] answers;

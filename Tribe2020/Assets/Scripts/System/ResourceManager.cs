@@ -73,13 +73,15 @@ public class ResourceManager : MonoBehaviour {
 		RefreshProduction();
 
 		DataContainer dataContainer = DataContainer.GetInstance();
-		CO2Outcome = dataContainer.cO2Outcome;
-		CO2Baseline = dataContainer.cO2Baseline;
-		CO2ChangeSeries = dataContainer.cO2ChangeSeries;
-		CostOutcome = dataContainer.costOutcome;
-		CostBaseline = dataContainer.costBaseline;
-		electricityOutcome = dataContainer.electricityOutcome;
-		gasOutcome = dataContainer.gasOutcome;
+		if(dataContainer) {
+			CO2Outcome = dataContainer.cO2Outcome;
+			CO2Baseline = dataContainer.cO2Baseline;
+			CO2ChangeSeries = dataContainer.cO2ChangeSeries;
+			CostOutcome = dataContainer.costOutcome;
+			CostBaseline = dataContainer.costBaseline;
+			electricityOutcome = dataContainer.electricityOutcome;
+			gasOutcome = dataContainer.gasOutcome;
+		}
 		_currentTime = _timeMgr.time;
 	}
 
