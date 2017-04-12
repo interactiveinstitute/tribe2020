@@ -28,10 +28,7 @@ GameObject:
   - component: {fileID: 114000012038547090}
   - component: {fileID: 114000010909788958}
   - component: {fileID: 114000010441662830}
-  - component: {fileID: 114000014268063458}
   - component: {fileID: 114000011584839538}
-  - component: {fileID: 114000011490770672}
-  - component: {fileID: 114684005188211906}
   m_Layer: 12
   m_Name: OfficeWorkerGeneral
   m_TagString: Avatar
@@ -188,10 +185,6 @@ MonoBehaviour:
   appliedEEMs: []
   interactionPos: {x: 0, y: 0.3502744, z: 0}
   posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!114 &114000010909788958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -211,18 +204,6 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 2
---- !u!114 &114000011490770672
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011262242068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uniqueId: 1faa528a-1638-4c78-8d37-45f40cbcbd84
 --- !u!114 &114000011584839538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -271,9 +252,9 @@ MonoBehaviour:
   _controller: {fileID: 0}
   _stats: {fileID: 0}
   _savedIdlePosition: {x: -1.185515, y: 0.3666649, z: -8.913963}
+  _prevActivity: {fileID: 0}
   _curActivity: {fileID: 0}
   _nextActivity: {fileID: 0}
-  _prevActivity: {fileID: 0}
   _isControlled: 0
   _isSimulating: 0
   _nrOfActiveColliders: 1
@@ -315,23 +296,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portrait: {fileID: 0}
-  knowledge: 0.75
-  attitude: 1
-  normSensititvity: 0
+  _knowledge: 0
+  _attitude: 0
+  _normSensititvity: 0
   conviction: 100
   energy: 60
---- !u!114 &114000014268063458
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011262242068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uniqueId: e5d4add0-9aa4-4b1d-bb6a-14eda141839c
 --- !u!114 &114290836954102972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -344,18 +313,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelId: 0
---- !u!114 &114684005188211906
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011262242068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uniqueId: 35b14537-5f4c-495f-ada4-37bc8ae8d027
+  hairColor: {r: 0, g: 0, b: 0, a: 0}
+  skinColor: {r: 0, g: 0, b: 0, a: 0}
+  clothesColor1: {r: 0, g: 0, b: 0, a: 0}
+  clothesColor2: {r: 0, g: 0, b: 0, a: 0}
+  pantsColor: {r: 0, g: 0, b: 0, a: 0}
+  shoeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!136 &136000012680133070
 CapsuleCollider:
   m_ObjectHideFlags: 1
