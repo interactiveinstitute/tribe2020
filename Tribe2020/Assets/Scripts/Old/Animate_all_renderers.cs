@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Animate_all_renderers : MonoBehaviour {
 
-	public float colorStart = 1f;
-	public float colorEnd = 0f;
+	public float colorStart = -2f;
+	public float colorEnd = 0.5f;
 	public float duration = 1.0F;
 	public Renderer[] AllRenderers;
 	private Renderer rend;
 	//private Material[] myMaterials;
 	void Start() {
-		AllRenderers = (Renderer[])Resources.FindObjectsOfTypeAll(typeof(Renderer));
+		AllRenderers = (Renderer[])Object.FindObjectsOfTypeAll(typeof(Renderer));
 		rend = GetComponent<Renderer>();
 	}
 
