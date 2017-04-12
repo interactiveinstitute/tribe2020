@@ -2,24 +2,32 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class BattleView : View {
+public class BattleView : MonoBehaviour {
 	//Singleton features
+	private static BattleView _instance;
 	public static BattleView GetInstance() {
 		return _instance as BattleView;
 	}
 
 	public GameObject RisingNumberPrefab;
 
+	public GameObject dialogueUI;
+	public GameObject barsUI;
+	public GameObject actionsUI;
+	public GameObject levelUpUI;
+
 	public Text foeName;
 	public Text foeCPNumber;
-	public Text foeEPNumber;
 	public Image foeCPBar;
-	public Image foeEPBar;
 
 	public Text allyCPNumber;
-	public Text allyEPNumber;
 	public Image allyCPBar;
-	public Image allyEPBar;
+
+	public Text levelUpName;
+	public Slider avatarSatisfaction;
+	public Slider avatarKnowledge;
+	public Slider avatarAttitude;
+	public Slider avatarNorm;
 
 	public Text question;
 	public Text[] answers;
@@ -61,6 +69,14 @@ public class BattleView : View {
 
 	//
 	public void ShowFireworks() {
-		fireworks.Play();
+		_instance.fireworks.Play();
+	}
+
+	//
+	public void ClearView() {
+	}
+
+	//
+	public void ControlInterface(string id, string action) {
 	}
 }

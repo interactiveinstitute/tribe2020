@@ -63,7 +63,6 @@ public class CameraManager : MonoBehaviour {
 	private float startTime;
 	[ShowOnly]
 	public float journeyLength;
-
 	private float _panSpeed = 0.01f;
 
 	private bool _firstLoop = true;
@@ -123,8 +122,6 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void UpdateVisibility() {
-		//Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
-
 		foreach(GameObject go in _curView.hideObjects) {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
@@ -222,6 +219,7 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
 	private void SaveCurrentAsLastCameraState() {
 		_lastPos = gameCamera.transform.position;
 		_lastRot = gameCamera.transform.rotation;
@@ -252,7 +250,6 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	public void SetLookAtTarget(Appliance appliance) {
-
 		SaveCurrentAsLastCameraState();
 		_isLooking = true;
 		// distance to zoomed in object
@@ -264,10 +261,6 @@ public class CameraManager : MonoBehaviour {
 		_lookaAtFOV = calculateLookAtFOV(appliance);
 
 		startTime = Time.unscaledTime;
-		//_lookAtRotation = new GameObject().transform;
-		//_lookAtTransform.rotation = transform.rotation;
-		//_lookAtTransform.position = transform.position;
-		//_lookAtRotation.LookAt(appliancePosition);
 
 		//Find center of appliance in order to set camera rotation
 		float applianceHeight = 1.5f; //Set a default approximate height for things without collider
@@ -279,8 +272,7 @@ public class CameraManager : MonoBehaviour {
 		Vector3 relativePos = appliancePosition - gameCamera.transform.position;
 		_lookAtRotation = Quaternion.LookRotation(relativePos);
 		//Position thee appliance on the left side of the screen
-		_lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);  //new Vector3(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
-																				//gameCamera.transform.LookAt(appliance.transform);
+		_lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
 	}
 
 	private float calculateLookAtFOV(Appliance appliance) {
@@ -421,7 +413,6 @@ public class CameraManager : MonoBehaviour {
 			}
 			return;
 		} else {
-
 			//Is new viewpoint on another floor?
 			if(TryFloorChange(targetCoordinates)) {
 				OnFloorChange(targetCoordinates);
@@ -446,19 +437,33 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
+	public void SetViewpoint(string viewpoint) {
+		for(int y = 0; y < _views.Length; y++) {
+			for(int x = 0; x < _views[y].Length; x++) {
+				if(_views[y][x].title == viewpoint) {
+					SetViewpoint(x, y, Vector2.zero);
+				}
+			}
+		}
+	}
+
+	//
 	bool TryFloorChange(Vector2 targetCoordinates) {
 		return targetCoordinates.y != currentCoordinates.y;
 	}
 
 	//
 	void OnFloorChange(Vector2 targetCoordinates) {
-		//Turn off lights on current floor
-		Floor currentFloor = _curView.relatedZones[0].GetFloor();
-		currentFloor.ToggleLightActive(false);
+		if(_curView.relatedZones.Count > 0) {
+			//Turn off lights on current floor
+			Floor currentFloor = _curView.relatedZones[0].GetFloor();
+			currentFloor.ToggleLightActive(false);
 
-		//Turn on lights on new floor
-		Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
-		newFloor.ToggleLightActive(true);
+			//Turn on lights on new floor
+			Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
+			newFloor.ToggleLightActive(true);
+		}
 	}
 
 	//Callback for when lerping between views is over and camera is still
@@ -476,6 +481,7 @@ public class CameraManager : MonoBehaviour {
 		return _views;
 	}
 
+	//
 	Viewpoint GetFirstUnlockedViewpointOnFloor(int y) {
 		foreach(Viewpoint viewpoint in _views[y]) {
 			if(!viewpoint.locked) {
@@ -485,6 +491,7 @@ public class CameraManager : MonoBehaviour {
 		return null;
 	}
 
+	//
 	void GotoUnlockedViewPointOnFloor(int y, Vector2 dir) {
 		foreach(Viewpoint viewpoint in _views[y]) {
 			if(!viewpoint.locked) {
@@ -615,12 +622,6 @@ public class CameraManager : MonoBehaviour {
 		animator.enabled = false;
 
 		cameraState = CameraState.PlayerControl;
-
-		//if(_inOverview) {
-		//	GoToOverview();
-		//} else {
-		//	GoToGridView();
-		//}
 	}
 
 	//

@@ -31,6 +31,12 @@ public class AvatarModel : MonoBehaviour {
 
 	//
 	public void InstantiateModel() {
+		SetModel(modelId);
+		ExtractMaterialColors();
+	}
+
+	//Set model for model index
+	public void SetModel(int modelIndex) {
 		Transform existingModel = transform.FindChild("Model");
 		AvatarManager am = FindObjectOfType<AvatarManager>();
 
@@ -38,21 +44,36 @@ public class AvatarModel : MonoBehaviour {
 			DestroyImmediate(existingModel.gameObject);
 		}
 
-		if(existingModel == null && (modelId >= 0 && modelId < am.models.models.Count)) {
-			_modelBundle = am.models.models[modelId];
+		if(existingModel == null && (modelIndex >= 0 && modelIndex < am.models.models.Count)) {
+			_modelBundle = am.models.models[modelIndex];
 
 			GameObject goModel = Instantiate(_modelBundle.model);
 			goModel.name = "Model";
 			SetLayerRecursive(goModel.transform);
 			goModel.transform.parent = transform;
 			goModel.transform.localPosition = Vector3.zero;
+			goModel.transform.localRotation = Quaternion.identity;
 
 			//Set animator rig
 			Animator animator = gameObject.GetComponent<Animator>();
 			animator.avatar = _modelBundle.avatar;
+			animator.Rebind();
+		}
+	}
+
+	//Set skin and clothing materials for material indexes
+	public void SetMaterials(int skinMaterial, int[] clothingMaterials) {
+		//Set skin material
+		Material materialSkin = _modelBundle.materialsSkin[skinMaterial];
+		foreach(AvatarModels.BodyPartSkin bodyPartSkin in _modelBundle.bodyPartsSkin) {
+			SetClothesMaterial(bodyPartSkin.model.name, materialSkin);
 		}
 
-		ExtractMaterialColors();
+		//Set clothing materials
+		for(int i = 0; i < _modelBundle.bodyPartsClothes.Count; i++) {
+			Material material = _modelBundle.bodyPartsClothes[i].materials[clothingMaterials[i]];
+			SetClothesMaterial(_modelBundle.bodyPartsClothes[i].model.name, material);
+		}
 	}
 
 	//
@@ -161,36 +182,15 @@ public class AvatarModel : MonoBehaviour {
 	public void DeserializeFromJSON(JSONNode modelJSON) {
 		AvatarManager avatarMgr = FindObjectOfType<AvatarManager>();
 		modelId = modelJSON["modelID"].AsInt;
-		_modelBundle = avatarMgr.models.models[modelId];
 
-		//Remove prefab model
-		Transform existingModel = transform.FindChild("Model");
-		if(existingModel) {
-			DestroyImmediate(existingModel.gameObject);
-		}
+		SetModel(modelId);
 
-		//Instantiate and set model hierarchy
-		GameObject goModel = Instantiate(_modelBundle.model);
-		goModel.name = "Model";
-		SetLayerRecursive(goModel.transform);
-		goModel.transform.parent = transform;
-		goModel.transform.localPosition = Vector3.zero;
-
-		//Set animator rig
-		Animator animator = gameObject.GetComponent<Animator>();
-		animator.avatar = _modelBundle.avatar;
-
-		//Set skin material
-		Material materialSkin = _modelBundle.materialsSkin[modelJSON["skinMaterial"].AsInt];
-		foreach(AvatarModels.BodyPartSkin bodyPartSkin in _modelBundle.bodyPartsSkin) {
-			SetClothesMaterial(bodyPartSkin.model.name, materialSkin);
-		}
-
-		//Set clothes materials
+		int skinMatIndex = modelJSON["skinMaterial"].AsInt;
+		int[] clothingMatIndexes = new int[modelJSON["clotheMaterials"].Count];
 		for(int i = 0; i < _modelBundle.bodyPartsClothes.Count; i++) {
-			Material material = _modelBundle.bodyPartsClothes[i].materials[modelJSON["clotheMaterials"][i].AsInt];
-			SetClothesMaterial(_modelBundle.bodyPartsClothes[i].model.name, material);
+			clothingMatIndexes[i] = modelJSON["clotheMaterials"][i].AsInt;
 		}
+		SetMaterials(skinMatIndex, clothingMatIndexes);
 
 		ExtractMaterialColors();
 	}
