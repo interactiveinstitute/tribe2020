@@ -27,6 +27,8 @@ public class SunMovement : MonoBehaviour {
 	private const double Deg2Rad = Math.PI / 180.0;
 	private const double Rad2Deg = 180.0 / Math.PI;
 
+	private Renderer[] _renderers;
+
 	/// current day phase
 	public DayPhase currentPhase;
 
@@ -37,6 +39,10 @@ public class SunMovement : MonoBehaviour {
 
 	public Color nightAmbience;
 	public Color dayAmbience;
+
+	public float nightMetallic;
+	public float duskMetallic;
+	public float dayMetallic;
 
 	public Material daySkybox;
 	public Material nightSkybox;
@@ -60,6 +66,8 @@ public class SunMovement : MonoBehaviour {
 		//longitude = 41.647453;
 		//latitude = -0.888630;
 
+		_renderers = (Renderer[])Resources.FindObjectsOfTypeAll(typeof(Renderer));
+
 		light = GetComponent<Light>();
 	}
 
@@ -72,22 +80,6 @@ public class SunMovement : MonoBehaviour {
 		transform.localRotation = Quaternion.Euler((float)Altitude, (float)Azimuth, 0);
 
 		UpdateAmbience(Altitude);
-
-		// Rudementary phase-check algorithm:  
-		//if(Altitude < 0) {
-		//	light.color = nightColor + (light.color - nightColor) * 0.95f;
-		//	RenderSettings.skybox = nightSkybox;
-		//	RenderSettings.ambientLight = nightAmbience;
-		//	currentPhase = DayPhase.Night;
-		//} else if(Altitude >= 0 && Altitude <= 45) {
-		//	light.color = dawnColor + (light.color - dawnColor) * 0.95f;
-		//	currentPhase = DayPhase.Dawn;
-		//} else {
-		//	RenderSettings.skybox = daySkybox;
-		//	light.color = dayColor + (light.color - dayColor) * 0.95f;
-		//	RenderSettings.ambientLight = dayAmbience;
-		//	currentPhase = DayPhase.Day;
-		//}
 	}
 
 	// Rudementary phase-check algorithm
@@ -96,14 +88,17 @@ public class SunMovement : MonoBehaviour {
 			light.color = nightColor + (light.color - nightColor) * 0.95f;
 			RenderSettings.skybox = nightSkybox;
 			RenderSettings.ambientLight = nightAmbience;
+			if(currentPhase != DayPhase.Night) { SetMetallic(nightMetallic); }
 			currentPhase = DayPhase.Night;
 		} else if(altitude >= 0 && altitude <= 45) {
 			light.color = dawnColor + (light.color - dawnColor) * 0.95f;
+			if(currentPhase != DayPhase.Dawn) { SetMetallic(duskMetallic); }
 			currentPhase = DayPhase.Dawn;
 		} else {
 			RenderSettings.skybox = daySkybox;
 			light.color = dayColor + (light.color - dayColor) * 0.95f;
 			RenderSettings.ambientLight = dayAmbience;
+			if(currentPhase != DayPhase.Day) { SetMetallic(dayMetallic); }
 			currentPhase = DayPhase.Day;
 		}
 	}
@@ -218,6 +213,17 @@ public class SunMovement : MonoBehaviour {
 			return angleInRadians % (2 * Math.PI);
 		} else {
 			return angleInRadians;
+		}
+	}
+
+	//
+	public void SetMetallic(float metallic) {
+		foreach(Renderer rend in _renderers) {
+			foreach(Material mat in rend.sharedMaterials) {
+				if(mat && mat.HasProperty("_Metallic")) {
+					mat.SetFloat("_Metallic", metallic);
+				}
+			}
 		}
 	}
 }
