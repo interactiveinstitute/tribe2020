@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public class Viewpoint : MonoBehaviour {
 	public bool overview;
 	public Vector2 coordinates;
-	public int xIndex;
-	public int yIndex;
 	public string title;
 
 	public List<Room> relatedZones;

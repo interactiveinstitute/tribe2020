@@ -2213,8 +2213,8 @@ GameObject:
   m_Component:
   - component: {fileID: 224913207209901746}
   - component: {fileID: 222606114945974214}
-  - component: {fileID: 114290587363073178}
   - component: {fileID: 114424838391841356}
+  - component: {fileID: 114290587363073178}
   - component: {fileID: 114857491776321742}
   m_Layer: 5
   m_Name: Character Panel
@@ -3351,7 +3351,7 @@ GameObject:
   - component: {fileID: 114775785670735016}
   - component: {fileID: 114888243759710712}
   m_Layer: 5
-  m_Name: Text
+  m_Name: EnergyWattText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4166,8 +4166,8 @@ GameObject:
   m_Component:
   - component: {fileID: 224942644942621798}
   - component: {fileID: 222950008372424004}
-  - component: {fileID: 114666387339001632}
   - component: {fileID: 114059478943141768}
+  - component: {fileID: 114666387339001632}
   - component: {fileID: 114554158230396154}
   m_Layer: 5
   m_Name: Device Panel
@@ -6345,7 +6345,7 @@ GameObject:
   - component: {fileID: 222487962958746754}
   - component: {fileID: 114458569202487056}
   m_Layer: 5
-  m_Name: Text
+  m_Name: QuitButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7229,7 +7229,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
+          type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
         m_Arguments:
@@ -8982,7 +8983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: Building
-  originalPosition: {x: 0, y: 0}
+  originalPosition: {x: 800, y: -600}
   targetPosition: {x: 0, y: -600}
   toggleButton: {fileID: 0}
 --- !u!114 &114063253751294620
@@ -9412,12 +9413,12 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -10628,7 +10629,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -11448,7 +11449,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -11728,7 +11729,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -13325,12 +13326,12 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -18095,9 +18096,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
-        m_MethodName: ToggleMenu
+        m_MethodName: HideUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18336,7 +18337,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -19882,7 +19883,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -19995,7 +19996,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -20336,7 +20337,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -20504,7 +20505,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -20736,7 +20737,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -21133,7 +21134,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Game over bitch!
+  m_Text: Game over
 --- !u!114 &114805487040471160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23251,7 +23252,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: HideUI
         m_Mode: 1
@@ -23427,7 +23428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -23454,7 +23455,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: SetCurrentUI
         m_Mode: 2
@@ -23534,7 +23535,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224713084933748494}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -23998,7 +23999,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114951931450549782, guid: 72bf7b8fcf2d0104c9ad1e0aedc7f23c,
+      - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
           type: 2}
         m_MethodName: ToggleMenu
         m_Mode: 1
@@ -30804,7 +30805,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -600}
+  m_AnchoredPosition: {x: 800, y: -600}
   m_SizeDelta: {x: 800, y: 600}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224515357843932754
@@ -32261,7 +32262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0.000020742416}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224728550133358552

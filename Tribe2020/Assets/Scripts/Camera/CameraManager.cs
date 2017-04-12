@@ -30,9 +30,7 @@ public class CameraManager : MonoBehaviour {
 	//Viewpoint variables
 	public Vector2 startCoordinates = Vector2.zero;
 	public Vector2 currentCoordinates = Vector2.zero;
-	//private Transform _curViewpoint;
 	private Viewpoint _curView;
-	//private Transform[][] _viewpoints;
 	private Viewpoint[][] _views;
 	private Viewpoint _overview;
 	[SerializeField]
@@ -49,8 +47,6 @@ public class CameraManager : MonoBehaviour {
 	private Quaternion _lookAtRotation;
 	[SerializeField, ShowOnly]
 	private float _lookaAtFOV;
-	//[SerializeField]
-	//private Vector3 _lookAtEuler;
 	[SerializeField]
 	[Range(0, 10)]
 	private float zoomInLevel;
@@ -67,12 +63,9 @@ public class CameraManager : MonoBehaviour {
 	private float startTime;
 	[ShowOnly]
 	public float journeyLength;
-
 	private float _panSpeed = 0.01f;
 
 	private bool _firstLoop = true;
-
-	
 	#endregion
 
 	//Sort use instead of constructor
@@ -82,14 +75,9 @@ public class CameraManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
-		//_controller = PilotController.GetInstance();
-
 		_lastFOV = _defaultFOV = gameCamera.fieldOfView;
-
 		_lastPos = _targetPos = gameCamera.transform.position;
-		//_lastRot = _targetRot = gameCamera.transform.eulerAngles;
 		_lastRot = _targetRot = gameCamera.transform.rotation;
-
 
 		//Populate collection of viewpoints
 		PopulateViewpoints();
@@ -134,8 +122,6 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void UpdateVisibility() {
-		//Viewpoint vp = _curViewpoint.GetComponent<Viewpoint>();
-
 		foreach(GameObject go in _curView.hideObjects) {
 			go.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
@@ -191,18 +177,16 @@ public class CameraManager : MonoBehaviour {
 	private void PopulateViewpoints() {
 		List<Viewpoint> viewPoints = new List<Viewpoint>(Object.FindObjectsOfType<Viewpoint>());
 
-		int maxY = 0;
-
 		//Find max y
+		int maxY = 0;
 		foreach(Viewpoint vp in viewPoints) {
 			if(vp.overview) {
 				_overview = vp;
 			} else {
-				int curY = vp.yIndex;
+				int curY = (int)vp.coordinates.y;
 				if(maxY <= curY) { maxY = curY + 1; }
 			}
 		}
-		//_viewpoints = new Transform[maxY][];
 		_views = new Viewpoint[maxY][];
 
 		//Find max x for each floor
@@ -210,18 +194,16 @@ public class CameraManager : MonoBehaviour {
 			int maxX = 0;
 
 			foreach(Viewpoint vp in viewPoints) {
-				if(!vp.overview && vp.yIndex == y) {
-					int curX = vp.xIndex;
+				if(!vp.overview && vp.coordinates.y == y) {
+					int curX = (int)vp.coordinates.x;
 					if(maxX <= curX) { maxX = curX + 1; }
 				}
 			}
-
-			//_viewpoints[y] = new Transform[maxX];
 			_views[y] = new Viewpoint[maxX];
 
 			int x = 0;
 			foreach(Viewpoint vp in viewPoints) {
-				if(!vp.overview && vp.yIndex == y) {
+				if(!vp.overview && vp.coordinates.y == y) {
 					_views[y][x++] = vp;
 				}
 			}
@@ -230,15 +212,14 @@ public class CameraManager : MonoBehaviour {
 		//Add viewpoints to camera manager
 		foreach(Viewpoint vp in viewPoints) {
 			if(!vp.overview) {
-				int curX = vp.xIndex;
-				int curY = vp.yIndex;
-
-				//_viewpoints[curY][curX] = vp.transform;
+				int curX = (int)vp.coordinates.x;
+				int curY = (int)vp.coordinates.y;
 				_views[curY][curX] = vp;
 			}
 		}
 	}
 
+	//
 	private void SaveCurrentAsLastCameraState() {
 		_lastPos = gameCamera.transform.position;
 		_lastRot = gameCamera.transform.rotation;
@@ -269,7 +250,6 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	public void SetLookAtTarget(Appliance appliance) {
-
 		SaveCurrentAsLastCameraState();
 		_isLooking = true;
 		// distance to zoomed in object
@@ -281,10 +261,6 @@ public class CameraManager : MonoBehaviour {
 		_lookaAtFOV = calculateLookAtFOV(appliance);
 
 		startTime = Time.unscaledTime;
-		//_lookAtRotation = new GameObject().transform;
-		//_lookAtTransform.rotation = transform.rotation;
-		//_lookAtTransform.position = transform.position;
-		//_lookAtRotation.LookAt(appliancePosition);
 
 		//Find center of appliance in order to set camera rotation
 		float applianceHeight = 1.5f; //Set a default approximate height for things without collider
@@ -296,8 +272,7 @@ public class CameraManager : MonoBehaviour {
 		Vector3 relativePos = appliancePosition - gameCamera.transform.position;
 		_lookAtRotation = Quaternion.LookRotation(relativePos);
 		//Position thee appliance on the left side of the screen
-		_lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);  //new Vector3(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
-																				//gameCamera.transform.LookAt(appliance.transform);
+		_lookAtRotation *= Quaternion.Euler(0, FOVToHFOV(_lookaAtFOV) / 4, 0);
 	}
 
 	private float calculateLookAtFOV(Appliance appliance) {
@@ -438,7 +413,6 @@ public class CameraManager : MonoBehaviour {
 			}
 			return;
 		} else {
-
 			//Is new viewpoint on another floor?
 			if(TryFloorChange(targetCoordinates)) {
 				OnFloorChange(targetCoordinates);
@@ -463,19 +437,33 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
+	//
+	public void SetViewpoint(string viewpoint) {
+		for(int y = 0; y < _views.Length; y++) {
+			for(int x = 0; x < _views[y].Length; x++) {
+				if(_views[y][x].title == viewpoint) {
+					SetViewpoint(x, y, Vector2.zero);
+				}
+			}
+		}
+	}
+
+	//
 	bool TryFloorChange(Vector2 targetCoordinates) {
 		return targetCoordinates.y != currentCoordinates.y;
 	}
 
 	//
 	void OnFloorChange(Vector2 targetCoordinates) {
-		//Turn off lights on current floor
-		Floor currentFloor = _curView.relatedZones[0].GetFloor();
-		currentFloor.ToggleLightActive(false);
+		if(_curView.relatedZones.Count > 0) {
+			//Turn off lights on current floor
+			Floor currentFloor = _curView.relatedZones[0].GetFloor();
+			currentFloor.ToggleLightActive(false);
 
-		//Turn on lights on new floor
-		Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
-		newFloor.ToggleLightActive(true);
+			//Turn on lights on new floor
+			Floor newFloor = _views[(int)targetCoordinates.y][(int)targetCoordinates.x].relatedZones[0].GetFloor();
+			newFloor.ToggleLightActive(true);
+		}
 	}
 
 	//Callback for when lerping between views is over and camera is still
@@ -493,6 +481,7 @@ public class CameraManager : MonoBehaviour {
 		return _views;
 	}
 
+	//
 	Viewpoint GetFirstUnlockedViewpointOnFloor(int y) {
 		foreach(Viewpoint viewpoint in _views[y]) {
 			if(!viewpoint.locked) {
@@ -502,10 +491,11 @@ public class CameraManager : MonoBehaviour {
 		return null;
 	}
 
+	//
 	void GotoUnlockedViewPointOnFloor(int y, Vector2 dir) {
 		foreach(Viewpoint viewpoint in _views[y]) {
 			if(!viewpoint.locked) {
-				SetViewpoint(viewpoint.xIndex, viewpoint.yIndex, dir);
+				SetViewpoint((int)viewpoint.coordinates.x, (int)viewpoint.coordinates.y, dir);
 				return;
 			}
 		}
@@ -632,12 +622,6 @@ public class CameraManager : MonoBehaviour {
 		animator.enabled = false;
 
 		cameraState = CameraState.PlayerControl;
-
-		//if(_inOverview) {
-		//	GoToOverview();
-		//} else {
-		//	GoToGridView();
-		//}
 	}
 
 	//
