@@ -763,7 +763,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void StepTimeForward(int days) {
-		_timeMgr.Offset(86400 * days);
+		_instance._view.PlayUIAnimation("TimeSkipped");
+		_instance._timeMgr.Offset(86400 * days);
 	}
 
 	//
