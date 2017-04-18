@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System;
 
-public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface {
+public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface, ResourceInterface {
 	//Singleton features
 	private static PilotController _instance;
 	public static PilotController GetInstance() {
@@ -91,7 +91,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_audioMgr.SetInterface(this);
 
 		_mainMeter = MainMeter.GetInstance();
+
 		_resourceMgr = ResourceManager.GetInstance();
+		_resourceMgr.SetInterface(this);
 
 		_narrationMgr = NarrationManager.GetInstance();
 		_narrationMgr.SetInterface(this);
@@ -866,5 +868,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void OnAnimationEvent(string animationEvent) {
 		_narrationMgr.OnNarrativeEvent("AnimationEvent", animationEvent);
+	}
+
+	//Callback from resouce manager for when monthly salary received
+	public void OnResourcesReceived(string data) {
+		PlayUIAnimation("CashReceived");
 	}
 }

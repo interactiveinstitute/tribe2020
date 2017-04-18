@@ -15,6 +15,7 @@ public class ResourceManager : MonoBehaviour {
 	private GameTime _timeMgr;
 	private List<Transform> _avatars;
 	private List<Appliance> _appliances;
+	private ResourceInterface _interface;
 
 	[Header("Containers")]
 	public float cash;
@@ -25,6 +26,8 @@ public class ResourceManager : MonoBehaviour {
 	public double CO2Change;
 	public double Cost;
 	public double CostSavings;
+	private int _pendingCash;
+	private double _lastHarvestTick;
 
 	public DataSeries CO2Outcome;
 	public DataSeries CO2Baseline;
@@ -51,11 +54,9 @@ public class ResourceManager : MonoBehaviour {
 	public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
 
-
 	[Header("DEBUG")]
 	public double c2outcome_debug, c2baseline_debug;
 	public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
-
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -146,6 +147,11 @@ public class ResourceManager : MonoBehaviour {
 		CalculateCost(now);
 
         NewMonthTest();
+	}
+
+	//
+	public void SetInterface(ResourceInterface i) {
+		_interface = i;
 	}
 
 	//
