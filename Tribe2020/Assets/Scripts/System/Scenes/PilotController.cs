@@ -15,6 +15,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
 		ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
 	};
+	[SerializeField]
 	private InputState _curState = InputState.ALL;
 
 	#region Fields
@@ -390,8 +391,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Open user interface
 	public void SetCurrentUI(RectTransform ui) {
-		if(debug) { Debug.Log(name + ": SetCurrentUI(" + ui.name + ")"); }
-		if(_curState != InputState.ALL) {
+		if(_instance._curState != InputState.ALL) {
 			if(ui == _instance._view.energyPanel && _instance._curState != InputState.ONLY_ENERGY) { return; }
 			if(ui == _instance._view.comfortPanel && _instance._curState != InputState.ONLY_COMFORT) { return; }
 			if(ui == _instance._view.inbox && _instance._curState != InputState.ONLY_OPEN_INBOX) { return; }
@@ -399,9 +399,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 
 		if(_instance._view.GetCurrentUI() != null) {
-			//if(_instance._view.GetCurrentUI() == _instance._view.inspector) {
-			//	_instance._narrationMgr.OnNarrativeEvent("InspectorClosed");
-			//} else 
 			if(_instance._view.GetCurrentUI() == _instance._view.inbox) {
 				_instance._narrationMgr.OnNarrativeEvent("InboxClosed");
 			}
@@ -411,9 +408,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			HideUI();
 		} else {
 			_instance._view.SetCurrentUI(ui);
-			//if(ui == _instance._view.inspector) {
-			//	_instance._narrationMgr.OnNarrativeEvent("InspectorOpened");
-			//} else
 			if(ui == _instance._view.inbox) {
 				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
@@ -765,7 +759,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void StepTimeForward(int days) {
-		_instance._view.PlayUIAnimation("TimeSkipped");
+		PlayUIAnimation("TimeSkipped");
 		_instance._timeMgr.Offset(86400 * days);
 	}
 
@@ -789,6 +783,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(syncPilot) _saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
 
 		_saveMgr.SaveCurrentSlot();
+		PlayUIAnimation("GameSaved");
 	}
 
 	//
