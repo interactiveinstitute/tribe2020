@@ -82,6 +82,11 @@ public class SunMovement : MonoBehaviour {
 		UpdateAmbience(Altitude);
 	}
 
+	//
+	void OnDestroy() {
+		SetMetallic(0);
+	}
+
 	// Rudementary phase-check algorithm
 	public void UpdateAmbience(double altitude) {
 		if(altitude < 0) {
