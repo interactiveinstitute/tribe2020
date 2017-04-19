@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class SunMovement : MonoBehaviour {
@@ -28,6 +28,8 @@ public class SunMovement : MonoBehaviour {
 	private const double Rad2Deg = 180.0 / Math.PI;
 
 	private Renderer[] _renderers;
+	private List<Material> _allMaterials;
+	private List<Material> _allMaterialClones;
 
 	/// current day phase
 	public DayPhase currentPhase;
@@ -66,7 +68,8 @@ public class SunMovement : MonoBehaviour {
 		//longitude = 41.647453;
 		//latitude = -0.888630;
 
-		_renderers = (Renderer[])Resources.FindObjectsOfTypeAll(typeof(Renderer));
+		
+		//InitMaterials();
 
 		light = GetComponent<Light>();
 	}
@@ -84,7 +87,7 @@ public class SunMovement : MonoBehaviour {
 
 	//
 	void OnDestroy() {
-		SetMetallic(0);
+		//RestoreMaterials();
 	}
 
 	// Rudementary phase-check algorithm
@@ -222,13 +225,59 @@ public class SunMovement : MonoBehaviour {
 	}
 
 	//
-	public void SetMetallic(float metallic) {
-		foreach(Renderer rend in _renderers) {
-			foreach(Material mat in rend.sharedMaterials) {
-				if(mat && mat.HasProperty("_Metallic")) {
-					mat.SetFloat("_Metallic", metallic);
+	public void InitMaterials() {
+		_renderers = (Renderer[])Resources.FindObjectsOfTypeAll(typeof(Renderer));
+		_allMaterials = new List<Material>();
+		_allMaterialClones = new List<Material>();
+
+		//First pass: get all materials
+		foreach(Renderer r in _renderers) {
+			foreach(Material m in r.sharedMaterials) {
+				if(m && !_allMaterials.Contains(m)) {
+					_allMaterials.Add(m);
+					_allMaterialClones.Add(new Material(m));
 				}
 			}
 		}
+
+		//Second pass: Replace all materials with clones
+		foreach(Renderer r in _renderers) {
+			Material[] mReplacement = new Material[r.sharedMaterials.Length];
+			for(int i = 0; i < r.sharedMaterials.Length; i++) {
+				if(r.sharedMaterials[i]) {
+					int mIndex = _allMaterials.IndexOf(r.sharedMaterials[i]);
+					mReplacement[i] = _allMaterialClones[mIndex];
+				}
+			}
+			r.materials = mReplacement;
+		}
+	}
+
+	//
+	public void RestoreMaterials() {
+		_renderers = (Renderer[])Resources.FindObjectsOfTypeAll(typeof(Renderer));
+
+		//Second pass: Replace all materials with clones
+		foreach(Renderer r in _renderers) {
+			Material[] mReplacement = new Material[r.sharedMaterials.Length];
+			for(int i = 0; i < r.sharedMaterials.Length; i++) {
+				if(r.sharedMaterials[i]) {
+					int mIndex = _allMaterialClones.IndexOf(r.sharedMaterials[i]);
+					if(mIndex >= 0) {
+						mReplacement[i] = _allMaterials[mIndex];
+					}
+				}
+			}
+			r.materials = mReplacement;
+		}
+	}
+
+	//
+	public void SetMetallic(float metallic) {
+		//foreach(Material m in _allMaterialClones) {
+		//	if(m && m.HasProperty("_Metallic")) {
+		//		m.SetFloat("_Metallic", metallic);
+		//	}
+		//}
 	}
 }
