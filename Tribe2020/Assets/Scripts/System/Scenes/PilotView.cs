@@ -749,4 +749,9 @@ public class PilotView : View{
 	public void PlayUIAnimation(string animation) {
 		GetComponent<Animator>().Play(animation, 0, 0);
 	}
+
+	//
+	public void OnAnimationEvent(string animationEvent){
+		_controller.OnAnimationEvent(animationEvent);
+	}
 }

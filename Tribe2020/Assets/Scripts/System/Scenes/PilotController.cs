@@ -66,22 +66,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public bool syncAvatars;
 	public bool syncAppliances;
 
-	//private List<Appliance> _appliances;
+	//Event flow state fields
+	private int _pendingTimeSkip = -1;
 
 	private bool _firstUpdate = false;
 	#endregion
 
-	//Sort use instead of constructor
+	//Called once on all behaviours before any Start call
 	void Awake() {
 		_instance = this;
 	}
 
-	//
-	public void SetToInstance(PilotController oldInstance) {
-
-	}
-
-	// Use this for initialization
+	//Called once on all behaviours before any Update call
 	void Start() {
 		_view = PilotView.GetInstance();
 		_view.SetController(this);
@@ -115,14 +111,17 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		playPeriod = endTime - startTime;
 	}
 
-	// Update is called once per frame
+	//Called every frame
 	void Update() {
 		if(!_firstUpdate) {
 			_firstUpdate = true;
-			LoadGameState();
+			_instance.LoadGameState();
 
-			//_narrationMgr.Init();
-			//_view.UpdateViewpointGuide(_camMgr.GetViewpoints(), _camMgr.GetCurrentViewpoint());
+			if(_saveMgr.GetClass("battleReport") != null) {
+				string loserName = _saveMgr.GetClass("battleReport")["avatar"];
+				Debug.Log("battle won over " + loserName);
+				_instance._narrationMgr.OnNarrativeEvent("BattleWon", loserName);
+			}
 		}
 
 		UpdateTouch();
@@ -147,7 +146,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
 		if(_timeMgr.time > endTime) {
-			LoadScene("MenuScene");
+			OnGameOver();
 		}
 	}
 
@@ -729,7 +728,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void ChallengeAvatar(Appliance app) {
 		JSONClass challengeData = app.GetComponent<AvatarStats>().SerializeAsJSON();
 		_instance._saveMgr.SetClass("pendingChallenge", challengeData);
-
+		_instance.SaveGameState();
 		_instance.LoadScene("BattleScene");
 	}
 
@@ -760,7 +759,20 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void StepTimeForward(int days) {
 		PlayUIAnimation("TimeSkipped");
-		_instance._timeMgr.Offset(86400 * days);
+		//_instance._timeMgr.Offset(86400 * days);
+		SetVisualTimeScale(10);
+		switch(days) {
+			case 1:
+				SetSimulationTimeScale(1000);
+				break;
+			case 7:
+				SetSimulationTimeScale(100000);
+				break;
+			case 30:
+				SetSimulationTimeScale(100000);
+				break;
+		}
+		_instance._pendingTimeSkip = days;
 	}
 
 	//
@@ -863,10 +875,23 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void OnAnimationEvent(string animationEvent) {
 		_narrationMgr.OnNarrativeEvent("AnimationEvent", animationEvent);
+		switch(animationEvent) {
+			case "timeSkippedOver":
+				_instance._timeMgr.Offset(86400 * _instance._pendingTimeSkip);
+				SetVisualTimeScale(1);
+				SetSimulationTimeScale(60);
+				Debug.Log("time skip over");
+				break;
+		}
 	}
 
 	//Callback from resouce manager for when monthly salary received
 	public void OnResourcesReceived(string data) {
 		PlayUIAnimation("CashReceived");
+	}
+
+	//
+	public void OnGameOver() {
+		LoadScene("MenuScene");
 	}
 }

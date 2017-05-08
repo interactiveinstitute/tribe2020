@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using SimpleJSON;
 using System;
 
-public class BattleController : MonoBehaviour, CameraInterface {
+public class BattleController : MonoBehaviour, NarrationInterface, CameraInterface {
 	//Singleton features
 	private static BattleController _instance;
 	public static BattleController GetInstance() {
@@ -38,7 +38,17 @@ public class BattleController : MonoBehaviour, CameraInterface {
 	private int _curQuiz = 0;
 	private bool _hasWon = false;
 	private bool _isLeveling = false;
-	private bool _isLoaded = false;
+	private bool _firstUpdate = false;
+
+	[Header("Save between sessions")]
+	public bool syncTime = true;
+	public bool syncPilot = true;
+	public bool syncCamera = true;
+	public bool syncResources = true;
+	public bool syncNarrative = true;
+	public bool syncLocalization = true;
+	public bool syncAvatars = true;
+	public bool syncAppliances = true;
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -48,12 +58,18 @@ public class BattleController : MonoBehaviour, CameraInterface {
 	// Use this for initialization
 	void Start () {
 		_view = BattleView.GetInstance();
+
 		_timeMgr = GameTime.GetInstance();
+
 		_audioMgr = AudioManager.GetInstance();
+
 		_narrationMgr = NarrationManager.GetInstance();
+		_narrationMgr.SetInterface(this);
+
 		_sceneMgr = CustomSceneManager.GetInstance();
 		_saveMgr = SaveManager.GetInstance();
 		_localMgr = LocalisationManager.GetInstance();
+
 		_camMgr = CameraManager.GetInstance();
 		_camMgr.SetInterface(this);
 
@@ -62,9 +78,10 @@ public class BattleController : MonoBehaviour, CameraInterface {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!_isLoaded) {
-			_isLoaded = true;
-			LoadGameState();
+		if(!_firstUpdate) {
+			_firstUpdate = true;
+			_instance.LoadGameState();
+
 			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
 		}
 
@@ -120,11 +137,13 @@ public class BattleController : MonoBehaviour, CameraInterface {
 		AvatarModel foeModel = foeObject.GetComponent<AvatarModel>();
 		AvatarStats foeStats = foeObject.GetComponent<AvatarStats>();
 
-		foeAppliance.title = json["appliance"]["title"];
-		foeModel.DeserializeFromJSON(json["avatarModel"]);
-		foeStats.DeserializeFromJSON(json);
+		if(json != null) {
+			foeAppliance.title = json["appliance"]["title"];
+			foeModel.DeserializeFromJSON(json["avatarModel"]);
+			foeStats.DeserializeFromJSON(json);
 
-		_view.foeName.text = foeAppliance.title;
+			_view.foeName.text = foeAppliance.title;
+		}
 	}
 
 	//
@@ -159,7 +178,7 @@ public class BattleController : MonoBehaviour, CameraInterface {
 
 		_camMgr.SetViewpoint("Victory");
 		allyObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.euphoric);
-		allyObject.GetComponent<Animator>().Play("Sit");
+		//allyObject.GetComponent<Animator>().Play("Sit");
 
 		_view.dialogueUI.SetActive(false);
 		_view.barsUI.SetActive(false);
@@ -167,7 +186,7 @@ public class BattleController : MonoBehaviour, CameraInterface {
 
 		_narrationMgr.OnNarrativeEvent("BattleOver");
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
-		SaveGameState();
+		//_instance.SaveGameState();
 	}
 
 	//
@@ -221,14 +240,16 @@ public class BattleController : MonoBehaviour, CameraInterface {
 
 	//
 	public void SaveGameState() {
-		_saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
+		if(syncNarrative) _saveMgr.SetCurrentSlotClass("NarrationManager", _narrationMgr.SerializeAsJSON());
+
 		_saveMgr.SaveCurrentSlot();
 	}
 
 	//
 	public void LoadGameState() {
-		_saveMgr.LoadCurrentSlot();
-		_narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
+		if(syncPilot) _saveMgr.LoadCurrentSlot();
+
+		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 	}
 
 	//
@@ -245,6 +266,59 @@ public class BattleController : MonoBehaviour, CameraInterface {
 
 	//
 	public void OnLevelUpOK() {
+		JSONClass challengeData = new JSONClass();
+		challengeData.Add("avatar", _instance.foeObject.GetComponent<Appliance>().title);
+		_instance._saveMgr.SetClass("battleReport", challengeData);
+
+		_instance.SaveGameState();
 		_instance._sceneMgr.LoadScene(_instance._saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
+	}
+
+	public void LimitInteraction(string limitation) {
+		throw new NotImplementedException();
+	}
+
+	public void ShowMessage(string cmdJSON) {
+		throw new NotImplementedException();
+	}
+
+	public void ShowPrompt(string cmdJSON) {
+		throw new NotImplementedException();
+	}
+
+	public void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
+		throw new NotImplementedException();
+	}
+
+	public void CreateHarvest(string commandJSON) {
+		throw new NotImplementedException();
+	}
+
+	public void ControlAvatar(string id, string action, Vector3 targetPosition) {
+		throw new NotImplementedException();
+	}
+
+	public void ControlAvatar(string id, UnityEngine.Object action) {
+		throw new NotImplementedException();
+	}
+
+	public void UnlockView(int x, int y) {
+		throw new NotImplementedException();
+	}
+
+	public void SetSimulationTimeScale(float timeScale) {
+		throw new NotImplementedException();
+	}
+
+	public void RequestCurrentView() {
+		throw new NotImplementedException();
+	}
+
+	public void MoveCamera(string animation) {
+		throw new NotImplementedException();
+	}
+
+	public void StopCamera() {
+		throw new NotImplementedException();
 	}
 }
