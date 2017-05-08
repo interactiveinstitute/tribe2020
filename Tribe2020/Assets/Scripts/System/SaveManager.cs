@@ -38,6 +38,7 @@ public class SaveManager : MonoBehaviour{
 
 	//Use this for initialization
 	void Start() {
+
 	}
 
     //Callback when interacting with component in editor
@@ -49,6 +50,15 @@ public class SaveManager : MonoBehaviour{
 	
 	//Update is called once per frame
 	void Update() {
+	}
+
+	//
+	public void CheckVersion() {
+		if(GetData("version") != Application.version) {
+			Debug.Log("wrong version");
+		} else {
+			Debug.Log("right version");
+		}
 	}
 
 	public JSONNode GetData(string key) {

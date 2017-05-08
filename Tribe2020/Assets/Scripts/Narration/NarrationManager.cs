@@ -100,6 +100,8 @@ public class NarrationManager : MonoBehaviour {
 				s.unityEvent.AddListener(
 					() => _interface.ShowCongratualations("{g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
 			}
+
+			n.SetCurrentStepIndex(narrative.GetCurrentStepIndex());
 		}
 		active.Add(n);
 		return n;
@@ -174,6 +176,7 @@ public class NarrationManager : MonoBehaviour {
 		JSONClass narrativeJSON = new JSONClass();
 		narrativeJSON.Add("index", GetDBIndexForNarrative(narrative).ToString());
 		narrativeJSON.Add("step", narrative.GetCurrentStepIndex().ToString());
+
 		return narrativeJSON;
 	}
 
@@ -185,6 +188,7 @@ public class NarrationManager : MonoBehaviour {
 		Narrative narrative = Object.Instantiate(allNarratives[index]) as Narrative;
 		//Narrative narrative = ActivateNarrative(allNarratives[index]);
 		narrative.SetCurrentStepIndex(step);
+
 		return narrative;
 	}
 
