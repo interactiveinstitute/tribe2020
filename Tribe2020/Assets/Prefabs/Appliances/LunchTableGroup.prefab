@@ -25,7 +25,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1274853976522840
 GameObject:
@@ -35,6 +35,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4833521278995074}
+  - component: {fileID: 114891663979562462}
+  - component: {fileID: 114933725011869410}
   m_Layer: 8
   m_Name: LunchTableGroup
   m_TagString: Untagged
@@ -51,6 +53,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4147044668299390}
   - component: {fileID: 114261680014456090}
+  - component: {fileID: 114751386925328494}
   m_Layer: 0
   m_Name: School_Chair
   m_TagString: Untagged
@@ -104,6 +107,7 @@ GameObject:
   - component: {fileID: 65549698677728548}
   - component: {fileID: 208579632012541946}
   - component: {fileID: 114735312708061368}
+  - component: {fileID: 114876353187542068}
   m_Layer: 0
   m_Name: Lunch Table (1)
   m_TagString: Appliance
@@ -120,6 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4738636827301916}
   - component: {fileID: 114417718201019798}
+  - component: {fileID: 114737083763611220}
   m_Layer: 0
   m_Name: School_Chair (1)
   m_TagString: Untagged
@@ -159,7 +164,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1949007509466096
 GameObject:
@@ -175,7 +180,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4147044668299390
 Transform:
@@ -440,7 +445,7 @@ BoxCollider:
   m_GameObject: {fileID: 1408292162203922}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.502194, y: 0.920807, z: 0.41210598}
   m_Center: {x: -0.168307, y: 0.4604035, z: -0.188508}
@@ -452,7 +457,7 @@ BoxCollider:
   m_GameObject: {fileID: 1612563022421704}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.2157339, y: 0.78664017, z: 0.8109093}
   m_Center: {x: -0.0031294823, y: 0.41080666, z: -0.015260696}
@@ -464,7 +469,7 @@ BoxCollider:
   m_GameObject: {fileID: 1830609004272740}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.502194, y: 0.920807, z: 0.41210598}
   m_Center: {x: -0.168307, y: 0.4604035, z: -0.188508}
@@ -496,7 +501,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1314216877815458}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
@@ -527,7 +532,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766839308939008}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
@@ -547,7 +552,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1612563022421704}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
   m_Name: 
@@ -560,10 +565,87 @@ MonoBehaviour:
   - affordance: {fileID: 11400000, guid: dfa09a1d9e142df4c8a592e6b4d70dba, type: 2}
     nrOfSlots: 0
     subscribingActivities: []
-  owners: []
+  owners:
+  - {fileID: 0}
+  - {fileID: 0}
   appliedEEMs: []
   interactionPos: {x: 0, y: 0, z: 0}
   posePositions: []
+--- !u!114 &114737083763611220
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766839308939008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 49e406a3-c6b8-4f20-9ad9-222ee4760f56
+--- !u!114 &114751386925328494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1314216877815458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: af5de37f-7d86-4e45-bab2-22ba6c721c09
+--- !u!114 &114876353187542068
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1612563022421704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 
+--- !u!114 &114891663979562462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1274853976522840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 04d0c350-91bf-42dd-879d-fcfe2e76ad7b
+--- !u!114 &114933725011869410
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1274853976522840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: 
+  description: 
+  icon: {fileID: 0}
+  playerAffordances: []
+  avatarAffordances:
+  - affordance: {fileID: 11400000, guid: dfa09a1d9e142df4c8a592e6b4d70dba, type: 2}
+    nrOfSlots: 2
+    subscribingActivities: []
+  owners:
+  - {fileID: 0}
+  appliedEEMs: []
+  interactionPos: {x: 0, y: 0, z: 0}
+  posePositions:
+  - position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+    occupant: {fileID: 0}
 --- !u!208 &208579632012541946
 NavMeshObstacle:
   m_ObjectHideFlags: 1

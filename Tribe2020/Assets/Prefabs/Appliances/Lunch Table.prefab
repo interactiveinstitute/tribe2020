@@ -27,28 +27,28 @@ GameObject:
   - component: {fileID: 469228}
   - component: {fileID: 6506042}
   - component: {fileID: 208000012669929324}
-  - component: {fileID: 11479424}
+  - component: {fileID: 114353450086975766}
   m_Layer: 0
   m_Name: Lunch Table
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &469228
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 176684}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.46, y: 0.25, z: -5.45}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.707043, z: -0, w: 0.7071706}
+  m_LocalPosition: {x: -2.714, y: -1.345, z: -1.64}
+  m_LocalScale: {x: 1.4285713, y: 1, z: 1.25}
   m_Children:
   - {fileID: 478262}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 89.990005, z: 0}
 --- !u!4 &478262
 Transform:
   m_ObjectHideFlags: 1
@@ -112,33 +112,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.2157339, y: 0.78664017, z: 0.8109093}
   m_Center: {x: -0.0031294823, y: 0.41080666, z: -0.015260696}
---- !u!114 &11479424
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 176684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: Lunch Table
-  description: 
-  playerAffordances: []
-  avatarAffordances:
-  - affordance: {fileID: 11400000, guid: dfa09a1d9e142df4c8a592e6b4d70dba, type: 2}
-    nrOfSlots: 0
-    subscribingActivities: []
-  temporaryAvatarAffordances: []
-  owners: []
-  appliedEEMs: []
-  interactionPos: {x: 0, y: 0, z: 0}
-  posePositions: []
-  cashProduction: 0
-  comfortPorduction: 0
-  possibleEEMs: []
-  harvestButtonRef: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -171,6 +144,18 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 176684}
   m_IsPrefabParent: 1
+--- !u!114 &114353450086975766
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 176684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: cc54fc70-8f5b-40d7-82b7-6774156871fe
 --- !u!208 &208000012669929324
 NavMeshObstacle:
   m_ObjectHideFlags: 1
@@ -180,7 +165,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_Extents: {x: 0.59, y: 0.615, z: 0.32}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
