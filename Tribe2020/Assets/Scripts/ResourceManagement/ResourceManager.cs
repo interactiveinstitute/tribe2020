@@ -224,6 +224,7 @@ public class ResourceManager : MonoBehaviour {
         if(months > 0) {
             AddCash(cashSalary * months);
             AddComfort(comfortSalary * months);
+			_interface.OnResourcesReceived("" + cashSalary);
         }
     }
 
