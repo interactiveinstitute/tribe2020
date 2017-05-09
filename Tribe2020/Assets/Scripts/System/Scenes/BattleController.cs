@@ -25,6 +25,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	private SaveManager _saveMgr;
 	private LocalisationManager _localMgr;
 	private CameraManager _camMgr;
+	private QuizManager _quizMgr;
 
 	private bool _isTouching = false;
 
@@ -73,7 +74,9 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 		_camMgr = CameraManager.GetInstance();
 		_camMgr.SetInterface(this);
 
-		LoadQuiz(quizzes[_curQuiz]);
+		_quizMgr = QuizManager.GetInstance();
+
+		//LoadQuiz(quizzes[_curQuiz]);
 	}
 	
 	// Update is called once per frame
@@ -123,12 +126,28 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	}
 
 	//
-	public void LoadQuiz(Quiz quiz) {
-		_view.question.text = quiz.question;
-		_view.answers[0].text = quiz.options[0];
-		_view.answers[1].text = quiz.options[1];
-		_view.answers[2].text = quiz.options[2];
-		_view.answers[3].text = quiz.options[3];
+	//public void LoadQuiz(Quiz quiz) {
+	//	_view.question.text = quiz.question;
+	//	_view.answers[0].text = quiz.options[0];
+	//	_view.answers[1].text = quiz.options[1];
+	//	_view.answers[2].text = quiz.options[2];
+	//	_view.answers[3].text = quiz.options[3];
+	//}
+
+	//
+	public void LoadQuiz(string avatarTitle, int quizIndex) {
+		QuizManager.AvatarQuizzes aq = _quizMgr.GetAvatarQuizzes(avatarTitle);
+		if(aq.avatarName != null) {
+			Quiz quiz = aq.quizzes[quizIndex];
+
+			_view.question.text = _localMgr.GetPhrase("Quizzes", quiz.name);
+			_view.answers[0].text = _localMgr.GetPhrase("Quizzes", quiz.name, 0);
+			_view.answers[1].text = _localMgr.GetPhrase("Quizzes", quiz.name, 1);
+			_view.answers[2].text = _localMgr.GetPhrase("Quizzes", quiz.name, 2);
+			_view.answers[3].text = _localMgr.GetPhrase("Quizzes", quiz.name, 3);
+		} else {
+			Debug.Log("no quizzes found for avatar " + avatarTitle);
+		}
 	}
 
 	//
@@ -144,6 +163,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 			_view.foeName.text = foeAppliance.title;
 		}
+
+		LoadQuiz(foeAppliance.title, _curQuiz);
 	}
 
 	//
@@ -157,7 +178,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 				_instance.OnWin();
 			} else {
 				_instance._curQuiz = (_instance._curQuiz + 1) % _instance.quizzes.Length;
-				_instance.LoadQuiz(_instance.quizzes[_instance._curQuiz]);
+				_instance.LoadQuiz(_instance.foeObject.GetComponent<Appliance>().title, _instance._curQuiz);
+				//_instance.LoadQuiz(_instance.quizzes[_instance._curQuiz]);
 			}
 		}
 	}
@@ -249,6 +271,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	public void LoadGameState() {
 		if(syncPilot) _saveMgr.LoadCurrentSlot();
 
+		if(syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
 		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 	}
 
