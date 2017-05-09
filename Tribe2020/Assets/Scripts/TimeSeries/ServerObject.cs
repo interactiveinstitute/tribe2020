@@ -81,7 +81,7 @@ public class ServerObject : DataNode {
         DataPoint Data = new DataPoint();
         LastData = Data;
 
-        if (Event != "mqtt")
+		if (Event != "mqtt" && Event != "series")
             return;
 
         string topic = (string) msg.GetField("topic").str;
@@ -112,42 +112,48 @@ public class ServerObject : DataNode {
 
             return;
         }
-       
-
-        Data.Timestamp = json_payload.GetField("time").n;
-        //Data.Texts[0] = payload;
-
-        json_payload.RemoveField("time");
 
 
+		if (Event == "mqtt") {
 
-        foreach (TopicMap tm in TopicMapping)
-        {
-            if (topic == tm.Topic)
-            {
-                //Send to all subscribers in the list. 
-                foreach (Subscription Sub in tm.Subscribers) {
+			Data.Timestamp = json_payload.GetField ("time").n;
+			//Data.Texts[0] = payload;
 
-                    if (Sub.Target.Columns == null || Sub.Target.Columns.Count == 0)
-                    {
-                        
-                        Sub.Target.Columns = json_payload.keys;
-                        //Sub.Target.Columns.Remove("Time");
-                    }
+			json_payload.RemoveField ("time");
 
-                    Data.Values = new double[Sub.Target.Columns.Count];
 
-                    for (int i =0; i < Sub.Target.Columns.Count; i++)
-                    {
-                        Data.Values[i] = json_payload.GetField(Sub.Target.Columns[i]).n;
-                    }
 
-                    
-                    Sub.TimeDataUpdate(Data);
-                }
-            }
+			foreach (TopicMap tm in TopicMapping) {
+				if (topic == tm.Topic) {
+					//Send to all subscribers in the list. 
+					foreach (Subscription Sub in tm.Subscribers) {
 
-        }
+						if (Sub.Target.Columns == null || Sub.Target.Columns.Count == 0) {
+	                        
+							Sub.Target.Columns = json_payload.keys;
+							//Sub.Target.Columns.Remove("Time");
+						}
+
+						Data.Values = new double[Sub.Target.Columns.Count];
+
+						for (int i = 0; i < Sub.Target.Columns.Count; i++) {
+							Data.Values [i] = json_payload.GetField (Sub.Target.Columns [i]).n;
+						}
+
+	                    
+						Sub.TimeDataUpdate (Data);
+					}
+				}
+
+			}
+		}
+
+		if (Event == "series") {
+
+
+			
+		}
+			
     }
 
     void printdata(JSONObject obj)

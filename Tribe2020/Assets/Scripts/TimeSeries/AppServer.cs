@@ -13,6 +13,7 @@ public class AppServer : SocketIOComponentMod {
 
 		On("open", DoOnOpen);
 		On("mqtt", DoOnMqtt);
+		On("series", DoOnSeries);
 		On("error", DoOnError);
 		On("close", DoOnClose);
 		Debug.Log ("Starting: " + NodeName);
@@ -87,6 +88,37 @@ public class AppServer : SocketIOComponentMod {
 
 
     }
+
+	public void DoOnSeries(SocketIOEvent e)
+	{
+		//string name = NodeName;
+
+		//Debug.Log(NodeName + ": [SocketIO] Mqtt received: " + e.name + " " + e.data);
+
+
+
+
+		UpdateAllTargets(e.name, e.data);
+
+
+		if (e.data == null) { return; }
+
+		Debug.Log(
+			"#####################################################" +
+			"THIS: " + e.data.GetField("this").str +
+			"#####################################################"
+		);
+
+
+		//DataPoint Data = new DataPoint();
+
+		//Data.Texts = e.data;
+
+
+
+
+
+	}
 
 	public void DoOnError(SocketIOEvent e)
 	{
