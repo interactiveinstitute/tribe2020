@@ -134,6 +134,14 @@ public class LocalisationExtractor : MonoBehaviour {
 		}
 		#endregion
 
+
+
+		ExtractContent();
+		ExtractQuizzes();
+	}
+
+	//
+	public void ExtractContent() {
 		//Appliance & Avatar wrapper
 		if(source.GetComponent<ApplianceManager>()) {
 			List<Language.KeyValue> appValues = new List<Language.KeyValue>();
@@ -146,7 +154,7 @@ public class LocalisationExtractor : MonoBehaviour {
 					List<string> values = new List<string>();
 					values.Add(a.description);
 					avatarValues.Add(new Language.KeyValue(a.title, a.title, values));
-				} 
+				}
 				//else {
 				//	if(!appInventory.Contains(a.title)) {
 				//		appInventory.Add(a.title);
@@ -167,6 +175,17 @@ public class LocalisationExtractor : MonoBehaviour {
 
 			groups.Add(new Language.ValueGroup("Content.Avatars", avatarValues));
 			groups.Add(new Language.ValueGroup("Content.Appliances", appValues));
+		}
+	}
+
+	//
+	public void ExtractQuizzes() {
+		if(source.GetComponent<QuizManager>()) {
+			List<Language.KeyValue> values = new List<Language.KeyValue>();
+			foreach(Quiz q in source.GetComponent<QuizManager>().GetAllQuizzez()) {
+				values.Add(new Language.KeyValue(q.name, q.question, q.options));
+			}
+			groups.Add(new Language.ValueGroup(key, values));
 		}
 	}
 }
