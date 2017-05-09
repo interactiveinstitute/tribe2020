@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using SimpleJSON;
 using System.Collections;
+using System;
 
-public class Appliance : MonoBehaviour, IPointerClickHandler {
+public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandler {
 	private PilotController _ctrlMgr;
     private PilotView _pilotView;
     private ApplianceManager _applianceManager;
@@ -352,5 +353,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 				}
 			}
 		}
+	}
+
+	public void OnPointerDown(PointerEventData eventData) {
+		Debug.Log("pointer down on " + name);
 	}
 }
