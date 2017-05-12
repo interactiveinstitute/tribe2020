@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
+  m_Name: Explaining the Game
+  m_EditorClassIdentifier: 
+  title: Explaining the Game
+  description: Get to know the people.
+  steps:
+  - description: If we cannot decrease
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: If we cannot decrease the CO2 emissions of San Pablo we are doomed!
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    character: player
+    textValue: If we cannot decrease the CO2 emissions of San Pablo we are doomed!
+    inChecklist: 0
+  - description: When private house
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: When people pay for their own energy use they can be motivated to
+        save energy in order to save money.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    character: player
+    textValue: When people pay for their own energy use they can be motivated to save
+      energy in order to save money.
+    inChecklist: 0
+  - description: No such luck here
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: I don't think we will have that luck here. Nobody sees their energy
+        use and no single person pays for it neither.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    character: player
+    textValue: I don't think we will have that luck here. Nobody sees their energy
+      use and no single person pays for it neither.
+    inChecklist: 0
+  - description: I think I will have to
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: If I am to change peoples habits here I have to understand them
+        better, and challenge them to do better!
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    character: player
+    textValue: If I am to change peoples habits here I have to understand them better,
+      and challenge them to do better!
+    inChecklist: 0
+  - description: Let's ask around
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: I think I should start with observing the people who use this building
+        and also talk to them to see what can be done.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    textType: 0
+    character: player
+    textValue: I think I should start with observing the people who use this building
+      and also talk to them to see what can be done.
+    inChecklist: 1
+  followingNarratives:
+  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
+  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
+  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
