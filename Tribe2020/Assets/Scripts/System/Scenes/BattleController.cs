@@ -194,7 +194,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 	//
 	public void OnWin() {
-		_view.ShowCongratualations("You have won the battle!");
+		_view.ShowCongratulations("You have won the battle!");
 		_isTouching = false;
 		_hasWon = true;
 
@@ -226,8 +226,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	}
 
 	//
-	public void ShowCongratualations(string text) {
-		_view.ShowCongratualations(text);
+	public void ShowCongratulations(string text) {
+		_view.ShowCongratulations(text);
 	}
 
 	//
@@ -342,6 +342,18 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	}
 
 	public void StopCamera() {
+		throw new NotImplementedException();
+	}
+
+	public void OnNarrativeAction(Narrative narrative, Narrative.Step step, string callback, string[] parameters) {
+		throw new NotImplementedException();
+	}
+
+	public void OnNarrativeCompleted(Narrative narrative) {
+		throw new NotImplementedException();
+	}
+
+	public void OnNarrativeActivated(Narrative narrative) {
 		throw new NotImplementedException();
 	}
 }

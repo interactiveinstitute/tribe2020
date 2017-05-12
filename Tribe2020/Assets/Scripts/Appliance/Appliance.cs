@@ -356,6 +356,5 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	}
 
 	public void OnPointerDown(PointerEventData eventData) {
-		Debug.Log("pointer down on " + name);
 	}
 }

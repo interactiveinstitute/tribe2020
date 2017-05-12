@@ -24,10 +24,12 @@ public class NarrationManager : MonoBehaviour {
 
 	[Header("Narratives")]
 	public Narrative curInFocus;
+	
+	private Narrative[] _allNarratives;
+
 	public List<Narrative> starters;
 	public List<Narrative> active;
 	public List<Narrative> archive;
-	public List<Narrative> allNarratives;
 
 	[Header("Narration Control")]
 	public int selectIndex;
@@ -40,6 +42,7 @@ public class NarrationManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start() {
+		_allNarratives = Resources.LoadAll<Narrative>("Narratives");
 	}
 
 	// Update is called once per frame
@@ -68,7 +71,10 @@ public class NarrationManager : MonoBehaviour {
 	//
 	public void ActiveNarratives() {
 		foreach(Narrative n in active) {
-			n.GetCurrentStep().unityEvent.Invoke();
+			//Call callbacks
+			foreach(Narrative.Action action in n.GetCurrentStep().actions) {
+				_interface.OnNarrativeAction(n, n.GetCurrentStep(), action.callback, action.GetParameters());
+			}
 		}
 	}
 
@@ -86,21 +92,6 @@ public class NarrationManager : MonoBehaviour {
 	public Narrative ActivateNarrative(Narrative narrative) {
 		Narrative n = Object.Instantiate(narrative) as Narrative;
 		foreach(Narrative.Step s in n.steps) {
-			string character = "";
-			if(s.character != "") {
-				character = "a:\"" + s.character + "\",";
-			}
-			if(s.textType == Narrative.Step.TextType.Message) {
-				s.unityEvent.AddListener(
-					() => _interface.ShowMessage("{" + character + " g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
-			} else if(s.textType == Narrative.Step.TextType.Prompt) {
-				s.unityEvent.AddListener(
-					() => _interface.ShowPrompt("{" + character + " g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
-			} else if(s.textType == Narrative.Step.TextType.Completion) {
-				s.unityEvent.AddListener(
-					() => _interface.ShowCongratualations("{g:\"" + n.title + "\", k:\"" + s.description + "\"}"));
-			}
-
 			n.SetCurrentStepIndex(narrative.GetCurrentStepIndex());
 		}
 		active.Add(n);
@@ -109,6 +100,7 @@ public class NarrationManager : MonoBehaviour {
 
 	//Callback for game event, progress narratives that are listening for the event
 	public void OnNarrativeEvent(string eventType = "", string prop = "") {
+		if(debug) { Debug.Log("Narrative: " + eventType + "(" + prop + ")"); }
 		if(!autoStart) { return; }
 
 		bool didProgress = false;
@@ -117,8 +109,10 @@ public class NarrationManager : MonoBehaviour {
 			Narrative.Step curStep = active[i].GetCurrentStep();
 			//Check if event fullfills conditions for current step
 			if(curStep.IsCompletedBy(eventType, prop)) {
-				//Invoke event function
-				curStep.unityEvent.Invoke();
+				//Call callbacks
+				foreach(Narrative.Action action in curStep.actions) {
+					_interface.OnNarrativeAction(active[i], curStep, action.callback, action.GetParameters());
+				}
 				//Progress narrative
 				active[i].Progress();
 				//Check if narrative was completed
@@ -144,9 +138,8 @@ public class NarrationManager : MonoBehaviour {
 		foreach(Narrative fn in n.followingNarratives) {
 			ActivateNarrative(fn);
 		}
-		//Save game due to progress
-		_interface.LimitInteraction("all");
-		_interface.SaveGameState();
+		//Send callback as narrative is over
+		_interface.OnNarrativeCompleted(n);
 	}
 
 	//
@@ -162,7 +155,7 @@ public class NarrationManager : MonoBehaviour {
 	//
 	public int GetDBIndexForNarrative(Narrative narrative) {
 		int count = 0;
-		foreach(Narrative n in allNarratives) {
+		foreach(Narrative n in _allNarratives) {
 			if(n.title == narrative.title) {
 				break;
 			}
@@ -185,7 +178,7 @@ public class NarrationManager : MonoBehaviour {
 		int index = narrativeJSON["index"].AsInt;
 		int step = narrativeJSON["step"].AsInt;
 
-		Narrative narrative = Object.Instantiate(allNarratives[index]) as Narrative;
+		Narrative narrative = Object.Instantiate(_allNarratives[index]) as Narrative;
 		//Narrative narrative = ActivateNarrative(allNarratives[index]);
 		narrative.SetCurrentStepIndex(step);
 
@@ -200,10 +193,8 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//
-	public void Log(string log) {
-		if(debug) {
-			Debug.Log(log);
-		}
+	public Narrative[] GetAllNarratives() {
+		return _allNarratives;
 	}
 
 	//Serialize narration manager state to json
