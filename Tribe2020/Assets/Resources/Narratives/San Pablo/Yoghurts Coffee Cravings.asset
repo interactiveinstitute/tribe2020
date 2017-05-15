@@ -9,42 +9,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
-  m_Name: Bobs Restroom Request
+  m_Name: Yoghurts Coffee Cravings
   m_EditorClassIdentifier: 
-  title: Bobs Restroom Request
-  description: Find Bob Alison and help him out.
+  title: Yoghurts Coffee Cravings
+  description: Figure out who Yoghurt Ableton is and see to her needs.
   steps:
-  - description: Talk to Bob
+  - description: Talk to Yoghurt
     conditionType: AvatarSelected
-    conditionProp: Bob Alison
+    conditionProp: Yoghurt Ableton
+    actions:
+    - callback: ShowPrompt
+      parameter1: Yoghurt Ableton
+      parameter2: I'm sooo tired!
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: I'm sooo tired!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
-    character: Bob Alison
-    textValue: Hello!
+    textType: 0
+    character: Yoghurt Ableton
+    textValue: I'm sooo tired!
     inChecklist: 1
   - description: TODO
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: HideMessage
+      parameter1: 
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: '{a:"Yoghurt Ableton", g:"Yoghurts Coffee Cravings",
-              k:0}'
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0

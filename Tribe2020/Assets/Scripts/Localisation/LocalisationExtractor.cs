@@ -33,27 +33,7 @@ public class LocalisationExtractor : MonoBehaviour {
 			groups.Add(new Language.ValueGroup(key, values));
 		}
 
-		//Narrative wrapper
-		if(source.GetComponent<NarrationManager>()) {
-			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().allNarratives) {
-				List<Language.KeyValue> values = new List<Language.KeyValue>();
-				values.Add(new Language.KeyValue("Description", n.description));
-				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
-				values.Add(checklist);
-				foreach(Narrative.Step ns in n.steps) {
-					if(ns.textValue != "" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowPrompt" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowMessage" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowCongratulations") {
-						values.Add(new Language.KeyValue(ns.description, ns.textValue));
-					}
-					if(ns.inChecklist) {
-						checklist.values.Add(ns.description);
-					}
-				}
-				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
-			}
-		}
+		
 
 		//Viewpoint wrapper
 		if(source.GetComponentsInChildren<Viewpoint>().Length > 0) {
@@ -135,9 +115,28 @@ public class LocalisationExtractor : MonoBehaviour {
 		#endregion
 
 
-
+		ExtractNarraive();
 		ExtractContent();
 		ExtractQuizzes();
+	}
+
+	//
+	public void ExtractNarraive() {
+		//Narrative wrapper
+		if(source.GetComponent<NarrationManager>()) {
+			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().GetAllNarratives()) {
+				List<Language.KeyValue> values = new List<Language.KeyValue>();
+				values.Add(new Language.KeyValue("Description", n.description));
+				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
+				values.Add(checklist);
+				foreach(Narrative.Step ns in n.steps) {
+					if(ns.inChecklist) {
+						checklist.values.Add(ns.description);
+					}
+				}
+				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
+			}
+		}
 	}
 
 	//

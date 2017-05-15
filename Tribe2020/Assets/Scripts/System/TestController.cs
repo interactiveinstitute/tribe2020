@@ -23,7 +23,7 @@ public class TestController : MonoBehaviour {
 	void Update () {
 		updateCount++;
 		if(updateCount == 2) {
-			theNarrative.steps[0].unityEvent.Invoke();
+			//theNarrative.steps[0].unityEvent.Invoke();
 		}
 	}
 

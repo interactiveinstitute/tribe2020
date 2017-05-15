@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
+  m_Name: Baby Steps
+  m_EditorClassIdentifier: 
+  title: Baby Steps
+  description: Learn the basics of being a fire shaman.
+  steps:
+  - description: So this is San Pablo
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Finally, I made it to San Pablo offices. As a Shaman I'll have to
+        make this place energy efficient.
+    inChecklist: 0
+  - description: Learn to swipe
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Let's have a look around. Swipe the screen to move to another view.
+    - callback: LimitInteraction
+      parameter1: only_swipe
+      parameter2: 
+    - callback: PlayUIAnimation
+      parameter1: SwipeInstruction
+      parameter2: 
+    inChecklist: 0
+  - description: What a view
+    conditionType: Swiped
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What a view! There are also other floors of this building.
+    - callback: StopUIAnimation
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Energy is difficult
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Energy efficiency is a difficult subject. There are so many ways
+        to think about it.
+    inChecklist: 0
+  - description: CO2 emissions
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: One such thing is carbon dioxide, or CO2, emissions caused directly
+        or indirectly by a building.
+    inChecklist: 0
+  - description: Burning
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: CO2 is emitted whenever we burn something.
+    inChecklist: 0
+  - description: Power stations
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: In power stations we burn things like coal and oil to generate electricity.
+    inChecklist: 0
+  - description: Burners
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: In houses we use burners to keep rooms warm and to heat water.
+    inChecklist: 0
+  - description: Open the apocalypsometer
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Let's have a look at the CO2 emissions of this building.
+    - callback: LimitInteraction
+      parameter1: only_apocalypsometer
+      parameter2: 
+    - callback: PlayUIAnimation
+      parameter1: MarkApocalypsometer
+      parameter2: 
+    inChecklist: 0
+  - description: Oh no
+    conditionType: Apocalypse PanelOpened
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Oh no! We are currently emitting a lot of CO2.
+    - callback: StopUIAnimation
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: CO2 is gaseous
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: CO2 emissions are gaseous and will rise to the sky and atmosphere.
+    inChecklist: 0
+  - description: Global warming
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: In the atmosphere CO2 functions as an isolation for the warmth emitted
+        by the sun.
+    inChecklist: 0
+  - description: We need CO2
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Without any CO2 in the atmosphere, our world would have been very
+        cold.
+    inChecklist: 0
+  - description: But not too much
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: On the other hand, more CO2 in the atmosphere will make it too hot.
+    inChecklist: 0
+  - description: Decrease CO2
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Therefore, we need to decrease our CO2 emissions as much as possible
+        to keep the world at a good temperature.
+    inChecklist: 0
+  - description: 20% by 2020
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: We have until the year 2020 to decrease the emissions by 20%. This
+        panel shows us how well we are doing.
+    inChecklist: 0
+  - description: Open the energy panel
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: LimitInteraction
+      parameter1: only_energy_panel
+      parameter2: 
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: In order to figure out what is causing all our CO2 emissions, we
+        have to take a look at the building's energy usage.
+    - callback: PlayUIAnimation
+      parameter1: MarkEnergyPanel
+      parameter2: 
+    inChecklist: 0
+  - description: Aha, the lamps
+    conditionType: Energy PanelOpened
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Aha, look at all these lamps that are turned on. Someone must have
+        forgot to turn them off yesterday.
+    - callback: StopUIAnimation
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Find a switch
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Now, where is there a power switch for a lamp...
+    inChecklist: 0
+  - description: Find another
+    conditionType: TurnedOffLamp
+    conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Great, let's turn off the rest of the lamps on this floor.
+    inChecklist: 0
+  - description: Find a third
+    conditionType: TurnedOffLamp
+    conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Great, let's turn off the rest of the lamps on this floor.
+    inChecklist: 0
+  - description: Turn off 3rd lamp
+    conditionType: TurnedOffLamp
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: There we go! I'll really have to teach people around here to turn
+        off the light after themselves.
+    inChecklist: 0
+  - description: Congratulations
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: ShowCongratulations
+      parameter1: 
+      parameter2: No need for lights when nobody is around.
+    inChecklist: 0
+  - description: Tap to continue
+    conditionType: Tapped
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  followingNarratives:
+  - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}

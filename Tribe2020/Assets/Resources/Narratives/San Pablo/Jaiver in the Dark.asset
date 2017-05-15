@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
-  m_Name: Jaivar in the Dark
+  m_Name: Jaiver in the Dark
   m_EditorClassIdentifier: 
   title: Javier in the Dark
   description: Get to know Javier Rouch and see what's his problem.
@@ -17,84 +17,87 @@ MonoBehaviour:
   - description: Talk to Javier
     conditionType: AvatarSelected
     conditionProp: Javier Rough
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Aargh! Too dark!
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    - callback: SetSimulationTimeScale
+      parameter1: 0
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: LimitInteraction
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: ok_pressed
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: SetSimulationTimeScale
-          m_Mode: 4
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Aargh! Too dark!
     inChecklist: 1
   - description: What's the problem
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What seems to be problem?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: What seems to be problem?
     inChecklist: 0
   - description: Seeing is the problem
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Seeing is the problem! It's either too bright or too dark.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Seeing is the problem! It's either too bright or too dark.
     inChecklist: 0
   - description: Why aren't you outside
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Maybe you should go outside, the light seems fine there.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Maybe you should go outside, the light seems fine there.
     inChecklist: 0
   - description: I wish I could
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I wish I could, but I have all this computer work I need to do.
+        Watching the screen everyday makes my eyes square!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: I wish I could, but I have all this computer work I need to do. Watching
       the screen everyday makes my eyes square!
@@ -102,24 +105,33 @@ MonoBehaviour:
   - description: I'll see what I can do
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Hmm, I'll see what I can do about that.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Hmm, I'll see what I can do about that.
     inChecklist: 0
   - description: Select the monitor
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can select an appliance by tapping it. Try tapping Javier's
+        computer screen.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: 
     textValue: You can select an appliance by tapping it. Try tapping Javier's computer
       screen.
@@ -127,21 +139,16 @@ MonoBehaviour:
   - description: Hide Message
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: HideMessage
+      parameter1: 
+      parameter2: 
+    - callback: LimitInteraction
+      parameter1: all
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
@@ -152,12 +159,17 @@ MonoBehaviour:
   - description: Find Javier's screen
     conditionType: DeviceSelected
     conditionProp: CRT Monitor
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What an old computer screen. These fat CRT monitors are not very
+        energy efficient neither.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: What an old computer screen. These fat CRT monitors are not very energy
       efficient neither.
@@ -165,12 +177,18 @@ MonoBehaviour:
   - description: How to upgrade
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can perform actions to appliances that change their energy efficiency.
+        However, this can cost both money and be unconvenient for the people in the
+        building.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: 
     textValue: You can perform actions to appliances that change their energy efficiency.
       However, this can cost both money and be unconvenient for the people in the
@@ -179,60 +197,81 @@ MonoBehaviour:
   - description: Updgrade Javier's screen
     conditionType: EEMPerformed
     conditionProp: EDL4
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What the, this is amazing! I can actually see what I am doing!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: What the, this is amazing! I can actually see what I am doing!
     inChecklist: 1
   - description: Your'e welcome
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Your'e welcome! (was he just hitting random keys before?)
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Your'e welcome! (was he just hitting random keys before?)
     inChecklist: 0
   - description: What is this
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Oh! But what is this!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Oh! But what is this!
     inChecklist: 0
   - description: What now
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What is it now?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: What is it now?
     inChecklist: 0
   - description: The lamps
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Now that I can see better, I can't help but notice that there is
+        a really ugly ligthing in this room!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Now that I can see better, I can't help but notice that there is a
       really ugly ligthing in this room!
@@ -240,105 +279,112 @@ MonoBehaviour:
   - description: I guess I'll see
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: I guess I'll see what I can do...
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: I guess I'll see what I can do...
     inChecklist: 0
   - description: Upgrade the Room Lighting
     conditionType: EEMPerformed
     conditionProp: EDL2
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: That's it! What a wonderful, bright and clear room ambience!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: That's it! What a wonderful, bright and clear room ambience!
     inChecklist: 1
   - description: Your'e welcome again
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: (Your'e welcome, again)
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: (Your'e welcome, again)
     inChecklist: 0
   - description: What the
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What the! What is going on!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: What the! What is going on!
     inChecklist: 0
   - description: Silence
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: '...'
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: '...'
     inChecklist: 0
   - description: Look at that thing
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Look at that thing. Look at it! What is that?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Look at that thing. Look at it! What is that?
     inChecklist: 0
   - description: Show vending machine
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: HideUI
+      parameter1: 
+      parameter2: 
+    - callback: GotoViewpoint
+      parameter1: Waiting Lounge
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: HideUI
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: GotoViewpoint
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Waiting Lounge
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
@@ -348,78 +394,107 @@ MonoBehaviour:
   - description: Moved to waiting lounge
     conditionType: CameraArrived
     conditionProp: Waiting Lounge
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What am I look for?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: What am I look for?
     inChecklist: 0
   - description: Don't you see it
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Don't you see it!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Don't you see it!
     inChecklist: 0
   - description: The busy atmosphere
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: The electrical current? The flow of the air? The busy atmosphere?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: The electrical current? The flow of the air? The busy atmosphere?
     inChecklist: 0
   - description: No, the vending machine
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: No, no, no. The vending machine, of course!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: No, no, no. The vending machine, of course!
     inChecklist: 0
   - description: Of course, that one
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Of course (that and all other things here)
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Of course (that and all other things here)
     inChecklist: 0
   - description: It has a horrible light
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: It has a horrible light. Disgusting. Can you get rid of it?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: It has a horrible light. Disgusting. Can you get rid of it?
     inChecklist: 0
   - description: Sure can
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Um? I suppose the ligth inside the machine is unnecessary as long
+        as you can see the products.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -433,21 +508,13 @@ MonoBehaviour:
   - description: Hide Message
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: HideMessage
+      parameter1: 
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
@@ -457,24 +524,33 @@ MonoBehaviour:
   - description: De-lamp the Vending Machine
     conditionType: EEMPerformed
     conditionProp: EDL2
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Wonderful! Much easier on the eyes!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Wonderful! Much easier on the eyes!
     inChecklist: 1
   - description: Your'e great
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: You know what, you are great! Just look at this wonderful ligthing
+        we have now.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: You know what, you are great! Just look at this wonderful ligthing
       we have now.
@@ -482,12 +558,17 @@ MonoBehaviour:
   - description: Not to mention the energy
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Thanks! Not to mention the energy savings we have achieved with
+        the things we have done.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Thanks! Not to mention the energy savings we have achieved with the
       things we have done.
@@ -495,12 +576,17 @@ MonoBehaviour:
   - description: What, I don't want that
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What? I don't care about energy savings. That's just boring and
+        pointless. As long as we have good ligthing, nothing else matters to me.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: What? I don't care about energy savings. That's just boring and pointless.
       As long as we have good ligthing, nothing else matters to me.
@@ -508,12 +594,18 @@ MonoBehaviour:
   - description: You can be serious
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: No way! You can't mean that. Listen, I have come to change your
+        mind. If we don't become more energy efficient there won't be any lights at
+        all!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: No way! You can't mean that. Listen, I have come to change your mind.
       If we don't become more energy efficient there won't be any lights at all!
@@ -521,24 +613,33 @@ MonoBehaviour:
   - description: Oh yeah
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Oh yeah? Prove it!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: Oh yeah? Prove it!
     inChecklist: 0
   - description: How to challenge
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: To challenge the attitude and view of a person, select them and
+        choose to challenge them.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: 
     textValue: To challenge the attitude and view of a person, select them and choose
       to challenge them.
@@ -546,21 +647,13 @@ MonoBehaviour:
   - description: Hide Message
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: HideMessage
+      parameter1: 
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: HideMessage
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
@@ -570,24 +663,33 @@ MonoBehaviour:
   - description: Battle won
     conditionType: BattleWon
     conditionProp: Javier Rough
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Do you see why we have to be more energy efficient now?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: Do you see why we have to be more energy efficient now?
     inChecklist: 0
   - description: I do
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I do... What a journey we have done! What else can I do to be more
+        efficient?
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: I do... What a journey we have done! What else can I do to be more
       efficient?
@@ -595,12 +697,17 @@ MonoBehaviour:
   - description: Many things
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: There are many things one can do. But to begin with, just thing
+        of the energy whenever you turn a light on or off!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: player
     textValue: There are many things one can do. But to begin with, just thing of
       the energy whenever you turn a light on or off!
@@ -608,45 +715,45 @@ MonoBehaviour:
   - description: I will
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I will! Thank's a lot!
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 2
+    textType: 0
     character: Javier Rough
     textValue: I will! Thank's a lot!
     inChecklist: 0
   - description: Congratulations
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowCongratulations
+      parameter1: 
+      parameter2: Things are not always what they seem with lighting.
     unityEvent:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    textType: 3
+    textType: 0
     character: 
     textValue: Things are not always what they seem with lighting.
     inChecklist: 0
   - description: Tap to continue
     conditionType: Tapped
     conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
     unityEvent:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114951931450549782, guid: 029d6f05919944e4b9debfd5c975893e,
-            type: 2}
-          m_MethodName: ClearView
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     textType: 0
