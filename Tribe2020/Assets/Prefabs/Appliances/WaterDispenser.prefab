@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &185322
 GameObject:
@@ -27,12 +27,13 @@ GameObject:
   - component: {fileID: 446630}
   - component: {fileID: 6521546}
   - component: {fileID: 11492818}
+  - component: {fileID: 114015542707313952}
   m_Layer: 0
   m_Name: WaterDispenser
   m_TagString: Appliance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &427014
 Transform:
@@ -135,8 +136,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   playerAffordances: []
   avatarAffordances:
-  - affordance: {fileID: 0}
-    nrOfSlots: 0
+  - affordance: {fileID: 11400000, guid: d92e15c46c08e0a418663e65ecc9f270, type: 2}
+    nrOfSlots: 1
     subscribingActivities: []
   owners: []
   appliedEEMs: []
@@ -193,7 +194,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: -1577725955494882426, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &1766091478234098
 GameObject:
@@ -209,7 +210,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: -6488666005112524639, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4644381973086194
 Transform:
@@ -237,6 +238,18 @@ Transform:
   m_Father: {fileID: 446630}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &114015542707313952
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 185322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c756e70f7b787a4cb78dcb9a6756e26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: 9516ede0-4b71-42ba-b9f6-0be32b9dc9d1
 --- !u!114 &114130082751897068
 MonoBehaviour:
   m_ObjectHideFlags: 1
