@@ -194,6 +194,7 @@ public class NarrationManager : MonoBehaviour {
 
 	//
 	public Narrative[] GetAllNarratives() {
+		_allNarratives = Resources.LoadAll<Narrative>("Narratives");
 		return _allNarratives;
 	}
 

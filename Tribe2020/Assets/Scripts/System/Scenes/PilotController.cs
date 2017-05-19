@@ -616,7 +616,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				portrait = _instance._avatarMgr.playerPortrait;
 				avatarName = "F. Shaman: ";
 			} else {
-				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
 				avatarName = avatarName + ": ";
 			}
 		}
@@ -638,7 +638,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				portrait = _instance._avatarMgr.playerPortrait;
 				avatarName = "F. Shaman: ";
 			} else {
-				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
 				avatarName = avatarName + ": ";
 			}
 		}
@@ -693,6 +693,14 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_instance._saveMgr.SetClass("pendingChallenge", challengeData);
 		_instance.SaveGameState();
 		_instance.LoadScene("BattleScene");
+	}
+
+	//
+	public void ControlAvatar(string[] cmd) {
+		JSONNode posJSON = JSON.Parse(cmd[1]);
+		Vector3 pos = new Vector3(posJSON["x"].AsFloat, posJSON["y"].AsFloat, posJSON["z"].AsFloat);
+		Debug.Log(cmd[0] + " -> " + pos);
+		_avatarMgr.ControlAvatar(cmd[0], pos);
 	}
 
 	//
@@ -841,7 +849,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				_instance._timeMgr.Offset(3600 * _instance._pendingTimeSkip);
 				SetVisualTimeScale(1);
 				SetSimulationTimeScale(60);
-				Debug.Log("time skip over");
 				break;
 		}
 	}
@@ -863,6 +870,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "ShowPrompt":
 			case "ShowCongratulations":
 				parameters[1] = "{g:\"Narrative." + narrative.title + "\", k:\"" + step.description + "\"}";
+				SendMessage(callback, parameters);
+				break;
+			case "ControlAvatar":
 				SendMessage(callback, parameters);
 				break;
 			default:
