@@ -18,10 +18,10 @@ MonoBehaviour:
     conditionType: 
     conditionProp: 
     actions:
-    - callback: MarkAppliance
+    - callback: MarkAvatar
       parameter1: Javier Rough
       parameter2: 
-    inChecklist: 1
+    inChecklist: 0
   - description: Talk to Javier
     conditionType: AvatarSelected
     conditionProp: Javier Rough
@@ -34,6 +34,9 @@ MonoBehaviour:
       parameter2: 
     - callback: SetSimulationTimeScale
       parameter1: 0
+      parameter2: 
+    - callback: UnmarkAvatar
+      parameter1: Javier Rough
       parameter2: 
     inChecklist: 1
   - description: What's the problem
@@ -85,6 +88,10 @@ MonoBehaviour:
       parameter1: 
       parameter2: You can select an appliance by tapping it. Try tapping Javier's
         computer screen.
+    - callback: MarkDevice
+      parameter1: CRT Monitor
+      parameter2: You can select an appliance by tapping it. Try tapping Javier's
+        computer screen.
     inChecklist: 0
   - description: Hide Message
     conditionType: OKPressed
@@ -123,6 +130,9 @@ MonoBehaviour:
     - callback: ShowPrompt
       parameter1: Javier Rough
       parameter2: What the, this is amazing! I can actually see what I am doing!
+    - callback: UnmarkDevice
+      parameter1: CRT Monitor
+      parameter2: 
     inChecklist: 1
   - description: Your'e welcome
     conditionType: OKPressed

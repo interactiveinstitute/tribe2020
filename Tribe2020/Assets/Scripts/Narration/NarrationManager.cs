@@ -33,10 +33,13 @@ public class NarrationManager : MonoBehaviour {
 
 	[Header("Narration Control")]
 	public int selectIndex;
-	#endregion
 
-	//Sort use instead of constructor
-	void Awake() {
+    [Header("User interaction")]
+    public GameObject interactionPoint;
+    #endregion
+
+    //Sort use instead of constructor
+    void Awake() {
 		_instance = this;
 	}
 
