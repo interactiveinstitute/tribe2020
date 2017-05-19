@@ -131,8 +131,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		_ctrlMgr.SetCurrentUI(this);
 	}
 
-	//
-	public void RefreshSlots() {
+    //
+    public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
 

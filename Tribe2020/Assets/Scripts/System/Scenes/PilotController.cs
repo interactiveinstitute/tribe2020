@@ -676,8 +676,43 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		LimitInteraction("only_tap");
 	}
 
-	//
-	public void AddObjective(string cmd) {
+    //
+    public void MarkAvatar(string cmd) {
+        Appliance app = _avatarMgr.GetAvatar(cmd).GetComponent<Appliance>();
+        GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
+        ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+
+        float y = 0.1f + Helpers.LargestBounds(app.transform).max.y;
+
+        ip.transform.localPosition = new Vector3(0.0f, y + 0.25f, 0.0f);
+    }
+
+    //
+    public void UnmarkAvatar(string cmd) {
+        Destroy(_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+    }
+
+    //
+    public void MarkDevice(string cmd) {
+        foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
+            GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
+            ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+
+            float y = 0.1f + Helpers.LargestBounds(app.transform).max.y;
+
+            ip.transform.localPosition = new Vector3(0.0f, y + 0.25f, 0.0f);
+        }
+    }
+
+    //
+    public void UnmarkDevice(string cmd) {
+        foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
+            Destroy(app.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+        }
+    }
+
+    //
+    public void AddObjective(string cmd) {
 		JSONNode json = JSON.Parse(cmd);
 	}
 

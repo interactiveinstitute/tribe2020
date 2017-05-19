@@ -900,21 +900,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoStart: 1
-  saveProgress: 1
+  saveProgress: 0
   debug: 0
   curInFocus: {fileID: 0}
   starters:
-  - {fileID: 11400000, guid: f834e78f0796b734dace008fa16e4a9b, type: 2}
+  - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}
   active: []
   archive: []
-  allNarratives:
-  - {fileID: 11400000, guid: f834e78f0796b734dace008fa16e4a9b, type: 2}
-  - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}
-  - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
   selectIndex: 0
+  interactionPoint: {fileID: 1861428572055132, guid: df5fdacd98e9bf24195b5ce249a8dd5c,
+    type: 2}
 --- !u!114 &114181491290269560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1530,7 +1525,7 @@ MonoBehaviour:
   - {fileID: 11434520, guid: cd98bfef8e723714aa81bd8ad3a8a204, type: 2}
   - {fileID: 114000011745709356, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
   - {fileID: 114000012667471348, guid: 600ac66c53283c245ae8a926c3bbda7e, type: 2}
-  - {fileID: 11479424, guid: 99155487fd89b214381843b757f70304, type: 2}
+  - {fileID: 0}
   - {fileID: 114000012964678822, guid: 0a34c60081b671a4aa0c8b03a12928ed, type: 2}
   - {fileID: 11492776, guid: b4cc5d8b7e18d234fb2c4761d79dd88f, type: 2}
   - {fileID: 11400008, guid: 61256a63d500d7b4595d0cc2b3423658, type: 2}
@@ -3386,7 +3381,7 @@ MonoBehaviour:
   CurrentDate: 
   KeyActions: []
   VisualTimeScale: 1
-  SimulationTimeScaleFactor: 360
+  SimulationTimeScaleFactor: 60
   LockScales: 0
 --- !u!114 &114951931450549782
 MonoBehaviour:
@@ -3400,7 +3395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _curState: 0
-  debug: 1
+  debug: 0
   enableSaveLoad: 1
   startTime: 1010127600
   endTime: 1577833200
@@ -3412,8 +3407,8 @@ MonoBehaviour:
   syncResources: 1
   syncNarrative: 1
   syncLocalization: 1
-  syncAvatars: 0
-  syncAppliances: 0
+  syncAvatars: 1
+  syncAppliances: 1
 --- !u!124 &124298556298773944
 Behaviour:
   m_ObjectHideFlags: 1
@@ -3429,7 +3424,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1826864137982002}
   serializedVersion: 5
   lengthInSec: 5
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -6054,7 +6049,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1505711593783160}
   serializedVersion: 5
   lengthInSec: 2
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
