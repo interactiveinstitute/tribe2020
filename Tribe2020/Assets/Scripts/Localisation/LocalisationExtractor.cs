@@ -128,12 +128,22 @@ public class LocalisationExtractor : MonoBehaviour {
 				List<Language.KeyValue> values = new List<Language.KeyValue>();
 				values.Add(new Language.KeyValue("Description", n.description));
 				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
-				values.Add(checklist);
+
 				foreach(Narrative.Step ns in n.steps) {
+					foreach(Narrative.Action na in ns.actions) {
+						if(na.callback == "ShowMessage" ||
+							na.callback == "ShowPrompt" ||
+							na.callback == "ShowCongratulations") {
+							values.Add(new Language.KeyValue(ns.description, na.parameter2));
+						}
+					}
 					if(ns.inChecklist) {
 						checklist.values.Add(ns.description);
 					}
 				}
+
+				
+				values.Add(checklist);
 				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
 			}
 		}
