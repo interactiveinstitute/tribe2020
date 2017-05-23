@@ -693,6 +693,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
     }
 
     //
+    public void SetAvatarBattleReady(string cmd) {
+        _avatarMgr.GetAvatar(cmd).GetComponent<BehaviourAI>().battleReady = true;
+    }
+
+    //
     public void MarkDevice(string cmd) {
         foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
             GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);

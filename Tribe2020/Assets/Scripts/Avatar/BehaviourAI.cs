@@ -59,6 +59,8 @@ public class BehaviourAI : SimulationObject {
 	[SerializeField]
 	public bool showCoffeeCup = false;
 
+    public bool battleReady = false;
+
 	//[SerializeField]
 	//private GameObject prefab;
 
