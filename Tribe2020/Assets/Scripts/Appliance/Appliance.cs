@@ -210,6 +210,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		//_ctrlMgr.LoadScene("BattleScene");
 	}
 
+    public void SRCAvatarIsBattleReady(CallbackResult result) {
+        result.result = GetComponent<BehaviourAI>().battleReady;
+    }
+
 	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
 		return playerAffordances;
@@ -357,4 +361,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	public void OnPointerDown(PointerEventData eventData) {
 	}
+
+    public string GetUniqueId() {
+        UniqueId uid = GetComponent<UniqueId>();
+        if (uid) {
+            return uid.uniqueId;
+        }
+        return "";
+    }
+
 }

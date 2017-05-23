@@ -8,9 +8,12 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
 	public string title;
+
 	[TextArea(3, 10)]
 	public string description;
-	public List<Step> steps;
+
+    public List<Step> steps;
+
 	private int _curStep = 0;
 
 	public List<Narrative> followingNarratives;
