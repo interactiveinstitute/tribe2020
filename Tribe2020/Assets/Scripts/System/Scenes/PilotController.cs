@@ -536,6 +536,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
+			_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+			_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -552,6 +554,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
 		}
+	}
+
+	//
+	public void AddMoney(float money) {
+		_resourceMgr.cash += money;
+		_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+	}
+
+	//
+	public void AddComfort(float comfort) {
+		_resourceMgr.comfort += comfort;
+		_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 	}
 
 	//
@@ -591,6 +605,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void PlaySound(string sound) {
 		_instance._audioMgr.PlaySound(sound);
+	}
+
+	//
+	public void StopSound(string sound) {
+		_instance._audioMgr.StopSound(sound);
 	}
 
 	//
@@ -906,6 +925,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "ShowCongratulations":
 				parameters[1] = "{g:\"Narrative." + narrative.title + "\", k:\"" + step.description + "\"}";
 				SendMessage(callback, parameters);
+				break;
+			case "AddComfort":
+			case "AddMoney":
+				SendMessage(callback, float.Parse(parameters[0]));
 				break;
 			case "ControlAvatar":
 				SendMessage(callback, parameters);
