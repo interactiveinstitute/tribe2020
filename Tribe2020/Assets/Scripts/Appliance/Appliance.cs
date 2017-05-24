@@ -361,4 +361,13 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	public void OnPointerDown(PointerEventData eventData) {
 	}
+
+    public string GetUniqueId() {
+        UniqueId uid = GetComponent<UniqueId>();
+        if (uid) {
+            return uid.uniqueId;
+        }
+        return "";
+    }
+
 }

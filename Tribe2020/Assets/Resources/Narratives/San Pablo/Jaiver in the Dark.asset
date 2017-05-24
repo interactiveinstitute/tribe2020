@@ -89,9 +89,8 @@ MonoBehaviour:
       parameter2: You can select an appliance by tapping it. Try tapping Javier's
         computer screen.
     - callback: MarkDevice
-      parameter1: CRT Monitor
-      parameter2: You can select an appliance by tapping it. Try tapping Javier's
-        computer screen.
+      parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
+      parameter2: CRT Monitor
     inChecklist: 0
   - description: Hide Message
     conditionType: OKPressed
@@ -131,8 +130,8 @@ MonoBehaviour:
       parameter1: Javier Rough
       parameter2: What the, this is amazing! I can actually see what I am doing!
     - callback: UnmarkDevice
-      parameter1: CRT Monitor
-      parameter2: 
+      parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
+      parameter2: CRT Monitor
     inChecklist: 1
   - description: Your'e welcome
     conditionType: OKPressed
@@ -174,6 +173,9 @@ MonoBehaviour:
     - callback: ShowPrompt
       parameter1: player
       parameter2: I guess I'll see what I can do...
+    - callback: MarkDevice
+      parameter1: 20661975-d622-4566-a3e2-4b21be564a79
+      parameter2: Lamp
     inChecklist: 0
   - description: Upgrade the Room Lighting
     conditionType: EEMPerformed
@@ -182,6 +184,9 @@ MonoBehaviour:
     - callback: ShowPrompt
       parameter1: Javier Rough
       parameter2: That's it! What a wonderful, bright and clear room ambience!
+    - callback: UnmarkDevice
+      parameter1: 20661975-d622-4566-a3e2-4b21be564a79
+      parameter2: Lamp
     inChecklist: 1
   - description: Your'e welcome again
     conditionType: OKPressed

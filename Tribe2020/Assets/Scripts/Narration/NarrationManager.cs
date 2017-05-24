@@ -30,6 +30,7 @@ public class NarrationManager : MonoBehaviour {
 	public List<Narrative> starters;
 	public List<Narrative> active;
 	public List<Narrative> archive;
+    List<PerformedStep> _performedSteps = new List<PerformedStep>();
 
 	[Header("Narration Control")]
 	public int selectIndex;
@@ -38,10 +39,27 @@ public class NarrationManager : MonoBehaviour {
     public GameObject interactionPoint;
     #endregion
 
+    public struct PerformedStep {
+
+        public PerformedStep(string t, string p) {
+            conditionType = t;
+            conditionProp = p;
+        }
+
+        public string conditionType;
+        public string conditionProp;
+
+        //
+        public bool IsCompletedBy(string eventType, string prop) {
+            return (conditionType == "" || conditionType == eventType) &&
+                    (conditionProp == "" || conditionProp == prop);
+        }
+    }
+
     //Sort use instead of constructor
     void Awake() {
-		_instance = this;
-	}
+        _instance = this;
+    }
 
 	// Use this for initialization
 	void Start() {
@@ -102,18 +120,28 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//Callback for game event, progress narratives that are listening for the event
-	public void OnNarrativeEvent(string eventType = "", string prop = "") {
+	public void OnNarrativeEvent(string eventType = "", string prop = "", bool saveAsPerformed = false) {
 		if(debug) { Debug.Log("Narrative: " + eventType + "(" + prop + ")"); }
 		if(!autoStart) { return; }
 
 		bool didProgress = false;
 		//For every active narrative, going backwards
 		for(int i = active.Count - 1; i >= 0; i--) {
+
 			Narrative.Step curStep = active[i].GetCurrentStep();
-			//Check if event fullfills conditions for current step
-			if(curStep.IsCompletedBy(eventType, prop)) {
-				//Call callbacks
-				foreach(Narrative.Action action in curStep.actions) {
+
+            //Check if event fullfills conditions for current step
+            bool isCompleted = curStep.IsCompletedBy(eventType, prop);
+
+            //Is current step already performed?
+            if (!isCompleted) {
+                isCompleted = IsPerformed(curStep.conditionType, curStep.conditionProp);
+            }
+
+            //if (curStep.IsCompletedBy(eventType, prop)) {
+            if (isCompleted) {
+                //Call callbacks
+                foreach (Narrative.Action action in curStep.actions) {
 					_interface.OnNarrativeAction(active[i], curStep, action.callback, action.GetParameters());
 				}
 				//Progress narrative
@@ -122,18 +150,32 @@ public class NarrationManager : MonoBehaviour {
 				if(active[i].IsComplete()) {
 					CompleteNarrative(active[i]);
 				}
+
 				//Flag progress
 				didProgress = true;
 			}
+            else if(saveAsPerformed){
+                _performedSteps.Add(new PerformedStep(eventType, prop));
+            }
 		}
+
 		//Fire empty event to start eventual new steps
 		if(didProgress) {
 			OnNarrativeEvent();
 		}
 	}
 
-	//
-	public void CompleteNarrative(Narrative n) {
+    public bool IsPerformed(string eventType, string prop) {
+        foreach(PerformedStep ps in _performedSteps) {
+            if(ps.IsCompletedBy(eventType, prop)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //
+    public void CompleteNarrative(Narrative n) {
 		//Archive and remove completed narrative
 		archive.Add(n);
 		active.Remove(n);

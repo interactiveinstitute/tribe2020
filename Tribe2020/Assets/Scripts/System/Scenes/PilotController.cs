@@ -70,6 +70,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private int _pendingTimeSkip = -1;
 
 	private bool _firstUpdate = false;
+
+    private UniqueId[] uniqueIds;
 	#endregion
 
 	//Called once on all behaviours before any Start call
@@ -109,6 +111,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_view.TranslateInterface();
 
 		playPeriod = endTime - startTime;
+
+        uniqueIds = FindObjectsOfType<UniqueId>();
+
 	}
 
 	//Called every frame
@@ -536,6 +541,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
+			_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+			_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -550,8 +557,20 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
             //Redraw device panel
             _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
 
-			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
+			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
+	}
+
+	//
+	public void AddMoney(float money) {
+		_resourceMgr.cash += money;
+		_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+	}
+
+	//
+	public void AddComfort(float comfort) {
+		_resourceMgr.comfort += comfort;
+		_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 	}
 
 	//
@@ -591,6 +610,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void PlaySound(string sound) {
 		_instance._audioMgr.PlaySound(sound);
+	}
+
+	//
+	public void StopSound(string sound) {
+		_instance._audioMgr.StopSound(sound);
 	}
 
 	//
@@ -697,20 +721,54 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
         _avatarMgr.GetAvatar(cmd).GetComponent<BehaviourAI>().battleReady = true;
     }
 
-    //
-    public void MarkDevice(string cmd) {
+    //[unique id; children appliance title]
+    public void MarkDevice(string[] cmd) {
+
+        UniqueId uid = GetUniqueIdObject(cmd[0]);
+        
+        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+
+        if (cmd[1] == "") {
+            MarkAppliance(uid.GetComponent<Appliance>());
+        }
+        else {
+            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+                MarkAppliance(child);
+            }
+        }
+    }
+
+    public void MarkDevices(string cmd) {
         foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
-            GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
-            ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+            MarkAppliance(app);
+        }
+    }
 
-            float y = 0.1f + Helpers.LargestBounds(app.transform).max.y;
+    void MarkAppliance(Appliance app) {
+        GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
+        ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+        Bounds bounds = Helpers.LargestBounds(app.transform);
+        ip.transform.localPosition = Vector3.zero;
+    }
 
-            ip.transform.localPosition = new Vector3(0.0f, y + 0.25f, 0.0f);
+    //
+    public void UnmarkDevice(string[] cmd) {
+        UniqueId uid = GetUniqueIdObject(cmd[0]);
+
+        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+
+        if (cmd[1] == "") {
+            Destroy(uid.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+        }
+        else {
+            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+                Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+            }
         }
     }
 
     //
-    public void UnmarkDevice(string cmd) {
+    public void UnmarkDevices(string cmd) {
         foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
             Destroy(app.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
         }
@@ -851,6 +909,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
+    public UniqueId GetUniqueIdObject(string id) {
+        foreach(UniqueId uid in uniqueIds) {
+            if(uid.uniqueId == id) {
+                return uid;
+            }
+        }
+        return null;
+    }
+
 	//
 	public void LoadScene(string scene) {
 		_instance.SaveGameState();
@@ -912,10 +979,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				parameters[1] = "{g:\"Narrative." + narrative.title + "\", k:\"" + step.description + "\"}";
 				SendMessage(callback, parameters);
 				break;
+			case "AddComfort":
+			case "AddMoney":
+				SendMessage(callback, float.Parse(parameters[0]));
+				break;
 			case "ControlAvatar":
 				SendMessage(callback, parameters);
 				break;
-			default:
+            case "MarkDevice":
+            case "UnmarkDevice":
+                SendMessage(callback, parameters);
+                break;
+            default:
 				SendMessage(callback, parameters[0]);
 				break;
 		}
