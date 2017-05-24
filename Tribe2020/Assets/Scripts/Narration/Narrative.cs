@@ -54,8 +54,8 @@ public class Narrative : ScriptableObject {
 		public List<Narrative.Action> actions;
 		public bool inChecklist;
 
-		//
-		public bool IsCompletedBy(string eventType, string prop) {
+        //
+        public bool IsCompletedBy(string eventType, string prop) {
 			return (conditionType == "" || conditionType == eventType) &&
 					(conditionProp == "" || conditionProp == prop);
 		}

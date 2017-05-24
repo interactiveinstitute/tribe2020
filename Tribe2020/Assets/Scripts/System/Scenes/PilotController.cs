@@ -555,7 +555,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
             //Redraw device panel
             _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
 
-			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
+			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
 	}
 
