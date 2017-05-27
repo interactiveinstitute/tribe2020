@@ -11,9 +11,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		return _instance as PilotController;
 	}
 	public enum InputState {
-		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT, ONLY_APOCALYPSE,
-		ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
-		ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
+		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT, ONLY_APOCALYPSE, ONLY_ENVELOPE,
+		ONLY_TIME, ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST,
+		NOTHING, ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
 	};
 	[SerializeField]
 	private InputState _curState = InputState.ALL;
@@ -70,6 +70,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private int _pendingTimeSkip = -1;
 
 	private bool _firstUpdate = false;
+
+    private UniqueId[] uniqueIds;
 	#endregion
 
 	//Called once on all behaviours before any Start call
@@ -105,10 +107,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_avatarMgr = AvatarManager.GetInstance();
 		_applianceMgr = ApplianceManager.GetInstance();
 
-		ClearView();
+		_instance._view.ClearView();
 		_view.TranslateInterface();
 
 		playPeriod = endTime - startTime;
+
+        uniqueIds = FindObjectsOfType<UniqueId>();
+
 	}
 
 	//Called every frame
@@ -220,9 +225,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private void OnTap(Vector3 pos) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
-		if((_view.GetCurrentUI() == _view.devicePanel || 
-			_view.GetCurrentUI() == _view.characterPanel) && pos.x < Screen.width / 2) {
-			HideUI();
+		if((_view.GetCurrentUIKey() == "Character Panel" || _view.GetCurrentUIKey() == "Device Panel") &&
+			pos.x < Screen.width / 2) {
+			ClearView();
 		}
 
 		_touchState = IDLE;
@@ -338,21 +343,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void OnOkPressed() {
-		_instance.ResetTouch();
-
-		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
-			_instance._view.messageUI.SetActive(false);
-
-			//_instance._narrationMgr.OnNarrativeEvent("OKPressed");
-			//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.OKPressed);
-			_instance._narrationMgr.OnNarrativeEvent("OKPressed");
-		}
-
-		_instance.PlaySound("Press Button");
-	}
-
-	//
 	public void ToggleMenu() {
 		_instance._view.ToggleMenu();
 	}
@@ -363,86 +353,114 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_instance._cameraMgr.SetLookAtTarget(app);
 
-		//string title = _localMgr.GetPhrase("Appliance:" + app.title + "_Title");
-		//string description = _localMgr.GetPhrase("Appliance:" + app.title + "_Description");
-
 		if(app.GetComponent<BehaviourAI>()) {
 			_instance._view.BuildAvatarPanel(app);
-			SetCurrentUI(_instance._view.characterPanel);
+			SetCurrentUI(_instance._view.GetUIPanel("Character Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("AvatarSelected", app.title);
 		} else {
 			_instance._view.BuildDevicePanel(app);
-			SetCurrentUI(_instance._view.devicePanel);
+			SetCurrentUI(_instance._view.GetUIPanel("Device Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
 	}
 
-	//Open mail with details of narrative
-	public void SetCurrentUI(Quest quest) {
-		if(debug) { Debug.Log(name + ": SetCurrentUI(" + quest.name + ")"); }
-		//if(_curState != InputState.ALL && _curState != InputState.ONLY_OPEN_QUEST) { return; }
-
-		//_view.BuildMail(quest);
-		//SetCurrentUI(_view.mail);
-
-		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.MailOpened);
-	}
-
 	//Open user interface
 	public void SetCurrentUI(RectTransform ui) {
-		if(_instance._curState != InputState.ALL) {
-			if(ui == _instance._view.energyPanel && _instance._curState != InputState.ONLY_ENERGY) { return; }
-			if(ui == _instance._view.comfortPanel && _instance._curState != InputState.ONLY_COMFORT) { return; }
-			if(ui == _instance._view.inbox && _instance._curState != InputState.ONLY_OPEN_INBOX) { return; }
-			if(ui == _instance._view.inbox && _instance._curState != InputState.ONLY_APOCALYPSE) { return; }
+		if(_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction) {
+			return;
 		}
 
-		if(_instance._view.GetCurrentUI() != null) {
-			if(_instance._view.GetCurrentUI() == _instance._view.inbox) {
-				_instance._narrationMgr.OnNarrativeEvent("InboxClosed");
-			}
-		}
-
-		if(ui == _instance._view.GetCurrentUI()) {
-			HideUI();
+		if(!ui) {
+			CloseUI(ui);
+		} else if(ui.name == _instance._view.GetCurrentUIKey()) {
+			CloseUI(ui);
 		} else {
-			_instance._view.SetCurrentUI(ui);
-			if(ui == _instance._view.inbox) {
-				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
-				_instance._narrationMgr.OnNarrativeEvent("InboxOpened");
-			} else if(ui == _instance._view.energyPanel) {
-				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
-				_instance._narrationMgr.OnNarrativeEvent("EnergyPanelOpened");
-			} else if(ui == _instance._view.comfortPanel) {
-				_instance._narrationMgr.OnNarrativeEvent("ComfortPanelOpened");
-			} else if(ui == _instance._view.apocalypsometer) {
-				_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerOpened");
+			if(_instance._view.GetCurrentUIKey() != "") {
+				CloseUI(_instance._view.GetCurrentUI());
 			}
+			OpenUI(ui);
 		}
 
 		_instance.ResetTouch();
 	}
 
-	//Hide any open user interface
-	public void HideUI() {
-		if(_instance._view.GetCurrentUI() == _instance._view.apocalypsometer) {
-			//_instance._narrationMgr.OnQuestEvent(Quest.QuestEvent.ApocalypsometerClosed);
-			_instance._narrationMgr.OnNarrativeEvent("ApocalypsometerClosed");
+	//
+	public void OpenUI(RectTransform ui) {
+		if(_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction) {
+			return;
 		}
 
-        if (_instance._view.GetCurrentUI() == _instance._view.characterPanel) {
-            _instance._view._characterPanel.OnClose();
-        }
+		_instance._view.SetUIPanel(ui.name);
+		switch(ui.name) {
+			case "Comfort Panel":
+				break;
+			case "Energy Panel":
+				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
+				break;
+			case "Inbox":
+				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
+				break;
+			case "Apocalypse Panel":
+				break;
+			case "Building Panel":
+				break;
+			case "Character Panel":
+				break;
+			case "Device Panel":
+				break;
+			case "Tim Control Panel":
+				break;
+		}
+		_instance._narrationMgr.OnNarrativeEvent(ui.name + "Opened");
+		_instance.ResetTouch();
+	}
 
-        if (_instance._view.GetCurrentUI() == _instance._view.devicePanel) {
-            _instance._view._devicePanel.OnClose();
-        }
+	//
+	public void CloseUI(RectTransform ui) {
+		if(!ui) { return; }
 
-        _instance._view.SetCurrentUI(null);
+		if(_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction) {
+			return;
+		}
+
+		_instance._view.SetUIPanel("");
+		
+		switch(ui.name) {
+			case "Comfort Panel":
+				break;
+			case "Energy Panel":
+				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
+				break;
+			case "Inbox":
+				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
+				break;
+			case "Apocalypse Panel":
+				break;
+			case "Building Panel":
+				break;
+			case "Character Panel":
+				_instance._cameraMgr.ClearLookAtTarget();
+				_instance._view._characterPanel.OnClose();
+				break;
+			case "Device Panel":
+				_instance._cameraMgr.ClearLookAtTarget();
+				_instance._view._devicePanel.OnClose();
+				break;
+			case "Time Control Panel":
+				break;
+		}
+		_instance._narrationMgr.OnNarrativeEvent(ui.name + "Closed");
+		_instance.ResetTouch();
+	}
+
+	//Hide any open user interface
+	public void ClearView() {
+		CloseUI(_instance._view.GetCurrentUI());
+
+		_instance._view.SetUIPanel("");
+		_instance._view.ClearView();
 		_instance._cameraMgr.ClearLookAtTarget();
-
-		//_view.SetCurrentUI(null);
-  //      _camMgr.ClearLookAtTarget();
+		_instance._view.HideMessage();
 	}
 
 	//Request narration event for current view
@@ -451,20 +469,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void OnHarvestTap(GameObject go) {
-		if(_curState != InputState.ALL && _curState != InputState.ONLY_HARVEST) { return; }
-
-		_resourceMgr.cash += 10;
-		_view.CreateFeedback(go.transform.position, "+" + 10 + "€");
-		go.SetActive(false);
-
-		ResetTouch();
-		_instance._narrationMgr.OnNarrativeEvent("ResourceHarvested");
-	}
-
-	//
 	public void OnHarvest(Gem gem) {
 		//_tempInstance._resourceMgr.AddComfort(gem.value);
+		_instance._view.CreateFeedback(gem.transform.position, "+" + gem.value);
 		Destroy(gem.gameObject);
 
 		switch(gem.type) {
@@ -483,10 +490,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnElectricMeterToggle(ElectricMeter meter) {
+		if(_instance._curState != InputState.ALL && _instance._curState != InputState.ONLY_SWITCH_LIGHT) { return; }
 
-        Appliance appliance = meter.gameObject.GetComponent<Appliance>();
+		meter.Toggle();
+
+		Appliance appliance = meter.gameObject.GetComponent<Appliance>();
         if (appliance) {
-
             Room zone = appliance.GetZone();
 
             //If appliance is light switch
@@ -532,6 +541,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
+			_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+			_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -546,8 +557,20 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
             //Redraw device panel
             _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
 
-			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name);
+			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
+	}
+
+	//
+	public void AddMoney(float money) {
+		_resourceMgr.cash += money;
+		_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
+	}
+
+	//
+	public void AddComfort(float comfort) {
+		_resourceMgr.comfort += comfort;
+		_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
 	}
 
 	//
@@ -571,39 +594,27 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
-	#region Narrative Methods
-	//
-	public void SetControlState(InputState state) {
-		_curState = state;
-	}
-
 	//
 	public void LimitInteraction(string interactionLimit) {
 		switch(interactionLimit) {
+			case "all": _curState = InputState.ALL; break;
 			case "only_ok": _curState = InputState.ONLY_PROMPT; break;
 			case "only_swipe": _curState = InputState.ONLY_SWIPE; break;
 			case "only_tap": _curState = InputState.ONLY_TAP; break;
+			case "only_apocalypsometer": _curState = InputState.ONLY_APOCALYPSE; break;
+			case "only_energy_panel": _curState = InputState.ONLY_ENERGY; break;
 			default: _curState = InputState.ALL; break;
 		}
 	}
 
 	//
-	public void ControlInterface(string id, string action) {
-		_instance._view.ControlInterface(id, action);
-	}
-
-	//
-	public void ControlInterface(string cmd) {
-		JSONNode json = JSON.Parse(cmd);
-		string id = json["id"];
-		string action = json["action"];
-
-		_view.ControlInterface(id,action);
-	}
-
-	//
 	public void PlaySound(string sound) {
 		_instance._audioMgr.PlaySound(sound);
+	}
+
+	//
+	public void StopSound(string sound) {
+		_instance._audioMgr.StopSound(sound);
 	}
 
 	//
@@ -617,88 +628,155 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void ShowMessage(string cmd) {
-		JSONNode json = JSON.Parse(cmd);
-		string avatarName = json["a"];
+	public void ShowMessage(string[] cmd) {
+		string avatarName = cmd[0];
+		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
 		Sprite portrait = null;
-		if(avatarName != null) {
+		if(avatarName != "") {
 			if(avatarName == "player") {
 				portrait = _instance._avatarMgr.playerPortrait;
 				avatarName = "F. Shaman: ";
 			} else {
-				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
 				avatarName = avatarName + ": ";
 			}
 		}
-		string message = GetPhrase("Narrative." + group, key);
+		string message = GetPhrase(group, key);
 
 		_instance._view.ShowMessage(avatarName + message, portrait, true, false);
 	}
 
 	//
-	public void ShowPrompt(string cmd) {
-		JSONNode json = JSON.Parse(cmd);
-		string avatarName = json["a"];
+	public void ShowPrompt(string[] cmd) {
+		string avatarName = cmd[0];
+		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
 		Sprite portrait = null;
-		if(avatarName != null) {
-			if(avatarName == "Player" || avatarName == "player") {
+		if(avatarName != "") {
+			if(avatarName == "player") {
 				portrait = _instance._avatarMgr.playerPortrait;
 				avatarName = "F. Shaman: ";
 			} else {
-				portrait = _instance._avatarMgr.GetAvatar(avatarName).portrait;
+				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
 				avatarName = avatarName + ": ";
 			}
 		}
-		string message = GetPhrase("Narrative." + group, key);
+		string message = GetPhrase(group, key);
 
 		_instance._view.ShowMessage(avatarName + message, portrait, true, true);
+
+		LimitInteraction("only_ok");
 	}
 
 	//
-	public void AddObjective(string cmd) {
-		JSONNode json = JSON.Parse(cmd);
-	}
+	public void OnOkPressed() {
+		_instance.ResetTouch();
 
-	//
-	public void HideMessage() {
-		_instance._view.HideMessage();
-	}
+		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
+			_instance._view.messageUI.SetActive(false);
 
-	//
-	public void ShowMessage(string key, string message, Sprite portrait, bool showButton) {
-		if(debug) { Debug.Log(name + ": ShowMessage(" + key + ", " + message + ")"); }
-		string msg = _localMgr.GetPhrase(key);
-		if(msg == "") { msg = message + "!"; }
-
-		_instance._view.ShowMessage(msg, portrait, true, showButton);
-	}
-
-	//
-	public void CreateHarvest(string command) {
-		JSONNode json = JSON.Parse(command);
-		string currency = json["type"];
-		string location = json["location"];
-
-		if(location.Equals("current")) {
-			Room room = _cameraMgr.GetCurrentViewpoint().relatedZones[0];
-			room.GetApplianceWithAffordance(room.avatarAffordanceSwitchLight).AddHarvest();
+			_instance.LimitInteraction("all");
+			_instance._narrationMgr.OnNarrativeEvent("OKPressed");
 		}
+
+		_instance.PlaySound("Press Button");
 	}
 
 	//
-	public void ControlAvatar(string id, string action, Vector3 pos) {
-		_avatarMgr.ControlAvatar(id, action, pos);
+	public void ShowCongratulations(string[] cmd) {
+		JSONNode json = JSON.Parse(cmd[1]);
+		string group = json["g"];
+		string key = json["k"];
+
+		_instance._audioMgr.PlaySound("Fireworks");
+		_instance._view.ShowCongratulations(_instance._localMgr.GetPhrase(group, key));
+		_instance._cameraMgr.PlayFireworks();
+
+		LimitInteraction("only_tap");
 	}
 
-	//
-	public void ControlAvatar(string id, UnityEngine.Object action) {
-		_avatarMgr.ControlAvatar(id, action);
+    //
+    public void MarkAvatar(string cmd) {
+        Appliance app = _avatarMgr.GetAvatar(cmd).GetComponent<Appliance>();
+        GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
+        ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+
+        float y = 0.1f + Helpers.LargestBounds(app.transform).max.y;
+
+        ip.transform.localPosition = new Vector3(0.0f, y + 0.25f, 0.0f);
+    }
+
+    //
+    public void UnmarkAvatar(string cmd) {
+        Destroy(_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+    }
+
+    //
+    public void SetAvatarBattleReady(string cmd) {
+        _avatarMgr.GetAvatar(cmd).GetComponent<BehaviourAI>().battleReady = true;
+    }
+
+    //[unique id; children appliance title]
+    public void MarkDevice(string[] cmd) {
+
+        UniqueId uid = GetUniqueIdObject(cmd[0]);
+        
+        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+
+        if (cmd[1] == "") {
+            MarkAppliance(uid.GetComponent<Appliance>());
+        }
+        else {
+            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+                MarkAppliance(child);
+            }
+        }
+    }
+
+    public void MarkDevices(string cmd) {
+        foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
+            MarkAppliance(app);
+        }
+    }
+
+    void MarkAppliance(Appliance app) {
+        GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
+        ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
+        Bounds bounds = Helpers.LargestBounds(app.transform);
+        ip.transform.localPosition = Vector3.zero;
+    }
+
+    //
+    public void UnmarkDevice(string[] cmd) {
+        UniqueId uid = GetUniqueIdObject(cmd[0]);
+
+        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+
+        if (cmd[1] == "") {
+            Destroy(uid.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+        }
+        else {
+            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+                Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+            }
+        }
+    }
+
+    //
+    public void UnmarkDevices(string cmd) {
+        foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
+            Destroy(app.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+        }
+    }
+
+    //
+    public void AddObjective(string cmd) {
+		JSONNode json = JSON.Parse(cmd);
 	}
 
 	//
@@ -706,23 +784,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_cameraMgr.UnlockView(x, y);
 		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
 	}
-
-	//
-	public void ShowCongratualations(string cmd) {
-		JSONNode json = JSON.Parse(cmd);
-		string group = json["group"];
-		string key = json["key"];
-
-		_instance._audioMgr.PlaySound("Fireworks");
-		_instance._view.ShowCongratualations(_instance._localMgr.GetPhrase(group, key));
-		_instance._cameraMgr.PlayFireworks();
-	}
-
-	//
-	public void ClearView() {
-		_instance._view.ClearView();
-	}
-	#endregion
 
 	//
 	public void ChallengeAvatar(Appliance app) {
@@ -733,7 +794,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void ApplyEEM(EnergyEfficiencyMeasure eem) {
+	public void ControlAvatar(string[] cmd) {
+		JSONNode posJSON = JSON.Parse(cmd[1]);
+		Vector3 pos = new Vector3(posJSON["x"].AsFloat, posJSON["y"].AsFloat, posJSON["z"].AsFloat);
+		Debug.Log(cmd[0] + " -> " + pos);
+		_avatarMgr.ControlAvatar(cmd[0], pos);
 	}
 
 	//
@@ -751,33 +816,35 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_instance._timeMgr.VisualTimeScale = timeScale;
 	}
 
-	//
+
 	public void SetSimulationTimeScale(float timeScale) {
 		_instance._timeMgr.SimulationTimeScaleFactor = timeScale;
 	}
 
 	//
-	public void StepTimeForward(int days) {
-		PlayUIAnimation("TimeSkipped");
-		//_instance._timeMgr.Offset(86400 * days);
-		SetVisualTimeScale(10);
-		switch(days) {
-			case 1:
-				SetSimulationTimeScale(1000);
-				break;
-			case 7:
-				SetSimulationTimeScale(100000);
-				break;
-			case 30:
-				SetSimulationTimeScale(100000);
-				break;
-		}
-		_instance._pendingTimeSkip = days;
+	public void SetSimulationTimeScale(string timeScale) {
+		SetSimulationTimeScale(float.Parse(timeScale));
 	}
 
 	//
-	public string GetCurrentDate() {
-		return _timeMgr.CurrentDate;
+	public void StepHoursForward(int hours) {
+		PlayUIAnimation("TimeSkipped");
+		SetVisualTimeScale(10);
+		switch(hours) {
+			case 1:
+				SetSimulationTimeScale(100);
+				break;
+			case 24:
+				SetSimulationTimeScale(1000);
+				break;
+			case 168:
+				SetSimulationTimeScale(100000);
+				break;
+			case 5040:
+				SetSimulationTimeScale(100000);
+				break;
+		}
+		_instance._pendingTimeSkip = hours;
 	}
 
 	//
@@ -842,6 +909,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
+    public UniqueId GetUniqueIdObject(string id) {
+        foreach(UniqueId uid in uniqueIds) {
+            if(uid.uniqueId == id) {
+                return uid;
+            }
+        }
+        return null;
+    }
+
 	//
 	public void LoadScene(string scene) {
 		_instance.SaveGameState();
@@ -877,10 +953,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_narrationMgr.OnNarrativeEvent("AnimationEvent", animationEvent);
 		switch(animationEvent) {
 			case "timeSkippedOver":
-				_instance._timeMgr.Offset(86400 * _instance._pendingTimeSkip);
+				_instance._timeMgr.Offset(3600 * _instance._pendingTimeSkip);
 				SetVisualTimeScale(1);
 				SetSimulationTimeScale(60);
-				Debug.Log("time skip over");
 				break;
 		}
 	}
@@ -893,5 +968,41 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void OnGameOver() {
 		LoadScene("MenuScene");
+	}
+
+	//
+	public void OnNarrativeAction(Narrative narrative, Narrative.Step step, string callback, string[] parameters) {
+		switch(callback) {
+			case "ShowMessage":
+			case "ShowPrompt":
+			case "ShowCongratulations":
+				parameters[1] = "{g:\"Narrative." + narrative.title + "\", k:\"" + step.description + "\"}";
+				SendMessage(callback, parameters);
+				break;
+			case "AddComfort":
+			case "AddMoney":
+				SendMessage(callback, float.Parse(parameters[0]));
+				break;
+			case "ControlAvatar":
+				SendMessage(callback, parameters);
+				break;
+            case "MarkDevice":
+            case "UnmarkDevice":
+                SendMessage(callback, parameters);
+                break;
+            default:
+				SendMessage(callback, parameters[0]);
+				break;
+		}
+	}
+
+	//Reset interaction limitations and save on narrative completion
+	public void OnNarrativeCompleted(Narrative narrative) {
+		_instance.LimitInteraction("all");
+		_instance.SaveGameState();
+	}
+
+	//TODO
+	public void OnNarrativeActivated(Narrative narrative) {
 	}
 }

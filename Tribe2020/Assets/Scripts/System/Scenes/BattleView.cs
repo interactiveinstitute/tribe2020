@@ -61,7 +61,7 @@ public class BattleView : MonoBehaviour {
 	}
 
 	//
-	public void ShowCongratualations(string text) {
+	public void ShowCongratulations(string text) {
 		ShowFireworks();
 		congratsPanel.SetActive(true);
 		congratsText.text = text;

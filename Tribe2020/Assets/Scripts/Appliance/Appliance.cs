@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using SimpleJSON;
 using System.Collections;
+using System;
 
-public class Appliance : MonoBehaviour, IPointerClickHandler {
+public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandler {
 	private PilotController _ctrlMgr;
     private PilotView _pilotView;
     private ApplianceManager _applianceManager;
@@ -130,8 +131,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		_ctrlMgr.SetCurrentUI(this);
 	}
 
-	//
-	public void RefreshSlots() {
+    //
+    public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
 
@@ -208,6 +209,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 		//_ctrlMgr.PrepareForBattle(this);
 		//_ctrlMgr.LoadScene("BattleScene");
 	}
+
+    public void SRCAvatarIsBattleReady(CallbackResult result) {
+        result.result = GetComponent<BehaviourAI>().battleReady;
+    }
 
 	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
@@ -353,4 +358,16 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 			}
 		}
 	}
+
+	public void OnPointerDown(PointerEventData eventData) {
+	}
+
+    public string GetUniqueId() {
+        UniqueId uid = GetComponent<UniqueId>();
+        if (uid) {
+            return uid.uniqueId;
+        }
+        return "";
+    }
+
 }

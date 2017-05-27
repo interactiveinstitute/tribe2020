@@ -33,27 +33,7 @@ public class LocalisationExtractor : MonoBehaviour {
 			groups.Add(new Language.ValueGroup(key, values));
 		}
 
-		//Narrative wrapper
-		if(source.GetComponent<NarrationManager>()) {
-			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().allNarratives) {
-				List<Language.KeyValue> values = new List<Language.KeyValue>();
-				values.Add(new Language.KeyValue("Description", n.description));
-				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
-				values.Add(checklist);
-				foreach(Narrative.Step ns in n.steps) {
-					if(ns.textValue != "" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowPrompt" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowMessage" ||
-						ns.unityEvent.GetPersistentMethodName(0) == "ShowCongratulations") {
-						values.Add(new Language.KeyValue(ns.description, ns.textValue));
-					}
-					if(ns.inChecklist) {
-						checklist.values.Add(ns.description);
-					}
-				}
-				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
-			}
-		}
+		
 
 		//Viewpoint wrapper
 		if(source.GetComponentsInChildren<Viewpoint>().Length > 0) {
@@ -134,6 +114,43 @@ public class LocalisationExtractor : MonoBehaviour {
 		}
 		#endregion
 
+
+		ExtractNarraive();
+		ExtractContent();
+		ExtractQuizzes();
+	}
+
+	//
+	public void ExtractNarraive() {
+		//Narrative wrapper
+		if(source.GetComponent<NarrationManager>()) {
+			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().GetAllNarratives()) {
+				List<Language.KeyValue> values = new List<Language.KeyValue>();
+				values.Add(new Language.KeyValue("Description", n.description));
+				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
+
+				foreach(Narrative.Step ns in n.steps) {
+					foreach(Narrative.Action na in ns.actions) {
+						if(na.callback == "ShowMessage" ||
+							na.callback == "ShowPrompt" ||
+							na.callback == "ShowCongratulations") {
+							values.Add(new Language.KeyValue(ns.description, na.parameter2));
+						}
+					}
+					if(ns.inChecklist) {
+						checklist.values.Add(ns.description);
+					}
+				}
+
+				
+				values.Add(checklist);
+				groups.Add(new Language.ValueGroup("Narrative." + n.title, values));
+			}
+		}
+	}
+
+	//
+	public void ExtractContent() {
 		//Appliance & Avatar wrapper
 		if(source.GetComponent<ApplianceManager>()) {
 			List<Language.KeyValue> appValues = new List<Language.KeyValue>();
@@ -146,7 +163,7 @@ public class LocalisationExtractor : MonoBehaviour {
 					List<string> values = new List<string>();
 					values.Add(a.description);
 					avatarValues.Add(new Language.KeyValue(a.title, a.title, values));
-				} 
+				}
 				//else {
 				//	if(!appInventory.Contains(a.title)) {
 				//		appInventory.Add(a.title);
@@ -167,6 +184,17 @@ public class LocalisationExtractor : MonoBehaviour {
 
 			groups.Add(new Language.ValueGroup("Content.Avatars", avatarValues));
 			groups.Add(new Language.ValueGroup("Content.Appliances", appValues));
+		}
+	}
+
+	//
+	public void ExtractQuizzes() {
+		if(source.GetComponent<QuizManager>()) {
+			List<Language.KeyValue> values = new List<Language.KeyValue>();
+			foreach(Quiz q in source.GetComponent<QuizManager>().GetAllQuizzez()) {
+				values.Add(new Language.KeyValue(q.name, q.question, q.options));
+			}
+			groups.Add(new Language.ValueGroup(key, values));
 		}
 	}
 }

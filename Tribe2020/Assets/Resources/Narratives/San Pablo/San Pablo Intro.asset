@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
+  m_Name: San Pablo Intro
+  m_EditorClassIdentifier: 
+  title: San Pablo Intro
+  description: Welcome to San Pablo!
+  steps:
+  - description: In the center of Spain
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: SetSimulationTimeScale
+      parameter1: 0
+      parameter2: 
+    - callback: MoveCamera
+      parameter1: SanPabloIntro
+      parameter2: 
+    - callback: ShowMessage
+      parameter1: 
+      parameter2: "In the center of Spain lies a beautiful town called Zaragoza.\r"
+    inChecklist: 0
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Being a roman city
+    conditionType: AnimationEvent
+    conditionProp: phrase_01
+    actions:
+    - callback: ShowMessage
+      parameter1: 
+      parameter2: Zaragoza is very old and the current city stands on the remains
+        of the  old one.
+    inChecklist: 0
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Because of the many
+    conditionType: AnimationEvent
+    conditionProp: phrase_02
+    actions:
+    - callback: ShowMessage
+      parameter1: 
+      parameter2: "Ancient ruins makes it hard to renovate and build new structures.\r"
+    inChecklist: 0
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Zaragoza Vivienda
+    conditionType: AnimationEvent
+    conditionProp: phrase_03
+    actions:
+    - callback: ShowMessage
+      parameter1: 
+      parameter2: "At San Pablo offices, Zaragoza Vivienda are looking for a solution
+        and\r help has just arrived.\r"
+    inChecklist: 0
+  - description: Hide message
+    conditionType: AnimationEvent
+    conditionProp: hide
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+  - description: Stop camera and start simulation
+    conditionType: AnimationEvent
+    conditionProp: end
+    actions:
+    - callback: StopCamera
+      parameter1: 
+      parameter2: 
+    - callback: SetSimulationTimeScale
+      parameter1: 60
+      parameter2: 
+    inChecklist: 0
+  followingNarratives:
+  - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}
