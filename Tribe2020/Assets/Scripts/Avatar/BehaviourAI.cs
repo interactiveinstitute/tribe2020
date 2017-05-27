@@ -59,8 +59,6 @@ public class BehaviourAI : SimulationObject {
 	[SerializeField]
 	public bool showCoffeeCup = false;
 
-    public bool battleReady = false;
-
 	//[SerializeField]
 	//private GameObject prefab;
 
@@ -270,7 +268,6 @@ public class BehaviourAI : SimulationObject {
 		if(_agent.remainingDistance > _agent.stoppingDistance) {
 			_charController.Move(_agent.desiredVelocity, false, false);
 		} else if(!_agent.pathPending) {
-			Debug.Log("path end position");
 			_charController.Move(Vector3.zero, false, false);
 
 			_controller.OnAvatarReachedPosition(this, _agent.pathEndPosition); //triggers narration relate stuff
@@ -515,9 +512,9 @@ public class BehaviourAI : SimulationObject {
 
 	//This is an override walk. Should be clearer that's the case.
 	public void WalkTo(Vector3 target) {
-		//if(!_isControlled) {
-		//	Debug.LogError("Hey! Your are trying to control an avatar without first calling TakeControlOfAvatar(). Call TakeControlOfAvatar(). Do Stuff. Then call ReleaseControlOfAvatar()", this);
-		//}
+		if(!_isControlled) {
+			Debug.LogError("Hey! Your are trying to control an avatar without first calling TakeControlOfAvatar(). Call TakeControlOfAvatar(). Do Stuff. Then call ReleaseControlOfAvatar()", this);
+		}
 		//_curTargetPos = target;
 
 		SetAgentDestination(target);
@@ -525,14 +522,10 @@ public class BehaviourAI : SimulationObject {
 		//_curAvatarState = AvatarState.OverrideWalking;
 	}
 
-	//Overrule internal behaviour via external control
 	public void TakeControlOfAvatar() {
-		_agent.enabled = true;
-		_charController.TurnOffAllBools();
 		_isControlled = true;
 	}
 
-	//Release behaviour from external control
 	public void ReleaseControlOfAvatar() {
 		_isControlled = false;
 	}

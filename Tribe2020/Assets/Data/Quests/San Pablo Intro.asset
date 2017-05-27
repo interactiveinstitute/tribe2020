@@ -1,0 +1,235 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78573791d21d72d48bba19a73f4ccad1, type: 3}
+  m_Name: San Pablo Intro
+  m_EditorClassIdentifier: 
+  title: San Pablo Intro
+  description: Learn the basic interaction of the TRIBE game
+  date: 
+  checkList:
+  - description: Learn basic interaction
+    done: 0
+  - description: Learn about CO2 emissions
+    done: 0
+  - description: Perform your first measure
+    done: 0
+  nextQuest: {fileID: 11400000, guid: 41d32b22467ac5e40a21cab852f0468f, type: 2}
+  steps:
+  - title: ChangeTimeScale.0
+    type: 7
+    message: So this is the San Pablo office building. Looks great, I wonder if it's
+      energy efficient as well. Well!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{"animation":"SanPabloIntro"}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: MoveCamera.{"animation":"SanPabloInt
+    type: 15
+    message: So this is the San Pablo office building. Looks great, I wonder if it's
+      energy efficient as well. Well!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{"animation":"SanPabloIntro"}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: phrase_00
+    inputState: 13
+  - title: Popup.In the center of Spain li
+    type: 1
+    message: In the center of Spain lies a beautiful town called Zaragoza
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{"animation":"SanPabloIntro"}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: hide
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 9
+    message: 
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: phrase_01
+    inputState: 13
+  - title: Popup.Zaragoza, being a roman c
+    type: 1
+    message: Zaragoza, being a roman city, is rich in history. This does however come
+      with a drawback.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: hide
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 9
+    message: Zaragoza is a middle sized town in the heart of Spain.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: phrase_02
+    inputState: 13
+  - title: Popup.Because of the many ancie
+    type: 1
+    message: Because of the many ancient remains in the ground, it is difficult to
+      build new buildings and repair old ones.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: hide
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 9
+    message: Because of the many ancient remains in the ground, it is difficult to
+      build new buildings and repair old ones.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: phrase_03
+    inputState: 13
+  - title: Popup.Zaragoza Vivienda are try
+    type: 1
+    message: Zaragoza Vivienda are trying to solve this issue. Let's help them out!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: hide
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 9
+    message: Zaragoza Vivienda are trying to solve this issue. Let's help them out!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 32
+    conditionField: end
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 16
+    message: Zaragoza Vivienda are trying to solve this issue. Let's help them out!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: ChangeTimeScale.30
+    type: 7
+    message: So this is the San Pablo office building. Looks great, I wonder if it's
+      energy efficient as well. Well!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: '{"animation":"SanPabloIntro"}'
+    activity: {fileID: 0}
+    timeScale: 30
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 0

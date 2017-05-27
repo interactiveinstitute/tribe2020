@@ -93,38 +93,6 @@ public class LocalisationManager : MonoBehaviour {
 	}
 
 	//
-	public string GetTemplatePhrase(string group, string key) {
-		foreach(Language.ValueGroup g in template.groups) {
-			if(g.title == group) {
-				foreach(Language.KeyValue keyValue in g.values) {
-					if(key == keyValue.key) {
-						if(curLanguage.isTestLanguage) {
-							return "DEBUG:" + keyValue.value;
-						} else {
-							return keyValue.value;
-						}
-					}
-				}
-			}
-		}
-		return "";
-	}
-
-	//
-	public string GetTemplatePhrase(string group, string key, int index) {
-		foreach(Language.ValueGroup g in template.groups) {
-			if(g.title == group) {
-				foreach(Language.KeyValue keyValue in g.values) {
-					if(key == keyValue.key) {
-						return keyValue.values[index];
-					}
-				}
-			}
-		}
-		return "";
-	}
-
-	//
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
 

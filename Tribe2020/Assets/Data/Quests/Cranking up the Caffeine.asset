@@ -1,0 +1,435 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78573791d21d72d48bba19a73f4ccad1, type: 3}
+  m_Name: Cranking up the Caffeine
+  m_EditorClassIdentifier: 
+  title: Cranking up the Caffeine
+  description: Learn about energy efficiency measures, how to apply them and what
+    they do
+  date: 
+  checkList:
+  - description: Check your mail
+    done: 0
+  - description: Find waiting lounge
+    done: 0
+  - description: Install thermal jugs
+    done: 0
+  - description: Harvest some goodwill
+    done: 0
+  nextQuest: {fileID: 11400000, guid: 01289aef405e9d74b95598031d47c325, type: 2}
+  steps:
+  - title: Prompt.OK, let''s get started. N
+    type: 0
+    message: OK, let''s get started. Now where did I put my checklist...
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: 
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: PlayAnimation.MarkInbox
+    type: 3
+    message: OK, let''s get started. Now where did I put my checklist...
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkInbox
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 18
+    conditionField: 
+    inputState: 6
+  - title: PlayAnimation.HideAll
+    type: 3
+    message: OK, let''s get started. Now where did I put my checklist...
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Prompt.Each task involves severa
+    type: 0
+    message: Each task involves several sub tasks. In each respective mail I can see
+      which sub tasks have been completed so far. Let''s close the Inbox
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: Wait.InboxClosed
+    type: 10
+    message: Each task involves several sub tasks. In each respective mail I can see
+      which sub tasks have been completed so far. Let''s close the Inbox
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 19
+    conditionField: 
+    inputState: 6
+  - title: Popup.So we need to fix that co
+    type: 1
+    message: So we need to fix that coffee. First step is to find the room where it''s
+      located. Swipe until you find the lobby.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 10
+    conditionField: Waiting Lounge
+    inputState: 2
+  - title: PlayAnimation.MarkEspressoMachine
+    type: 3
+    message: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
+      tap that pesky perculator
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkEspressoMachine
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Popup.Ah, here we are. The oasi
+    type: 1
+    message: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
+      tap that pesky perculator
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 16
+    conditionField: Espresso Machine
+    inputState: 4
+  - title: PlayAnimation.HideAll
+    type: 3
+    message: Ah, here we are. The oasis of the office, Mecca of the Metropol. Let's
+      tap that pesky perculator
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Prompt.This appliance is not loo
+    type: 0
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: PlayAnimation.MarkThermalJugs
+    type: 3
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkThermalJugs
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Wait.MeasurePerformed
+    type: 10
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: MarkThermalJugs
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 9
+    conditionField: EDS37
+    inputState: 11
+  - title: PlayAnimation.HideAll
+    type: 3
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: 
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: ControlInterface.{id:inspector, action:hid
+    type: 9
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:inspector, action:hide}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: 'ControlAvatar.{id:"Bob Alison", action:'
+    type: 5
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:WalkTo, pos:[5.8,0.3,-0.3]}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Wait.AvatarArrived
+    type: 10
+    message: This appliance is not looking quite up to date, let's install thermal
+      jugs to keep the coffee warm.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{"id":"Bob Alison", "action":WalkTo, pos:[5.8,0.3,-0.3]}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 11
+    conditionField: 
+    inputState: 13
+  - title: Prompt.Looks like Bob has arrive
+    type: 0
+    message: Looks like Bob has arrived, and he is thirsty for some coffee.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{"id":"Bob Alison", "action":WalkTo, pos:[5.8,0.3,-0.3]}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: ControlAvatar.{id:"Bob Alison"}
+    type: 5
+    message: Looks like Bob has arrived, and he is thirsty for some coffee.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison"}'
+    activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: ChangeTimeScale.20
+    type: 7
+    message: Looks like Bob has arrived, and he is thirsty for some coffee.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:DrinkCoffee}'
+    activity: {fileID: 0}
+    timeScale: 20
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: Popup.Drinking coffee is an act
+    type: 1
+    message: Drinking coffee is an activity. It involves using a coffee machine, fridge,
+      table and finally dishwasher.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:DrinkCoffee}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 13
+    conditionField: DrinkCoffee
+    inputState: 13
+  - title: ChangeTimeScale.1
+    type: 7
+    message: Drinking coffee is an activity. It involves using a coffee machine, fridge,
+      table and finally dishwasher.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:DrinkCoffee}'
+    activity: {fileID: 0}
+    timeScale: 1
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 0
+    condition: 0
+    conditionField: 
+    inputState: 13
+  - title: 'Prompt.Throughout a day, people '
+    type: 0
+    message: Throughout a day, people perform activities. Such activities include
+      a lot of session, like picking up a cup of coffee or using a machine.
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:DrinkCoffee}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 1
+    conditionField: 
+    inputState: 1
+  - title: QuestComplete.Making measures!
+    type: 8
+    message: Making measures!
+    portrait: {fileID: 0}
+    valueField: 
+    viewpoint: {fileID: 0}
+    animation: HideAll
+    commandJSON: '{id:"Bob Alison", action:DrinkCoffee}'
+    activity: {fileID: 0}
+    timeScale: 0
+    sound: 
+    objectField: {fileID: 0}
+    showAtBottom: 0
+    conditionalProgress: 1
+    condition: 3
+    conditionField: 
+    inputState: 3

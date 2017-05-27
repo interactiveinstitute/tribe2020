@@ -51,13 +51,4 @@ public class AudioManager : MonoBehaviour{
 			}
 		}
 	}
-
-	//
-	public void StopSound(string key) {
-		foreach(AudioWrapper sound in sounds) {
-			if(key == sound.key) {
-				sound.value.Stop();
-			}
-		}
-	}
 }

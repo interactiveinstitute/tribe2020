@@ -121,7 +121,6 @@ GameObject:
   - component: {fileID: 92000012377356044}
   - component: {fileID: 124000012605285712}
   - component: {fileID: 81000010830529714}
-  - component: {fileID: 114945675918191736}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -213,23 +212,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1623241106384160
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4125556432851342}
-  - component: {fileID: 114843003112296948}
-  - component: {fileID: 114400839341790782}
-  m_Layer: 0
-  m_Name: Quizzes
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1891010720153094
 GameObject:
   m_ObjectHideFlags: 1
@@ -267,7 +249,6 @@ Transform:
   - {fileID: 4000010212343500}
   - {fileID: 4000012482295030}
   - {fileID: 4671008281949338}
-  - {fileID: 4125556432851342}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -401,19 +382,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4747532289392428}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4125556432851342
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1623241106384160}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4000010176583524}
-  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4671008281949338
 Transform:
@@ -669,13 +637,9 @@ MonoBehaviour:
   debug: 0
   languages:
   - {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
-  - {fileID: 11400000, guid: 857ab495458b85348a390fe58e86687d, type: 2}
-  - {fileID: 11400000, guid: e7af61774e1e01843a890e3d3a23a4bd, type: 2}
-  - {fileID: 11400000, guid: ba7747d6d75886c4fb36566a95919e72, type: 2}
-  - {fileID: 11400000, guid: cf92e20d4e54c204a84d6802116a11a9, type: 2}
   curLanguage: {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
-  template: {fileID: 11400000, guid: b4da8deabd16c704b827516d386642e5, type: 2}
-  APIKey: AIzaSyAo04V4xlUTXCADRppahd2tf_kD1n1-_jo
+  template: {fileID: 0}
+  APIKey: 
 --- !u!114 &114000010637359334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -934,57 +898,6 @@ MonoBehaviour:
       texture: {fileID: 2800000, guid: f7e465d9097a9de4ca7979ffa96e0b83, type: 3}
     - mood: 7
       texture: {fileID: 2800000, guid: f7e465d9097a9de4ca7979ffa96e0b83, type: 3}
---- !u!114 &114400839341790782
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1623241106384160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 938db65971e2ea9428314a431c4e04f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: Quizzes
-  source: {fileID: 1623241106384160}
-  groups:
-  - title: Quizzes
-    values:
-    - key: 1. One kilowatt hour
-      value: "What can\u2019t be done with one kilowatt-hour of electricity?"
-      values:
-      - Listen to CDs for 40 hours
-      - 'Vacuum for 2 hours '
-      - Watch TV for 7 hours
-      - Make 70 cups of coffee
-      - Iron 15 shirts
-      - Wash one load of dirty cloths
-    - key: 2. Decrease 1 degree
-      value: "How much energy can be saved on average in one heating period by decreasing
-        the room temperature by 1\xB0C?"
-      values:
-      - None
-      - Up to 3%
-      - Up to 3%
-      - Up to 10%
-    - key: 3. Energy for heating
-      value: What share of the total energy consumption of private households (including
-        heating, warm water, electrical appliances, lights, and mobility) is assigned
-        to heating?
-      values:
-      - About 10%
-      - About 25%
-      - About 30%
-      - About 50%
-    - key: 4. Control devices
-      value: How much heating costs can be saved by installing control devices (thermostatic
-        valves, clock timer, etc.)?
-      values:
-      - 2 to 4%
-      - 10 to 15%
-      - 20 to 25%
-      - 30 to 35%
-    translated: 0
 --- !u!114 &114549923206755280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1003,14 +916,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8d83fc9499d2bbc43a9b4c966be6cce6, type: 2}
   - {fileID: 11400000, guid: 41eed73c03dc77f459033b29e32d3d73, type: 2}
   - {fileID: 11400000, guid: 6e1fa00ead878934194b851128e6bf14, type: 2}
-  syncTime: 1
-  syncPilot: 1
-  syncCamera: 1
-  syncResources: 1
-  syncNarrative: 1
-  syncLocalization: 1
-  syncAvatars: 1
-  syncAppliances: 1
 --- !u!114 &114596677917146876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1085,51 +990,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _appliances: []
   allDevices: []
---- !u!114 &114843003112296948
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1623241106384160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bc68b002ad260c45b16fc7dabe975c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  avatarQuizzes:
-  - avatarName: Javier Rough
-    quizzes:
-    - {fileID: 11400000, guid: a1e7c9c867f5e4b418f4e6d65b75e9c7, type: 2}
-    - {fileID: 11400000, guid: 8d83fc9499d2bbc43a9b4c966be6cce6, type: 2}
-    - {fileID: 11400000, guid: 41eed73c03dc77f459033b29e32d3d73, type: 2}
-    - {fileID: 11400000, guid: 6e1fa00ead878934194b851128e6bf14, type: 2}
---- !u!114 &114945675918191736
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012559162466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5f52fb9eaf5e448b13b48d43bd6aae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0
-  xWrap: 0
-  yWrap: 0
-  gameCamera: {fileID: 20000011021672334}
-  animator: {fileID: 0}
-  overlayCanvas: {fileID: 0}
-  fireworks: {fileID: 198808323461610066}
-  cameraState: 5
-  startCoordinates: {x: 0, y: 0}
-  currentCoordinates: {x: 0, y: 0}
-  _inOverview: 0
-  _lookAtRotation: {x: 0, y: 0, z: 0, w: 0}
-  _lookaAtFOV: 0
-  zoomInLevel: 0
-  fracJourney: 0
-  journeyLength: 0
 --- !u!124 &124000012605285712
 Behaviour:
   m_ObjectHideFlags: 1
@@ -1145,7 +1005,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1891010720153094}
   serializedVersion: 5
   lengthInSec: 5
-  simulationSpeed: 1
+  speed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -3770,7 +3630,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1413930247806722}
   serializedVersion: 5
   lengthInSec: 2
-  simulationSpeed: 1
+  speed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
