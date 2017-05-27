@@ -75,13 +75,18 @@ public class ServerObject : DataNode {
         }
     }
 
+	virtual public bool GetPeriod(string Topic, double from, double To, DataSeries Target){
+
+		return false;
+	}
+
 
     public void UpdateAllTargets(string Event, JSONObject msg)
     {
         DataPoint Data = new DataPoint();
         LastData = Data;
 
-		if (Event != "mqtt" && Event != "series")
+		if (Event != "mqtt" && Event != "requested")
             return;
 
         string topic = (string) msg.GetField("topic").str;
@@ -90,6 +95,9 @@ public class ServerObject : DataNode {
         payload = payload.Replace("\\\"", "\"");
 
         JSONObject json_payload = new JSONObject(payload);
+
+
+
         
         //Only text  
         if (json_payload.IsNull) {
@@ -148,8 +156,27 @@ public class ServerObject : DataNode {
 			}
 		}
 
-		if (Event == "series") {
+		if (Event == "requested") {
+			print ("DATA:");
+			print (json_payload.GetField("results")[0].GetField("series"));
+	
+			foreach (TopicMap tm in TopicMapping) {
+				if (topic == tm.Topic) {
+					foreach (Subscription Sub in tm.Subscribers) {
+						if (!Sub.Target is DataSeries) {
+							continue;	
+						}
 
+						if (Sub.Target.Columns == null || Sub.Target.Columns.Count == 0) {
+							
+						}
+
+
+						
+					}
+					
+				}
+			}
 
 			
 		}

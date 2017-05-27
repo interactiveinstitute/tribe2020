@@ -20,6 +20,10 @@ public class DataSeriesBufferEditor : Editor
 		{
 			myScript.LoadFromCVSFile();
 		}
+		if(GUILayout.Button("Request",GUILayout.Width(100) ))
+		{
+			myScript.RequestData();
+		}
 		if(GUILayout.Button("Clear data",GUILayout.Width(100) ))
 		{
 			myScript.Clear();
