@@ -44,33 +44,5 @@ public class Language : ScriptableObject {
 		}
 	}
 
-	public List<Language.ValueGroup> groups;
-
-	//
-	public string GetValue(string group, string key) {
-		foreach(Language.ValueGroup g in groups) {
-			if(g.title == group) {
-				foreach(Language.KeyValue keyValue in g.values) {
-					if(key == keyValue.key) {
-						return keyValue.value;
-					}
-				}
-			}
-		}
-		return "";
-	}
-
-	//
-	public string GetValue(string group, string key, int index) {
-		foreach(Language.ValueGroup g in groups) {
-			if(g.title == group) {
-				foreach(Language.KeyValue keyValue in g.values) {
-					if(key == keyValue.key) {
-						return keyValue.values[index];
-					}
-				}
-			}
-		}
-		return "";
-	}
+	public List<Language.ValueGroup> groups; 
 }

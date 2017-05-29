@@ -87,6 +87,11 @@ public class PilotView : View{
 	public Sprite lockIcon;
 	public Color currentColor;
 
+
+	//public GameObject inspectorUI;
+	//public Transform inspectorEEMContainer;
+	//public Transform inspectorActionList;
+
 	[Header("Overlay")]
 	public GameObject messageUI;
 	public GameObject messageButton;
@@ -107,12 +112,9 @@ public class PilotView : View{
 
 	private bool _showSettings;
 	private RectTransform _curMenu;
-	//public List<Transform> menus;
+	public List<Transform> menus;
 
-	//public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, apocalypsometer, characterPanel, devicePanel;
-	private Dictionary<string, RectTransform> _uiPanels;
-	private string _curUIPanel;
-
+	public RectTransform settingsPanel, energyPanel, comfortPanel, inbox, apocalypsometer, characterPanel, devicePanel;
 	private bool _settingsIsVisible = false;
     #endregion
 
@@ -131,11 +133,6 @@ public class PilotView : View{
 
         //Clear interface
         _curMenu = null;
-		_curUIPanel = "";
-		_uiPanels = new Dictionary<string, RectTransform>();
-		foreach(UIPanel uiPanel in GetComponentsInChildren<UIPanel>()) {
-			_uiPanels.Add(uiPanel.name, uiPanel.transform as RectTransform);
-		}
 
 		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
 		apocalypsePercent.text = "0 %";
@@ -149,24 +146,42 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-		//Lerp ui panels into position
-		foreach(RectTransform uiPanel in _uiPanels.Values) {
-			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
-				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
-			} else {
-				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().originalPosition);
+		if(_showSettings) {
+			Vector2 target = settingsPanel.GetComponent<UIPanel>().targetPosition;
+			if(settingsPanel.anchoredPosition.x != target.x || settingsPanel.anchoredPosition.y != target.y) {
+				float curX = target.x + (settingsPanel.anchoredPosition.x - target.x) * 0.75f;
+				float curY = target.y + (settingsPanel.anchoredPosition.y - target.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
+			}
+		} else {
+			Vector2 origin = settingsPanel.GetComponent<UIPanel>().originalPosition;
+			if(settingsPanel.anchoredPosition.x != origin.x || settingsPanel.anchoredPosition.y != origin.y) {
+				float curX = origin.x + (settingsPanel.anchoredPosition.x - origin.x) * 0.75f;
+				float curY = origin.y + (settingsPanel.anchoredPosition.y - origin.y) * 0.75f;
+				settingsPanel.anchoredPosition = new Vector2(curX, curY);
 			}
 		}
 
-		//Lerp game menu separately from other ui panels
-		if(_showSettings) {
-			LerpTowards(GetUIPanel("Menu"), GetUIPanel("Menu").GetComponent<UIPanel>().targetPosition);
-		} else {
-			LerpTowards(GetUIPanel("Menu"), GetUIPanel("Menu").GetComponent<UIPanel>().originalPosition);
+		foreach(RectTransform menu in menus) {
+			if(menu == _curMenu) {
+				Vector2 target = menu.GetComponent<UIPanel>().targetPosition;
+				if(menu.anchoredPosition.x != target.x || menu.anchoredPosition.y != target.y) {
+					float curX = target.x + (menu.anchoredPosition.x - target.x) * 0.75f;
+					float curY = target.y + (menu.anchoredPosition.y - target.y) * 0.75f;
+					menu.anchoredPosition = new Vector2(curX, curY);
+				}
+			} else {
+				Vector2 origin = menu.GetComponent<UIPanel>().originalPosition;
+				if(menu.anchoredPosition.x != origin.x || menu.anchoredPosition.y != origin.y) {
+					float curX = origin.x + (menu.anchoredPosition.x - origin.x) * 0.75f;
+					float curY = origin.y + (menu.anchoredPosition.y - origin.y) * 0.75f;
+					menu.anchoredPosition = new Vector2(curX, curY);
+				}
+			}
 		}
 
-		//Character panel
-		BehaviourAI currentAvatar = _characterPanel.currentAvatar;
+        //Character panel
+        BehaviourAI currentAvatar = _characterPanel.currentAvatar;
         if (currentAvatar != null) {
             if (currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
                 BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
@@ -182,36 +197,6 @@ public class PilotView : View{
         }
 
     }
-
-	//
-	public string GetCurrentUIKey() {
-		return _curUIPanel;
-	}
-
-	//
-	public void SetUIPanel(string key) {
-		if(_curUIPanel == key) {
-			_curUIPanel = "";
-		} else {
-			_curUIPanel = key;
-		}
-	}
-
-	//
-	public void LerpTowards(RectTransform t, Vector2 target) {
-		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
-			t.anchoredPosition = target;
-		} else {
-			float curX = target.x + (t.anchoredPosition.x - target.x) * 0.75f;
-			float curY = target.y + (t.anchoredPosition.y - target.y) * 0.75f;
-			t.anchoredPosition = new Vector2(curX, curY);
-		}
-	}
-
-	//
-	public RectTransform GetUIPanel(string key) {
-		return _uiPanels[key];
-	}
 
     //
     public void SetController(PilotController controller) {
@@ -318,6 +303,31 @@ public class PilotView : View{
 
 		//timeBar.sizeDelta = new Vector2(276 * timeFraction, 0);
 		timeBar.offsetMax = new Vector2(-307 + 307 * timeFraction, 0);
+	}
+
+	//
+	public override void ControlInterface(string id, string action) {
+		AnimationUI animation = animationUI.GetComponent<AnimationUI>();
+
+		bool visibility = action == "show";
+		switch(id) {
+			case "inspector":
+				_controller.HideUI();
+				GetComponent<Animator>().Play("IdleCanvas");
+				//inspectorUI.SetActive(visibility);
+				break;
+			case "animation":
+				if(debug) { Debug.Log(name + ": ControlAnimation " + visibility); }
+				foreach(Transform t in animationUI.transform) {
+					t.gameObject.SetActive(visibility);
+				}
+				//animationUI.gameObject.SetActive(visibility);
+				break;
+			case "playAnimation":
+				if(debug) { Debug.Log(name + ": PlayAnimation " + animationUI.GetComponent<Animation>().GetClip(action)); }
+				GetComponent<Animator>().Play(action);
+				break;
+		}
 	}
 
 	//
@@ -592,8 +602,69 @@ public class PilotView : View{
 		//mailObj.transform.SetParent(inboxList, false);
 	}
 
+	////Full MAIL with quest data including quest steps and whether they have been completed or not
+	//public void BuildMail(Quest quest) {
+	//	Text title = mailReadUI.GetComponentsInChildren<Text>()[0];
+	//	Text description = mailReadUI.GetComponentsInChildren<Text>()[2];
+	//	Text steps = mailReadUI.GetComponentsInChildren<Text>()[4];
+
+	//	title.text = quest.title;
+	//	description.text = quest.description;
+
+	//	string stepConcat = "";
+	//	foreach(Quest.NarrativeCheck checkStep in quest.checkList) {
+	//		stepConcat += checkStep.description + "\n";
+	//	}
+	//	steps.text = stepConcat;
+
+	//	//string stepConcat = "";
+	//	//for(int i = 0; i < quest.questSteps.Count; i++) {
+	//	//	if(quest.questSteps[i].condition != Quest.QuestEvent.EMPTY) {
+	//	//		if(i < quest.GetCurrentStepIndex()) {
+	//	//			stepConcat += " --";
+	//	//		} else {
+	//	//			stepConcat += "¤ ";
+	//	//		}
+	//	//		stepConcat += quest.questSteps[i].title + "\n";
+	//	//	}
+	//	//}
+	//	//steps.text = stepConcat;
+
+	//	mailReadUI.SetActive(true);
+	//}
+
 	//
-	public override void ShowCongratulations(string text) {
+	public void EnableEnergyPanel() {
+		energyPanel.gameObject.SetActive(true);
+	}
+
+	//
+	public void EnableComfortPanel() {
+		comfortPanel.gameObject.SetActive(true);
+	}
+
+	//
+	public void DisableEnergyPanel() {
+		energyPanel.gameObject.SetActive(false);
+	}
+
+	//
+	public void DisableComfortPanel() {
+		comfortPanel.gameObject.SetActive(false);
+	}
+
+	//
+	public void ShowApocalypsometer() {
+		SetCurrentUI(apocalypsometer);
+	}
+
+	//
+	public void HideApocalypsometer() {
+		SetCurrentUI(null);
+	}
+
+	//
+	public override void ShowCongratualations(string text) {
 		victoryUI.SetActive(true);
 		victoryText.text = text;
 	}
@@ -604,17 +675,55 @@ public class PilotView : View{
 		victoryUI.SetActive(false);
 	}
 
+	////
+	//public void HideQuest() {
+		
+	//	mailReadUI.SetActive(false);
+	//	inboxUI.SetActive(true);
+	//}
+
 	//
 	public void ToggleMenu() {
 		_showSettings = !_showSettings;
 	}
 
 	//
-	public RectTransform GetCurrentUI() {
-		if(_curUIPanel != "") {
-			return _uiPanels[_curUIPanel];
+	public void SetCurrentUI(RectTransform ui) {
+		if(ui && ui.GetComponent<UIPanel>().toggleButton) {
+			ui.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
 		}
-		return null;
+
+        //Set old panel inactive
+        if (_curMenu) {
+            UIPanel panelOld = _curMenu.GetComponent<UIPanel>();
+            if (panelOld) {
+                panelOld.SetActive(false);
+            }
+        }
+
+        if (_curMenu == ui) {
+            _curMenu = null;
+		} else {
+			if(_curMenu && _curMenu.GetComponent<UIPanel>().toggleButton) {
+				_curMenu.GetComponent<UIPanel>().toggleButton.Rotate(new Vector3(0, 0, 180));
+			}
+
+            _curMenu = ui;
+
+            //Set new panel active
+            if (_curMenu) {
+                UIPanel panelNew = _curMenu.GetComponent<UIPanel>();
+                if (panelNew) {
+                    panelNew.SetActive(true);
+                }
+            }
+
+		}
+	}
+
+	//
+	public RectTransform GetCurrentUI() {
+		return _curMenu;
 	}
 
 	//
@@ -633,7 +742,7 @@ public class PilotView : View{
 
 	//
 	public bool IsAnyOverlayActive() {
-		return _curUIPanel != "";
+		return _curMenu != null;
 	}
 
 	//

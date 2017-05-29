@@ -48,18 +48,9 @@ public class AvatarManager : MonoBehaviour {
 	}
 
 	//
-	public void ControlAvatar(string avatarName, Vector3 pos) {
-		BehaviourAI avatar = GetAvatar(avatarName);
-		if(avatar) {
-			avatar.TakeControlOfAvatar();
-			avatar.WalkTo(pos);
-		}
-	}
-
-	//
-	public void ControlAvatar(string avatarName, string action, Vector3 pos) {
+	public void ControlAvatar(string id, string action, Vector3 pos) {
 		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == avatarName) {
+			if(avatar.name == id) {
 				avatar.TakeControlOfAvatar();
 				avatar.WalkTo(pos);
 			}
@@ -76,17 +67,8 @@ public class AvatarManager : MonoBehaviour {
 		}
 	}
 
-	public BehaviourAI GetAvatar(string avatarName) {
-		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == avatarName) {
-				return avatar;
-			}
-		}
-		return null;
-	}
-
 	//
-	public AvatarStats GetAvatarStats(string name) {
+	public AvatarStats GetAvatar(string name) {
 		foreach(BehaviourAI ai in _avatars) {
 			if(ai.GetComponent<Appliance>().name.Equals(name)) {
 				return ai.GetComponent<AvatarStats>();

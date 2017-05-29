@@ -19,6 +19,11 @@ public class DataSeries : DataModifier {
 
 	//
 	public virtual void InsertData(DataPoint datapoint) {
+		
+	}
+
+	public virtual void InsertData(List<DataPoint> datapoint) {
+		
 	}
 
 	//

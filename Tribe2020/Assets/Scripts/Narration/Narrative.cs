@@ -8,12 +8,9 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
 	public string title;
-
 	[TextArea(3, 10)]
 	public string description;
-
-    public List<Step> steps;
-
+	public List<Step> steps = new List<Step>();
 	private int _curStep = 0;
 
 	public List<Narrative> followingNarratives;
@@ -51,11 +48,17 @@ public class Narrative : ScriptableObject {
 		public string conditionType;
 		public string conditionProp;
 
-		public List<Narrative.Action> actions;
+		public UnityEvent unityEvent;
+
+		public enum TextType { None, Message, Prompt, Completion };
+		public TextType textType;
+		public string character;
+		[TextArea(3, 10)]
+		public string textValue;
 		public bool inChecklist;
 
-        //
-        public bool IsCompletedBy(string eventType, string prop) {
+		//
+		public bool IsCompletedBy(string eventType, string prop) {
 			return (conditionType == "" || conditionType == eventType) &&
 					(conditionProp == "" || conditionProp == prop);
 		}
@@ -63,15 +66,16 @@ public class Narrative : ScriptableObject {
 
 	//
 	[Serializable]
-	public struct Action {
-		public string callback;
-		public string parameter1;
-		[TextArea(3, 10)]
-		public string parameter2;
-
-		public string[] GetParameters() {
-			string[] parameters = { parameter1, parameter2 };
-			return parameters;
+	public struct NarrativeCondition {
+		public enum Condition {
+			EMPTY, OKPressed, Swiped, Tapped, ApplianceSelected, ApplianceDeselected, QuestListOpened,
+			QuestListClosed, QuestOpened, MeasurePerformed, FindView, AvatarArrived, AvatarSessionOver, AvatarActivityOver,
+			ResourceHarvested, BattleOver, InspectorOpened, InspectorClosed, InboxOpened, InboxClosed, MailOpened, MailClosed,
+			OpenEnergyPanel, CloseEnergyPanel, OpenComfortPanel, CloseComfortPanel, LightSwitchedOff, LightSwitchedOn, AvatarSelected,
+			SelectedOverview, SelectedGridView, CameraMoveOver, CameraAnimationEvent
 		}
+
+		public string type;
+		public string prop;
 	}
 }

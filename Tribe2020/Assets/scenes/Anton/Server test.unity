@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 8
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -25,6 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -37,11 +38,11 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 9
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -53,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 4
+    serializedVersion: 8
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -66,13 +67,27 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_DirectLightInLightProbes: 1
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
+    m_MixedBakeMode: 1
+    m_BakeBackend: 0
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 500
+    m_PVRBounces: 2
+    m_PVRFiltering: 0
+    m_PVRFilteringMode: 1
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousColorSigma: 1
+    m_PVRFilteringAtrousNormalSigma: 1
+    m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
-  m_RuntimeCPUUsage: 25
+  m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -89,8 +104,103 @@ NavMeshSettings:
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &45940103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 45940104}
+  - component: {fileID: 45940105}
+  m_Layer: 0
+  m_Name: Outdoor temperature
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &45940104
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 45940103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1821812479}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &45940105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 45940103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources:
+  - Topic: Climate/Zaragoza_Circe
+    DataPeriod:
+      Enabled: 1
+      Relative: 1
+      FromTime: -108000
+      ToTime: 108000
+    Source: {fileID: 1030803920}
+    Target: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  TimeOffset: 0
+  Rescales: []
+  Offsets: []
+  ScaleWithTimeSeries: {fileID: 0}
+  OffsetWithTimeSeries: {fileID: 0}
+  TTime: {fileID: 0}
+  StartTime: 0
+  StopTime: 0
+  Relative: 0
+  BufferMaxSize: 0
+  isAsync: 0
+  hasIntegral: 0
+  isTextSeries: 0
+  ReloadLimit: 0
+  Enabled: 1
+  Record: 0
+  BufferValid: 0
+  CurrentIndex: 0
+  CurrentTimestamp: 0
+  CurrentDate: 
+  CurrentValue: 0
+  CurrentIntegral: 0
+  CurrentText: 
+  CurrentSize: 0
+  Data: []
+  File: {fileID: 0}
 --- !u!224 &183356428
 RectTransform:
   m_ObjectHideFlags: 0
@@ -111,6 +221,99 @@ RectTransform:
   m_AnchoredPosition: {x: 199.55304, y: 256.33258}
   m_SizeDelta: {x: 953, y: 544}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &332115558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 332115559}
+  - component: {fileID: 332115560}
+  m_Layer: 0
+  m_Name: DataBuffer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &332115559
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332115558}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1030803921}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &332115560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332115558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources:
+  - Topic: test/signalA
+    DataPeriod:
+      Enabled: 0
+      Relative: 0
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 1030803920}
+    Target: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  TimeOffset: 0
+  Rescales: []
+  Offsets: []
+  ScaleWithTimeSeries: {fileID: 0}
+  OffsetWithTimeSeries: {fileID: 0}
+  TTime: {fileID: 0}
+  StartTime: 1495634747
+  StopTime: 1495635047
+  Relative: 0
+  BufferMaxSize: 0
+  isAsync: 0
+  hasIntegral: 0
+  isTextSeries: 0
+  ReloadLimit: 0
+  Enabled: 1
+  Record: 0
+  BufferValid: 0
+  CurrentIndex: 1
+  CurrentTimestamp: 0
+  CurrentDate: 
+  CurrentValue: 0
+  CurrentIntegral: 0
+  CurrentText: 
+  CurrentSize: 0
+  Data: []
+  File: {fileID: 0}
 --- !u!114 &393235065 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114000010584203272, guid: 79769193b9ce28c45b0fa41ff393f086,
@@ -228,6 +431,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!4 &517637133
 Transform:
@@ -312,6 +516,8 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -374,6 +580,7 @@ MonoBehaviour:
   ackExpirationTime: 1800
   pingInterval: 25
   pingTimeout: 60
+  RequestCounter: 0
 --- !u!4 &590139810
 Transform:
   m_ObjectHideFlags: 0
@@ -449,7 +656,7 @@ Canvas:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 600966270}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -458,6 +665,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -582,6 +790,7 @@ MonoBehaviour:
   Relative: 1
   Max: 70000
   Min: 0
+  findSourceByName: 
   Source: {fileID: 393235065}
   ValueIndex: 0
   color: {r: 0.959, g: 0.09558824, b: 0.24824521, a: 0.559}
@@ -795,10 +1004,11 @@ MonoBehaviour:
   Relative: 1
   Max: 70000
   Min: 0
+  findSourceByName: 
   Source: {fileID: 935896051}
   ValueIndex: 0
   color: {r: 0.07551282, g: 0.04617214, b: 0.89705884, a: 0.488}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data: []
@@ -996,6 +1206,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -1004,6 +1215,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 50000
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -1017,6 +1229,7 @@ MonoBehaviour:
   runlevelOff: 0
   runlevelUnpowered: 0
   _energyMod: 1
+  energyEffeciency: 0
 --- !u!1 &1030803919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1056,12 +1269,13 @@ MonoBehaviour:
     origin:
       Data: []
       index: 0
-  url: ws://data.tribe2020.eu:5000
+  url: ws://localhost:5000
   autoConnect: 1
   reconnectDelay: 5
   ackExpirationTime: 1800
   pingInterval: 25
   pingTimeout: 60
+  RequestCounter: 0
 --- !u!4 &1030803921
 Transform:
   m_ObjectHideFlags: 0
@@ -1071,7 +1285,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -476.5, y: -79.41557, z: 0.000061035156}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 332115559}
   m_Father: {fileID: 807325718}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1080,6 +1295,34 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224000012618730820, guid: 0870149312751f84aafb4a79e2afe05c,
     type: 2}
   m_PrefabInternal: {fileID: 1540612543}
+--- !u!1 &1082184794
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1082184795}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1082184795
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1082184794}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.898649, y: 1.302807, z: 15.41}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1128715988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,10 +1499,11 @@ MonoBehaviour:
   Relative: 2
   Max: 5000
   Min: 0
+  findSourceByName: 
   Source: {fileID: 1128715990}
   ValueIndex: 0
   color: {r: 0.04065744, g: 0.20665185, b: 0.6911765, a: 0.5882353}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug:
   - {x: 0, y: -1}
@@ -1824,7 +2068,7 @@ Light:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1632545847}
   m_Enabled: 1
-  serializedVersion: 7
+  serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -1849,6 +2093,8 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &1632545849
@@ -1930,7 +2176,7 @@ Canvas:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1649517228}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -1939,6 +2185,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2122,10 +2369,11 @@ MonoBehaviour:
   Relative: 1
   Max: 70000
   Min: 0
+  findSourceByName: 
   Source: {fileID: 393235065}
   ValueIndex: 0
   color: {r: 1, g: 0, b: 0, a: 0.909}
-  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  _material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 3}
   Staircase: 1
   Debug: []
   Data: []
@@ -2136,6 +2384,35 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1787804019}
+--- !u!1 &1821812478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1821812479}
+  m_Layer: 0
+  m_Name: Climate data
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1821812479
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1821812478}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 45940104}
+  m_Father: {fileID: 1460999982}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839079553
 GameObject:
   m_ObjectHideFlags: 0
@@ -2227,7 +2504,7 @@ Canvas:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1892548955}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -2236,6 +2513,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

@@ -27,7 +27,7 @@ public class View : MonoBehaviour {
 	}
 
 	//
-	public virtual void ShowCongratulations(string text) {
+	public virtual void ShowCongratualations(string text) {
 	}
 
 	//
