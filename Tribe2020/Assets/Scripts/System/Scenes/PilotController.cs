@@ -225,9 +225,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private void OnTap(Vector3 pos) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
-		if((_view.GetCurrentUIKey() == "Character Panel" || _view.GetCurrentUIKey() == "Device Panel") &&
-			pos.x < Screen.width / 2) {
+		if(_view.victoryUI.activeSelf) {
 			ClearView();
+			LimitInteraction("all");
 		}
 
 		_touchState = IDLE;
@@ -713,7 +713,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
     //
     public void UnmarkAvatar(string cmd) {
-        Destroy(_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+		if(!_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject) {
+			return;
+		}
+
+		Destroy(_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
     }
 
     //
@@ -998,11 +1002,28 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Reset interaction limitations and save on narrative completion
 	public void OnNarrativeCompleted(Narrative narrative) {
+		_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", narrative.title, true);
 		_instance.LimitInteraction("all");
 		_instance.SaveGameState();
 	}
 
 	//TODO
 	public void OnNarrativeActivated(Narrative narrative) {
+	}
+
+	public bool IsStepAlreadyPerformed(Narrative narrative, Narrative.Step step) {
+		bool result = false;
+		foreach(Narrative.Action a in step.actions) {
+			switch(a.callback) {
+				case "EEMPerformed":
+					break;
+				case "NarrativeComplete":
+					foreach(Narrative n in _instance._narrationMgr.archive) {
+						_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", n.title);
+					}
+					break;
+			}
+		}
+		return result;
 	}
 }

@@ -356,4 +356,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	public void OnNarrativeActivated(Narrative narrative) {
 		throw new NotImplementedException();
 	}
+
+	public bool IsStepAlreadyPerformed(Narrative narrative, Narrative.Step step) {
+		throw new NotImplementedException();
+	}
 }
