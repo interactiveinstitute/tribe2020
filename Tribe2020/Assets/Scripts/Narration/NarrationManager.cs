@@ -24,13 +24,14 @@ public class NarrationManager : MonoBehaviour {
 
 	[Header("Narratives")]
 	public Narrative curInFocus;
-	
+
 	private Narrative[] _allNarratives;
 
 	public List<Narrative> starters;
 	public List<Narrative> active;
 	public List<Narrative> archive;
-    List<PerformedStep> _performedSteps = new List<PerformedStep>();
+	[SerializeField]
+	public List<PerformedStep> _performedSteps = new List<PerformedStep>();
 
 	[Header("Narration Control")]
 	public int selectIndex;
@@ -133,8 +134,9 @@ public class NarrationManager : MonoBehaviour {
             //Check if event fullfills conditions for current step
             bool isCompleted = curStep.IsCompletedBy(eventType, prop);
 
-            //Is current step already performed?
-            if (!isCompleted) {
+			//Is current step already performed?
+			_interface.IsStepAlreadyPerformed(active[i], curStep);
+			if (!isCompleted) {
                 isCompleted = IsPerformed(curStep.conditionType, curStep.conditionProp);
             }
 
