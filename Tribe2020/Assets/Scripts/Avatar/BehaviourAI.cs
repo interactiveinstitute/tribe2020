@@ -49,7 +49,17 @@ public class BehaviourAI : SimulationObject {
 		public AvatarActivity activity;
 	}
 
-	[SerializeField]
+    //Definition of a schedule
+    [System.Serializable]
+    public class Schedule {
+        public ScheduleItem[] items;
+        public int _currentItem;
+    }
+
+    public Schedule[] schedules;
+    private int _activeSchedule = 0;
+
+    [SerializeField]
 	public ScheduleItem[] schedule;
 	[SerializeField]
 	private int _scheduleIndex = 0;
@@ -128,24 +138,31 @@ public class BehaviourAI : SimulationObject {
 	}
 
 	private double TimeStampForNextScheduledActivity() {
-		//We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
-		double curTime = _timeMgr.GetTotalSeconds();
-		int nxtIndex = _scheduleIndex;
-		//get offset in days
-		int nxtActivityDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
 
-		//Loop through schedule until we find an activity with startTime
-		//Also, let's limit the loop to the length of the schedule. If no activity with a startTime is found that means there is no activity with startTime in the schedule.
-		for(int i = 0; i < schedule.Length; i++) {
-			//Get next schedule index
-			nxtIndex = (nxtIndex + 1) % schedule.Length;
-			if(schedule[nxtIndex].time == "") {
-				//This activity has no scheduled startTime
-				continue;
-			}
-			//Determine startTime for nextActivity
-			return _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, schedule[nxtIndex].time);
-		}
+        Schedule activeSchedule = GetActiveSchedule();
+
+        if (activeSchedule != null) {
+
+            //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+            double curTime = _timeMgr.GetTotalSeconds();
+            int nxtIndex = activeSchedule._currentItem;
+            //get offset in days
+            int nxtActivityDayOffset = (int)Mathf.Floor((activeSchedule._currentItem + 1) / activeSchedule.items.Length);
+
+            //Loop through schedule until we find an activity with startTime
+            //Also, let's limit the loop to the length of the schedule. If no activity with a startTime is found that means there is no activity with startTime in the schedule.
+            for (int i = 0; i < activeSchedule.items.Length; i++) {
+                //Get next schedule index
+                nxtIndex = (nxtIndex + 1) % activeSchedule.items.Length;
+                if (activeSchedule.items[nxtIndex].time == "") {
+                    //This activity has no scheduled startTime
+                    continue;
+                }
+                //Determine startTime for nextActivity
+                return _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, activeSchedule.items[nxtIndex].time);
+            }
+
+        }
 
 		DebugManager.LogError("Couldn't find an activity with startTime in schedule. Double check the schedule of the avatar", this, this);
 		return 0;
@@ -257,6 +274,15 @@ public class BehaviourAI : SimulationObject {
 		}
 	}
 
+    public Schedule GetActiveSchedule() {
+        ////Not working when Schedule is a struct
+        if (schedules.Length == 0 || _activeSchedule < 0 || _activeSchedule >= schedules.Length) {
+            return null;
+        }
+
+        return schedules[_activeSchedule];
+    }
+
 	public AvatarActivity GetRunningActivity() {
 		if(_tempActivities.Count > 0) {
 			return _tempActivities.Peek();
@@ -286,96 +312,108 @@ public class BehaviourAI : SimulationObject {
 
 		DebugManager.Log("starting schedule sync", this);
 
-		//TODO: Handle when last item in schedule doesnn't have start time!!
+        //TODO: Handle when last item in schedule doesnn't have start time!!
 
-		//loop through the schedule until we pass an actvity that should already have happended
-		for(; _scheduleIndex < schedule.Length; _scheduleIndex++) {
-			//Handle schedule posts without time. Such activities should happen as soon as the activity before is finished. But since they have no startTime, we skip them when setting up the schedule.
-			if(schedule[_scheduleIndex].time == null || schedule[_scheduleIndex].time == "") {
-				//Ok. so this schedule post has no time specified. Let's loop further.
-				continue;
-			}
-			string[] timeParse = schedule[_scheduleIndex].time.Split(':');
-			int schedHour = int.Parse(timeParse[0]);
-			int schedMinute = int.Parse(timeParse[1]);
+        Schedule activeSchedule = GetActiveSchedule();
 
-			//Is this activity in the future? If so, dont pick it.
-			if(curHour <= schedHour && _scheduleIndex + 1 != schedule.Length) {
-				//if same hour. also check minutes. are the minutes past.
-				if(curHour == schedHour) {
-					if(curMinute < schedMinute && _scheduleIndex + 1 != schedule.Length) {
-						continue; // if same hour but minutes not yet past, don't pick this activity.
-					}
-				} else {
-					continue;
-				}
-			}
+        if (activeSchedule != null) {
 
-			//Ok. Now we should have picked an index.
-			//We set the dayoffsets depending on what index we picked
-			int prevActivityDayOffset = 0;
-			int curActivityDayOffset = 0;
-			int nxtActivityDayOffset = 0;
-			if(schedule.Length == 1)//In the super unsusual case when schedule only has one item
-			{
-				//Ok. this might seem weird. But since the length of schedule is 1, curitem is actually from yesterday. Since we picked the closest item earlier than curtime.
-				prevActivityDayOffset = -2;
-				curActivityDayOffset = -1;
-				nxtActivityDayOffset = 0;
-			} else if(_scheduleIndex == 0)//First item in schedule picked. prev is yesterday.
-			 {
-				prevActivityDayOffset = -1;
-				curActivityDayOffset = 0;
-				nxtActivityDayOffset = 0;
+            //loop through the schedule until we pass an actvity that should already have happended
+            for (; activeSchedule._currentItem < activeSchedule.items.Length; activeSchedule._currentItem++) {
+                //Handle schedule posts without time. Such activities should happen as soon as the activity before is finished. But since they have no startTime, we skip them when setting up the schedule.
+                if (activeSchedule.items[activeSchedule._currentItem].time == null || activeSchedule.items[activeSchedule._currentItem].time == "") {
+                    //Ok. so this schedule post has no time specified. Let's loop further.
+                    continue;
+                }
+                string[] timeParse = activeSchedule.items[activeSchedule._currentItem].time.Split(':');
+                int schedHour = int.Parse(timeParse[0]);
+                int schedMinute = int.Parse(timeParse[1]);
 
-			} else if(_scheduleIndex + 1 == schedule.Length)//Ok. Last item in schedule picked. nxt izz tomarrah.
-			 {
-				prevActivityDayOffset = -1;
-				curActivityDayOffset = -1;
-				nxtActivityDayOffset = 0;
-			}
+                //Is this activity in the future? If so, dont pick it.
+                if (curHour <= schedHour && activeSchedule._currentItem + 1 != activeSchedule.items.Length) {
+                    //if same hour. also check minutes. are the minutes past.
+                    if (curHour == schedHour) {
+                        if (curMinute < schedMinute && activeSchedule._currentItem + 1 != activeSchedule.items.Length) {
+                            continue; // if same hour but minutes not yet past, don't pick this activity.
+                        }
+                    }
+                    else {
+                        continue;
+                    }
+                }
 
-			//Setup the scheduleIndices.
-			int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
-			int prevIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
-			//Get the schedule items
-			ScheduleItem prevItem = schedule[prevIndex];
-			ScheduleItem curItem = schedule[_scheduleIndex];
-			ScheduleItem nxtItem = schedule[nxtIndex];
+                //Ok. Now we should have picked an index.
+                //We set the dayoffsets depending on what index we picked
+                int prevActivityDayOffset = 0;
+                int curActivityDayOffset = 0;
+                int nxtActivityDayOffset = 0;
+                if (activeSchedule.items.Length == 1)//In the super unsusual case when schedule only has one item
+                {
+                    //Ok. this might seem weird. But since the length of schedule is 1, curitem is actually from yesterday. Since we picked the closest item earlier than curtime.
+                    prevActivityDayOffset = -2;
+                    curActivityDayOffset = -1;
+                    nxtActivityDayOffset = 0;
+                }
+                else if (activeSchedule._currentItem == 0)//First item in schedule picked. prev is yesterday.
+               {
+                    prevActivityDayOffset = -1;
+                    curActivityDayOffset = 0;
+                    nxtActivityDayOffset = 0;
 
-			//Determine startTime for prevActivity
-			double prevStartTime = 0;
-			if(prevItem.time != "") {
-				prevStartTime = _timeMgr.ScheduleToTS(curTime, prevActivityDayOffset, prevItem.time);
-				SetPrevActivity(prevItem.activity, prevStartTime);
-				DebugManager.Log("_prevActivity set: " + _prevActivity.name + " with startTime: " + _prevActivity.startTime, this.gameObject, this);
-			} else {
-				SetPrevActivity(prevItem.activity);
-			}
+                }
+                else if (activeSchedule._currentItem + 1 == activeSchedule.items.Length)//Ok. Last item in schedule picked. nxt izz tomarrah.
+               {
+                    prevActivityDayOffset = -1;
+                    curActivityDayOffset = -1;
+                    nxtActivityDayOffset = 0;
+                }
 
-			//Determine startTime as timeStamp. We set dayOffset to 0 since we should set the activity to this day.
-			double startTime = 0;
-			if(curItem.time != "") {
-				startTime = _timeMgr.ScheduleToTS(curTime, curActivityDayOffset, curItem.time);
-				SetCurrentActivity(curItem.activity, startTime);
-				DebugManager.Log("_curActivity set: " + _curActivity.name + " with startTime: " + _curActivity.startTime, this.gameObject, this);
-			} else {
-				SetCurrentActivity(curItem.activity);
-			}
+                //Setup the scheduleIndices.
+                int nxtIndex = (activeSchedule._currentItem + 1) % activeSchedule.items.Length;
+                int prevIndex = (activeSchedule._currentItem + activeSchedule.items.Length - 1) % activeSchedule.items.Length;
+                //Get the schedule items
+                ScheduleItem prevItem = activeSchedule.items[prevIndex];
+                ScheduleItem curItem = activeSchedule.items[activeSchedule._currentItem];
+                ScheduleItem nxtItem = activeSchedule.items[nxtIndex];
 
-			//Determine startTime for nextActivity
-			double nxtStartTime = 0;
-			if(nxtItem.time != "") {
-				nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
-				SetNextActivity(nxtItem.activity, nxtStartTime);
-				DebugManager.Log("_nextActivity set: " + _nextActivity.name + " with startTime: " + _nextActivity.startTime, this.gameObject, this);
-			} else {
-				SetNextActivity(nxtItem.activity);
-			}
+                //Determine startTime for prevActivity
+                double prevStartTime = 0;
+                if (prevItem.time != "") {
+                    prevStartTime = _timeMgr.ScheduleToTS(curTime, prevActivityDayOffset, prevItem.time);
+                    SetPrevActivity(prevItem.activity, prevStartTime);
+                    DebugManager.Log("_prevActivity set: " + _prevActivity.name + " with startTime: " + _prevActivity.startTime, this.gameObject, this);
+                }
+                else {
+                    SetPrevActivity(prevItem.activity);
+                }
 
-			DebugManager.Log("syncSchedule finished. timestamp is: " + _timeMgr.GetTotalSeconds(), this.gameObject, this);
-			return;
-		}
+                //Determine startTime as timeStamp. We set dayOffset to 0 since we should set the activity to this day.
+                double startTime = 0;
+                if (curItem.time != "") {
+                    startTime = _timeMgr.ScheduleToTS(curTime, curActivityDayOffset, curItem.time);
+                    SetCurrentActivity(curItem.activity, startTime);
+                    DebugManager.Log("_curActivity set: " + _curActivity.name + " with startTime: " + _curActivity.startTime, this.gameObject, this);
+                }
+                else {
+                    SetCurrentActivity(curItem.activity);
+                }
+
+                //Determine startTime for nextActivity
+                double nxtStartTime = 0;
+                if (nxtItem.time != "") {
+                    nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
+                    SetNextActivity(nxtItem.activity, nxtStartTime);
+                    DebugManager.Log("_nextActivity set: " + _nextActivity.name + " with startTime: " + _nextActivity.startTime, this.gameObject, this);
+                }
+                else {
+                    SetNextActivity(nxtItem.activity);
+                }
+
+                DebugManager.Log("syncSchedule finished. timestamp is: " + _timeMgr.GetTotalSeconds(), this.gameObject, this);
+                return;
+            }
+
+        }
 	}
 
 	//
@@ -421,70 +459,84 @@ public class BehaviourAI : SimulationObject {
 
 	//Alright. Let's pick the next activity in the schedule. This function updates the references of _prev, _cur and _next -activity.
 	public void NextActivity() {
-		//We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
-		double curTime = _timeMgr.GetTotalSeconds();
 
-		DebugManager.Log("Next activity called. " + _nextActivity.name, this);
-		//Iterate schedule index
-		//Soo. _scheduleIndex is here incremented to point on the activity we jump to.
-		_scheduleIndex = (_scheduleIndex + 1) % schedule.Length;
+        Schedule activeSchedule = GetActiveSchedule();
 
-		//Get next schedule index with potential offset in days
-		int nxtIndex = (_scheduleIndex + 1) % schedule.Length;
-		int nxtActivityDayOffset = (int)Mathf.Floor((_scheduleIndex + 1) / schedule.Length);
+        if (activeSchedule != null) {
 
-		//Setup next schedule item
-		ScheduleItem nxtItem = schedule[nxtIndex];
+            //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+            double curTime = _timeMgr.GetTotalSeconds();
 
-		//We have already an instantiated activity in _nextActivity. So we set _curActivity as _prevActivity and _nextActivity as _curActivity. Then we instantiate a new one for _nextActivity.
-		_prevActivity = _curActivity;
-		_curActivity = _nextActivity;
+            DebugManager.Log("Next activity called. " + _nextActivity.name, this);
+            //Iterate schedule index
+            //Soo. _scheduleIndex is here incremented to point on the activity we jump to.
+            activeSchedule._currentItem = (activeSchedule._currentItem + 1) % activeSchedule.items.Length;
+
+            //Get next schedule index with potential offset in days
+            int nxtIndex = (activeSchedule._currentItem + 1) % activeSchedule.items.Length;
+            int nxtActivityDayOffset = (int)Mathf.Floor((activeSchedule._currentItem + 1) / activeSchedule.items.Length);
+
+            //Setup next schedule item
+            ScheduleItem nxtItem = activeSchedule.items[nxtIndex];
+
+            //We have already an instantiated activity in _nextActivity. So we set _curActivity as _prevActivity and _nextActivity as _curActivity. Then we instantiate a new one for _nextActivity.
+            _prevActivity = _curActivity;
+            _curActivity = _nextActivity;
 
 
-		if(nxtItem.time != "") {
-			//Determine startTime for nextActivity
-			double nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
-			SetNextActivity(nxtItem.activity, nxtStartTime);
-		} else {
-			SetNextActivity(nxtItem.activity);
-		}
+            if (nxtItem.time != "") {
+                //Determine startTime for nextActivity
+                double nxtStartTime = _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nxtItem.time);
+                SetNextActivity(nxtItem.activity, nxtStartTime);
+            }
+            else {
+                SetNextActivity(nxtItem.activity);
+            }
+        }
 	}
 
 	//
 	public void PreviousActivity() {
-		//We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
-		double curTime = _timeMgr.GetTotalSeconds();
 
-		int prevIndex = 0;
-		if(schedule.Length > 0) {
+        Schedule activeSchedule = GetActiveSchedule();
 
-			//Iterate schedule index
-			_scheduleIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
-			prevIndex = (_scheduleIndex + schedule.Length - 1) % schedule.Length;
-		}
+        if (activeSchedule != null) {
 
-		int startTimeDayOffset = 0;
-		//Is the new (previous) activity started the previous day?
-		if(prevIndex > _scheduleIndex) { startTimeDayOffset = -1; }
+            //We will use the current time as reference timestamp for picking correct day when converting schedule timestring to epoch timestamp.
+            double curTime = _timeMgr.GetTotalSeconds();
 
-		//Setup cur schedule item and the one after that
-		ScheduleItem prevItem = schedule[prevIndex];
+            int prevIndex = 0;
+            if (activeSchedule.items.Length > 0) {
 
-		//Move all the three activities one step back
-		_nextActivity = _curActivity;
-		_curActivity = _prevActivity;
+                //Iterate schedule index
+                activeSchedule._currentItem = (activeSchedule._currentItem + activeSchedule.items.Length - 1) % activeSchedule.items.Length;
+                prevIndex = (activeSchedule._currentItem + activeSchedule.items.Length - 1) % activeSchedule.items.Length;
+            }
 
-		if(prevItem.time != "") {
-			//Determine the startTime of the new _prevActivity,
-			//using the _prevActivity as day reference
-			//This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
-			//If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
-			//we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
-			double prevActivityStartTime = _timeMgr.ScheduleToTS(curTime, startTimeDayOffset, prevItem.time);
-			SetPrevActivity(prevItem.activity, prevActivityStartTime);
-		} else {
-			SetPrevActivity(prevItem.activity);
-		}
+            int startTimeDayOffset = 0;
+            //Is the new (previous) activity started the previous day?
+            if (prevIndex > activeSchedule._currentItem) { startTimeDayOffset = -1; }
+
+            //Setup cur schedule item and the one after that
+            ScheduleItem prevItem = activeSchedule.items[prevIndex];
+
+            //Move all the three activities one step back
+            _nextActivity = _curActivity;
+            _curActivity = _prevActivity;
+
+            if (prevItem.time != "") {
+                //Determine the startTime of the new _prevActivity,
+                //using the _prevActivity as day reference
+                //This means that if _prevActivity is already on the previous day, this will be the day reference for setting startTime. If prevIndex is on same day as _prevActivity dayOffset will be 0.
+                //If prevIndex instead is one day before _scheduleIndex AND _prevActivity already is on previous day (should only be possible with a schedule of length 1 I think)
+                //we will get one day back from _prevActivity day reference and additionally one day back from startTimeDayOffset.
+                double prevActivityStartTime = _timeMgr.ScheduleToTS(curTime, startTimeDayOffset, prevItem.time);
+                SetPrevActivity(prevItem.activity, prevActivityStartTime);
+            }
+            else {
+                SetPrevActivity(prevItem.activity);
+            }
+        }
 	}
 
 	void SetAgentDestination(AvatarActivity activity) {
