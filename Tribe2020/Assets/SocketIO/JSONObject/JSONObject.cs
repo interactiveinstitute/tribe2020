@@ -165,7 +165,7 @@ public class JSONObject {
 		obj.b = val;
 		return obj;
 	}
-	public static JSONObject Create(float val) {
+	public static JSONObject Create(double val) {
 		JSONObject obj = Create();
 		obj.type = Type.NUMBER;
 		obj.n = val;
@@ -412,7 +412,7 @@ public class JSONObject {
 	public void AddField(string name, bool val) {
 		AddField(name, Create(val));
 	}
-	public void AddField(string name, float val) {
+	public void AddField(string name, double val) {
 		AddField(name, Create(val));
 	}
 	public void AddField(string name, int val) {

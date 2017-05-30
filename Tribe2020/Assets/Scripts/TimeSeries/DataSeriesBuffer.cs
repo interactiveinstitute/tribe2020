@@ -136,7 +136,7 @@ public class DataSeriesBuffer : DataSeries {
 		
 	}
 
-	void AddPoint(DataPoint NewData) {
+	public void AddPoint(DataPoint NewData) {
 		int index;
 
 		//Skip if not inside buffer. 
@@ -210,6 +210,18 @@ public class DataSeriesBuffer : DataSeries {
 		//	return false;
 
 		//Server.Get(Name,StartTime,Absolute,BufferMaxSize);
+
+		print ("Request");
+
+		ServerObject server;
+
+		foreach (Subscription sub in Sources) {
+			print (sub);
+			if (sub.Source is ServerObject) {
+				server = (ServerObject)sub.Source;
+				server.GetPeriod (sub.Topic, getStartTime (), getStopTime (), this);
+			}
+		}
 
 		return true;
 	}
@@ -407,7 +419,12 @@ public class DataSeriesBuffer : DataSeries {
 
 	//Set list of datapoints
 	public override void InsertData(DataPoint datapoint) {
-		Data.Add(datapoint);
+		//Data.Add(datapoint);
+		AddPoint(datapoint);
+
+		//var index = Data.BinarySearch(datapoint);
+		//if (index < 0) index = ~index;
+		//Data.Insert(index, datapoint);
 	}
 
 	//Clear list of datapoints

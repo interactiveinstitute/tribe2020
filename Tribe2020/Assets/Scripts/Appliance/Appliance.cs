@@ -98,7 +98,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
         _pilotView = PilotView.GetInstance();
         _applianceManager = ApplianceManager.GetInstance();
 
-        _applianceManager.AddAppliance(GetComponent<Appliance>());
+		if(!transform.parent.GetComponent<ApplianceSlot>()) {
+			_applianceManager.AddAppliance(GetComponent<Appliance>());
+		}
 
         _zone = GetComponentInParent<Room>();
 
@@ -164,7 +166,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 		if(eem.replacementPrefab != null) {
 			//TODO Temp guard against performing EEMs that replace appliance if appliance group
-			if(!GetComponentInChildren<ApplianceSlot>()) {
+			if(!GetComponentInChildren<ApplianceSlot>() && !GetComponentInParent<ApplianceSlot>()) {
 				GameObject newApp = Instantiate(eem.replacementPrefab);
 				newApp.transform.SetParent(transform.parent, false);
 				newApp.transform.localPosition = transform.localPosition;
@@ -176,6 +178,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
                 edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
 
                 returnGO = newApp;
+				returnGO.AddComponent<UniqueId>();
+				returnGO.GetComponent<UniqueId>().uniqueId = gameObject.GetComponent<UniqueId>().uniqueId;
 
                 //Remove
                 Destroy(gameObject);
@@ -210,6 +214,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		//_ctrlMgr.LoadScene("BattleScene");
 	}
 
+	//
     public void SRCAvatarIsBattleReady(CallbackResult result) {
         result.result = GetComponent<BehaviourAI>().battleReady;
     }

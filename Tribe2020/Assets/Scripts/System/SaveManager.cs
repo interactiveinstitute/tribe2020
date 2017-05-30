@@ -24,7 +24,7 @@ public class SaveManager : MonoBehaviour{
 	public string fileName;
 	[TextArea(3, 10)]
 	public string defaultContent;
-	private string _filePath;
+	private string _filePath = "";
 	private JSONNode _dataClone = new JSONNode();
 	#endregion
 
@@ -226,6 +226,7 @@ public class SaveManager : MonoBehaviour{
 
 	//
 	public JSONNode ReadFileAsJSON() {
+		if(_filePath == "") { return null; }
 		if(!File.Exists(_filePath)) { InitFile(); }
 
 		string fileClone = File.ReadAllText(_filePath);

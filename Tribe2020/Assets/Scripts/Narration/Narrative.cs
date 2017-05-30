@@ -8,12 +8,9 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
 	public string title;
-
 	[TextArea(3, 10)]
 	public string description;
-
-    public List<Step> steps;
-
+	public List<Step> steps;
 	private int _curStep = 0;
 
 	public List<Narrative> followingNarratives;
@@ -54,8 +51,8 @@ public class Narrative : ScriptableObject {
 		public List<Narrative.Action> actions;
 		public bool inChecklist;
 
-        //
-        public bool IsCompletedBy(string eventType, string prop) {
+		//
+		public bool IsCompletedBy(string eventType, string prop) {
 			return (conditionType == "" || conditionType == eventType) &&
 					(conditionProp == "" || conditionProp == prop);
 		}

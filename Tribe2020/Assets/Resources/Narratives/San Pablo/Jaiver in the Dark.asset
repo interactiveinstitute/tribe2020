@@ -92,17 +92,6 @@ MonoBehaviour:
       parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
       parameter2: CRT Monitor
     inChecklist: 0
-  - description: Hide Message
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: HideMessage
-      parameter1: 
-      parameter2: 
-    - callback: LimitInteraction
-      parameter1: all
-      parameter2: 
-    inChecklist: 0
   - description: Find Javier's screen
     conditionType: DeviceSelected
     conditionProp: CRT Monitor
@@ -174,18 +163,18 @@ MonoBehaviour:
       parameter1: player
       parameter2: I guess I'll see what I can do...
     - callback: MarkDevice
-      parameter1: 20661975-d622-4566-a3e2-4b21be564a79
+      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
       parameter2: Lamp
     inChecklist: 0
   - description: Upgrade the Room Lighting
     conditionType: EEMPerformed
-    conditionProp: EDL2
+    conditionProp: LL5
     actions:
     - callback: ShowPrompt
       parameter1: Javier Rough
       parameter2: That's it! What a wonderful, bright and clear room ambience!
     - callback: UnmarkDevice
-      parameter1: 20661975-d622-4566-a3e2-4b21be564a79
+      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
       parameter2: Lamp
     inChecklist: 1
   - description: Your'e welcome again
@@ -224,7 +213,7 @@ MonoBehaviour:
     conditionType: OKPressed
     conditionProp: 
     actions:
-    - callback: HideUI
+    - callback: ClearView
       parameter1: 
       parameter2: 
     - callback: GotoViewpoint
@@ -292,13 +281,13 @@ MonoBehaviour:
     conditionType: OKPressed
     conditionProp: 
     actions:
-    - callback: HideMessage
+    - callback: ClearView
       parameter1: 
       parameter2: 
     inChecklist: 0
   - description: De-lamp the Vending Machine
     conditionType: EEMPerformed
-    conditionProp: EDL2
+    conditionProp: EDL9
     actions:
     - callback: ShowPrompt
       parameter1: Javier Rough
@@ -365,7 +354,7 @@ MonoBehaviour:
     conditionType: OKPressed
     conditionProp: 
     actions:
-    - callback: HideMessage
+    - callback: ClearView
       parameter1: 
       parameter2: 
     inChecklist: 0
