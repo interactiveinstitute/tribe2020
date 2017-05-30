@@ -8,8 +8,8 @@ using System;
 
 public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandler {
 	private PilotController _ctrlMgr;
-    private PilotView _pilotView;
-    private ApplianceManager _applianceManager;
+	private PilotView _pilotView;
+	private ApplianceManager _applianceManager;
 
 	[Header("Properties")]
 	public string title;
@@ -95,14 +95,14 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	// Use this for initialization
 	void Start() {
 		_ctrlMgr = PilotController.GetInstance();
-        _pilotView = PilotView.GetInstance();
-        _applianceManager = ApplianceManager.GetInstance();
+		_pilotView = PilotView.GetInstance();
+		_applianceManager = ApplianceManager.GetInstance();
 
 		if(!transform.parent.GetComponent<ApplianceSlot>()) {
 			_applianceManager.AddAppliance(GetComponent<Appliance>());
 		}
 
-        _zone = GetComponentInParent<Room>();
+		_zone = GetComponentInParent<Room>();
 
 		//Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
 		PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
@@ -118,11 +118,11 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	}
 
 	//Called before destroyed
-    void OnDestroy() {
+	void OnDestroy() {
 		if(_applianceManager) {
 			_applianceManager.RemoveAppliance(GetComponent<Appliance>());
 		}
-    }
+	}
 
 	// Update is called once per frame
 	void Update() {
@@ -133,78 +133,81 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		_ctrlMgr.SetCurrentUI(this);
 	}
 
-    //
-    public void RefreshSlots() {
+	//
+	public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
 
-            ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
-            if (removedDevice) {
-                DestroyImmediate(removedDevice.gameObject);
-            }
+			ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
+			if(removedDevice) {
+				DestroyImmediate(removedDevice.gameObject);
+			}
 
-            if (slot.appliancePrefabs[slot.currentApplianceIndex]) {
-				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);                
+			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
+				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
 				newApp.transform.SetParent(slot.transform, false);
-            }
+			}
 
-            
 
-            //newApp.transform.position = slot.transform.position;
-            //newApp.transform.rotation = slot.transform.rotation;
-        }
+
+			//newApp.transform.position = slot.transform.position;
+			//newApp.transform.rotation = slot.transform.rotation;
+		}
 	}
 
 	//
 	public GameObject ApplyEEM(EnergyEfficiencyMeasure eem) {
+		GameObject returnGO = gameObject;
 
-        GameObject returnGO = gameObject;
-
-        if (!eem.multipleUse) {
-            appliedEEMs.Add(eem);
-        }
+		if(!eem.multipleUse) {
+			appliedEEMs.Add(eem);
+		}
 
 		if(eem.replacementPrefab != null) {
 			//TODO Temp guard against performing EEMs that replace appliance if appliance group
-			if(!GetComponentInChildren<ApplianceSlot>() && !GetComponentInParent<ApplianceSlot>()) {
+			if(!GetComponentInChildren<ApplianceSlot>()) {
 				GameObject newApp = Instantiate(eem.replacementPrefab);
 				newApp.transform.SetParent(transform.parent, false);
 				newApp.transform.localPosition = transform.localPosition;
 				newApp.transform.localRotation = transform.localRotation;
 				newApp.gameObject.layer = gameObject.layer;
 
-                ElectricDevice edOld = GetComponent<ElectricDevice>();
-                ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
-                edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
+				ElectricDevice edOld = GetComponent<ElectricDevice>();
+				ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
+				edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
 
-                returnGO = newApp;
-				returnGO.AddComponent<UniqueId>();
-				returnGO.GetComponent<UniqueId>().uniqueId = gameObject.GetComponent<UniqueId>().uniqueId;
+				returnGO = newApp;
 
-                //Remove
-                Destroy(gameObject);
+				//If UID, Keep it
+				if(gameObject.GetComponent<UniqueId>()) {
+					returnGO.AddComponent<UniqueId>();
+					returnGO.GetComponent<UniqueId>().uniqueId = gameObject.GetComponent<UniqueId>().uniqueId;
+				}
+
+				//Remove
+				Destroy(gameObject);
 			}
 		}
 
-        if (eem.setEnergyEffeciency) {
-            ElectricDevice ed = GetComponent<ElectricDevice>();
-            if (ed) {
-                ed.energyEffeciency = eem.energyEffeciency;
-                foreach(Runlevel runlevel in ed.runlevels) {
-                    runlevel.SetPowerByEE(eem.energyEffeciency);
-                }
-                ed.SetRunlevel(ed.runlevel);
+		if(eem.setEnergyEffeciency) {
+			ElectricDevice ed = GetComponent<ElectricDevice>();
+			if(ed) {
+				ed.energyEffeciency = eem.energyEffeciency;
+				foreach(Runlevel runlevel in ed.runlevels) {
+					runlevel.SetPowerByEE(eem.energyEffeciency);
+				}
+				ed.SetRunlevel(ed.runlevel);
 
-                _pilotView.BuildDevicePanel(this);
-            }
-        }
+				_pilotView.BuildDevicePanel(this);
+			}
+		}
 
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
 			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
 		}
 
-        return returnGO;
+		return returnGO;
 	}
 
 	//If Avatar, challenge to a battle
@@ -215,9 +218,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	}
 
 	//
-    public void SRCAvatarIsBattleReady(CallbackResult result) {
-        result.result = GetComponent<BehaviourAI>().battleReady;
-    }
+	public void SRCAvatarIsBattleReady(CallbackResult result) {
+		result.result = GetComponent<BehaviourAI>().battleReady;
+	}
 
 	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
@@ -367,12 +370,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	public void OnPointerDown(PointerEventData eventData) {
 	}
 
-    public string GetUniqueId() {
-        UniqueId uid = GetComponent<UniqueId>();
-        if (uid) {
-            return uid.uniqueId;
-        }
-        return "";
-    }
+	public string GetUniqueId() {
+		UniqueId uid = GetComponent<UniqueId>();
+		if(uid) {
+			return uid.uniqueId;
+		}
+		return "";
+	}
 
 }
