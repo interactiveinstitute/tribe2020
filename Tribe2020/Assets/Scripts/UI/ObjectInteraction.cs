@@ -55,7 +55,7 @@ public class ObjectInteraction : MonoBehaviour {
 
 	//
 	private void ToggleMeter() {
-		_meter.Toggle();
+		//_meter.Toggle();
         _controller.OnElectricMeterToggle(_meter);
         //_appliance.GetZone().OnApplianceInteraction(_appliance);
 	}
