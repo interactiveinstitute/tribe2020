@@ -713,7 +713,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
     //
     public void UnmarkAvatar(string cmd) {
-		if(!_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>().gameObject) {
+		if(!_avatarMgr.GetAvatar(cmd).GetComponentInChildren<NarrativeInteractionPoint>()) {
 			return;
 		}
 

@@ -69,11 +69,17 @@ public class LocalisationManager : MonoBehaviour {
 						if(curLanguage.isTestLanguage) {
 							return "DEBUG:" + keyValue.value;
 						} else {
+							if(debug) {
+								Debug.Log("GetPhrase(" + group + ", " + key + ") -> " + keyValue.value);
+							}
 							return keyValue.value;
 						}
 					}
 				}
 			}
+		}
+		if(debug) {
+			Debug.Log("GetPhrase(" + group + ", " + key + ") -> \"\"");
 		}
 		return "";
 	}
@@ -84,10 +90,16 @@ public class LocalisationManager : MonoBehaviour {
 			if(g.title == group) {
 				foreach(Language.KeyValue keyValue in g.values) {
 					if(key == keyValue.key) {
+						if(debug) {
+							Debug.Log("GetPhrase(" + group + ", " + key + ", " + index + ") -> " + keyValue.values[index]);
+						}
 						return keyValue.values[index];
 					}
 				}
 			}
+		}
+		if(debug) {
+			Debug.Log("GetPhrase(" + group + ", " + key + ", " + index + ") -> \"\"");
 		}
 		return "";
 	}

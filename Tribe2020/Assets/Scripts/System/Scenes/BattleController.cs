@@ -135,22 +135,6 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	//}
 
 	//
-	public void LoadQuiz(string avatarTitle, int quizIndex) {
-		QuizManager.AvatarQuizzes aq = _quizMgr.GetAvatarQuizzes(avatarTitle);
-		if(aq.avatarName != null) {
-			Quiz quiz = aq.quizzes[quizIndex];
-
-			_view.question.text = _localMgr.GetPhrase("Quizzes", quiz.name);
-			_view.answers[0].text = _localMgr.GetPhrase("Quizzes", quiz.name, 0);
-			_view.answers[1].text = _localMgr.GetPhrase("Quizzes", quiz.name, 1);
-			_view.answers[2].text = _localMgr.GetPhrase("Quizzes", quiz.name, 2);
-			_view.answers[3].text = _localMgr.GetPhrase("Quizzes", quiz.name, 3);
-		} else {
-			Debug.Log("no quizzes found for avatar " + avatarTitle);
-		}
-	}
-
-	//
 	public void LoadOpponent(JSONNode json) {
 		Appliance foeAppliance = foeObject.GetComponent<Appliance>();
 		AvatarModel foeModel = foeObject.GetComponent<AvatarModel>();
@@ -165,6 +149,22 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 		}
 
 		LoadQuiz(foeAppliance.title, _curQuiz);
+	}
+
+	//
+	public void LoadQuiz(string avatarTitle, int quizIndex) {
+		QuizManager.AvatarQuizzes aq = _quizMgr.GetAvatarQuizzes(avatarTitle);
+		if(aq.avatarName != null) {
+			Quiz quiz = aq.quizzes[quizIndex];
+
+			_view.question.text = _localMgr.GetPhrase("Quizzes", quiz.name);
+			_view.answers[0].text = _localMgr.GetPhrase("Quizzes", quiz.name, 0);
+			_view.answers[1].text = _localMgr.GetPhrase("Quizzes", quiz.name, 1);
+			_view.answers[2].text = _localMgr.GetPhrase("Quizzes", quiz.name, 2);
+			_view.answers[3].text = _localMgr.GetPhrase("Quizzes", quiz.name, 3);
+		} else {
+			Debug.Log("no quizzes found for avatar " + avatarTitle);
+		}
 	}
 
 	//
