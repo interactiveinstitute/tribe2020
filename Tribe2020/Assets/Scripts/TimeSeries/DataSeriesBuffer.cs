@@ -22,6 +22,8 @@ public class CompareDataPoint : IComparer<DataPoint>
 }
 
 public class DataSeriesBuffer : DataSeries {
+	public bool debug = false;
+
 	[Header("Timeseries properties")]
 	public double StartTime;
 	public double StopTime;
@@ -211,12 +213,16 @@ public class DataSeriesBuffer : DataSeries {
 
 		//Server.Get(Name,StartTime,Absolute,BufferMaxSize);
 
-		print ("Request");
+		if(debug) {
+			print("Request");
+		}
 
 		ServerObject server;
 
 		foreach (Subscription sub in Sources) {
-			print (sub);
+			if(debug) {
+				print(sub);
+			}
 			if (sub.Source is ServerObject) {
 				server = (ServerObject)sub.Source;
 				server.GetPeriod (sub.Topic, getStartTime (), getStopTime (), this);
