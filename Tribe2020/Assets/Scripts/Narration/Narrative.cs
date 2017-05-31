@@ -31,6 +31,16 @@ public class Narrative : ScriptableObject {
 	}
 
 	//
+	public int GetLatestCheckpoint() {
+		for(int i = GetCurrentStepIndex(); i > 0; i--) {
+			if(i >= steps.Count() || steps[i].checkpoint) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	//
 	public void Progress() {
 		_curStep++;
 	}
@@ -50,6 +60,7 @@ public class Narrative : ScriptableObject {
 
 		public List<Narrative.Action> actions;
 		public bool inChecklist;
+		public bool checkpoint;
 
 		//
 		public bool IsCompletedBy(string eventType, string prop) {

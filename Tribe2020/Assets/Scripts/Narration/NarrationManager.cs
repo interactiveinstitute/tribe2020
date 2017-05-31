@@ -215,7 +215,7 @@ public class NarrationManager : MonoBehaviour {
 	public JSONClass SerializeNarrative(Narrative narrative) {
 		JSONClass narrativeJSON = new JSONClass();
 		narrativeJSON.Add("index", GetDBIndexForNarrative(narrative).ToString());
-		narrativeJSON.Add("step", narrative.GetCurrentStepIndex().ToString());
+		narrativeJSON.Add("step", narrative.GetLatestCheckpoint().ToString());
 
 		return narrativeJSON;
 	}
