@@ -184,6 +184,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 					returnGO.GetComponent<UniqueId>().uniqueId = gameObject.GetComponent<UniqueId>().uniqueId;
 				}
 
+				if(!transform.parent.GetComponent<ApplianceSlot>()) {
+					_applianceManager.AddAppliance(returnGO.GetComponent<Appliance>());
+				}
+
 				//Remove
 				Destroy(gameObject);
 			}
