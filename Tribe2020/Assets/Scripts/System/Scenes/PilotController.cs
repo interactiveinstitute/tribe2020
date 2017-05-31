@@ -124,7 +124,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 			if(_saveMgr.GetClass("battleReport") != null) {
 				string loserName = _saveMgr.GetClass("battleReport")["avatar"];
-				Debug.Log("battle won over " + loserName);
+				//Debug.Log("battle won over " + loserName);
 				_instance._narrationMgr.OnNarrativeEvent("BattleWon", loserName);
 			}
 		}
