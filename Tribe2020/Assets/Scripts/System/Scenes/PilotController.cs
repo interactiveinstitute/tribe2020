@@ -791,6 +791,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
+	public void ChallengeAvatar(string avatarName) {
+		ChallengeAvatar(_avatarMgr.GetAvatar(avatarName).GetComponent<Appliance>());
+	}
+
+	//
 	public void ChallengeAvatar(Appliance app) {
 		JSONClass challengeData = app.GetComponent<AvatarStats>().SerializeAsJSON();
 		_instance._saveMgr.SetClass("pendingChallenge", challengeData);
