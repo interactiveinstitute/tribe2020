@@ -349,7 +349,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 		throw new NotImplementedException();
 	}
 
-	public bool IsStepAlreadyPerformed(Narrative narrative, Narrative.Step step) {
+	public bool HasEventFired(Narrative narrative, Narrative.Step step) {
 		throw new NotImplementedException();
 	}
 }

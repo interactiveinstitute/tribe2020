@@ -71,7 +71,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	private bool _firstUpdate = false;
 
-    private UniqueId[] uniqueIds;
+    //private UniqueId[] uniqueIds;
 	#endregion
 
 	//Called once on all behaviours before any Start call
@@ -112,7 +112,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		playPeriod = endTime - startTime;
 
-        uniqueIds = FindObjectsOfType<UniqueId>();
+        //uniqueIds = FindObjectsOfType<UniqueId>();
 
 	}
 
@@ -726,28 +726,28 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
     }
 
     //[unique id; children appliance title]
-    public void MarkDevice(string[] cmd) {
+	public void MarkDevice(string[] cmd) {
+		//cmd[0] = uid, acquire appliance for given uid
+		Appliance app = _applianceMgr.GetAppliance(cmd[0]);  
 
-        UniqueId uid = GetUniqueIdObject(cmd[0]);
-        
-        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+		if (cmd[1] == "") {
+			MarkAppliance(app);
+		} else {
+			List<Appliance> children = new List<Appliance>(app.GetComponentsInChildren<Appliance>());
+			foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+				MarkAppliance(child);
+			}
+		}
+	}
 
-        if (cmd[1] == "") {
-            MarkAppliance(uid.GetComponent<Appliance>());
-        }
-        else {
-            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
-                MarkAppliance(child);
-            }
-        }
-    }
-
+	//
     public void MarkDevices(string cmd) {
         foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
             MarkAppliance(app);
         }
     }
 
+	//
     void MarkAppliance(Appliance app) {
         GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
         ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
@@ -757,18 +757,19 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
     //
     public void UnmarkDevice(string[] cmd) {
-        UniqueId uid = GetUniqueIdObject(cmd[0]);
+		//cmd[0] = uid, acquire appliance for given uid
+		Appliance app = _applianceMgr.GetAppliance(cmd[0]); ;
 
-        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
-
-        if (cmd[1] == "") {
-            Destroy(uid.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
-        }
-        else {
-            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
-                Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
-            }
-        }
+		if (app.GetComponentInChildren<NarrativeInteractionPoint>() && cmd[1] == "") {
+			Destroy(app.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+		} else {
+			List<Appliance> children = new List<Appliance>(app.GetComponentsInChildren<Appliance>());
+			foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+				if(child.GetComponentInChildren<NarrativeInteractionPoint>()) {
+					Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+				}
+			}
+		}
     }
 
     //
@@ -913,15 +914,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
-    public UniqueId GetUniqueIdObject(string id) {
-        foreach(UniqueId uid in uniqueIds) {
-            if(uid.uniqueId == id) {
-                return uid;
-            }
-        }
-        return null;
-    }
-
 	//
 	public void LoadScene(string scene) {
 		_instance.SaveGameState();
@@ -1011,19 +1003,20 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void OnNarrativeActivated(Narrative narrative) {
 	}
 
-	public bool IsStepAlreadyPerformed(Narrative narrative, Narrative.Step step) {
-		bool result = false;
-		foreach(Narrative.Action a in step.actions) {
-			switch(a.callback) {
-				case "EEMPerformed":
-					break;
-				case "NarrativeComplete":
-					foreach(Narrative n in _instance._narrationMgr.archive) {
-						_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", n.title);
+	public bool HasEventFired(Narrative narrative, Narrative.Step step) {
+		switch(step.conditionType) {
+			case "EEMPerformed":
+				return _instance._applianceMgr.WasEEMPerformed(step.conditionProp);
+			case "NarrativeComplete":
+				foreach(Narrative n in _instance._narrationMgr.archive) {
+					if(n.title == step.conditionProp) {
+						return true;
 					}
-					break;
-			}
+				}
+				break;
+			case "CameraArrived":
+				return _cameraMgr.GetCurrentViewpoint().title == step.conditionProp;
 		}
-		return result;
+		return false;
 	}
 }
