@@ -189,6 +189,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 				}
 
 				//Remove
+				_applianceManager.RemoveAppliance(this);
 				Destroy(gameObject);
 			}
 		}
