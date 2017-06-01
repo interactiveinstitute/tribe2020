@@ -40,23 +40,6 @@ public class NarrationManager : MonoBehaviour {
     public GameObject interactionPoint;
     #endregion
 
-    public struct PerformedStep {
-
-        public PerformedStep(string t, string p) {
-            conditionType = t;
-            conditionProp = p;
-        }
-
-        public string conditionType;
-        public string conditionProp;
-
-        //
-        public bool IsCompletedBy(string eventType, string prop) {
-            return (conditionType == "" || conditionType == eventType) &&
-                    (conditionProp == "" || conditionProp == prop);
-        }
-    }
-
     //Sort use instead of constructor
     void Awake() {
         _instance = this;
@@ -121,29 +104,29 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//Callback for game event, progress narratives that are listening for the event
-	public void OnNarrativeEvent(string eventType = "", string prop = "", bool saveAsPerformed = false) {
+	public void OnNarrativeEvent(string eventType = "", string prop = "", bool storeEvent = false) {
 		if(debug) { Debug.Log("Narrative: " + eventType + "(" + prop + ")"); }
 		if(!autoStart) { return; }
 
 		bool didProgress = false;
 		//For every active narrative, going backwards
 		for(int i = active.Count - 1; i >= 0; i--) {
-
 			Narrative.Step curStep = active[i].GetCurrentStep();
 
             //Check if event fullfills conditions for current step
-            bool isCompleted = curStep.IsCompletedBy(eventType, prop);
+            bool isCompleted =
+				curStep.IsCompletedBy(eventType, prop) ||
+				_interface.HasEventFired(active[i], curStep);
 
 			//Is current step already performed?
-			_interface.IsStepAlreadyPerformed(active[i], curStep);
-			if (!isCompleted) {
-                isCompleted = IsPerformed(curStep.conditionType, curStep.conditionProp);
-            }
+			//if (!isCompleted) {
+			//             isCompleted = IsPerformed(curStep.conditionType, curStep.conditionProp);
+			//         }
 
-            //if (curStep.IsCompletedBy(eventType, prop)) {
-            if (isCompleted) {
-                //Call callbacks
-                foreach (Narrative.Action action in curStep.actions) {
+			//if (curStep.IsCompletedBy(eventType, prop)) {
+			if(isCompleted) {
+				//Call callbacks
+				foreach(Narrative.Action action in curStep.actions) {
 					_interface.OnNarrativeAction(active[i], curStep, action.callback, action.GetParameters());
 				}
 				//Progress narrative
@@ -156,9 +139,10 @@ public class NarrationManager : MonoBehaviour {
 				//Flag progress
 				didProgress = true;
 			}
-            else if(saveAsPerformed){
-                _performedSteps.Add(new PerformedStep(eventType, prop));
-            }
+			//else if(storeEvent){
+   //             _performedSteps.Add(new PerformedStep(eventType, prop));
+			//	Debug.Log(_performedSteps.Count);
+   //         }
 		}
 
 		//Fire empty event to start eventual new steps
@@ -248,21 +232,29 @@ public class NarrationManager : MonoBehaviour {
 	//Serialize narration manager state to json
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
-
 		if(saveProgress) {
+			//Store active narratives
 			JSONArray activeJSON = new JSONArray();
 			foreach(Narrative n in active) {
 				activeJSON.Add(SerializeNarrative(n));
 			}
 			json.Add("active", activeJSON);
 
+			//Store archive of completed narratives
 			JSONArray archiveJSON = new JSONArray();
 			foreach(Narrative n in archive) {
 				archiveJSON.Add(SerializeNarrative(n));
 			}
 			json.Add("archive", archiveJSON);
-		}
 
+			//Store archive of stored events
+			//JSONArray storedEventsJSON = new JSONArray();
+			//foreach(PerformedStep ps in _performedSteps) {
+			//	storedEventsJSON.Add(ps.Serialize());
+			//	Debug.Log(storedEventsJSON.ToString());
+			//}
+			//json.Add("storedEvents", storedEventsJSON);
+		}
 		return json;
 	}
 
@@ -272,20 +264,53 @@ public class NarrationManager : MonoBehaviour {
 			active.Clear();
 			archive.Clear();
 
+			//Recover active narratives
 			JSONArray activeJSON = json["active"].AsArray;
 			foreach(JSONClass narrativeJSON in activeJSON) {
 				ActivateNarrative(DeserializeNarrative(narrativeJSON));
-				//active.Add(DeserializeNarrative(narrativeJSON));
 			}
 
+			//Recover archive of completed narratives
 			JSONArray archiveJSON = json["archive"].AsArray;
 			foreach(JSONClass narrativeJSON in archiveJSON) {
 				archive.Add(DeserializeNarrative(narrativeJSON));
 			}
 
+			//Recover archive of stored events
+			//JSONArray storedEventsJSON = json["storedEvents"].AsArray;
+			//foreach(JSONClass storedEvent in storedEventsJSON) {
+			//	_performedSteps.Add(new PerformedStep(storedEvent["event"], storedEvent["prop"]));
+			//}
+
+			//Fire empty event to activate active narratives
 			OnNarrativeEvent();
 		} else {
 			Init();
+		}
+	}
+
+	//
+	public struct PerformedStep {
+		public PerformedStep(string t, string p) {
+			conditionType = t;
+			conditionProp = p;
+		}
+
+		public string conditionType;
+		public string conditionProp;
+
+		//
+		public bool IsCompletedBy(string eventType, string prop) {
+			return (conditionType == "" || conditionType == eventType) &&
+					(conditionProp == "" || conditionProp == prop);
+		}
+
+		//
+		public JSONClass Serialize() {
+			JSONClass stepJSON = new JSONClass();
+			stepJSON.Add("type", conditionType);
+			stepJSON.Add("prop", conditionProp);
+			return stepJSON;
 		}
 	}
 }

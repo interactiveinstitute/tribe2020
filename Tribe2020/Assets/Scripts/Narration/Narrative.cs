@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using SimpleJSON;
 
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
@@ -28,6 +29,11 @@ public class Narrative : ScriptableObject {
 	//
 	public void SetCurrentStepIndex(int i) {
 		_curStep = i;
+	}
+
+	//
+	public int GetNarrativeID() {
+		return NarrationManager.GetInstance().GetDBIndexForNarrative(this);
 	}
 
 	//
