@@ -27,6 +27,48 @@ public class ApplianceManager : MonoBehaviour {
 		
 	}
 
+	//
+	public void AddAppliance(Appliance appliance) {
+		_appliances.Add(appliance);
+	}
+
+	//
+	public void RemoveAppliance(Appliance appliance) {
+		_appliances.Remove(appliance);
+	}
+
+	//
+	public List<Appliance> GetAppliances() {
+		return _appliances;
+	}
+
+	//
+	public Appliance GetAppliance(string uid) {
+		foreach(Appliance app in _appliances) {
+			if(app.GetComponent<UniqueId>() && app.GetComponent<UniqueId>().uniqueId == uid) {
+				return app;
+			}
+		}
+		return null;
+	}
+
+	//
+	public bool WasEEMPerformed(EnergyEfficiencyMeasure eem) {
+		return WasEEMPerformed(eem.title);
+	}
+
+	//
+	public bool WasEEMPerformed(string eemTitle) {
+		foreach(Appliance app in _appliances) {
+			foreach(EnergyEfficiencyMeasure appEEM in app.appliedEEMs) {
+				if(eemTitle == appEEM.title) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	//Serialize state as json for a save file
 	public JSONClass SerializeAsJSON() {
 		JSONClass json = new JSONClass();
@@ -82,17 +124,4 @@ public class ApplianceManager : MonoBehaviour {
 			//}
 		}
 	}
-
-    public void AddAppliance(Appliance appliance) {
-        _appliances.Add(appliance);
-    }
-
-    public void RemoveAppliance(Appliance appliance) {
-        _appliances.Remove(appliance);
-    }
-
-    public List<Appliance> GetAppliances() {
-        return _appliances;
-    }
-
 }
