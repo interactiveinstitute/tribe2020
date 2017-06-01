@@ -153,6 +153,8 @@ public class SaveManager : MonoBehaviour{
 	public void ClearFile() {
 		File.WriteAllText(Application.persistentDataPath + "/" + fileName, defaultContent);
 		Load();
+
+		Debug.Log(name + ": " + Application.persistentDataPath + "/" + fileName + " was cleared");
 	}
 
 	//
