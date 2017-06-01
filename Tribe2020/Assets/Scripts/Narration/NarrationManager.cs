@@ -33,11 +33,11 @@ public class NarrationManager : MonoBehaviour {
 	[SerializeField]
 	public List<PerformedStep> _performedSteps = new List<PerformedStep>();
 
+	[Header("References")]
+	public GameObject interactionPoint;
+
 	[Header("Narration Control")]
 	public int selectIndex;
-
-    [Header("User interaction")]
-    public GameObject interactionPoint;
     #endregion
 
     //Sort use instead of constructor
@@ -173,9 +173,10 @@ public class NarrationManager : MonoBehaviour {
 		_interface.OnNarrativeCompleted(n);
 	}
 
-	//
+	//Send event matching the condition of selected, active narrative
 	public void NextStep() {
-		active[selectIndex].Progress();
+		OnNarrativeEvent(active[selectIndex].GetCurrentStep().conditionType,
+			active[selectIndex].GetCurrentStep().conditionProp);
 	}
 
 	//TODO
