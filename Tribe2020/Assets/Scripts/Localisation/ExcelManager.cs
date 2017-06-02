@@ -24,6 +24,7 @@ public class ExcelManager : MonoBehaviour {
 	public void ExportAllExcels() {
 		_localMgr = GetComponent<LocalisationManager>();
 		foreach(Language l in _localMgr.languages) {
+			Debug.Log("Exporting " + l.name + " as .xls");
 			ExportLocalizationExcel(l, _localMgr.template);
 		}
 	}
