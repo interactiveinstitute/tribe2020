@@ -352,4 +352,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	public bool HasEventFired(Narrative narrative, Narrative.Step step) {
 		throw new NotImplementedException();
 	}
+
+	public bool NarrativeCheck(string callback) {
+		throw new NotImplementedException();
+	}
 }
