@@ -6,4 +6,5 @@ public interface NarrationInterface{
 	void OnNarrativeCompleted(Narrative narrative);
 	void OnNarrativeActivated(Narrative narrative);
 	bool HasEventFired(Narrative narrative, Narrative.Step step);
+	bool NarrativeCheck(string callback);
 }

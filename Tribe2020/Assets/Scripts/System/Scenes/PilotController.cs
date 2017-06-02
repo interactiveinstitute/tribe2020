@@ -804,6 +804,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
+	public bool HasWonChallenge() {
+		return _saveMgr.GetClass("battleReport") != null;
+	}
+
+	//
 	public void ControlAvatar(string[] cmd) {
 		JSONNode posJSON = JSON.Parse(cmd[1]);
 		Vector3 pos = new Vector3(posJSON["x"].AsFloat, posJSON["y"].AsFloat, posJSON["z"].AsFloat);
@@ -1021,6 +1026,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 			case "CameraArrived":
 				return _cameraMgr.GetCurrentViewpoint().title == step.conditionProp;
+		}
+		return false;
+	}
+
+	//
+	public bool NarrativeCheck(string callback) {
+		switch(callback) {
+			case "HasWonChallenge":
+				return HasWonChallenge();
 		}
 		return false;
 	}

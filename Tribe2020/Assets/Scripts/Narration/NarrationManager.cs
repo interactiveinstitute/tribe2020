@@ -113,15 +113,20 @@ public class NarrationManager : MonoBehaviour {
 		for(int i = active.Count - 1; i >= 0; i--) {
 			Narrative.Step curStep = active[i].GetCurrentStep();
 
+			if(curStep.conditionType == "Check") {
+				bool result = _interface.NarrativeCheck(curStep.conditionProp);
+				if(result) {
+					GotoStep(active[i], curStep.actions[0].callback);
+				} else {
+					GotoStep(active[i], curStep.actions[1].callback);
+				}
+				return;
+			}
+
             //Check if event fullfills conditions for current step
             bool isCompleted =
 				curStep.IsCompletedBy(eventType, prop) ||
 				_interface.HasEventFired(active[i], curStep);
-
-			//Is current step already performed?
-			//if (!isCompleted) {
-			//             isCompleted = IsPerformed(curStep.conditionType, curStep.conditionProp);
-			//         }
 
 			//if (curStep.IsCompletedBy(eventType, prop)) {
 			if(isCompleted) {
@@ -139,10 +144,6 @@ public class NarrationManager : MonoBehaviour {
 				//Flag progress
 				didProgress = true;
 			}
-			//else if(storeEvent){
-   //             _performedSteps.Add(new PerformedStep(eventType, prop));
-			//	Debug.Log(_performedSteps.Count);
-   //         }
 		}
 
 		//Fire empty event to start eventual new steps
@@ -182,6 +183,16 @@ public class NarrationManager : MonoBehaviour {
 	//TODO
 	public void PrevStep() {
 		//TODO
+	}
+
+	//
+	public void GotoStep(Narrative narrative, string stepTitle) {
+		for(int i = 0; i < narrative.steps.Count; i++) {
+			if(narrative.steps[i].description == stepTitle) {
+				narrative.SetCurrentStepIndex(i);
+			}
+		}
+		OnNarrativeEvent();
 	}
 
 	//

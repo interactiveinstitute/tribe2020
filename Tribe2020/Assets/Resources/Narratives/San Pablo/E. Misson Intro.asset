@@ -105,8 +105,8 @@ MonoBehaviour:
     actions:
     - callback: ShowPrompt
       parameter1: player
-      parameter2: He doesn't care what right or wrong, and he wouldn't believe in
-        energy efficiency if his mother's life depended on it.
+      parameter2: He doesn't care what is right or wrong, and he wouldn't believe
+        in energy efficiency if his mother's life depended on it.
     inChecklist: 0
     checkpoint: 0
   - description: Thanks for the introduction
@@ -134,7 +134,7 @@ MonoBehaviour:
     actions:
     - callback: ShowPrompt
       parameter1: player
-      parameter2: That's enough Mission! I want let your evil mission ruin the work
+      parameter2: That's enough Mission! I won't let your evil mission ruin the work
         I'm doing here at San Pablo!
     inChecklist: 0
     checkpoint: 0
@@ -183,6 +183,18 @@ MonoBehaviour:
     actions: []
     inChecklist: 0
     checkpoint: 0
+  - description: Check challenge
+    conditionType: Check
+    conditionProp: HasWonChallenge
+    actions:
+    - callback: E. Mission Defeated
+      parameter1: 
+      parameter2: 
+    - callback: Auto challenge
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 1
   - description: Auto challenge
     conditionType: 
     conditionProp: 
@@ -191,7 +203,7 @@ MonoBehaviour:
       parameter1: E. Mission
       parameter2: 
     inChecklist: 0
-    checkpoint: 1
+    checkpoint: 0
   - description: E. Mission Defeated
     conditionType: BattleWon
     conditionProp: E. Mission
@@ -207,7 +219,7 @@ MonoBehaviour:
       parameter2: Don't you see now E. Mission? We all have to work together in order
         to fight global warming and other environmental issues.
     inChecklist: 0
-    checkpoint: 0
+    checkpoint: 1
   - description: Bah!
     conditionType: OKPressed
     conditionProp: 
