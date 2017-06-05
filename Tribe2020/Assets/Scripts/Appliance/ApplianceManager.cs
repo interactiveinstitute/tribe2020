@@ -11,30 +11,76 @@ public class ApplianceManager : MonoBehaviour {
 
 	[SerializeField]
 	private List<Appliance> _appliances;
+	private Dictionary<string, Appliance> _uidLookup = new Dictionary<string, Appliance>();
+	private Dictionary<string, List<Appliance>> _appLookup = new Dictionary<string, List<Appliance>>();
+	private List<string> _performedEEMs = new List<string>();
 	public List<Appliance> allDevices;
 
 	//
 	void Awake() {
 		_instance = this;
+
+		//Init uid lookup by uid
+		UniqueId[] uids = Object.FindObjectsOfType<UniqueId>();
+		foreach(UniqueId uid in uids) {
+			_uidLookup.Add(uid.uniqueId, uid.GetComponent<Appliance>());
+		}
+
+		//Init appliance lookup by app title
+		foreach(Appliance app in allDevices) {
+			_appLookup.Add(app.title, new List<Appliance>());
+		}
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update() {
+
 	}
 
 	//
 	public void AddAppliance(Appliance appliance) {
+		//Debug.Log("adding a " + appliance.title);
 		_appliances.Add(appliance);
+		if(_appLookup.ContainsKey(appliance.title)) {
+			_appLookup[appliance.title].Add(appliance);
+		}
+		//else {
+		//	Debug.Log("There is no " + appliance.title, appliance.gameObject);
+		//}
 	}
 
 	//
 	public void RemoveAppliance(Appliance appliance) {
+		if(!_appLookup.ContainsKey(appliance.title)) { return; }
 		_appliances.Remove(appliance);
+		_appLookup[appliance.title].Remove(appliance);
+	}
+
+	//
+	public void ReplaceAppliance(Appliance oldApp, Appliance newApp) {
+		//Only applies to base appliances
+		if(!oldApp.transform.parent.GetComponent<ApplianceSlot>()) {
+			//If old has uid, clone to new and update lookup table
+			if(oldApp.GetComponent<UniqueId>()) {
+				newApp.gameObject.AddComponent<UniqueId>();
+				string uid = oldApp.gameObject.GetComponent<UniqueId>().uniqueId;
+				newApp.GetComponent<UniqueId>().uniqueId = uid;
+				_uidLookup[uid] = newApp;
+			}
+
+			//Remove old and add new to list
+			//RemoveAppliance(oldApp);
+			//AddAppliance(newApp);
+		}
+	}
+
+	//
+	public bool ContainsAppliance(Appliance app) {
+		return _appliances.Contains(app);
 	}
 
 	//
@@ -44,29 +90,28 @@ public class ApplianceManager : MonoBehaviour {
 
 	//
 	public Appliance GetAppliance(string uid) {
-		foreach(Appliance app in _appliances) {
-			if(app.GetComponent<UniqueId>() && app.GetComponent<UniqueId>().uniqueId == uid) {
-				return app;
-			}
-		}
-		return null;
+		return _uidLookup[uid];
+		//foreach(Appliance app in _appliances) {
+		//	if(app.GetComponent<UniqueId>() && app.GetComponent<UniqueId>().uniqueId == uid) {
+		//		return app;
+		//	}
+		//}
+		//return null;
 	}
 
 	//
-	public bool WasEEMPerformed(EnergyEfficiencyMeasure eem) {
-		return WasEEMPerformed(eem.title);
+	public List<Appliance> GetAppliancesOfType(string title) {
+		return _appLookup[title];
+	}
+
+	//
+	public void AddEEMTitle(string eemTitle) {
+		_performedEEMs.Add(eemTitle);
 	}
 
 	//
 	public bool WasEEMPerformed(string eemTitle) {
-		foreach(Appliance app in _appliances) {
-			foreach(EnergyEfficiencyMeasure appEEM in app.appliedEEMs) {
-				if(eemTitle == appEEM.title) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return _performedEEMs.Contains(eemTitle);
 	}
 
 	//Serialize state as json for a save file
@@ -74,7 +119,12 @@ public class ApplianceManager : MonoBehaviour {
 		JSONClass json = new JSONClass();
 
 		JSONArray applianceJSON = new JSONArray();
+		int index = 0;
 		foreach(Appliance appliance in _appliances) {
+			if(!appliance) {
+				
+				Debug.Log("No, here it is! " + index++);
+			}
 			applianceJSON.Add(appliance.SerializeAsJSON());
 		}
 
@@ -107,7 +157,7 @@ public class ApplianceManager : MonoBehaviour {
 			}
 
 			//if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
-				
+
 			//}
 
 

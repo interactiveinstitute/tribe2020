@@ -87,7 +87,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		if(ip != null) {
 			interactionPos = ip.transform.position;
 		} else {
-			DebugManager.Log("didn't find interaction point for " + this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
+			DebugManager.Log("didn't find interaction point for " +
+				this.title + " with name " + this.name + ", usig the gameObjects transform instead", this);
 			interactionPos = transform.position;
 		}
 	}
@@ -99,7 +100,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		_applianceManager = ApplianceManager.GetInstance();
 
 		if(!transform.parent.GetComponent<ApplianceSlot>()) {
-			_applianceManager.AddAppliance(GetComponent<Appliance>());
+			_applianceManager.AddAppliance(this);
 		}
 
 		_zone = GetComponentInParent<Room>();
@@ -119,9 +120,12 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	//Called before destroyed
 	void OnDestroy() {
-		if(_applianceManager) {
-			_applianceManager.RemoveAppliance(GetComponent<Appliance>());
+		if(_applianceManager && !transform.parent.GetComponent<ApplianceSlot>()) {
+			_applianceManager.RemoveAppliance(this);
 		}
+		//if(_applianceManager && _applianceManager.ContainsAppliance(this)) {
+		//	_applianceManager.RemoveAppliance(GetComponent<Appliance>());
+		//}
 	}
 
 	// Update is called once per frame
@@ -157,39 +161,28 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	//
 	public GameObject ApplyEEM(EnergyEfficiencyMeasure eem) {
-		GameObject returnGO = gameObject;
+		GameObject newAppGO = gameObject;
 
 		if(!eem.multipleUse) {
 			appliedEEMs.Add(eem);
 		}
 
+		_applianceManager.AddEEMTitle(eem.name);
+
 		if(eem.replacementPrefab != null) {
 			//TODO Temp guard against performing EEMs that replace appliance if appliance group
 			if(!GetComponentInChildren<ApplianceSlot>()) {
-				GameObject newApp = Instantiate(eem.replacementPrefab);
-				newApp.transform.SetParent(transform.parent, false);
-				newApp.transform.localPosition = transform.localPosition;
-				newApp.transform.localRotation = transform.localRotation;
-				newApp.gameObject.layer = gameObject.layer;
+				newAppGO = Instantiate(eem.replacementPrefab);
+				newAppGO.transform.SetParent(transform.parent, false);
+				newAppGO.transform.localPosition = transform.localPosition;
+				newAppGO.transform.localRotation = transform.localRotation;
+				newAppGO.gameObject.layer = gameObject.layer;
 
 				ElectricDevice edOld = GetComponent<ElectricDevice>();
-				ElectricDevice edNew = newApp.GetComponent<ElectricDevice>();
+				ElectricDevice edNew = newAppGO.GetComponent<ElectricDevice>();
 				edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
 
-				returnGO = newApp;
-
-				//If UID, Keep it
-				if(gameObject.GetComponent<UniqueId>()) {
-					returnGO.AddComponent<UniqueId>();
-					returnGO.GetComponent<UniqueId>().uniqueId = gameObject.GetComponent<UniqueId>().uniqueId;
-				}
-
-				if(!transform.parent.GetComponent<ApplianceSlot>()) {
-					_applianceManager.AddAppliance(returnGO.GetComponent<Appliance>());
-				}
-
-				//Remove
-				_applianceManager.RemoveAppliance(this);
+				_applianceManager.ReplaceAppliance(this, newAppGO.GetComponent<Appliance>());
 				Destroy(gameObject);
 			}
 		}
@@ -212,7 +205,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
 		}
 
-		return returnGO;
+		return newAppGO;
 	}
 
 	//If Avatar, challenge to a battle
