@@ -541,8 +541,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
-			_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
-			_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
+			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
+			_instance._narrationMgr.OnNarrativeEvent("ComfortChanged", "" + _resourceMgr.comfort);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -554,8 +554,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			}
 			GameObject returnedGO = appliance.ApplyEEM(eem);
 
-            //Redraw device panel
-            _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
+			//Redraw device panel
+			if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Device") {
+				_view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
+			} else {
+				_view.BuildAvatarPanel(returnedGO.GetComponent<Appliance>());
+			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
@@ -805,7 +809,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public bool HasWonChallenge() {
+		Debug.Log(_saveMgr.GetClass("battleReport"));
 		return _saveMgr.GetClass("battleReport") != null;
+	}
+
+	//
+	public void ClearChallengeData() {
+		_instance._saveMgr.RemoveClass("pendingChallenge");
+		_instance._saveMgr.RemoveClass("battleReport");
+		//_instance.SaveGameState();
 	}
 
 	//
@@ -908,19 +920,23 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		List<Appliance> appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		foreach(BehaviourAI avatar in avatars) {
-			UniqueId[] ids = avatar.GetComponents<UniqueId>();
-			foreach(UniqueId id in ids) {
-				DestroyImmediate(id);
+			//UniqueId[] ids = avatar.GetComponents<UniqueId>();
+			//foreach(UniqueId id in ids) {
+			//	DestroyImmediate(id);
+			//}
+			if(!avatar.GetComponent<UniqueId>()) {
+				avatar.gameObject.AddComponent<UniqueId>();
 			}
-			avatar.gameObject.AddComponent<UniqueId>();
 		}
 
 		foreach(Appliance app in appliances) {
-			UniqueId[] ids = app.GetComponents<UniqueId>();
-			foreach(UniqueId id in ids) {
-				DestroyImmediate(id);
+			//UniqueId[] ids = app.GetComponents<UniqueId>();
+			//foreach(UniqueId id in ids) {
+			//	DestroyImmediate(id);
+			//}
+			if(!app.GetComponent<UniqueId>()) {
+				app.gameObject.AddComponent<UniqueId>();
 			}
-			app.gameObject.AddComponent<UniqueId>();
 		}
 	}
 
@@ -990,13 +1006,14 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				SendMessage(callback, float.Parse(parameters[0]));
 				break;
 			case "ControlAvatar":
+			case "MarkDevice":
+			case "UnmarkDevice":
 				SendMessage(callback, parameters);
 				break;
-            case "MarkDevice":
-            case "UnmarkDevice":
-                SendMessage(callback, parameters);
-                break;
-            default:
+			case "ClearChallengeData":
+				SendMessage(callback);
+				break;
+			default:
 				SendMessage(callback, parameters[0]);
 				break;
 		}
@@ -1032,9 +1049,24 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public bool NarrativeCheck(string callback) {
-		switch(callback) {
+		JSONArray parse = JSON.Parse(callback).AsArray;
+		switch(parse[0]) {
 			case "HasWonChallenge":
 				return HasWonChallenge();
+			case "money":
+				switch(parse[1]) {
+					case "<":
+						return _instance._resourceMgr.cash < parse[2].AsFloat;
+					default:
+						return false;
+				}
+			case "comfort":
+				switch(parse[1]) {
+					case "<":
+						return _instance._resourceMgr.comfort < parse[2].AsFloat;
+					default:
+						return false;
+				}
 		}
 		return false;
 	}

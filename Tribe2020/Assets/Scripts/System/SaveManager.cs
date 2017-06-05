@@ -135,6 +135,11 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public void RemoveClass(string field) {
+		_dataClone.Remove(field);
+	}
+
+	//
 	public void SetCurrentSlotArray(string key, JSONArray value) {
 		SetArray(currentSlot, key, value);
 	}
