@@ -14,14 +14,33 @@ MonoBehaviour:
   title: Out of comfort
   description: What to do if one runs out of people's goodwill
   steps:
-  - description: Out of comfort points
-    conditionType: ComfortIsEqualTo
-    conditionProp: 0
+  - description: Comfort changed
+    conditionType: ComfortChanged
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  - description: Check Comfort
+    conditionType: Check
+    conditionProp: '[comfort,<,200]'
+    actions:
+    - callback: Oh my
+      parameter1: 
+      parameter2: 
+    - callback: Comfort changed
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Oh my
+    conditionType: 
+    conditionProp: 
     actions:
     - callback: ShowPrompt
       parameter1: player
       parameter2: Oh my. It seems that I have run out of comfort points.
     inChecklist: 0
+    checkpoint: 0
   - description: Some actions cost
     conditionType: OKPressed
     conditionProp: 
@@ -31,6 +50,7 @@ MonoBehaviour:
       parameter2: Some actions such as making changes to an appliances or change the
         behaviour of a person are uncomfortable.
     inChecklist: 0
+    checkpoint: 0
   - description: Make sure that
     conditionType: OKPressed
     conditionProp: 
@@ -40,6 +60,7 @@ MonoBehaviour:
       parameter2: In order to perform such actions I need to make sure that people
         already feel comfortable enough so that they accept the actions anyway.
     inChecklist: 0
+    checkpoint: 0
   - description: Gather comfort
     conditionType: OKPressed
     conditionProp: 
@@ -49,6 +70,7 @@ MonoBehaviour:
       parameter2: When people are having a good time, they generate comfort points.
         I pick these points up by tapping them.
     inChecklist: 0
+    checkpoint: 0
   - description: Skip time
     conditionType: OKPressed
     conditionProp: 
@@ -58,6 +80,7 @@ MonoBehaviour:
       parameter2: If I have to wait a long time to gather comfort points there is
         the option to fast forward until there are more points around.
     inChecklist: 0
+    checkpoint: 0
   - description: Here is a bonus
     conditionType: OKPressed
     conditionProp: 
@@ -67,6 +90,7 @@ MonoBehaviour:
       parameter2: It's a good thing I had these points laying around. But I have to
         be more careful not to run out of points in the future.
     inChecklist: 0
+    checkpoint: 0
   - description: Receive bonus
     conditionType: OKPressed
     conditionProp: 
@@ -75,7 +99,5 @@ MonoBehaviour:
       parameter1: 50
       parameter2: 
     inChecklist: 0
-  followingNarratives:
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
+    checkpoint: 0
+  followingNarratives: []

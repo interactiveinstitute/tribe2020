@@ -14,14 +14,33 @@ MonoBehaviour:
   title: Out of money
   description: What to do if one runs out of money
   steps:
-  - description: Out of money
-    conditionType: MoneyIsEqualTo
-    conditionProp: 0
+  - description: Money changed
+    conditionType: MoneyChanged
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  - description: Check money
+    conditionType: Check
+    conditionProp: '[money,<,200]'
+    actions:
+    - callback: It seems like
+      parameter1: 
+      parameter2: 
+    - callback: Money changed
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: It seems like
+    conditionType: 
+    conditionProp: 
     actions:
     - callback: ShowPrompt
       parameter1: player
       parameter2: It seems like I have run out of money.
     inChecklist: 0
+    checkpoint: 0
   - description: Some actions cost
     conditionType: OKPressed
     conditionProp: 
@@ -31,6 +50,7 @@ MonoBehaviour:
       parameter2: Most actions cost money to perform, and I have a budget to work
         with.
     inChecklist: 0
+    checkpoint: 0
   - description: Receive more money
     conditionType: OKPressed
     conditionProp: 
@@ -40,6 +60,7 @@ MonoBehaviour:
       parameter2: At the end of every month I will receive additional funding so that
         I can perform more actions.
     inChecklist: 0
+    checkpoint: 0
   - description: Skip time
     conditionType: OKPressed
     conditionProp: 
@@ -49,6 +70,7 @@ MonoBehaviour:
       parameter2: If it will be long before the end of the current month, and I need
         money, I can always fast forward to skip the wait.
     inChecklist: 0
+    checkpoint: 0
   - description: Have a bonus
     conditionType: OKPressed
     conditionProp: 
@@ -58,6 +80,7 @@ MonoBehaviour:
       parameter2: It's a good thing I hid some money in my socks. I will have to be
         careful so that I don't run out of money in the future.
     inChecklist: 0
+    checkpoint: 0
   - description: Receive money
     conditionType: OKPressed
     conditionProp: 
@@ -66,7 +89,5 @@ MonoBehaviour:
       parameter1: 1000
       parameter2: 
     inChecklist: 0
-  followingNarratives:
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
+    checkpoint: 0
+  followingNarratives: []
