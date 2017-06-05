@@ -185,7 +185,7 @@ MonoBehaviour:
     checkpoint: 0
   - description: Check challenge
     conditionType: Check
-    conditionProp: HasWonChallenge
+    conditionProp: '[HasWonChallenge]'
     actions:
     - callback: E. Mission Defeated
       parameter1: 
@@ -207,7 +207,10 @@ MonoBehaviour:
   - description: E. Mission Defeated
     conditionType: BattleWon
     conditionProp: E. Mission
-    actions: []
+    actions:
+    - callback: ClearChallengeData
+      parameter1: 
+      parameter2: 
     inChecklist: 0
     checkpoint: 0
   - description: Don't you see now
