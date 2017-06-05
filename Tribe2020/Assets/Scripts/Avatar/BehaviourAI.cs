@@ -1361,9 +1361,9 @@ public class BehaviourAI : SimulationObject {
 		json.Add("transform", JsonUtility.ToJson(position));
 		json.Add("savedStandingPosition", JsonUtility.ToJson(_savedIdlePosition));
 		//json.Add("scheduleIndex", _scheduleIndex.ToString());
-		json.Add("_curActivity", _curActivity.Encode());
-		json.Add("_nextActivity", _nextActivity.Encode());
-		json.Add("_prevActivity", _prevActivity.Encode());
+		//json.Add("_curActivity", _curActivity.Encode());
+		//json.Add("_nextActivity", _nextActivity.Encode());
+		//json.Add("_prevActivity", _prevActivity.Encode());
 		json.Add("tempActivities", EncodeActivityStack());
 		//Should be mooore here!
 
@@ -1379,9 +1379,9 @@ public class BehaviourAI : SimulationObject {
 		transform.position = JsonUtility.FromJson<Vector3>(json["transform"]);
 		_savedIdlePosition = JsonUtility.FromJson<Vector3>(json["savedStandingPosition"]);
 
-		_curActivity.Decode(json["_curActivity"]);
-		_nextActivity.Decode(json["_nextActivity"]);
-		_prevActivity.Decode(json["_prevActivity"]);
+		//_curActivity.Decode(json["_curActivity"]);
+		//_nextActivity.Decode(json["_nextActivity"]);
+		//_prevActivity.Decode(json["_prevActivity"]);
 
 		//Should be more here!
 	}
