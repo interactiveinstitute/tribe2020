@@ -4,6 +4,7 @@ using System.Collections;
 
 public class EEMButton : MonoBehaviour {
 	public Text title;
+	public Image eemIcon;
 	public Image buttonImage;
 	public Button button;
 	public Image comfortIcon;

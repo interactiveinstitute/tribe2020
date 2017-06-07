@@ -4,10 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterPanel : MonoBehaviour {
+	private PilotView _pilotView;
+	private AvatarManager _avatarManager;
 
-    PilotView _pilotView;
-    AvatarManager _avatarManager;
-    public BehaviourAI currentAvatar = null;
+	public Text avatarTitle;
+	public Text avatarDescription;
+	public Image avatarMood;
+	public Text avatarTemperatureTitle;
+	public Text avatarTemperature;
+	public Text avatarEfficiencyTitle;
+	public Image avatarEfficiency;
+	public Image avatarEfficiencyLabel;
+	public Text avatarSatisfactionTitle;
+	public Slider avatarSatisfaction;
+	public Text avatarKnowledgeTitle;
+	public Slider avatarKnowledge;
+	public Text avatarAttitudeTitle;
+	public Slider avatarAttitude;
+	public Text avatarNormTitle;
+	public Slider avatarNorm;
+	public Text avatarEEMTitle;
+	public Transform avatarEEMContainer;
+
+	public BehaviourAI currentAvatar = null;
 
 	// Use this for initialization
 	void Start () {
