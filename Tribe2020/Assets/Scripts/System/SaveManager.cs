@@ -13,7 +13,7 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	#region Fields
-	public static int currentSlot = -1;
+	public static int currentSlot;
 
 	public bool overrideSlot = false;
     [SerializeField]
