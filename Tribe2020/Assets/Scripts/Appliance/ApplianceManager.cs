@@ -11,6 +11,7 @@ public class ApplianceManager : MonoBehaviour {
 
 	[SerializeField]
 	private List<Appliance> _appliances;
+	public Appliance pilotAppliance;
 	private Dictionary<string, Appliance> _uidLookup = new Dictionary<string, Appliance>();
 	private Dictionary<string, List<Appliance>> _appLookup = new Dictionary<string, List<Appliance>>();
 	private List<string> _performedEEMs = new List<string>();
@@ -43,6 +44,11 @@ public class ApplianceManager : MonoBehaviour {
 
 	//
 	public void AddAppliance(Appliance appliance) {
+		if(appliance.isPilot) {
+			pilotAppliance = appliance;
+			return;
+		}
+
 		//Debug.Log("adding a " + appliance.title);
 		_appliances.Add(appliance);
 		if(_appLookup.ContainsKey(appliance.title)) {

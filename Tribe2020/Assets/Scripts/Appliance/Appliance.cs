@@ -15,6 +15,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	public string title;
 	public string description;
 	public Sprite icon;
+	public bool isPilot = false;
 
 	[Header("Affordances")]
 	public List<EnergyEfficiencyMeasure> playerAffordances;
