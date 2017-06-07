@@ -107,8 +107,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_avatarMgr = AvatarManager.GetInstance();
 		_applianceMgr = ApplianceManager.GetInstance();
 
-		_instance._view.ClearView();
-		_view.TranslateInterface();
+		_view.ClearView();
 
 		playPeriod = endTime - startTime;
 
@@ -121,6 +120,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(!_firstUpdate) {
 			_firstUpdate = true;
 			_instance.LoadGameState();
+			_view.TranslateInterface();
 
 			if(_saveMgr.GetClass("battleReport") != null) {
 				string loserName = _saveMgr.GetClass("battleReport")["avatar"];
@@ -228,6 +228,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(_view.victoryUI.activeSelf) {
 			ClearView();
 			LimitInteraction("all");
+		}
+
+		if(_view.GetCurrentUI() != null) {
+			ClearView();
 		}
 
 		_touchState = IDLE;
@@ -350,7 +354,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
-
 		_instance._cameraMgr.SetLookAtTarget(app);
 
 		if(app.GetComponent<BehaviourAI>()) {
@@ -403,6 +406,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "Apocalypse Panel":
 				break;
 			case "Building Panel":
+				_instance._view.BuildPilotPanel();
 				break;
 			case "Character Panel":
 				break;
@@ -440,11 +444,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 			case "Character Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				_instance._view._characterPanel.OnClose();
+				//_instance._view._characterPanel.OnClose();
 				break;
 			case "Device Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				_instance._view._devicePanel.OnClose();
+				//_instance._view._devicePanel.OnClose();
 				break;
 			case "Time Control Panel":
 				break;
@@ -563,6 +567,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
+	}
+
+	//
+	public Appliance GetPilotAppliance() {
+		return _applianceMgr.pilotAppliance;
 	}
 
 	//
@@ -809,7 +818,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public bool HasWonChallenge() {
-		Debug.Log(_saveMgr.GetClass("battleReport"));
+		//Debug.Log(_saveMgr.GetClass("battleReport"));
 		return _saveMgr.GetClass("battleReport") != null;
 	}
 
