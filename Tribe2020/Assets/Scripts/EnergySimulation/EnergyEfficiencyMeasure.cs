@@ -10,6 +10,7 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public string description;
 	public Color color;
 	public string category;
+	public Sprite icon;
 
 	[Header("Effects")]
 	public int cashCost;

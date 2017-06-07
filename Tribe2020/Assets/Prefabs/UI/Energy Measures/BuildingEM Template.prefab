@@ -38,8 +38,10 @@ GameObject:
   - component: {fileID: 224300455471448526}
   - component: {fileID: 222306585213421290}
   - component: {fileID: 114563016150032664}
+  - component: {fileID: 114087985725490518}
   - component: {fileID: 114510045423586016}
   - component: {fileID: 114395080660416166}
+  - component: {fileID: 114003740368611064}
   m_Layer: 5
   m_Name: BuildingEM Template
   m_TagString: Untagged
@@ -166,6 +168,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114003740368611064
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393114331307382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aaf795927d7b624a837ff5be0c9ec54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 114005592574214648}
+  eemIcon: {fileID: 114119803577005342}
+  buttonImage: {fileID: 114563016150032664}
+  button: {fileID: 114087985725490518}
+  comfortIcon: {fileID: 0}
+  comfortCost: {fileID: 0}
+  moneyIcon: {fileID: 114926158814753454}
+  moneyCost: {fileID: 114164552456260934}
+  efficiencyIcon: {fileID: 0}
+  efficiencyEffect: {fileID: 0}
 --- !u!114 &114005592574214648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -201,6 +224,47 @@ MonoBehaviour:
   m_Text: 'Envelope energy measure description
 
 '
+--- !u!114 &114087985725490518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393114331307382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 0.13725491, g: 0.5803922, b: 0.3137255, a: 1}
+    m_HighlightedColor: {r: 0.11764707, g: 0.8000001, b: 0.09411766, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 114563016150032664}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114119803577005342
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,7 +286,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: e34365243a8f1ac479469696030e8830, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
