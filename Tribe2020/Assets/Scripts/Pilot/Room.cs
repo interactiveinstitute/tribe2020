@@ -18,9 +18,9 @@ public class Room : MonoBehaviour {
     void Start() {
 		_occupants = new List<BehaviourAI>();
 
-		foreach(Appliance device in GetComponentsInChildren<Appliance>()) {
-			_devices.Add(device);
-		}
+		//foreach(Appliance device in GetComponentsInChildren<Appliance>()) {
+		//	_devices.Add(device);
+		//}
 	}
 	
 	// Update is called once per frame
@@ -32,8 +32,7 @@ public class Room : MonoBehaviour {
 	public bool IsLit() {
         //Appliance lightSwitch = GetLightSwitch();
         Appliance lightSwitch = GetApplianceWithAffordance(avatarAffordanceSwitchLight);
-        if (lightSwitch == null)
-        {
+        if (lightSwitch == null) {
             return false; //Presumption: no light switch -> no light
         }
         return lightSwitch.GetComponent<ElectricMeter>().GivesPower;
@@ -123,6 +122,12 @@ public class Room : MonoBehaviour {
 
 	//Returns all appliances in the room
 	public List<Appliance> GetAppliances() {
+		_devices.Clear();
+
+		foreach(Appliance device in GetComponentsInChildren<Appliance>()) {
+			_devices.Add(device);
+		}
+
 		return _devices;
 	}
 
@@ -140,6 +145,16 @@ public class Room : MonoBehaviour {
 	public Floor GetFloor() {
         return GetComponentInParent<Floor>();
     }
+
+	//
+	public void AddAppliance(Appliance app) {
+		_devices.Add(app);
+	}
+
+	//
+	public void RemoveAppliance(Appliance app) {
+		_devices.Remove(app);
+	}
 
 	////This functions assumes that the provided affordance is the light switch affordance.
 	//public void UpdateLighting(Affordance affordance) {

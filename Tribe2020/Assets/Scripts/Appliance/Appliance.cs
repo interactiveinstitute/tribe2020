@@ -23,6 +23,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	[Header("References")]
 	public List<BehaviourAI> owners;
+	[SerializeField]
 	private Room _zone;
 
 	[System.Serializable]
@@ -100,11 +101,19 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		_pilotView = PilotView.GetInstance();
 		_applianceManager = ApplianceManager.GetInstance();
 
+		if(GetComponentInParent<ApplianceSlot>()) {
+			_zone = transform.parent.parent.GetComponentInParent<Room>();
+		} else {
+			_zone = GetComponentInParent<Room>();
+		}
+		if(_zone) {
+			_zone.AddAppliance(this);
+		}
+
+
 		if(!transform.parent.GetComponent<ApplianceSlot>()) {
 			_applianceManager.AddAppliance(this);
 		}
-
-		_zone = GetComponentInParent<Room>();
 
 		//Setting the posePositions for this appliance. Retrieving them from the transforms of the PosePoint components in the gameobject.
 		PosePoint[] poseArray = GetComponentsInChildren<PosePoint>();
@@ -123,6 +132,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	void OnDestroy() {
 		if(_applianceManager && !transform.parent.GetComponent<ApplianceSlot>()) {
 			_applianceManager.RemoveAppliance(this);
+			if(_zone) {
+				_zone.RemoveAppliance(this);
+			}
 		}
 		//if(_applianceManager && _applianceManager.ContainsAppliance(this)) {
 		//	_applianceManager.RemoveAppliance(GetComponent<Appliance>());
