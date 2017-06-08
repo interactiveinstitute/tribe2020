@@ -121,6 +121,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			_firstUpdate = true;
 			_instance.LoadGameState();
 			_view.TranslateInterface();
+			//Fire empty event to activate active narratives
+			_instance._narrationMgr.OnNarrativeEvent();
 
 			if(_saveMgr.GetClass("battleReport") != null) {
 				string loserName = _saveMgr.GetClass("battleReport")["avatar"];
@@ -365,6 +367,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			SetCurrentUI(_instance._view.GetUIPanel("Device Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
+		_instance.ResetTouch();
 	}
 
 	//Open user interface
@@ -433,10 +436,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "Comfort Panel":
 				break;
 			case "Energy Panel":
-				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
+				//_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
 				break;
 			case "Inbox":
-				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
+				_instance._view.DestroyInbox();
+				//_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				break;
 			case "Apocalypse Panel":
 				break;

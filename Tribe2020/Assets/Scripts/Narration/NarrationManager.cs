@@ -70,7 +70,7 @@ public class NarrationManager : MonoBehaviour {
 			ActivateNarrative(n);
 		}
 
-		OnNarrativeEvent();
+		//OnNarrativeEvent();
 	}
 
 	//
@@ -293,9 +293,6 @@ public class NarrationManager : MonoBehaviour {
 			//foreach(JSONClass storedEvent in storedEventsJSON) {
 			//	_performedSteps.Add(new PerformedStep(storedEvent["event"], storedEvent["prop"]));
 			//}
-
-			//Fire empty event to activate active narratives
-			OnNarrativeEvent();
 		} else {
 			Init();
 		}
