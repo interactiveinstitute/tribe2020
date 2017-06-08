@@ -135,7 +135,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	//
 	public void OnPointerClick(PointerEventData eventData) {
-		_ctrlMgr.SetCurrentUI(this);
+		if(!isPilot) {
+			_ctrlMgr.SetCurrentUI(this);
+		}
 	}
 
 	//
