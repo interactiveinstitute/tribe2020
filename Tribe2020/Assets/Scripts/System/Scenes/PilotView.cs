@@ -580,6 +580,11 @@ public class PilotView : View{
 	}
 
 	//
+	public void DestroyInbox() {
+		RemoveChildren(inboxList);
+	}
+
+	//
 	public void BuildMail(Mail mail, Narrative narrative) {
 		Transform contentTrans = mail.transform.GetChild(1);
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
