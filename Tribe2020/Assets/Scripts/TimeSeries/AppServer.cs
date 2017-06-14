@@ -168,6 +168,8 @@ public class AppServer : SocketIOComponentMod {
 
 		JSONObject json_payload = new JSONObject(payload);
 		int keyindex_time=0,test=0;
+		int[] keyindex = null;
+		int keyindex_counter = 0;
 		List<DataPoint> ParsedData = new List<DataPoint>();
 		DataPoint dp;
 
@@ -175,18 +177,19 @@ public class AppServer : SocketIOComponentMod {
 			if (rq.request_id != request_id)
 				continue;
 
-			print( "MATCHING RESPONSE: " + request_id);
+			//print( "MATCHING RESPONSE: " + request_id);
 
 			data = json_payload["results"][0]["series"][0];
 			keys = data ["columns"];
 			values = data ["values"];
 
-			print ("DATA:");
+			//print ("DATA:");
 			//print (values.Count);
-			print (values);
-			print (values.Count);
-			print (keys);
+			//print (values);
+			//print (values.Count);
+			//print (keys);
 
+			//Find index of time
 			for (int i=0; i < keys.Count; i++) {
 				//print(keys [i].ToString());
 				//print (keys [i].str == "time");
@@ -199,13 +202,43 @@ public class AppServer : SocketIOComponentMod {
 					
 				return;
 			}
+
+			//Find other indexes
+			keyindex = new int[keys.Count-1];
+			keyindex_counter = 0;
+
+			//Check if columns set. 
+			if (rq.Target.Columns.Count == 0) {
+				//If not set it. 
+				for (int i=0; i < keys.Count; i++) {
+					//print(keys [i].ToString());
+					//print (keys [i].str == "time");
+
+					if (keys [i].str == "time") {
+						continue;
+					}
+
+					rq.Target.Columns.Add (keys [i].str);
+					keyindex [keyindex_counter] = i;
+					keyindex_counter++;
+
+				}
+
+			}
+
 				
 
 			for (int i=0;i<values.Count;i++) {
 				dp = new DataPoint ();
-				print ("Inserted1");
+				//print ("Inserted1");
 				dp.Timestamp = values [i] [keyindex_time].n/1000.0;
-				print (dp.Timestamp);
+				//print (dp.Timestamp);
+				dp.Values = new double[keys.Count-1];
+
+				for (int f = 0; f < keys.Count - 1; f++) {
+					dp.Values[f] = values [i] [keyindex [f]].n;
+				}
+
 				rq.Target.InsertData (dp);
 
 			}
