@@ -25,6 +25,9 @@ public class ApplianceManager : MonoBehaviour {
 		UniqueId[] uids = Object.FindObjectsOfType<UniqueId>();
 		foreach(UniqueId uid in uids) {
 			_uidLookup.Add(uid.uniqueId, uid.GetComponent<Appliance>());
+			if(_uidLookup.ContainsKey("")) {
+				Debug.Log("double key", uid.gameObject);
+			}
 		}
 
 		//Init appliance lookup by app title
@@ -49,14 +52,10 @@ public class ApplianceManager : MonoBehaviour {
 			return;
 		}
 
-		//Debug.Log("adding a " + appliance.title);
 		_appliances.Add(appliance);
 		if(_appLookup.ContainsKey(appliance.title)) {
 			_appLookup[appliance.title].Add(appliance);
 		}
-		//else {
-		//	Debug.Log("There is no " + appliance.title, appliance.gameObject);
-		//}
 	}
 
 	//
@@ -68,19 +67,13 @@ public class ApplianceManager : MonoBehaviour {
 
 	//
 	public void ReplaceAppliance(Appliance oldApp, Appliance newApp) {
-		//Only applies to base appliances
-		if(!oldApp.transform.parent.GetComponent<ApplianceSlot>()) {
-			//If old has uid, clone to new and update lookup table
-			if(oldApp.GetComponent<UniqueId>()) {
-				newApp.gameObject.AddComponent<UniqueId>();
-				string uid = oldApp.gameObject.GetComponent<UniqueId>().uniqueId;
-				newApp.GetComponent<UniqueId>().uniqueId = uid;
-				_uidLookup[uid] = newApp;
-			}
+		if(oldApp.GetComponent<UniqueId>()) {
+			newApp.gameObject.AddComponent<UniqueId>();
+			string uid = oldApp.gameObject.GetComponent<UniqueId>().uniqueId;
+			newApp.GetComponent<UniqueId>().uniqueId = uid;
+			_uidLookup[uid] = newApp;
 
-			//Remove old and add new to list
-			//RemoveAppliance(oldApp);
-			//AddAppliance(newApp);
+			newApp.appliedEEMs = oldApp.appliedEEMs;
 		}
 	}
 
@@ -95,14 +88,19 @@ public class ApplianceManager : MonoBehaviour {
 	}
 
 	//
+	public void RefreshAllSlots() {
+		Appliance[] apps = Object.FindObjectsOfType<Appliance>();
+		foreach(Appliance app in apps) {
+			app.RefreshSlots();
+		}
+	}
+
+	//
 	public Appliance GetAppliance(string uid) {
+		if(!_uidLookup.ContainsKey(uid)) {
+			Debug.Log("does not contain " + uid);
+		}
 		return _uidLookup[uid];
-		//foreach(Appliance app in _appliances) {
-		//	if(app.GetComponent<UniqueId>() && app.GetComponent<UniqueId>().uniqueId == uid) {
-		//		return app;
-		//	}
-		//}
-		//return null;
 	}
 
 	//
@@ -125,28 +123,12 @@ public class ApplianceManager : MonoBehaviour {
 		JSONClass json = new JSONClass();
 
 		JSONArray applianceJSON = new JSONArray();
-		int index = 0;
-		foreach(Appliance appliance in _appliances) {
-			if(!appliance) {
-				
-				Debug.Log("No, here it is! " + index++);
-			}
-			applianceJSON.Add(appliance.SerializeAsJSON());
+		foreach(Appliance app in _appliances) {
+			applianceJSON.Add(app.SerializeAsJSON());
 		}
 
 		json.Add("appliances", applianceJSON);
 		return json;
-
-		//_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
-
-
-		//JSONArray avatarsJSON = new JSONArray();
-		//foreach(BehaviourAI avatar in _avatars) {
-		//	avatarsJSON.Add(avatar.Encode());
-		//}
-
-		//json.Add("avatars", avatarsJSON);
-		//return json;
 	}
 
 	//Deserialize json and apply states to aspects handled by the manager
@@ -155,29 +137,14 @@ public class ApplianceManager : MonoBehaviour {
 			JSONArray appsJSON = json["appliances"].AsArray;
 
 			foreach(JSONClass appJSON in appsJSON) {
-				foreach(Appliance app in _appliances) {
-					if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
-						app.DeserializeFromJSON(appJSON);
-					}
-				}
+				GetAppliance(appJSON["id"]).DeserializeFromJSON(appJSON);
+
+				//foreach(Appliance app in _appliances) {
+				//	if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
+				//		app.DeserializeFromJSON(appJSON);
+				//	}
+				//}
 			}
-
-			//if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
-
-			//}
-
-
-
-			//JSONArray avatarsJSON = json["avatars"].AsArray;
-
-			//foreach(JSONClass avatarJSON in avatarsJSON) {
-			//	foreach(BehaviourAI avatar in _avatars) {
-			//		string loadedName = avatarJSON["name"];
-			//		if(avatar.name == loadedName) {
-			//			avatar.Decode(avatarJSON);
-			//		}
-			//	}
-			//}
 		}
 	}
 }
