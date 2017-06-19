@@ -376,14 +376,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			return;
 		}
 
-		if(!ui) {
-			CloseUI(ui);
-		} else if(ui.name == _instance._view.GetCurrentUIKey()) {
+		//Close give ui if null or already open
+		if(!ui || ui.name == _instance._view.GetCurrentUIKey()) {
 			CloseUI(ui);
 		} else {
-			if(_instance._view.GetCurrentUIKey() != "") {
-				CloseUI(_instance._view.GetCurrentUI());
-			}
+			//Close current ui and open new ui
+			CloseUI(_instance._view.GetCurrentUI());
 			OpenUI(ui);
 		}
 
@@ -424,23 +422,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void CloseUI(RectTransform ui) {
-		if(!ui) { return; }
-
-		if(_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction) {
+		if(!ui || (_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction)) {
 			return;
 		}
 
 		_instance._view.SetUIPanel("");
-		
 		switch(ui.name) {
 			case "Comfort Panel":
 				break;
 			case "Energy Panel":
-				//_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
 				break;
 			case "Inbox":
 				_instance._view.DestroyInbox();
-				//_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
 				break;
 			case "Apocalypse Panel":
 				break;
@@ -448,11 +441,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 			case "Character Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				//_instance._view._characterPanel.OnClose();
 				break;
 			case "Device Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				//_instance._view._devicePanel.OnClose();
 				break;
 			case "Time Control Panel":
 				break;
@@ -542,11 +533,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
+	public void ApplyEEM(Appliance app, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
-		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
+		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
@@ -555,18 +546,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
 				if (eem.callbackAffordance) {
-					appliance.SendMessage(eem.callback, eem.callbackAffordance);
+					app.SendMessage(eem.callback, eem.callbackAffordance);
 				} else {
-					appliance.SendMessage(eem.callback, eem.callbackArgument);
+					app.SendMessage(eem.callback, eem.callbackArgument);
 				}
 			}
-			GameObject returnedGO = appliance.ApplyEEM(eem);
+			GameObject returnedGO = app.ApplyEEM(eem);
 
 			//Redraw device panel
 			if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Device") {
-				_view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
+				_view.BuildDevicePanel(app);
 			} else {
-				_view.BuildAvatarPanel(returnedGO.GetComponent<Appliance>());
+				_view.BuildAvatarPanel(app);
 			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
