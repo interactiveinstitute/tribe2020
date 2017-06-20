@@ -178,6 +178,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_Animator.SetBool(talking, false);
 			int doStuff = Animator.StringToHash("Drink Water");
 			m_Animator.SetBool(doStuff, false);
+			int sleep = Animator.StringToHash("Sleeping");
+			m_Animator.SetBool(sleep, false);
 
 
 
