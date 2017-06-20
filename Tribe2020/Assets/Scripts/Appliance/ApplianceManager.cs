@@ -24,10 +24,13 @@ public class ApplianceManager : MonoBehaviour {
 		//Init uid lookup by uid
 		UniqueId[] uids = Object.FindObjectsOfType<UniqueId>();
 		foreach(UniqueId uid in uids) {
-			_uidLookup.Add(uid.uniqueId, uid.GetComponent<Appliance>());
-			if(_uidLookup.ContainsKey("")) {
-				Debug.Log("double key", uid.gameObject);
+			if(_uidLookup.ContainsKey(uid.uniqueId)) {
+				Debug.Log("duplicate uid " + uid.uniqueId + " for " + uid.name, uid.gameObject);
 			}
+			if(_uidLookup.ContainsKey("")) {
+				Debug.Log("uid not generated for " + uid.name, uid.gameObject);
+			}
+			_uidLookup.Add(uid.uniqueId, uid.GetComponent<Appliance>());
 		}
 
 		//Init appliance lookup by app title
