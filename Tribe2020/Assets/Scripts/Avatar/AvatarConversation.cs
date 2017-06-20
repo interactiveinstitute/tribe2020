@@ -30,21 +30,26 @@ public class AvatarConversation : MonoBehaviour
     public List<Sprite> emojisTopicsNeutral = new List<Sprite>();
     public List<Sprite> emojisTopicsPositive = new List<Sprite>();
 
+	//
+	void Awake() {
+		emojisReactions.Add(AvatarMood.Mood.angry, emojisReactionsAngry);
+		emojisReactions.Add(AvatarMood.Mood.sad, emojisReactionsSad);
+		emojisReactions.Add(AvatarMood.Mood.tired, emojisReactionsTired);
+		emojisReactions.Add(AvatarMood.Mood.neutral_neg, emojisReactionsNeutralNegative);
+		emojisReactions.Add(AvatarMood.Mood.neutral_pos, emojisReactionsNeutralPositive);
+		emojisReactions.Add(AvatarMood.Mood.surprised, emojisReactionsSurprised);
+		emojisReactions.Add(AvatarMood.Mood.happy, emojisReactionsHappy);
+		emojisReactions.Add(AvatarMood.Mood.euphoric, emojisReactionsEuphoric);
+
+		emojisTopics.Add(EnvironmentLevel.negative, emojisTopicsNegative);
+		emojisTopics.Add(EnvironmentLevel.neutral, emojisTopicsNeutral);
+		emojisTopics.Add(EnvironmentLevel.positive, emojisTopicsPositive);
+	}
+
     // Use this for initialization
     void Start()
     {
-        emojisReactions.Add(AvatarMood.Mood.angry, emojisReactionsAngry);
-        emojisReactions.Add(AvatarMood.Mood.sad, emojisReactionsSad);
-        emojisReactions.Add(AvatarMood.Mood.tired, emojisReactionsTired);
-        emojisReactions.Add(AvatarMood.Mood.neutral_neg, emojisReactionsNeutralNegative);
-        emojisReactions.Add(AvatarMood.Mood.neutral_pos, emojisReactionsNeutralPositive);
-        emojisReactions.Add(AvatarMood.Mood.surprised, emojisReactionsSurprised);
-        emojisReactions.Add(AvatarMood.Mood.happy, emojisReactionsHappy);
-        emojisReactions.Add(AvatarMood.Mood.euphoric, emojisReactionsEuphoric);
-
-        emojisTopics.Add(EnvironmentLevel.negative, emojisTopicsNegative);
-        emojisTopics.Add(EnvironmentLevel.neutral, emojisTopicsNeutral);
-        emojisTopics.Add(EnvironmentLevel.positive, emojisTopicsPositive);
+        
     }
 
     // Update is called once per frame
@@ -60,7 +65,11 @@ public class AvatarConversation : MonoBehaviour
 
     public Sprite GetEmojiTopic(EnvironmentLevel environmentLevel)
     {
-        int i = Random.Range(0, emojisTopics[environmentLevel].Count);
+		if(!emojisTopics.ContainsKey(environmentLevel)) {
+			Debug.Log(environmentLevel);
+		}
+
+		int i = Random.Range(0, emojisTopics[environmentLevel].Count);
         return emojisTopics[environmentLevel][i];
     }
 

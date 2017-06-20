@@ -39,6 +39,8 @@ public class BehaviourAI : SimulationObject {
 	private Room _curRoom;
 	public int _nrOfActiveColliders = 0;
 
+	private bool _firstUpdate = true;
+
 	//private bool _isSync = false;
 	//private bool _isScheduleOver = false;
 
@@ -89,12 +91,6 @@ public class BehaviourAI : SimulationObject {
 		//added by Gunnar.
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
-
-		//Synchronise schedule to get current activity for time
-		SyncSchedule();
-        if (_curActivity) {
-            _curActivity.Start(); //Start this activity.
-        }
 
 		if(_nextActivity != null) {
 			//Add key point for _nextActivity.
@@ -170,6 +166,15 @@ public class BehaviourAI : SimulationObject {
 
 	// Update is called once per frame
 	void Update() {
+		if(_firstUpdate) {
+			//Synchronise schedule to get current activity for time
+			SyncSchedule();
+			if(_curActivity) {
+				_curActivity.Start(); //Start this activity.
+			}
+
+			_firstUpdate = false;
+		}
 
 		UpdateCoffeeCup();
 
@@ -1208,7 +1213,9 @@ public class BehaviourAI : SimulationObject {
 		_curRoom = room;
 		_curRoom.OnAvatarEnter(this); //Increase person count in room
 
-		if(GetRunningActivity().GetCurrentTargetObject() != null && _curRoom.IsObjectInRoom(GetRunningActivity().GetCurrentTargetObject())) {
+		if(GetRunningActivity() &&
+			GetRunningActivity().GetCurrentTargetObject() &&
+			_curRoom.IsObjectInRoom(GetRunningActivity().GetCurrentTargetObject())) {
 			CheckLighting(AvatarActivity.SessionType.TurnOn);
 		}
 	}
