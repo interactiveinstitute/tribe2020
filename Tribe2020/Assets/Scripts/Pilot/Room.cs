@@ -35,56 +35,29 @@ public class Room : MonoBehaviour {
         if (lightSwitch == null) {
             return false; //Presumption: no light switch -> no light
         }
+
         return lightSwitch.GetComponent<ElectricMeter>().GivesPower;
 	}
 
     //Tries to retrieve the first available appliance with the given affordance in this room
-    public Appliance GetApplianceWithAffordance(Affordance affordance, BehaviourAI owner = null)
-    {
+    public Appliance GetApplianceWithAffordance(Affordance affordance, BehaviourAI owner = null) {
         Appliance targetAppliance = null;
         float minDist = float.MaxValue;
-        foreach (Appliance device in _devices)
-        {
+		//Search all appliances in zone and compare to all affordances for each one
+        foreach (Appliance device in _devices) {
             List<Appliance.AffordanceResource> affordances = device.avatarAffordances;
-            foreach (Appliance.AffordanceResource affordanceSlot in affordances)
-            {
-                if (affordanceSlot.affordance == affordance && (owner == null || device.owners.Contains(owner)))
-                {
+            foreach (Appliance.AffordanceResource affordanceSlot in affordances) {
+				//If affordance found and either doesn't require to be owner or is owned by given owner
+                if(affordanceSlot.affordance == affordance && (owner == null || device.owners.Contains(owner))) {
                     float dist = Vector3.Distance(transform.position, device.transform.position);
-                    if (dist < minDist)
-                    {
+					//Keep appliance as candidate if the euclidean distance is shortest so far 
+                    if (dist < minDist) {
                         minDist = dist;
                         targetAppliance = device;
                     }
                 }
             }
-
-            //foreach (Affordance aff in device.avatarAffordances)
-            //{
-                
-                
-            //    //We must check for reference equality. We only want to return if it's the same scriptableObject asset (the assets are actually different instances of the scriptableObject)
-            //    //Hmm. But doesn't Equals default to reference equality? So if we haven't overridden it we should be fine, no?
-            //    if(Object.ReferenceEquals(aff, affordance))
-            //    {
-            //        return device;
-            //    }
-
-            //}
-            //if (device.avatarAffordances.Contains(affordance))//Must check for being same instance
-            //{
-            //    return device;
-            //}
         }
-
-        //if (targetAppliance == null)
-        //{
-        //    if (owner != null)
-        //        DebugManager.LogError(name + " could not find an OWNED appliance with affordance: " + affordance.ToString(), this);
-        //    else
-        //        DebugManager.LogError(name + " could not find the appliance with affordance: " + affordance.ToString(), this);
-        //}
-
         return targetAppliance;
     }
 

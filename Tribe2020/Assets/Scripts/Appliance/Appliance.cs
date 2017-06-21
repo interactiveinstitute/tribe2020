@@ -6,16 +6,18 @@ using SimpleJSON;
 using System.Collections;
 using System;
 
-public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandler {
+public class Appliance : MonoBehaviour, IPointerClickHandler {
 	private PilotController _ctrlMgr;
 	private PilotView _pilotView;
 	private ApplianceManager _applianceManager;
+	private EnergyEfficiencyMeasureContainer _eemMgr;
 
 	[Header("Properties")]
 	public string title;
 	public string description;
 	public Sprite icon;
 	public bool isPilot = false;
+	private bool _isTopAppliance = false;
 
 	[Header("Affordances")]
 	public List<EnergyEfficiencyMeasure> playerAffordances;
@@ -23,7 +25,6 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	[Header("References")]
 	public List<BehaviourAI> owners;
-	[SerializeField]
 	private Room _zone;
 
 	[System.Serializable]
@@ -100,18 +101,22 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		_ctrlMgr = PilotController.GetInstance();
 		_pilotView = PilotView.GetInstance();
 		_applianceManager = ApplianceManager.GetInstance();
+		_eemMgr = EnergyEfficiencyMeasureContainer.GetInstance();
 
-		if(GetComponentInParent<ApplianceSlot>()) {
-			_zone = transform.parent.parent.GetComponentInParent<Room>();
-		} else {
+		_isTopAppliance = !GetComponentInParent<ApplianceSlot>();
+
+		if(_isTopAppliance) {
 			_zone = GetComponentInParent<Room>();
+		} else {
+			_zone = transform.parent.parent.GetComponentInParent<Room>();
 		}
 		if(_zone) {
 			_zone.AddAppliance(this);
 		}
 
-
-		if(!transform.parent.GetComponent<ApplianceSlot>()) {
+		//if(!transform.parent.GetComponent<ApplianceSlot>()) {
+		//if(_applianceManager && _isTopAppliance) {
+		if(_applianceManager) {
 			_applianceManager.AddAppliance(this);
 		}
 
@@ -125,16 +130,18 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 			posePositions.Add(item);
 		}
 
-		RefreshSlots();
+		//RefreshSlots();
 	}
 
 	//Called before destroyed
 	void OnDestroy() {
-		if(_applianceManager && !transform.parent.GetComponent<ApplianceSlot>()) {
-			_applianceManager.RemoveAppliance(this);
-			if(_zone) {
-				_zone.RemoveAppliance(this);
-			}
+		//if(_applianceManager && !transform.parent.GetComponent<ApplianceSlot>()) {
+		//if(_applianceManager && _isTopAppliance) {
+		if(_applianceManager) {
+			_applianceManager.RemoveAppliance(this);	
+		}
+		if(_zone) {
+			_zone.RemoveAppliance(this);
 		}
 		//if(_applianceManager && _applianceManager.ContainsAppliance(this)) {
 		//	_applianceManager.RemoveAppliance(GetComponent<Appliance>());
@@ -145,7 +152,7 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	void Update() {
 	}
 
-	//
+	//Callback for when the appliance is selected
 	public void OnPointerClick(PointerEventData eventData) {
 		if(!isPilot) {
 			_ctrlMgr.SetCurrentUI(this);
@@ -156,21 +163,27 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 	public void RefreshSlots() {
 		ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
 		foreach(ApplianceSlot slot in slots) {
+			Appliance oldApp = slot.GetComponentInChildren<Appliance>();
+			
+			GameObject newAppObj = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
+			newAppObj.transform.SetParent(slot.transform, false);
+			newAppObj.AddComponent<UniqueId>();
 
-			ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
-			if(removedDevice) {
-				DestroyImmediate(removedDevice.gameObject);
+			if(oldApp) {
+				string uid = oldApp.gameObject.GetComponent<UniqueId>().uniqueId;
+				newAppObj.GetComponent<UniqueId>().uniqueId = uid;
+				DestroyImmediate(oldApp.gameObject);
 			}
 
-			if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
-				GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
-				newApp.transform.SetParent(slot.transform, false);
-			}
+			//ElectricDevice removedDevice = slot.transform.GetComponentInChildren<ElectricDevice>();
+			//if(removedDevice) {
+			//	DestroyImmediate(removedDevice.gameObject);
+			//}
 
-
-
-			//newApp.transform.position = slot.transform.position;
-			//newApp.transform.rotation = slot.transform.rotation;
+			//if(slot.appliancePrefabs[slot.currentApplianceIndex]) {
+			//	GameObject newApp = Instantiate(slot.appliancePrefabs[slot.currentApplianceIndex]);
+			//	newApp.transform.SetParent(slot.transform, false);
+			//}
 		}
 	}
 
@@ -179,27 +192,24 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		GameObject newAppGO = gameObject;
 
 		if(!eem.multipleUse) {
-			appliedEEMs.Add(eem);
+			appliedEEMs.Insert(appliedEEMs.Count, eem);
 		}
 
 		_applianceManager.AddEEMTitle(eem.name);
 
 		if(eem.replacementPrefab != null) {
-			//TODO Temp guard against performing EEMs that replace appliance if appliance group
-			if(!GetComponentInChildren<ApplianceSlot>()) {
-				newAppGO = Instantiate(eem.replacementPrefab);
-				newAppGO.transform.SetParent(transform.parent, false);
-				newAppGO.transform.localPosition = transform.localPosition;
-				newAppGO.transform.localRotation = transform.localRotation;
-				newAppGO.gameObject.layer = gameObject.layer;
+			newAppGO = Instantiate(eem.replacementPrefab);
+			newAppGO.transform.SetParent(transform.parent, false);
+			newAppGO.transform.localPosition = transform.localPosition;
+			newAppGO.transform.localRotation = transform.localRotation;
+			newAppGO.gameObject.layer = gameObject.layer;
 
-				ElectricDevice edOld = GetComponent<ElectricDevice>();
-				ElectricDevice edNew = newAppGO.GetComponent<ElectricDevice>();
-				edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
+			ElectricDevice edOld = GetComponent<ElectricDevice>();
+			ElectricDevice edNew = newAppGO.GetComponent<ElectricDevice>();
+			edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
 
-				_applianceManager.ReplaceAppliance(this, newAppGO.GetComponent<Appliance>());
-				Destroy(gameObject);
-			}
+			_applianceManager.ReplaceAppliance(this, newAppGO.GetComponent<Appliance>());
+			Destroy(gameObject);
 		}
 
 		if(eem.setEnergyEffeciency) {
@@ -223,6 +233,33 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		return newAppGO;
 	}
 
+	//
+	public void RefreshEEMs() {
+		//Determine highest replacement eem
+		EnergyEfficiencyMeasure lastReplacement = null;
+		foreach(EnergyEfficiencyMeasure eem in appliedEEMs) {
+			if(eem.replacementPrefab != null) {
+				lastReplacement = eem;
+			}
+		}
+		//If there was a last replacement eem and it wasn't to the current type
+		if(lastReplacement != null && lastReplacement.replacementPrefab.GetComponent<Appliance>().title != title) {
+			GameObject newAppGO = 
+				Instantiate(lastReplacement.replacementPrefab, transform.position, transform.rotation, transform.parent);
+			newAppGO.layer = gameObject.layer;
+
+			ElectricDevice edOld = GetComponent<ElectricDevice>();
+			ElectricDevice edNew = newAppGO.GetComponent<ElectricDevice>();
+			edNew.DefaultRunlevel = edOld.runlevel == edOld.runlevelOn ? edNew.runlevelOn : edNew.runlevelOff;
+
+			_applianceManager.ReplaceAppliance(this, newAppGO.GetComponent<Appliance>());
+			newAppGO.GetComponent<Appliance>().appliedEEMs = appliedEEMs;
+			newAppGO.GetComponent<Appliance>().RefreshEEMs();
+			Destroy(gameObject);
+		}
+
+	}
+
 	//If Avatar, challenge to a battle
 	public void Challenge() {
 		_ctrlMgr.ChallengeAvatar(this);
@@ -237,6 +274,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 
 	//
 	public List<EnergyEfficiencyMeasure> GetEEMs() {
+		//List<
+		//if(_isTopAppliance) {
+		//}
 		return playerAffordances;
 	}
 
@@ -333,9 +373,23 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		return _zone;
 	}
 
-	//
+	//Get the uid string if appliance has a uid component
+	public string GetUniqueId() {
+		UniqueId uid = GetComponent<UniqueId>();
+		if(uid) {
+			return uid.uniqueId;
+		}
+		return "";
+	}
+
+	//For a given eem, returns whether its been applied on this appliance
 	public bool IsEEMApplied(EnergyEfficiencyMeasure eem) {
 		return appliedEEMs.Contains(eem);
+	}
+
+	//Is appliance child of an appliance group within a slot or a "top" appliance
+	public bool IsTopAppliance() {
+		return _isTopAppliance;
 	}
 
 	//
@@ -348,20 +402,10 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		JSONArray eemsJSON = new JSONArray();
 		foreach(EnergyEfficiencyMeasure eem in appliedEEMs) {
 			JSONClass eemJSON = new JSONClass();
-			eemJSON.Add("title", eem.title);
+			eemJSON.Add("name", eem.name);
 			eemsJSON.Add(eemJSON);
 		}
 		json.Add("appliedEEMs", eemsJSON);
-
-		//ApplianceSlot[] slots = GetComponentsInChildren<ApplianceSlot>();
-		//JSONArray slotsJSON = new JSONArray();
-		//foreach(ApplianceSlot slot in slots) {
-		//	JSONClass slotJSON = new JSONClass();
-		//	slotJSON.Add("name", slot.name);
-		//	slotJSON.Add("curIndex", ""+slot.currentApplianceIndex);
-		//	slotsJSON.Add(slotJSON);
-		//}
-		//json.Add("slots", slotsJSON);
 
 		return json;
 	}
@@ -371,24 +415,9 @@ public class Appliance : MonoBehaviour, IPointerClickHandler, IPointerDownHandle
 		if(json != null) {
 			JSONArray eemsJSON = json["appliedEEMs"].AsArray;
 			foreach(JSONClass appliedEEMJSON in eemsJSON) {
-				foreach(EnergyEfficiencyMeasure eem in playerAffordances) {
-					if(eem.title.Equals(appliedEEMJSON["title"])) {
-						ApplyEEM(eem);
-					}
-				}
+				appliedEEMs.Add(_eemMgr.GetEEM(appliedEEMJSON["name"]));
 			}
+			RefreshEEMs();
 		}
 	}
-
-	public void OnPointerDown(PointerEventData eventData) {
-	}
-
-	public string GetUniqueId() {
-		UniqueId uid = GetComponent<UniqueId>();
-		if(uid) {
-			return uid.uniqueId;
-		}
-		return "";
-	}
-
 }

@@ -12,7 +12,7 @@ public class PilotView : View{
 	public bool debug = false;
 
 	private PilotController _controller;
-    ResourceManager _resourceMgr;
+	private ResourceManager _resourceMgr;
 
 	[Header("Header")]
 	public Transform cash;
@@ -152,8 +152,16 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
+		if(_uiPanels == null) {
+			Debug.Log("here");
+		}
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
+			if(!uiPanel) {
+				Debug.Log("there");
+				Debug.Log(uiPanel.name);
+			}
+
 			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
 				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
 			} else {
@@ -385,14 +393,10 @@ public class PilotView : View{
 
 	//Prepare and show interface for inspecting a device
 	public void BuildDevicePanel(Appliance app) {
-        //if(_controller) {
-            deviceTitle.text = _controller.GetPhrase("Content.Appliances", app.title);
-            deviceDescription.text = _controller.GetPhrase("Content.Appliances", app.title, 0);
-        //}
+        deviceTitle.text = _controller.GetPhrase("Content.Appliances", app.title);
+        deviceDescription.text = _controller.GetPhrase("Content.Appliances", app.title, 0);
 
-        //if(devicePanel) {
-            devicePanel.BuildPanel(app);
-        //}
+        devicePanel.BuildPanel(app);
 
         BuildEEMInterface(deviceEEMContainer, app, EEMButtonPrefab);
 	}
@@ -405,70 +409,75 @@ public class PilotView : View{
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
 	public void BuildEEMInterface(Transform container, Appliance app, GameObject buttonPrefab) {
 		RemoveChildren(container);
-		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
-
-        foreach (EnergyEfficiencyMeasure eem in eems) {
-            bool doRenderButton = eem.shouldRenderCallback == "";
-
-            if(!doRenderButton) {
-                if (eem.shouldRenderCallback != "") {
-                    CallbackResult result = new CallbackResult();
-                    app.SendMessage(eem.shouldRenderCallback, result);
-                    doRenderButton = result.result;
-                }
-            }
-
-            if(doRenderButton) {
-                EnergyEfficiencyMeasure curEEM = eem;
-                GameObject buttonObj = Instantiate(buttonPrefab);
-                EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
-
-				eemButton.title.text = _controller.GetPhrase("EEM." + eem.category, eem.name);
-                eemButton.buttonImage.color = eem.color;// _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
-                ColorBlock cb = eemButton.button.colors;
-                cb.normalColor = eem.color;
-                cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
-                eemButton.button.colors = cb;
-
-				if(eem.icon) {
-					eemButton.eemIcon.sprite = eem.icon;
-				}
-
-				//Comfort cost
-				if(eemButton.comfortIcon) {
-					eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
-					eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
-					eemButton.comfortCost.text = eem.comfortCost.ToString();
-				}
-
-                //Money cost
-                eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
-                eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
-                eemButton.moneyCost.text = eem.cashCost.ToString();
-
-				//Efficiency benefit
-				if(eemButton.efficiencyIcon) {
-					eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
-					eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
-					eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
-				}
-
-                Button button = buttonObj.GetComponent<Button>();
-                if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
-                    button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-                    //if(eem.callback == "") {
-                    //	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-                    //} else {
-                    //	//TODO: Can be used for battle when battle scene ready
-                    //	//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-                    //}
-                } else {
-                    button.interactable = false;
-                }
-
-                buttonObj.transform.SetParent(container, false);
-            }
+		//Render list of eems in this appliance
+        foreach (EnergyEfficiencyMeasure eem in app.GetEEMs()) {
+			if(ShouldRenderEEMButton(app, eem)) {
+				GameObject buttonObj = BuildEEMButton(app, eem, buttonPrefab);
+				buttonObj.transform.SetParent(container, false);
+			}
         }
+		//Append eems from appliances in slots of this appliance
+		foreach(Transform child in app.transform) {
+			if(child.GetComponent<ApplianceSlot>()) {
+				Appliance slotApp = child.GetChild(0).GetComponent<Appliance>();
+				foreach(EnergyEfficiencyMeasure eem in slotApp.GetEEMs()) {
+					if(ShouldRenderEEMButton(slotApp, eem)) {
+						GameObject buttonObj = BuildEEMButton(slotApp, eem, buttonPrefab);
+						buttonObj.transform.SetParent(container, false);
+					}
+				}
+			}
+		}
+	}
+
+	//Generate eem button given the appliance, the eem and a button prefab
+	private GameObject BuildEEMButton(Appliance app, EnergyEfficiencyMeasure eem, GameObject buttonPrefab) {
+		EnergyEfficiencyMeasure curEEM = eem;
+		GameObject buttonObj = Instantiate(buttonPrefab);
+
+		//Set buttons colors depending on eem type
+		EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
+		eemButton.title.text = _controller.GetPhrase("EEM." + eem.category, eem.name);
+		eemButton.buttonImage.color = _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
+		ColorBlock cb = eemButton.button.colors;
+		cb.normalColor = eem.color;
+		cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
+		eemButton.button.colors = cb;
+
+		//Render button decorations like resource icons and costs
+		if(eem.icon) { eemButton.eemIcon.sprite = eem.icon; }
+		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost);
+		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost);
+		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect, eem.energyFactor);
+
+		Button button = buttonObj.GetComponent<Button>();
+		if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
+			button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+		} else {
+			button.interactable = false;
+		}
+
+		return buttonObj;
+	}
+
+	//Render element of an eem button, such as a resource cost
+	private void RenderEEMProperty(Image icon, Text text, float value) {
+		if(icon) {
+			icon.gameObject.SetActive(value != 0);
+			text.gameObject.SetActive(value != 0);
+			text.text = value.ToString();
+		}
+	}
+
+	//Check whether appliance fullfills eems conditions for being rendered
+	private bool ShouldRenderEEMButton(Appliance app, EnergyEfficiencyMeasure eem) {
+		//Check if should be rendered
+		if(eem.shouldRenderCallback != "") {
+			CallbackResult result = new CallbackResult();
+			app.SendMessage(eem.shouldRenderCallback, result);
+			return result.result;
+		}
+		return true;
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
