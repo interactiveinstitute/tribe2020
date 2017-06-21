@@ -535,7 +535,7 @@ public class AvatarActivity : ScriptableObject {
 
         //Trigger callback for finished activity
         //Be aware that this callback will also move to and start next activity in schedule if it has no startime.
-		_ai.OnActivityOver();
+		//_ai.OnActivityOver();
 	}
 
 	//

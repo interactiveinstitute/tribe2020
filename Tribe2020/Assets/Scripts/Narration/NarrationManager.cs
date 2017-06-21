@@ -122,7 +122,7 @@ public class NarrationManager : MonoBehaviour {
 
 	//Callback for game event, progress narratives that are listening for the event
 	public void OnNarrativeEvent(string eventType = "", string prop = "", bool saveAsPerformed = false) {
-		if(debug) { Debug.Log("Narrative: " + eventType + "(" + prop + ")"); }
+		//if(debug) { Debug.Log("Narrative: " + eventType + "(" + prop + ")"); }
 		if(!autoStart) { return; }
 
 		bool didProgress = false;

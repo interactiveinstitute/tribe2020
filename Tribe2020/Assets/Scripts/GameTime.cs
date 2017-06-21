@@ -65,8 +65,6 @@ public class GameTime : MonoBehaviour {
 	public bool LockScales;
 	private float prevVisualTimeScale,prevSimulationTimeScale;
 
-
-
 	void Awake () {
 		time = StartTime + offset;
 		_instance = this;
@@ -78,12 +76,7 @@ public class GameTime : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-
-
-		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
-
-
+        CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 	}
 
     //Add a reference to an object that implements simulationObject. The UpdateSim function of the passed object will be called when provided timestamp is passed. If provided timestamp is in history, the updatesim will get called immmeditely (kind of).
@@ -163,7 +156,6 @@ public class GameTime : MonoBehaviour {
 			if (KeyActions [0].Timestamp > newtime)
 				return i;
 			 
-
 			i += 1;
 			ka = KeyActions [0];
 
@@ -172,8 +164,6 @@ public class GameTime : MonoBehaviour {
 
 			//Execute the event. 
 			ka.target.UpdateSim(time);
-
-
 
 			//Remove
 			KeyActions.Remove (ka);
@@ -304,6 +294,16 @@ public class GameTime : MonoBehaviour {
             return 0;
         }
         return (dateTimeCurrent.Year - dateTimeLastUpdate.Year) * 12 + (dateTimeCurrent.Month - dateTimeLastUpdate.Month);
+    }
+
+    public bool IsWeekend() {
+        int dayOfWeek = (int)GetDateTime().DayOfWeek;
+        return dayOfWeek == 0 || dayOfWeek == 6;
+    }
+
+    public bool IsWeekendTomorrow() {
+        int dayOfWeek = (int)GetDateTime().DayOfWeek;
+        return dayOfWeek == 5 || dayOfWeek == 6;
     }
 }
 

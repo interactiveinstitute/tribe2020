@@ -37,7 +37,7 @@ public class AvatarModel : MonoBehaviour {
 
 	//Set model for model index
 	public void SetModel(int modelIndex) {
-		Transform existingModel = transform.FindChild("Model");
+		Transform existingModel = transform.Find("Model");
 		AvatarManager am = FindObjectOfType<AvatarManager>();
 
 		if(existingModel) {
@@ -78,7 +78,7 @@ public class AvatarModel : MonoBehaviour {
 
 	//
 	public void ExtractMaterialColors() {
-		Transform existingModel = transform.FindChild("Model");
+		Transform existingModel = transform.Find("Model");
 		if(existingModel != null) {
 			AvatarManager avatarMgr = FindObjectOfType<AvatarManager>();
 			int modelId = GetComponent<AvatarModel>().modelId;
@@ -86,7 +86,7 @@ public class AvatarModel : MonoBehaviour {
 
 			//Load color from skin parts
 			foreach(AvatarModels.BodyPartSkin bodyPartSkin in _modelBundle.bodyPartsSkin) {
-				skinColor = transform.FindChild("Model/" + bodyPartSkin.model.name).
+				skinColor = transform.Find("Model/" + bodyPartSkin.model.name).
 					GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 			}
 
@@ -94,23 +94,23 @@ public class AvatarModel : MonoBehaviour {
 			foreach(AvatarModels.BodyPartClothes bodyPart in _modelBundle.bodyPartsClothes) {
 				switch(bodyPart.model.name) {
 					case "Hair":
-						hairColor = transform.FindChild("Model/" + bodyPart.model.name).
+						hairColor = transform.Find("Model/" + bodyPart.model.name).
 							GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 						break;
 					case "Suit":
-						clothesColor1 = transform.FindChild("Model/" + bodyPart.model.name).
+						clothesColor1 = transform.Find("Model/" + bodyPart.model.name).
 							GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 						break;
 					case "Pants":
-						pantsColor = transform.FindChild("Model/" + bodyPart.model.name).
+						pantsColor = transform.Find("Model/" + bodyPart.model.name).
 							GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 						break;
 					case "Shoes":
-						shoeColor = transform.FindChild("Model/" + bodyPart.model.name).
+						shoeColor = transform.Find("Model/" + bodyPart.model.name).
 							GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 						break;
 					default:
-						clothesColor2 = transform.FindChild("Model/" + bodyPart.model.name).
+						clothesColor2 = transform.Find("Model/" + bodyPart.model.name).
 							GetComponent<SkinnedMeshRenderer>().sharedMaterial.color;
 						break;
 				}
@@ -129,7 +129,7 @@ public class AvatarModel : MonoBehaviour {
 	//
 	public void RandomizeClothes() {
 
-		Transform existingModel = transform.FindChild("Model");
+		Transform existingModel = transform.Find("Model");
 		if(existingModel != null) {
 			AvatarManager am = FindObjectOfType<AvatarManager>();
 			int modelId = GetComponent<AvatarModel>().modelId;
@@ -151,7 +151,7 @@ public class AvatarModel : MonoBehaviour {
 
 	//
 	public void SetClothesMaterial(string modelName, Material material) {
-		transform.FindChild("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().material = material;
+		transform.Find("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().material = material;
 	}
 
 	//
@@ -168,7 +168,7 @@ public class AvatarModel : MonoBehaviour {
 	public void SetFaceTexture(AvatarMood.Mood mood) {
 		Texture2D textureFace = GetFaceTextureByMood(mood);
 		if(textureFace != null) {
-			transform.FindChild("Model/" + _modelBundle.faceObject.name).GetComponent<SkinnedMeshRenderer>().material.mainTexture = textureFace;
+			transform.Find("Model/" + _modelBundle.faceObject.name).GetComponent<SkinnedMeshRenderer>().material.mainTexture = textureFace;
 		}
 	}
 
@@ -204,7 +204,7 @@ public class AvatarModel : MonoBehaviour {
 		json.Add("modelID", "" + modelId);
 
 		//Serialize skin material
-		Material skinMat = transform.FindChild("Model/" + _modelBundle.bodyPartsSkin[0].model.name).
+		Material skinMat = transform.Find("Model/" + _modelBundle.bodyPartsSkin[0].model.name).
 				GetComponent<SkinnedMeshRenderer>().sharedMaterial;
 		json.Add("skinMaterial", avatarModels.models[modelId].materialsSkin.IndexOf(skinMat) + "");
 
@@ -213,7 +213,7 @@ public class AvatarModel : MonoBehaviour {
 		for(int i = 0; i < _modelBundle.bodyPartsClothes.Count; i++) {
 			string modelName = _modelBundle.bodyPartsClothes[i].model.name;
 			int matIndex = _modelBundle.bodyPartsClothes[i].materials.IndexOf(
-				transform.FindChild("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().sharedMaterial);
+				transform.Find("Model/" + modelName).GetComponent<SkinnedMeshRenderer>().sharedMaterial);
 			clotheMaterials.Add("" + matIndex);
 		}
 		json.Add("clotheMaterials", clotheMaterials);
