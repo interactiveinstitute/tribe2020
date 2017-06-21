@@ -12,7 +12,7 @@ public class PilotView : View{
 	public bool debug = false;
 
 	private PilotController _controller;
-    ResourceManager _resourceMgr;
+	private ResourceManager _resourceMgr;
 
 	[Header("Header")]
 	public Transform cash;
@@ -74,7 +74,7 @@ public class PilotView : View{
 	public Transform deviceEEMContainer;
     public Image deviceEfficiencyLabel;
 
-    [Header("Quest UI")]
+	[Header("Quest UI")]
 	public GameObject inboxUI;
 	public Transform inboxList;
 	//public GameObject mailReadUI;
@@ -101,6 +101,7 @@ public class PilotView : View{
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
 	public GameObject EEMButtonPrefab;
+	public GameObject PilotEEMButtonPrefab;
 	public GameObject EnergyPanelDevice;
 
 	public GameObject FeedbackNumber;
@@ -116,8 +117,10 @@ public class PilotView : View{
 	private bool _settingsIsVisible = false;
     #endregion
 
-    public CharacterPanel _characterPanel;
-    public DevicePanel _devicePanel;
+    public CharacterPanel characterPanel;
+    public DevicePanel devicePanel;
+	public PilotPanel pilotPanel;
+	//public UIPanel pilotPanel;
 
 	//Sort use instead of constructor
 	void Awake(){
@@ -140,8 +143,8 @@ public class PilotView : View{
 		apocalypsePointer.localEulerAngles = -90 * Vector3.forward;
 		apocalypsePercent.text = "0 %";
 
-        _characterPanel = GetComponentInChildren<CharacterPanel>();
-        _devicePanel = GetComponentInChildren<DevicePanel>();
+        characterPanel = GetComponentInChildren<CharacterPanel>();
+        devicePanel = GetComponentInChildren<DevicePanel>();
 
         //Clear inbox
         //RemoveChildren(inboxList);
@@ -149,8 +152,16 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
+		if(_uiPanels == null) {
+			Debug.Log("here");
+		}
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
+			if(!uiPanel) {
+				Debug.Log("there");
+				Debug.Log(uiPanel.name);
+			}
+
 			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
 				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
 			} else {
@@ -166,21 +177,20 @@ public class PilotView : View{
 		}
 
 		//Character panel
-		BehaviourAI currentAvatar = _characterPanel.currentAvatar;
-        if (currentAvatar != null) {
-            if (currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
-                BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
-            }
-        }
+		BehaviourAI currentAvatar = characterPanel.currentAvatar;
+		if(currentAvatar != null) {
+			if(currentAvatar.GetComponent<AvatarMood>().IsUpdated() || currentAvatar.GetComponent<AvatarStats>().IsUpdated()) {
+				BuildAvatarPanel(currentAvatar.GetComponent<Appliance>());
+			}
+		}
 
-        //Device panel
-        ElectricDevice currentDevice = _devicePanel.currentDevice;
-        if (currentDevice != null) {
-            if (currentDevice.IsUpdated()) {
-                BuildDevicePanel(currentDevice.GetComponent<Appliance>());
-            }
-        }
-
+		//Device panel
+		ElectricDevice currentDevice = devicePanel.currentDevice;
+		if(currentDevice != null) {
+			if(currentDevice.IsUpdated()) {
+				BuildDevicePanel(currentDevice.GetComponent<Appliance>());
+			}
+		}
     }
 
 	//
@@ -326,36 +336,33 @@ public class PilotView : View{
 		TranslateText(energyTitle);
 		TranslateText(inboxTitle);
 		TranslateText(apocalypsometerTitle);
+
+		//Settings menu
 		TranslateText(menuTitle);
 		TranslateText(settingsButtonText);
 		TranslateText(quitButtonText);
 
-		TranslateText(avatarTemperatureTitle);
-		TranslateText(avatarEfficiencyTitle);
-		TranslateText(avatarSatisfactionTitle);
-		TranslateText(avatarKnowledgeTitle);
-		TranslateText(avatarAttitudeTitle);
-		TranslateText(avatarNormTitle);
-		TranslateText(avatarEEMTitle);
+		//Avatar panel
+		TranslateText(characterPanel.avatarTemperatureTitle);
+		TranslateText(characterPanel.avatarEfficiencyTitle);
+		TranslateText(characterPanel.avatarSatisfactionTitle);
+		TranslateText(characterPanel.avatarKnowledgeTitle);
+		TranslateText(characterPanel.avatarAttitudeTitle);
+		TranslateText(characterPanel.avatarNormTitle);
+		TranslateText(characterPanel.avatarEEMTitle);
 
+		//Device panel
 		TranslateText(deviceEEMTitle);
-		//satisfactionTitle.text = _controller.GetPhrase("Interface", "comfort panel title");
-		//energyTitle.text = _controller.GetPhrase("Interface", "energy panel title");
-		//inboxTitle.text = _controller.GetPhrase("Interface", "inbox panel title");
-		//apocalypsometerTitle.text = _controller.GetPhrase("Interface", "apocalypse panel title");
-		//menuTitle.text = _controller.GetPhrase("Interface", "menu panel title");
-		//settingsButtonText.text = _controller.GetPhrase("Interface", "menu settings");
-		//quitButtonText.text = _controller.GetPhrase("Interface", "menu quit");
 
-		//avatarTemperatureTitle.text = _controller.GetPhrase("Interface", "avatar temperature");
-		//avatarEfficiencyTitle.text = _controller.GetPhrase("Interface", "avatar efficiency");
-		//avatarSatisfactionTitle.text = _controller.GetPhrase("Interface", "avatar satisfaction");
-		//avatarKnowledgeTitle.text = _controller.GetPhrase("Interface", "avatar knowledge");
-		//avatarAttitudeTitle.text = _controller.GetPhrase("Interface", "avatar attitude");
-		//avatarNormTitle.text = _controller.GetPhrase("Interface", "avatar norm");
-		//avatarEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
-
-		//deviceEEMTitle.text = _controller.GetPhrase("Interface", "avatar eems");
+		//Pilot panel
+		TranslateText(pilotPanel.panelHeading);
+		TranslateText(pilotPanel.infoHeading);
+		TranslateText(pilotPanel.temperatureHeading);
+		TranslateText(pilotPanel.indoorLabel);
+		TranslateText(pilotPanel.outdoorLabel);
+		TranslateText(pilotPanel.climateHeading);
+		TranslateText(pilotPanel.heatingLabel);
+		TranslateText(pilotPanel.coolingLabel);
 	}
 
 	//Given a UI text, look for translation using object name as key
@@ -379,88 +386,98 @@ public class PilotView : View{
         avatarTitle.text = app.title;
         avatarDescription.text = _controller.GetPhrase("Avatars", app.title, 0);
 
-        _characterPanel.BuildPanel(app.gameObject);
+        characterPanel.BuildPanel(app.gameObject);
 
-        BuildEEMInterface(avatarEEMContainer, app);
+        BuildEEMInterface(avatarEEMContainer, app, EEMButtonPrefab);
     }
 
 	//Prepare and show interface for inspecting a device
 	public void BuildDevicePanel(Appliance app) {
+        deviceTitle.text = _controller.GetPhrase("Content.Appliances", app.title);
+        deviceDescription.text = _controller.GetPhrase("Content.Appliances", app.title, 0);
 
-        if (_controller) {
-            deviceTitle.text = _controller.GetPhrase("Content.Appliances", app.title);
-            deviceDescription.text = _controller.GetPhrase("Content.Appliances", app.title, 0);
-        }
+        devicePanel.BuildPanel(app);
 
-        if (_devicePanel) {
-            _devicePanel.BuildPanel(app);
-        }
+        BuildEEMInterface(deviceEEMContainer, app, EEMButtonPrefab);
+	}
 
-        BuildEEMInterface(deviceEEMContainer, app);
+	//
+	public void BuildPilotPanel() {
+		BuildEEMInterface(pilotPanel.eemContainer, _controller.GetPilotAppliance(), PilotEEMButtonPrefab);
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
-	public void BuildEEMInterface(Transform container, Appliance app) {
+	public void BuildEEMInterface(Transform container, Appliance app, GameObject buttonPrefab) {
 		RemoveChildren(container);
-		List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
-
-        foreach (EnergyEfficiencyMeasure eem in eems) {
-
-            bool doRenderButton = eem.shouldRenderCallback == "";
-
-            if (!doRenderButton) {
-                if (eem.shouldRenderCallback != "") {
-                    CallbackResult result = new CallbackResult();
-                    app.SendMessage(eem.shouldRenderCallback, result);
-                    doRenderButton = result.result;
-                }
-            }
-
-            if (doRenderButton) {
-
-                EnergyEfficiencyMeasure curEEM = eem;
-                GameObject buttonObj = Instantiate(EEMButtonPrefab);
-                EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
-
-                eemButton.title.text = eem.title;
-                eemButton.buttonImage.color = eem.color;// _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
-                ColorBlock cb = eemButton.button.colors;
-                cb.normalColor = eem.color;
-                cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
-                eemButton.button.colors = cb;
-
-                //Comfort cost
-                eemButton.comfortIcon.gameObject.SetActive(eem.comfortCost != 0);
-                eemButton.comfortCost.gameObject.SetActive(eem.comfortCost != 0);
-                eemButton.comfortCost.text = eem.comfortCost.ToString();
-
-                //Money cost
-                eemButton.moneyIcon.gameObject.SetActive(eem.cashCost != 0);
-                eemButton.moneyCost.gameObject.SetActive(eem.cashCost != 0);
-                eemButton.moneyCost.text = eem.cashCost.ToString();
-
-                //Efficiency benefit
-                eemButton.efficiencyIcon.gameObject.SetActive(eem.energyFactor != 0);
-                eemButton.efficiencyEffect.gameObject.SetActive(eem.energyFactor != 0);
-                eemButton.efficiencyEffect.text = eem.energyFactor.ToString();
-
-                Button button = buttonObj.GetComponent<Button>();
-                if (!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
-                    button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-                    //if(eem.callback == "") {
-                    //	button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-                    //} else {
-                    //	//TODO: Can be used for battle when battle scene ready
-                    //	//button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-                    //}
-                }
-                else {
-                    button.interactable = false;
-                }
-
-                buttonObj.transform.SetParent(container, false);
-            }
+		//Render list of eems in this appliance
+        foreach (EnergyEfficiencyMeasure eem in app.GetEEMs()) {
+			if(ShouldRenderEEMButton(app, eem)) {
+				GameObject buttonObj = BuildEEMButton(app, eem, buttonPrefab);
+				buttonObj.transform.SetParent(container, false);
+			}
         }
+		//Append eems from appliances in slots of this appliance
+		foreach(Transform child in app.transform) {
+			if(child.GetComponent<ApplianceSlot>()) {
+				Appliance slotApp = child.GetChild(0).GetComponent<Appliance>();
+				foreach(EnergyEfficiencyMeasure eem in slotApp.GetEEMs()) {
+					if(ShouldRenderEEMButton(slotApp, eem)) {
+						GameObject buttonObj = BuildEEMButton(slotApp, eem, buttonPrefab);
+						buttonObj.transform.SetParent(container, false);
+					}
+				}
+			}
+		}
+	}
+
+	//Generate eem button given the appliance, the eem and a button prefab
+	private GameObject BuildEEMButton(Appliance app, EnergyEfficiencyMeasure eem, GameObject buttonPrefab) {
+		EnergyEfficiencyMeasure curEEM = eem;
+		GameObject buttonObj = Instantiate(buttonPrefab);
+
+		//Set buttons colors depending on eem type
+		EEMButton eemButton = buttonObj.GetComponent<EEMButton>();
+		eemButton.title.text = _controller.GetPhrase("EEM." + eem.category, eem.name);
+		eemButton.buttonImage.color = _resourceMgr.CanAfford(eem.cashCost,eem.comfortCost) ? eem.color : Color.gray;
+		ColorBlock cb = eemButton.button.colors;
+		cb.normalColor = eem.color;
+		cb.highlightedColor = eem.color + new Color(0.3f, 0.3f, 0.3f);
+		eemButton.button.colors = cb;
+
+		//Render button decorations like resource icons and costs
+		if(eem.icon) { eemButton.eemIcon.sprite = eem.icon; }
+		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost);
+		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost);
+		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect, eem.energyFactor);
+
+		Button button = buttonObj.GetComponent<Button>();
+		if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
+			button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
+		} else {
+			button.interactable = false;
+		}
+
+		return buttonObj;
+	}
+
+	//Render element of an eem button, such as a resource cost
+	private void RenderEEMProperty(Image icon, Text text, float value) {
+		if(icon) {
+			icon.gameObject.SetActive(value != 0);
+			text.gameObject.SetActive(value != 0);
+			text.text = value.ToString();
+		}
+	}
+
+	//Check whether appliance fullfills eems conditions for being rendered
+	private bool ShouldRenderEEMButton(Appliance app, EnergyEfficiencyMeasure eem) {
+		//Check if should be rendered
+		if(eem.shouldRenderCallback != "") {
+			CallbackResult result = new CallbackResult();
+			app.SendMessage(eem.shouldRenderCallback, result);
+			return result.result;
+		}
+		return true;
 	}
 
 	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
@@ -569,6 +586,11 @@ public class PilotView : View{
 			//texts[1].text = curQuest.date;
 			mailButtonObj.transform.SetParent(inboxList, false);
 		}
+	}
+
+	//
+	public void DestroyInbox() {
+		RemoveChildren(inboxList);
 	}
 
 	//

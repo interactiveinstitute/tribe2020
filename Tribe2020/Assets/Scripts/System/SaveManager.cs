@@ -13,7 +13,7 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	#region Fields
-	public static int currentSlot = -1;
+	public static int currentSlot;
 
 	public bool overrideSlot = false;
     [SerializeField]
@@ -135,6 +135,11 @@ public class SaveManager : MonoBehaviour{
 	}
 
 	//
+	public void RemoveClass(string field) {
+		_dataClone.Remove(field);
+	}
+
+	//
 	public void SetCurrentSlotArray(string key, JSONArray value) {
 		SetArray(currentSlot, key, value);
 	}
@@ -153,6 +158,8 @@ public class SaveManager : MonoBehaviour{
 	public void ClearFile() {
 		File.WriteAllText(Application.persistentDataPath + "/" + fileName, defaultContent);
 		Load();
+
+		Debug.Log(name + ": " + Application.persistentDataPath + "/" + fileName + " was cleared");
 	}
 
 	//

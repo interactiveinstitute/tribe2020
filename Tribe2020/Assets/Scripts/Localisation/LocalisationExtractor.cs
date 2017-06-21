@@ -122,6 +122,10 @@ public class LocalisationExtractor : MonoBehaviour {
 
 	//
 	public void ExtractNarraive() {
+		if(!source) {
+			source = gameObject;
+		}
+
 		//Narrative wrapper
 		if(source.GetComponent<NarrationManager>()) {
 			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().GetAllNarratives()) {
@@ -151,6 +155,10 @@ public class LocalisationExtractor : MonoBehaviour {
 
 	//
 	public void ExtractContent() {
+		if(!source) {
+			source = gameObject;
+		}
+
 		//Appliance & Avatar wrapper
 		if(source.GetComponent<ApplianceManager>()) {
 			List<Language.KeyValue> appValues = new List<Language.KeyValue>();
@@ -189,6 +197,10 @@ public class LocalisationExtractor : MonoBehaviour {
 
 	//
 	public void ExtractQuizzes() {
+		if(!source) {
+			source = gameObject;
+		}
+
 		if(source.GetComponent<QuizManager>()) {
 			List<Language.KeyValue> values = new List<Language.KeyValue>();
 			foreach(Quiz q in source.GetComponent<QuizManager>().GetAllQuizzez()) {

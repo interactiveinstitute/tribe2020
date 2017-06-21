@@ -71,7 +71,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	private bool _firstUpdate = false;
 
-    private UniqueId[] uniqueIds;
+    //private UniqueId[] uniqueIds;
 	#endregion
 
 	//Called once on all behaviours before any Start call
@@ -107,12 +107,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_avatarMgr = AvatarManager.GetInstance();
 		_applianceMgr = ApplianceManager.GetInstance();
 
-		_instance._view.ClearView();
-		_view.TranslateInterface();
+		_view.ClearView();
 
 		playPeriod = endTime - startTime;
 
-        uniqueIds = FindObjectsOfType<UniqueId>();
+        //uniqueIds = FindObjectsOfType<UniqueId>();
 
 	}
 
@@ -121,10 +120,13 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(!_firstUpdate) {
 			_firstUpdate = true;
 			_instance.LoadGameState();
+			_view.TranslateInterface();
+			//Fire empty event to activate active narratives
+			_instance._narrationMgr.OnNarrativeEvent();
 
 			if(_saveMgr.GetClass("battleReport") != null) {
 				string loserName = _saveMgr.GetClass("battleReport")["avatar"];
-				Debug.Log("battle won over " + loserName);
+				//Debug.Log("battle won over " + loserName);
 				_instance._narrationMgr.OnNarrativeEvent("BattleWon", loserName);
 			}
 		}
@@ -228,6 +230,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(_view.victoryUI.activeSelf) {
 			ClearView();
 			LimitInteraction("all");
+		}
+
+		if(_view.GetCurrentUI() != null) {
+			ClearView();
 		}
 
 		_touchState = IDLE;
@@ -350,7 +356,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
-
 		_instance._cameraMgr.SetLookAtTarget(app);
 
 		if(app.GetComponent<BehaviourAI>()) {
@@ -362,6 +367,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			SetCurrentUI(_instance._view.GetUIPanel("Device Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
+		_instance.ResetTouch();
 	}
 
 	//Open user interface
@@ -370,14 +376,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			return;
 		}
 
-		if(!ui) {
-			CloseUI(ui);
-		} else if(ui.name == _instance._view.GetCurrentUIKey()) {
+		//Close give ui if null or already open
+		if(!ui || ui.name == _instance._view.GetCurrentUIKey()) {
 			CloseUI(ui);
 		} else {
-			if(_instance._view.GetCurrentUIKey() != "") {
-				CloseUI(_instance._view.GetCurrentUI());
-			}
+			//Close current ui and open new ui
+			CloseUI(_instance._view.GetCurrentUI());
 			OpenUI(ui);
 		}
 
@@ -403,6 +407,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "Apocalypse Panel":
 				break;
 			case "Building Panel":
+				_instance._view.BuildPilotPanel();
 				break;
 			case "Character Panel":
 				break;
@@ -417,22 +422,18 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void CloseUI(RectTransform ui) {
-		if(!ui) { return; }
-
-		if(_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction) {
+		if(!ui || (_instance._curState != InputState.ALL && _instance._curState != ui.GetComponent<UIPanel>().relatedAction)) {
 			return;
 		}
 
 		_instance._view.SetUIPanel("");
-		
 		switch(ui.name) {
 			case "Comfort Panel":
 				break;
 			case "Energy Panel":
-				_instance._view.BuildEnergyPanel(_instance._cameraMgr.GetCurrentViewpoint().GetElectricDevices());
 				break;
 			case "Inbox":
-				_instance._view.BuildInbox(_instance._narrationMgr.active, _instance._narrationMgr.archive);
+				_instance._view.DestroyInbox();
 				break;
 			case "Apocalypse Panel":
 				break;
@@ -440,11 +441,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 			case "Character Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				_instance._view._characterPanel.OnClose();
 				break;
 			case "Device Panel":
 				_instance._cameraMgr.ClearLookAtTarget();
-				_instance._view._devicePanel.OnClose();
 				break;
 			case "Time Control Panel":
 				break;
@@ -534,31 +533,40 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
-	public void ApplyEEM(Appliance appliance, EnergyEfficiencyMeasure eem) {
+	public void ApplyEEM(Appliance app, EnergyEfficiencyMeasure eem) {
 		ResetTouch();
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
-		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !appliance.IsEEMApplied(eem)) {
+		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_resourceMgr.comfort -= eem.comfortCost;
-			_instance._narrationMgr.OnNarrativeEvent("MoneyIsEqualTo", "" + _resourceMgr.cash);
-			_instance._narrationMgr.OnNarrativeEvent("ComfortIsEqualTo", "" + _resourceMgr.comfort);
+			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
+			_instance._narrationMgr.OnNarrativeEvent("ComfortChanged", "" + _resourceMgr.comfort);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
 				if (eem.callbackAffordance) {
-					appliance.SendMessage(eem.callback, eem.callbackAffordance);
+					app.SendMessage(eem.callback, eem.callbackAffordance);
 				} else {
-					appliance.SendMessage(eem.callback, eem.callbackArgument);
+					app.SendMessage(eem.callback, eem.callbackArgument);
 				}
 			}
-			GameObject returnedGO = appliance.ApplyEEM(eem);
+			GameObject returnedGO = app.ApplyEEM(eem);
 
-            //Redraw device panel
-            _view.BuildDevicePanel(returnedGO.GetComponent<Appliance>());
+			//Redraw device panel
+			if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Device") {
+				_view.BuildDevicePanel(app);
+			} else {
+				_view.BuildAvatarPanel(app);
+			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
 		}
+	}
+
+	//
+	public Appliance GetPilotAppliance() {
+		return _applianceMgr.pilotAppliance;
 	}
 
 	//
@@ -726,28 +734,28 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
     }
 
     //[unique id; children appliance title]
-    public void MarkDevice(string[] cmd) {
+	public void MarkDevice(string[] cmd) {
+		//cmd[0] = uid, acquire appliance for given uid
+		Appliance app = _applianceMgr.GetAppliance(cmd[0]);  
 
-        UniqueId uid = GetUniqueIdObject(cmd[0]);
-        
-        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
+		if (cmd[1] == "") {
+			MarkAppliance(app);
+		} else {
+			List<Appliance> children = new List<Appliance>(app.GetComponentsInChildren<Appliance>());
+			foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+				MarkAppliance(child);
+			}
+		}
+	}
 
-        if (cmd[1] == "") {
-            MarkAppliance(uid.GetComponent<Appliance>());
-        }
-        else {
-            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
-                MarkAppliance(child);
-            }
-        }
-    }
-
+	//
     public void MarkDevices(string cmd) {
         foreach (Appliance app in _applianceMgr.GetAppliances().FindAll(x => x.title == cmd)) {
             MarkAppliance(app);
         }
     }
 
+	//
     void MarkAppliance(Appliance app) {
         GameObject ip = Instantiate(_narrationMgr.interactionPoint, app.transform);
         ip.GetComponentInChildren<NarrativeInteractionPoint>().app = app;
@@ -757,18 +765,19 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
     //
     public void UnmarkDevice(string[] cmd) {
-        UniqueId uid = GetUniqueIdObject(cmd[0]);
+		//cmd[0] = uid, acquire appliance for given uid
+		Appliance app = _applianceMgr.GetAppliance(cmd[0]); ;
 
-        List<Appliance> children = new List<Appliance>(uid.GetComponentsInChildren<Appliance>());
-
-        if (cmd[1] == "") {
-            Destroy(uid.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
-        }
-        else {
-            foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
-                Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
-            }
-        }
+		if (app.GetComponentInChildren<NarrativeInteractionPoint>() && cmd[1] == "") {
+			Destroy(app.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+		} else {
+			List<Appliance> children = new List<Appliance>(app.GetComponentsInChildren<Appliance>());
+			foreach (Appliance child in children.FindAll(x => x.title == cmd[1])) {
+				if(child.GetComponentInChildren<NarrativeInteractionPoint>()) {
+					Destroy(child.GetComponentInChildren<NarrativeInteractionPoint>().gameObject);
+				}
+			}
+		}
     }
 
     //
@@ -790,11 +799,29 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
+	public void ChallengeAvatar(string avatarName) {
+		ChallengeAvatar(_avatarMgr.GetAvatar(avatarName).GetComponent<Appliance>());
+	}
+
+	//
 	public void ChallengeAvatar(Appliance app) {
 		JSONClass challengeData = app.GetComponent<AvatarStats>().SerializeAsJSON();
 		_instance._saveMgr.SetClass("pendingChallenge", challengeData);
 		_instance.SaveGameState();
 		_instance.LoadScene("BattleScene");
+	}
+
+	//
+	public bool HasWonChallenge() {
+		//Debug.Log(_saveMgr.GetClass("battleReport"));
+		return _saveMgr.GetClass("battleReport") != null;
+	}
+
+	//
+	public void ClearChallengeData() {
+		_instance._saveMgr.RemoveClass("pendingChallenge");
+		_instance._saveMgr.RemoveClass("battleReport");
+		//_instance.SaveGameState();
 	}
 
 	//
@@ -897,30 +924,25 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		List<Appliance> appliances = new List<Appliance>(UnityEngine.Object.FindObjectsOfType<Appliance>());
 
 		foreach(BehaviourAI avatar in avatars) {
-			UniqueId[] ids = avatar.GetComponents<UniqueId>();
-			foreach(UniqueId id in ids) {
-				DestroyImmediate(id);
+			//UniqueId[] ids = avatar.GetComponents<UniqueId>();
+			//foreach(UniqueId id in ids) {
+			//	DestroyImmediate(id);
+			//}
+			if(!avatar.GetComponent<UniqueId>()) {
+				avatar.gameObject.AddComponent<UniqueId>();
 			}
-			avatar.gameObject.AddComponent<UniqueId>();
 		}
 
 		foreach(Appliance app in appliances) {
-			UniqueId[] ids = app.GetComponents<UniqueId>();
-			foreach(UniqueId id in ids) {
-				DestroyImmediate(id);
+			//UniqueId[] ids = app.GetComponents<UniqueId>();
+			//foreach(UniqueId id in ids) {
+			//	DestroyImmediate(id);
+			//}
+			if(!app.GetComponent<UniqueId>()) {
+				app.gameObject.AddComponent<UniqueId>();
 			}
-			app.gameObject.AddComponent<UniqueId>();
 		}
 	}
-
-    public UniqueId GetUniqueIdObject(string id) {
-        foreach(UniqueId uid in uniqueIds) {
-            if(uid.uniqueId == id) {
-                return uid;
-            }
-        }
-        return null;
-    }
 
 	//
 	public void LoadScene(string scene) {
@@ -988,13 +1010,14 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				SendMessage(callback, float.Parse(parameters[0]));
 				break;
 			case "ControlAvatar":
+			case "MarkDevice":
+			case "UnmarkDevice":
 				SendMessage(callback, parameters);
 				break;
-            case "MarkDevice":
-            case "UnmarkDevice":
-                SendMessage(callback, parameters);
-                break;
-            default:
+			case "ClearChallengeData":
+				SendMessage(callback);
+				break;
+			default:
 				SendMessage(callback, parameters[0]);
 				break;
 		}
@@ -1011,19 +1034,44 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	public void OnNarrativeActivated(Narrative narrative) {
 	}
 
-	public bool IsStepAlreadyPerformed(Narrative narrative, Narrative.Step step) {
-		bool result = false;
-		foreach(Narrative.Action a in step.actions) {
-			switch(a.callback) {
-				case "EEMPerformed":
-					break;
-				case "NarrativeComplete":
-					foreach(Narrative n in _instance._narrationMgr.archive) {
-						_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", n.title);
+	public bool HasEventFired(Narrative narrative, Narrative.Step step) {
+		switch(step.conditionType) {
+			case "EEMPerformed":
+				return _instance._applianceMgr.WasEEMPerformed(step.conditionProp);
+			case "NarrativeComplete":
+				foreach(Narrative n in _instance._narrationMgr.archive) {
+					if(n.title == step.conditionProp) {
+						return true;
 					}
-					break;
-			}
+				}
+				break;
+			case "CameraArrived":
+				return _cameraMgr.GetCurrentViewpoint().title == step.conditionProp;
 		}
-		return result;
+		return false;
+	}
+
+	//
+	public bool NarrativeCheck(string callback) {
+		JSONArray parse = JSON.Parse(callback).AsArray;
+		switch(parse[0]) {
+			case "HasWonChallenge":
+				return HasWonChallenge();
+			case "money":
+				switch(parse[1]) {
+					case "<":
+						return _instance._resourceMgr.cash < parse[2].AsFloat;
+					default:
+						return false;
+				}
+			case "comfort":
+				switch(parse[1]) {
+					case "<":
+						return _instance._resourceMgr.comfort < parse[2].AsFloat;
+					default:
+						return false;
+				}
+		}
+		return false;
 	}
 }

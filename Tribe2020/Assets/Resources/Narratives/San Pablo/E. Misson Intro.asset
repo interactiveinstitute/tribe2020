@@ -19,16 +19,19 @@ MonoBehaviour:
     conditionProp: Bobs Restroom Request
     actions: []
     inChecklist: 0
+    checkpoint: 0
   - description: Complete Javiers Narrative
     conditionType: NarrativeComplete
     conditionProp: Javier in the Dark
     actions: []
     inChecklist: 0
+    checkpoint: 0
   - description: Complete Yoghurts Narrative
     conditionType: NarrativeComplete
     conditionProp: Yoghurts Coffee Cravings
     actions: []
     inChecklist: 0
+    checkpoint: 0
   - description: Good job!
     conditionType: 
     conditionProp: 
@@ -38,6 +41,7 @@ MonoBehaviour:
       parameter2: Wow! What great work I have done here. At this rate I will be able
         to save the TRIBE for sure!
     inChecklist: 0
+    checkpoint: 1
   - description: Wait, what's that music
     conditionType: OKPressed
     conditionProp: 
@@ -52,9 +56,22 @@ MonoBehaviour:
       parameter1: Boss
       parameter2: 
     inChecklist: 0
-  - description: Oh no
+    checkpoint: 0
+  - description: Oh no, look around
     conditionType: OKPressed
     conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Oh no...
+    - callback: GotoViewpoint
+      parameter1: Waiting Lounge
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Oh no, look back
+    conditionType: CameraArrived
+    conditionProp: Waiting Lounge
     actions:
     - callback: ShowMessage
       parameter1: player
@@ -63,12 +80,202 @@ MonoBehaviour:
       parameter1: Elevator
       parameter2: 
     inChecklist: 0
+    checkpoint: 0
   - description: Well well
     conditionType: CameraArrived
     conditionProp: Elevator
     actions:
     - callback: ShowPrompt
-      parameter1: E.Mission
+      parameter1: E. Mission
       parameter2: Well, well, well. What DO we have HERE!?
     inChecklist: 0
+    checkpoint: 0
+  - description: E. Mission, the nororious
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: It's E. Mission. The notorious energy skeptic!
+    inChecklist: 0
+    checkpoint: 0
+  - description: He doesn't care
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: He doesn't care what is right or wrong, and he wouldn't believe
+        in energy efficiency if his mother's life depended on it.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Thanks for the introduction
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: Well, thank you for the introduction. I would however call myself
+        a skeptic rather than a non believer.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Who wouldn't want
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: Who wouldn't want the weather to be a little warmer, after all?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Stop it
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: That's enough Mission! I won't let your evil mission ruin the work
+        I'm doing here at San Pablo!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Evil?
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: Evil?! Now, spending perfecly good money on non-sensical energy
+        efficincy measure, that's just SAD!
+    inChecklist: 0
+    checkpoint: 0
+  - description: I think it's about time
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: I think it's about time that I perform a few efficiency measures
+        myself in this place!
+    inChecklist: 0
+    checkpoint: 0
+  - description: I won't let you
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: I won't let you! We Fire Shamans have caused enough trouble as it
+        is!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Let's see
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: Let's see if you CAN stop me, or if you are just words.
+    inChecklist: 0
+    checkpoint: 0
+  - description: About to challenge
+    conditionType: OKPressed
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  - description: Check challenge
+    conditionType: Check
+    conditionProp: '[HasWonChallenge]'
+    actions:
+    - callback: E. Mission Defeated
+      parameter1: 
+      parameter2: 
+    - callback: Auto challenge
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 1
+  - description: Auto challenge
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ChallengeAvatar
+      parameter1: E. Mission
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: E. Mission Defeated
+    conditionType: BattleWon
+    conditionProp: E. Mission
+    actions:
+    - callback: ClearChallengeData
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Don't you see now
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Don't you see now E. Mission? We all have to work together in order
+        to fight global warming and other environmental issues.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Bah!
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: Bah! You haven't seen the last of me. Your obsession for flowers
+        and weird animals doesn't interest me the slightest.
+    inChecklist: 0
+    checkpoint: 0
+  - description: What, what do you mean
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What? What animals? This is not just about some fuzzy subject. The
+        whole Earth is at stake!
+    inChecklist: 0
+    checkpoint: 0
+  - description: You tell yourself that
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: E. Mission
+      parameter2: You tell yourself that kid, but it won't safe you during our next
+        encounter. Au revior, weirdo!
+    inChecklist: 0
+    checkpoint: 0
+  - description: That guy
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: That guy really gives me the creeps, but I can never give up on
+        this struggle. Not until I have convinced even people like him.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Congratulations
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowCongratulations
+      parameter1: 
+      parameter2: Don't give in to energy skeptics!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Tap to continue
+    conditionType: Tapped
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
   followingNarratives: []

@@ -10,8 +10,10 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public string description;
 	public Color color;
 	public string category;
+	public Sprite icon;
 
 	[Header("Effects")]
+	private Appliance _relatedAppliance;
 	public int cashCost;
 	public int comfortCost;
 
@@ -31,11 +33,6 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
     public bool setEnergyEffeciency;
     public EnergyEffeciencyLabels.Name energyEffeciency;
 
-    //public string targetSlot;
-
-    //public string deactivateDeviceName;
-    //public string activateDeviceName;
-
     [Header("Time Limitation")]
 	public double discoveryTime;
 	public double obsoletionTime;
@@ -44,16 +41,13 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public List<EnergyEfficiencyMeasure> requires;
 	public List<EnergyEfficiencyMeasure> excludes;
 
-	//public int cashProduction;
-	//public int comfortPorduction;
+	public bool performed = false;
+	public bool passive = false;
+	public bool hidden = false;
 
-	public bool performed;
-	public bool passive;
-	public bool hidden;
+    public string shouldRenderCallback = "";
 
-    public string shouldRenderCallback;
-
-    public bool multipleUse;
+    public bool multipleUse = false;
 
     public bool IsAffordable(float money, float comfort) {
 		return cashCost <= money && comfortCost <= comfort;

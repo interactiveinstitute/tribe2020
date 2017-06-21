@@ -11,20 +11,114 @@ public class ApplianceManager : MonoBehaviour {
 
 	[SerializeField]
 	private List<Appliance> _appliances;
+	public Appliance pilotAppliance;
+	private Dictionary<string, Appliance> _uidLookup = new Dictionary<string, Appliance>();
+	private Dictionary<string, List<Appliance>> _appLookup = new Dictionary<string, List<Appliance>>();
+	private List<string> _performedEEMs = new List<string>();
 	public List<Appliance> allDevices;
 
 	//
 	void Awake() {
 		_instance = this;
+
+		//Init uid lookup by uid
+		UniqueId[] uids = Object.FindObjectsOfType<UniqueId>();
+		foreach(UniqueId uid in uids) {
+			if(_uidLookup.ContainsKey(uid.uniqueId)) {
+				Debug.Log("duplicate uid " + uid.uniqueId + " for " + uid.name, uid.gameObject);
+			}
+			if(_uidLookup.ContainsKey("")) {
+				Debug.Log("uid not generated for " + uid.name, uid.gameObject);
+			}
+			_uidLookup.Add(uid.uniqueId, uid.GetComponent<Appliance>());
+		}
+
+		//Init appliance lookup by app title
+		foreach(Appliance app in allDevices) {
+			_appLookup.Add(app.title, new List<Appliance>());
+		}
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update() {
+
+	}
+
+	//
+	public void AddAppliance(Appliance appliance) {
+		if(appliance.isPilot) {
+			pilotAppliance = appliance;
+			return;
+		}
+
+		_appliances.Add(appliance);
+		if(_appLookup.ContainsKey(appliance.title)) {
+			_appLookup[appliance.title].Add(appliance);
+		}
+	}
+
+	//
+	public void RemoveAppliance(Appliance appliance) {
+		if(!_appLookup.ContainsKey(appliance.title)) { return; }
+		_appliances.Remove(appliance);
+		_appLookup[appliance.title].Remove(appliance);
+	}
+
+	//
+	public void ReplaceAppliance(Appliance oldApp, Appliance newApp) {
+		if(oldApp.GetComponent<UniqueId>()) {
+			newApp.gameObject.AddComponent<UniqueId>();
+			string uid = oldApp.gameObject.GetComponent<UniqueId>().uniqueId;
+			newApp.GetComponent<UniqueId>().uniqueId = uid;
+			_uidLookup[uid] = newApp;
+
+			newApp.appliedEEMs = oldApp.appliedEEMs;
+		}
+	}
+
+	//
+	public bool ContainsAppliance(Appliance app) {
+		return _appliances.Contains(app);
+	}
+
+	//
+	public List<Appliance> GetAppliances() {
+		return _appliances;
+	}
+
+	//
+	public void RefreshAllSlots() {
+		Appliance[] apps = Object.FindObjectsOfType<Appliance>();
+		foreach(Appliance app in apps) {
+			app.RefreshSlots();
+		}
+	}
+
+	//
+	public Appliance GetAppliance(string uid) {
+		if(!_uidLookup.ContainsKey(uid)) {
+			Debug.Log("does not contain " + uid);
+		}
+		return _uidLookup[uid];
+	}
+
+	//
+	public List<Appliance> GetAppliancesOfType(string title) {
+		return _appLookup[title];
+	}
+
+	//
+	public void AddEEMTitle(string eemTitle) {
+		_performedEEMs.Add(eemTitle);
+	}
+
+	//
+	public bool WasEEMPerformed(string eemTitle) {
+		return _performedEEMs.Contains(eemTitle);
 	}
 
 	//Serialize state as json for a save file
@@ -32,23 +126,12 @@ public class ApplianceManager : MonoBehaviour {
 		JSONClass json = new JSONClass();
 
 		JSONArray applianceJSON = new JSONArray();
-		foreach(Appliance appliance in _appliances) {
-			applianceJSON.Add(appliance.SerializeAsJSON());
+		foreach(Appliance app in _appliances) {
+			applianceJSON.Add(app.SerializeAsJSON());
 		}
 
 		json.Add("appliances", applianceJSON);
 		return json;
-
-		//_saveMgr.SetCurrentSlotArray("Appliances", applianceJSON);
-
-
-		//JSONArray avatarsJSON = new JSONArray();
-		//foreach(BehaviourAI avatar in _avatars) {
-		//	avatarsJSON.Add(avatar.Encode());
-		//}
-
-		//json.Add("avatars", avatarsJSON);
-		//return json;
 	}
 
 	//Deserialize json and apply states to aspects handled by the manager
@@ -57,42 +140,14 @@ public class ApplianceManager : MonoBehaviour {
 			JSONArray appsJSON = json["appliances"].AsArray;
 
 			foreach(JSONClass appJSON in appsJSON) {
-				foreach(Appliance app in _appliances) {
-					if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
-						app.DeserializeFromJSON(appJSON);
-					}
-				}
+				GetAppliance(appJSON["id"]).DeserializeFromJSON(appJSON);
+
+				//foreach(Appliance app in _appliances) {
+				//	if(app.GetComponent<UniqueId>().uniqueId.Equals(appJSON["id"])) {
+				//		app.DeserializeFromJSON(appJSON);
+				//	}
+				//}
 			}
-
-			//if(syncAppliances && _saveMgr.GetCurrentSlotData("Appliances") != null) {
-				
-			//}
-
-
-
-			//JSONArray avatarsJSON = json["avatars"].AsArray;
-
-			//foreach(JSONClass avatarJSON in avatarsJSON) {
-			//	foreach(BehaviourAI avatar in _avatars) {
-			//		string loadedName = avatarJSON["name"];
-			//		if(avatar.name == loadedName) {
-			//			avatar.Decode(avatarJSON);
-			//		}
-			//	}
-			//}
 		}
 	}
-
-    public void AddAppliance(Appliance appliance) {
-        _appliances.Add(appliance);
-    }
-
-    public void RemoveAppliance(Appliance appliance) {
-        _appliances.Remove(appliance);
-    }
-
-    public List<Appliance> GetAppliances() {
-        return _appliances;
-    }
-
 }

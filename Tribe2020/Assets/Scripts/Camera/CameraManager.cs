@@ -101,16 +101,16 @@ public class CameraManager : MonoBehaviour {
 				gameCamera.transform.position = Vector3.Lerp(_lastPos, _targetPos, fracJourney);
 				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _targetRot, fracJourney);
 				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _defaultFOV, fracJourney);
+
+				if(fracJourney > 0.99f) {
+					gameCamera.transform.position = _targetPos;
+					gameCamera.transform.rotation = _targetRot;
+					journeyLength = 0;
+					OnCameraArrived();
+				}
 			} else {
 				gameCamera.transform.rotation = Quaternion.Lerp(_lastRot, _lookAtRotation, fracJourney);
 				gameCamera.fieldOfView = Mathf.Lerp(_lastFOV, _lookaAtFOV, fracJourney);
-			}
-
-			if(fracJourney > 0.99f) {
-				gameCamera.transform.position = _targetPos;
-				gameCamera.transform.rotation = _targetRot;
-				journeyLength = 0;
-				OnCameraArrived();
 			}
 		}
 	}
@@ -256,6 +256,7 @@ public class CameraManager : MonoBehaviour {
 		_isLooking = true;
 		// distance to zoomed in object
 		//float distance = Vector3.Distance(gameCamera.transform.position, appliance.transform.position
+		journeyLength = Vector3.Distance(gameCamera.transform.position, appliance.transform.position);
 
 		////FOV is the vertical agnle of the viewport, so let's use the height (and distance) for calculating how much we should zoom in
 		//_lookaAtFOV = Mathf.Rad2Deg * 2 * Mathf.Atan2(applianceHeight, distance);

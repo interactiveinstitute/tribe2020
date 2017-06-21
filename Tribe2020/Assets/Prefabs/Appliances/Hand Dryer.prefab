@@ -1,0 +1,330 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &121034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 458032}
+  - component: {fileID: 11441240}
+  m_Layer: 9
+  m_Name: Interaction Point
+  m_TagString: Untagged
+  m_Icon: {fileID: -1577725955494882426, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!1 &123774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 467642}
+  - component: {fileID: 3346228}
+  - component: {fileID: 2388912}
+  m_Layer: 9
+  m_Name: Handdryer__Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!1 &190636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 426034}
+  - component: {fileID: 6516222}
+  - component: {fileID: 208000012191567596}
+  - component: {fileID: 114000010453038570}
+  - component: {fileID: 11479856}
+  m_Layer: 9
+  m_Name: Hand Dryer
+  m_TagString: Appliance
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &426034
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_LocalRotation: {x: -0, y: -0.70711225, z: -0, w: 0.70710135}
+  m_LocalPosition: {x: 0.6879997, y: -0.20600009, z: -0.37099934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 467642}
+  - {fileID: 458032}
+  - {fileID: 4751729385193374}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -90.00101, z: 0}
+--- !u!4 &458032
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121034}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.066, y: -0.75, z: 0.32}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 426034}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &467642
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123774}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 426034}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &2388912
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123774}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: d44dc26a1f6fafe4a9aee22c81fcb2c4, type: 2}
+  - {fileID: 2100000, guid: 69a03f97026b34646af53a6d1cd3af1b, type: 2}
+  - {fileID: 2100000, guid: 344b279e1f3f67a408975874c941b5e3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &3346228
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123774}
+  m_Mesh: {fileID: 4300000, guid: 0163aebba59e08145ad9e9b7eacdbe4e, type: 3}
+--- !u!65 &6516222
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2412706, y: 0.25994754, z: 0.17872454}
+  m_Center: {x: -0.0053251022, y: 0.1486113, z: 0.01457699}
+--- !u!114 &11441240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c251cec634f44c34491dee654864c4ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11479856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842bd76f32fff0c45869a9766019b885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: Hand Dryer
+  description: Handy device for obfuscating disturbing sounds of colleagues standing
+    next to you.
+  icon: {fileID: 0}
+  playerAffordances:
+  - {fileID: 11400000, guid: 63d0ab5bd48f48d4ba6b206c367be60d, type: 2}
+  - {fileID: 11400000, guid: 5c77ef3802859d940bfae237d2098280, type: 2}
+  avatarAffordances:
+  - affordance: {fileID: 11400000, guid: 95786e55885268146aa72fa1270d8642, type: 2}
+    nrOfSlots: 0
+    subscribingActivities: []
+  owners: []
+  appliedEEMs: []
+  interactionPos: {x: 0, y: 0, z: 0}
+  posePositions: []
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: description
+      value: Handy device for obfuscating disturbing sounds of colleagues standing
+        next to you.
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: harvestButton
+      value: 
+      objectReference: {fileID: 22460674, guid: 5d16f8f0f7e294048b78788b64ed7ffa,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: harvestButtonRef
+      value: 
+      objectReference: {fileID: 177914, guid: 5d16f8f0f7e294048b78788b64ed7ffa, type: 2}
+    - target: {fileID: 0}
+      propertyPath: avatarAffordances.Array.data[0]
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Appliance
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 190636}
+  m_IsPrefabParent: 1
+--- !u!1 &1134110400470338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4751729385193374}
+  m_Layer: 9
+  m_Name: Pose Position
+  m_TagString: Untagged
+  m_Icon: {fileID: -6488666005112524639, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4751729385193374
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1134110400470338}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: -1.019, z: 0.333}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 426034}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &114000010453038570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21794f2e1acf84f46a6cfaf08847bb28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  PowerSource: {fileID: 0}
+  AutomaticallyFindSource: 1
+  AlwaysPowered: 0
+  GivesPower: 1
+  Powering: []
+  HasPower: 0
+  Power: 0
+  Energy: 0
+  lastupdate: 0
+  continous_updates: 0
+  Unplugged: 0
+  runlevels:
+  - Name: Off
+    Power: 0
+    powerByEE: []
+    Target: {fileID: 2388912}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  - Name: On
+    Power: 0
+    powerByEE:
+    - energyEffeciency: 0
+      power: 800
+    - energyEffeciency: 5
+      power: 2700
+    Target: {fileID: 2388912}
+    materials: []
+    sound: {fileID: 0}
+    LoopSound: 0
+    LightsOn: []
+    LightsOff: []
+  runlevel: 0
+  RetainsRunlevel: 0
+  DefaultRunlevel: 0
+  runlevelOn: 1
+  runlevelOff: 0
+  runlevelUnpowered: 0
+  _energyMod: 1
+  energyEffeciency: 5
+--- !u!208 &208000012191567596
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190636}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.1, y: 0.13, z: 0.1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.13, z: 0}
+  m_TimeToStationary: 0.5

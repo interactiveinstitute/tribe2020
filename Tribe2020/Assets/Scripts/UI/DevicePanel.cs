@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class DevicePanel : MonoBehaviour {
+	private PilotView _pilotView;
 
-    PilotView _pilotView;
-    public ElectricDevice currentDevice = null;
+	public Text deviceTitle;
+	public Text deviceDescription;
+	public Text devicePowerValue;
+	public Text deviceEEMTitle;
+	public Transform deviceEEMContainer;
+	public Image deviceEfficiencyLabel;
+
+	public ElectricDevice currentDevice = null;
 
     // Use this for initialization
     void Start() {
@@ -18,34 +25,37 @@ public class DevicePanel : MonoBehaviour {
 
     }
 
+	//
     public void BuildPanel(Appliance appliance) {
-
         currentDevice = appliance.GetComponent<ElectricDevice>();
 
         ElectricDevice ed = appliance.GetComponent<ElectricDevice>();
         if (ed) {
             SetPowerValue(ed.Power);
             SetEnergyEffeciency(ed.energyEffeciency);
-        }
-        else {
+        } else {
             SetPowerValueNotApplicable();
             SetEnergyEffeciency(EnergyEffeciencyLabels.Name.AAAA);
         }
         
     }
 
+	//
     public void OnClose() {
         currentDevice = null;
     }
 
+	//
     void SetPowerValue(float value) {
         _pilotView.devicePowerValue.text = value + "W";
     }
 
+	//
     void SetPowerValueNotApplicable() {
         _pilotView.devicePowerValue.text = "-";
     }
 
+	//
     void SetEnergyEffeciency(EnergyEffeciencyLabels.Name eeName) {
         _pilotView.deviceEfficiencyLabel.GetComponent<Image>().sprite = _pilotView.EELabels[(int)eeName];
     }

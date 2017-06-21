@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 82365980445826312}
   - component: {fileID: 82000951252708300}
   - component: {fileID: 82681007053526204}
+  - component: {fileID: 82011740693245740}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -636,6 +637,86 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!82 &82011740693245740
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1545798417225876}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 08daf2f7619c5774ea0c702f09a6600d, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82365980445826312
 AudioSource:
   m_ObjectHideFlags: 1
@@ -866,6 +947,8 @@ MonoBehaviour:
     value: {fileID: 82365980445826312}
   - key: Fireworks
     value: {fileID: 82681007053526204}
+  - key: Boss
+    value: {fileID: 82011740693245740}
   defaultMusic: Climbing the Mountain
 --- !u!114 &114144636180338146
 MonoBehaviour:
@@ -899,21 +982,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 1
+  autoStart: 0
   saveProgress: 1
   debug: 0
   curInFocus: {fileID: 0}
   starters:
-  - {fileID: 11400000, guid: f834e78f0796b734dace008fa16e4a9b, type: 2}
+  - {fileID: 11400000, guid: 23af2d0736c909648b00fc82da4b0fb9, type: 2}
   active: []
   archive: []
-  allNarratives:
-  - {fileID: 11400000, guid: f834e78f0796b734dace008fa16e4a9b, type: 2}
-  - {fileID: 11400000, guid: d9bf115c679b7c146af54e51d93fb448, type: 2}
-  - {fileID: 11400000, guid: 945f0c6b70cdfe24f8616d4f454dce50, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
+  interactionPoint: {fileID: 1861428572055132, guid: df5fdacd98e9bf24195b5ce249a8dd5c,
+    type: 2}
   selectIndex: 0
 --- !u!114 &114181491290269560
 MonoBehaviour:
@@ -1515,6 +1593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _appliances: []
+  pilotAppliance: {fileID: 0}
   allDevices:
   - {fileID: 114925987497062190, guid: b9b63f4f396bc1a418b950d5ef7f2c01, type: 2}
   - {fileID: 11439236, guid: c0709a25903fb8441a15ba4656ca9946, type: 2}
@@ -1530,7 +1609,6 @@ MonoBehaviour:
   - {fileID: 11434520, guid: cd98bfef8e723714aa81bd8ad3a8a204, type: 2}
   - {fileID: 114000011745709356, guid: 76b573e863d72fa42ac12be129d551e8, type: 2}
   - {fileID: 114000012667471348, guid: 600ac66c53283c245ae8a926c3bbda7e, type: 2}
-  - {fileID: 11479424, guid: 99155487fd89b214381843b757f70304, type: 2}
   - {fileID: 114000012964678822, guid: 0a34c60081b671a4aa0c8b03a12928ed, type: 2}
   - {fileID: 11492776, guid: b4cc5d8b7e18d234fb2c4761d79dd88f, type: 2}
   - {fileID: 11400008, guid: 61256a63d500d7b4595d0cc2b3423658, type: 2}
@@ -1547,17 +1625,12 @@ MonoBehaviour:
   - {fileID: 11492818, guid: 644d0bf9eb6948d4aa52829d4b240592, type: 2}
   - {fileID: 114000012477659158, guid: 36e9592e43efaa840b09dc124a744d9b, type: 2}
   - {fileID: 11468768, guid: ad243d36139dd1449aff8ccc050449f9, type: 2}
-  - {fileID: 11499390, guid: 4dff5515f5470ab41812f9d451fc38fc, type: 2}
-  - {fileID: 114000014229571858, guid: b54585c2be82a234a8a598639dac0b63, type: 2}
   - {fileID: 11498028, guid: 3a894235f36325f4c8de5347b5c3ba9a, type: 2}
-  - {fileID: 114000012283481730, guid: b22db3a20e9213c4cbb81b0998c089a2, type: 2}
-  - {fileID: 114000012370458472, guid: 78fadfc5eaeeb4742afb1116c3818ab6, type: 2}
   - {fileID: 114673759262005310, guid: 545780a2291398d409f98d07a533645f, type: 2}
   - {fileID: 114000010489967452, guid: 5ea5104231575354cb33fda344afa06e, type: 2}
   - {fileID: 114000010030162554, guid: a7932aece73363d448688f937c75155f, type: 2}
-  - {fileID: 114413883107458976, guid: 218a1b3f5c0b71f4caaf865c9b380b65, type: 2}
-  - {fileID: 114287123219287160, guid: 3e4076895e5309247b640ace663a79c3, type: 2}
   - {fileID: 11414528, guid: 7728fc6a0d71eff438edf31c1ab0189d, type: 2}
+  - {fileID: 114732973723832952, guid: 18f5d7203b1f2e14ab7f369f4205dad0, type: 2}
 --- !u!114 &114579081545576198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1793,12 +1866,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bfb1c9fbaa262419180bc7292666b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overrideSlot: 1
+  overrideSlot: 0
   saveSlot: 0
   debug: 0
   fileName: tribeSave.gd
-  defaultContent: '{"San Pablo":"True", "IES Azucarera":"False", "CIRCE HQ":"False",
-    "Emmeline de Pankhurst":"False", "Universidad Ouezygin":"False", "lastSlot":"-1",
+  defaultContent: '{"San Pablo":"True", "IES Azucarera":"True", "CIRCE HQ":"True",
+    "Emmeline de Pankhurst":"True", "Universidad Ouezygin":"False", "lastSlot":"-1",
     "slots":[{}, {}, {}]}'
 --- !u!114 &114784165226372590
 MonoBehaviour:
@@ -3386,7 +3459,7 @@ MonoBehaviour:
   CurrentDate: 
   KeyActions: []
   VisualTimeScale: 1
-  SimulationTimeScaleFactor: 360
+  SimulationTimeScaleFactor: 60
   LockScales: 0
 --- !u!114 &114951931450549782
 MonoBehaviour:
@@ -3400,7 +3473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _curState: 0
-  debug: 1
+  debug: 0
   enableSaveLoad: 1
   startTime: 1010127600
   endTime: 1577833200
@@ -3409,11 +3482,11 @@ MonoBehaviour:
   syncTime: 1
   syncPilot: 1
   syncCamera: 1
-  syncResources: 1
+  syncResources: 0
   syncNarrative: 1
   syncLocalization: 1
-  syncAvatars: 0
-  syncAppliances: 0
+  syncAvatars: 1
+  syncAppliances: 1
 --- !u!124 &124298556298773944
 Behaviour:
   m_ObjectHideFlags: 1
@@ -3429,7 +3502,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1826864137982002}
   serializedVersion: 5
   lengthInSec: 5
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -6054,7 +6127,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1505711593783160}
   serializedVersion: 5
   lengthInSec: 2
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0

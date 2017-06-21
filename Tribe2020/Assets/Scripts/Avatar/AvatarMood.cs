@@ -31,14 +31,8 @@ public class AvatarMood : MonoBehaviour {
 	Markov<Mood> markovMood = new Markov<Mood>();
 	Markov<AvatarConversation.EnvironmentLevel> markovEnvironmentLevel = new Markov<AvatarConversation.EnvironmentLevel>();
 
-	//Constructor
-	void Start() {
-		_timeMgr = GameTime.GetInstance();
-		_gems = Gems.GetInstance();
-		_resourceMgr = ResourceManager.GetInstance();
-
-		_charController = GetComponent<ThirdPersonCharacter>();
-
+	//
+	void Awake() {
 		//Markov
 		List<Mood> markovStates = new List<Mood>();
 		markovStates.Add(Mood.angry);
@@ -67,6 +61,17 @@ public class AvatarMood : MonoBehaviour {
 		//UpdateFaceTextureByCurrentMood();
 	}
 
+	//Constructor
+	void Start() {
+		_timeMgr = GameTime.GetInstance();
+		_gems = Gems.GetInstance();
+		_resourceMgr = ResourceManager.GetInstance();
+
+		_charController = GetComponent<ThirdPersonCharacter>();
+
+		
+	}
+
 	void Update() {
 		TryReleaseSatisfactionGem(_timeMgr.time);
 		TryResetMood(_timeMgr.time);
@@ -83,7 +88,8 @@ public class AvatarMood : MonoBehaviour {
 	}
 
 	public Mood TryChangeMood(Mood moodInput) {
-		Mood moodNew = markovMood.SetToNextState(new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
+		Mood moodNew = markovMood.SetToNextState(
+			new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
 		_timeLastMoodChange = _timeMgr.time;
 		UpdateLooksByCurrentMood();
 		SetUpdated();

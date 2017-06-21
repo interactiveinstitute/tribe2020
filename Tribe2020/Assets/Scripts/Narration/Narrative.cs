@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using SimpleJSON;
 
 [CreateAssetMenu(fileName = "Narrative", menuName = "Narration/Narrative", order = 1)]
 public class Narrative : ScriptableObject {
@@ -31,6 +32,21 @@ public class Narrative : ScriptableObject {
 	}
 
 	//
+	public int GetNarrativeID() {
+		return NarrationManager.GetInstance().GetDBIndexForNarrative(this);
+	}
+
+	//
+	public int GetLatestCheckpoint() {
+		for(int i = GetCurrentStepIndex(); i > 0; i--) {
+			if(i >= steps.Count() || steps[i].checkpoint) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+	//
 	public void Progress() {
 		_curStep++;
 	}
@@ -50,6 +66,7 @@ public class Narrative : ScriptableObject {
 
 		public List<Narrative.Action> actions;
 		public bool inChecklist;
+		public bool checkpoint;
 
 		//
 		public bool IsCompletedBy(string eventType, string prop) {
