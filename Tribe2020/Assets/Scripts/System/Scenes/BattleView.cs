@@ -17,11 +17,13 @@ public class BattleView : MonoBehaviour {
 	public GameObject levelUpUI;
 
 	public Text foeName;
-	public Text foeCPNumber;
-	public Image foeCPBar;
+	public ImageBar foeEnergy;
+	public ImageBar allyEnergy;
+	//public Text foeCPNumber;
+	//public Image foeCPBar;
 
-	public Text allyCPNumber;
-	public Image allyCPBar;
+	//public Text allyCPNumber;
+	//public Image allyCPBar;
 
 	public Text levelUpName;
 	public Slider avatarSatisfaction;

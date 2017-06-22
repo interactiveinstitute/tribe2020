@@ -32,8 +32,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	public GameObject foeObject;
 	public GameObject allyObject;
 
-	private int foeCP = 100;
-	private int allyCP = 100;
+	private int foeCP = 4;
+	private int allyCP = 3;
 
 	public Quiz[] quizzes;
 	private int _curQuizIndex = 0;
@@ -89,11 +89,14 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
 		}
 
-		_view.foeCPNumber.text = foeCP + "/100";
-		_view.foeCPBar.fillAmount = foeCP / 100f;
+		//_view.foeCPNumber.text = foeCP + "/100";
+		//_view.foeCPBar.fillAmount = foeCP / 100f;
 
-		_view.allyCPNumber.text = allyCP + "/100";
-		_view.allyCPBar.fillAmount = allyCP / 100f;
+		//_view.allyCPNumber.text = allyCP + "/100";
+		//_view.allyCPBar.fillAmount = allyCP / 100f;
+
+		_view.foeEnergy.value = foeCP;
+		_view.allyEnergy.value = allyCP;
 
 		_view.levelUpName.text = foeObject.GetComponent<Appliance>().title;
 		_view.avatarKnowledge.value = foeObject.GetComponent<AvatarStats>().knowledge * 100;
@@ -162,7 +165,9 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	//
 	public void OnArguePressed(int answerIndex) {
 		if(answerIndex == _instance._curQuiz.rightChoice) {
-			int damage = UnityEngine.Random.Range(10, 20);
+			//Right answer, deal damage to foe
+			//int damage = UnityEngine.Random.Range(10, 20);
+			int damage = 1;
 			_instance._view.CreateFeedback(_instance.foeObject.transform.position, "" + damage);
 			_instance.foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
 			_instance.foeCP = Mathf.Max(_instance.foeCP - damage, 0);
@@ -172,6 +177,12 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 				_instance._curQuizIndex = (_instance._curQuizIndex + 1) % _instance.quizzes.Length;
 				_instance.LoadQuiz(_instance.foeObject.GetComponent<Appliance>().title, _instance._curQuizIndex);
 				//_instance.LoadQuiz(_instance.quizzes[_instance._curQuiz]);
+			}
+		} else {
+			//Wrong answer, receive damage
+			_instance.allyCP = Mathf.Max(_instance.allyCP - 1, 0);
+			if(_instance.allyCP == 0) {
+				_instance.OnDefeat();
 			}
 		}
 	}
@@ -201,6 +212,17 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 		_narrationMgr.OnNarrativeEvent("BattleOver");
 		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
 		//_instance.SaveGameState();
+	}
+
+	//
+	public void OnDefeat() {
+		_instance.foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.happy);
+
+		_view.dialogueUI.SetActive(false);
+		_view.barsUI.SetActive(false);
+		_view.actionsUI.SetActive(false);
+
+		_instance._sceneMgr.LoadScene(_instance._saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
 	}
 
 	//
