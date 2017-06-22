@@ -618,7 +618,7 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void StopAnimation() {
-		animator.Stop();
+		animator.StopPlayback();
 		overlayCanvas.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
 		animator.enabled = false;
 

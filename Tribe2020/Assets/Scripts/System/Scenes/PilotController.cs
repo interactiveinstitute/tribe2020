@@ -552,12 +552,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				}
 			}
 			GameObject returnedGO = app.ApplyEEM(eem);
+			Appliance returnApp = returnedGO.GetComponent<Appliance>();
 
 			//Redraw device panel
 			if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Device") {
-				_view.BuildDevicePanel(app);
-			} else {
-				_view.BuildAvatarPanel(app);
+				_view.BuildDevicePanel(returnApp);
+			} else if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Character") {
+				_view.BuildAvatarPanel(returnApp);
+			} else if(_view.GetCurrentUI().GetComponent<UIPanel>().title == "Building") {
+				_view.BuildPilotPanel();
 			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
