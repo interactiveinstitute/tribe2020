@@ -9,17 +9,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(ThirdPersonCharacter))]
 [System.Serializable]
 public class BehaviourAI : SimulationObject {
-	[SerializeField]
+	#region Fields
 	private PilotController _controller;
 	private GameTime _timeMgr;
 	private AvatarManager _avatarMgr;
     private ApplianceManager _applianceManager;
 
-	[SerializeField]
 	private AvatarStats _stats;
 	private NavMeshAgent _agent;
 	private ThirdPersonCharacter _charController;
-	[SerializeField]
 	private Vector3 _savedIdlePosition;
 	private Appliance _poseAppliance = null;
 
@@ -31,13 +29,11 @@ public class BehaviourAI : SimulationObject {
 	private Stack<AvatarActivity> _tempActivities = new Stack<AvatarActivity>();
 	//private bool _isTemporarilyUnscheduled = false;
 
-	[SerializeField]
 	private bool _isControlled = false;
-	[SerializeField]
 	private bool _isSimulating = false;
 
 	private Room _curRoom;
-	public int _nrOfActiveColliders = 0;
+	private int _nrOfActiveColliders = 0;
 
 	private bool _firstUpdate = true;
 
@@ -72,9 +68,7 @@ public class BehaviourAI : SimulationObject {
 	public bool showCoffeeCup = false;
 
     public bool battleReady = false;
-
-	//[SerializeField]
-	//private GameObject prefab;
+	#endregion
 
 	// Use this for initialization
 	void Start() {
@@ -91,17 +85,6 @@ public class BehaviourAI : SimulationObject {
 		//added by Gunnar.
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
-
-		if(_nextActivity != null) {
-			//Add key point for _nextActivity.
-			if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
-				DebugManager.Log("added key action point", this, this);
-			} else {
-				DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
-			}
-		} else {
-			DebugManager.LogError("_nextActivity is null!!", this, this);
-		}
 	}
 
 	//Update simulation
@@ -171,6 +154,17 @@ public class BehaviourAI : SimulationObject {
 			SyncSchedule();
 			if(_curActivity) {
 				_curActivity.Start(); //Start this activity.
+			}
+
+			if(_nextActivity != null) {
+				//Add key point for _nextActivity.
+				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+					DebugManager.Log("added key action point", this, this);
+				} else {
+					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
+				}
+			} else {
+				DebugManager.LogError("_nextActivity is null!!", this, this);
 			}
 
 			_firstUpdate = false;
@@ -1257,8 +1251,8 @@ public class BehaviourAI : SimulationObject {
 		AvatarConversation.EnvironmentLevel environmentLevel = AvatarConversation.EnvironmentLevel.neutral; //Change to avatar markov state
 
 		AvatarConversation.EmojiLine line = _avatarMgr.conversation.GenerateEmojiLine(environmentLevel, mood);
-        transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = true;
-        transform.FindChild("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
+        transform.Find("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = true;
+        transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = line.emojiReaction;
         StartCoroutine(other.ListenToOtherAvatarEmoji(this, environmentLevel, mood));
 	}
 
@@ -1271,7 +1265,7 @@ public class BehaviourAI : SimulationObject {
 
 		if(continueTalking) {
             //Be polite, be quiet when other creatures are talking
-            transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
+            transform.Find("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
             transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
 
 			yield return new WaitForSeconds(2);
@@ -1291,7 +1285,7 @@ public class BehaviourAI : SimulationObject {
 
 	public void EndTalkToOtherAvatar() {
 		transform.Find("Canvas/Speech/EmojiReaction").GetComponent<SpriteRenderer>().sprite = null;
-        transform.FindChild("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
+        transform.Find("Canvas/Speech/SpeechBubble").GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<AvatarMood>().EndInteraction();
 	}
 
