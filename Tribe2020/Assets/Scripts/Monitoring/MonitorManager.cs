@@ -30,7 +30,7 @@ public class MonitorManager : MonoBehaviour {
 			_macAddress = GetMACAddress();
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update() {
 		playTime += Time.unscaledDeltaTime;
@@ -45,7 +45,7 @@ public class MonitorManager : MonoBehaviour {
 		foreach(NetworkInterface adapter in nics) {
 			PhysicalAddress address = adapter.GetPhysicalAddress();
 			byte[] bytes = address.GetAddressBytes();
-			
+
 			for(int i = 0; i < bytes.Length; i++) {
 				mac = string.Concat(mac + (string.Format("{0}", bytes[i].ToString("X2"))));
 				if(i != bytes.Length - 1) {
@@ -78,6 +78,14 @@ public class MonitorManager : MonoBehaviour {
 
 		_surveyCompleted = result;
 	}
+
+	//gamedata/[mac]/survey
+	//gamedata/[mac]/playtime {"time":[unix epoc time], "playtime":[playtime]}
+	//
+	//gamedata/[mac]/event {"time":[uet], "event":"app started"}
+	//...
+	//session started/ended
+	//event
 
 	//
 	public void LoadSurvey(SurveyQuestion[] questions) {
