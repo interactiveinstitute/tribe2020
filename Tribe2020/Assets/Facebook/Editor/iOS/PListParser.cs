@@ -18,7 +18,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace UnityEditor.FacebookEditor
+namespace Facebook.FacebookEditor
 {
     using System;
     using System.Collections.Generic;
@@ -28,8 +28,9 @@ namespace UnityEditor.FacebookEditor
     using System.Xml.Linq;
     using Facebook.Unity.Editor;
     using UnityEngine;
+	using UnityEditor.FacebookEditor;
 
-    internal class PListParser
+	internal class PListParser
     {
         private const string LSApplicationQueriesSchemesKey = "LSApplicationQueriesSchemes";
         private const string NSAppTransportSecurityKey = "NSAppTransportSecurity";

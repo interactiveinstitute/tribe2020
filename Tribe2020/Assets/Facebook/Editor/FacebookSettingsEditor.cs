@@ -20,7 +20,8 @@
 
 namespace Facebook.Unity.Editor
 {
-    using System.Collections;
+	using Facebook.FacebookEditor;
+	using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
     using UnityEditor;
@@ -202,7 +203,7 @@ namespace Facebook.Unity.Editor
 
                 EditorGUILayout.LabelField(
                     "Copy and Paste these into your \"Native Android App\" Settings on developers.facebook.com/apps");
-                this.SelectableLabelField(this.packageNameLabel, PlayerSettings.bundleIdentifier);
+                this.SelectableLabelField(this.packageNameLabel, PlayerSettings.applicationIdentifier);
                 this.SelectableLabelField(this.classNameLabel, ManifestMod.DeepLinkingActivityName);
                 this.SelectableLabelField(this.debugAndroidKeyLabel, FacebookAndroidUtil.DebugKeyHash);
                 if (GUILayout.Button("Regenerate Android Manifest"))

@@ -76,7 +76,7 @@ namespace Facebook.Unity.Editor
                 AssetDatabase.DeleteAsset("Assets/Temp");
 
                 // regenerate the manifest
-                UnityEditor.FacebookEditor.ManifestMod.GenerateManifest();
+                Facebook.FacebookEditor.ManifestMod.GenerateManifest();
             }
 
             Debug.Log("Finished exporting!");

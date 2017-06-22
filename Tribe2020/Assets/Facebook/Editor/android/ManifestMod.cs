@@ -18,7 +18,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace UnityEditor.FacebookEditor
+namespace Facebook.FacebookEditor
 {
     using System.Collections.Generic;
     using System.Globalization;
