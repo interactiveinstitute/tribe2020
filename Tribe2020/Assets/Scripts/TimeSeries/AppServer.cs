@@ -54,6 +54,21 @@ public class AppServer : SocketIOComponentMod {
         return true;
     }
 
+	override public bool Publish(string topic, string payload) {
+		//JSONObject json = new JSONObject("\"topic\":\"" + topic + "\"");
+
+		if (!IsConnected)
+			return false;
+
+		Dictionary<string, string> data = new Dictionary<string, string>();
+		data["topic"] = topic;
+		data["payload"] = payload;
+
+		Emit("publish", new JSONObject(data));
+
+		return true;
+	}
+
     override public bool SubscribeTopic(string Topic)
     {
         return MQTTsubscribe(Topic);
