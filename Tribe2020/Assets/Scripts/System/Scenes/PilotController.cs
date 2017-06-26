@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 using System;
 
-public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface, ResourceInterface {
+public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface, ResourceInterface, InteractionListener {
 	//Singleton features
 	private static PilotController _instance;
 	public static PilotController GetInstance() {
@@ -39,22 +39,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private LocalisationManager _localMgr;
 	private AvatarManager _avatarMgr;
 	private ApplianceManager _applianceMgr;
-
-	//Interaction props
-	[SerializeField]
-	private string _touchState = IDLE;
-	private float _touchTimer = 0;
-	private float _doubleTimer = 0;
-	private Vector3 _startPos;
-	private bool _isPinching = false;
-	private bool _touchReset = false;
-
-	//Interaction consts
-	private const string IDLE = "idle";
-	private const string TAP = "tap";
-	public const float TAP_TIMEOUT = 0.1f;
-	public const float D_TAP_TIMEOUT = 0.2f;
-	public const float SWIPE_THRESH = 200;
+	private InteractionManager _interMgr;
 
 	[Header("Save between sessions")]
 	public bool syncTime;
@@ -107,12 +92,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_avatarMgr = AvatarManager.GetInstance();
 		_applianceMgr = ApplianceManager.GetInstance();
 
+		_interMgr = InteractionManager.GetInstance();
+		_interMgr.SetListener(this);
+
 		_view.ClearView();
 
 		playPeriod = endTime - startTime;
-
-        //uniqueIds = FindObjectsOfType<UniqueId>();
-
 	}
 
 	//Called every frame
@@ -130,9 +115,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				_instance._narrationMgr.OnNarrativeEvent("BattleWon", loserName);
 			}
 		}
-
-		UpdateTouch();
-		UpdatePinch();
 
 		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
@@ -157,74 +139,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 	}
 
-	//Updates basic onStart, onTouch, onEnd, tap, double tap and swipe interaction
-	private void UpdateTouch() {
-		if(!_touchReset) {
-			//Touch start
-			if(Input.GetMouseButtonDown(0)) {
-				OnTouchStart(Input.mousePosition);
-			}
-
-			//Touch ongoing
-			if(Input.GetMouseButton(0)) {
-				OnTouch(Input.mousePosition);
-			}
-
-			//Touch end
-			if(Input.GetMouseButtonUp(0)) {
-				OnTouchEnded(Input.mousePosition);
-			}
-
-			//Delay tap for possibility to double tap
-			if(_touchState == TAP) {
-				_doubleTimer += Time.unscaledDeltaTime;
-				if(_doubleTimer > D_TAP_TIMEOUT) {
-					OnTap(_startPos);
-					ResetTouch();
-				}
-			}
-		} else {
-			_touchReset = false;
-		}
-	}
-
-	//New touch started
-	private void OnTouchStart(Vector3 pos) {
-		if(_touchState == IDLE) {
-			_touchTimer = 0;
-			_startPos = pos;
-		}
-	}
-
-	//Touch ongoing
-	private void OnTouch(Vector3 pos) {
-		_touchTimer += Time.unscaledDeltaTime;
-	}
-
-	//Touch ended
-	private void OnTouchEnded(Vector3 pos) {
-		float dist = Vector3.Distance(_startPos, pos);
-		if(!_touchReset) {
-			if(_touchTimer < TAP_TIMEOUT && dist < SWIPE_THRESH) {
-				if(_touchState == IDLE) {
-					//First tap, start double tap timer
-					_touchState = TAP;
-					_touchTimer = 0;
-				} else if(_touchState == TAP) {
-					//Second tap before double tap timer ran out, trigger double tap
-					OnDoubleTap(pos);
-					ResetTouch();
-				}
-			} else if(dist >= SWIPE_THRESH) {
-				//Swipe distance greater than threshold, trigger swipe
-				OnSwipe(_startPos, pos);
-				ResetTouch();
-			}
-		}
-	}
-
 	//Callback for when tap is triggered
-	private void OnTap(Vector3 pos) {
+	public void OnTap(Vector3 pos) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_TAP) { return; }
 
 		if(_view.victoryUI.activeSelf) {
@@ -232,119 +148,29 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			LimitInteraction("all");
 		}
 
-		if(_view.GetCurrentUI() != null) {
-			ClearView();
-		}
-
-		_touchState = IDLE;
 		_instance._narrationMgr.OnNarrativeEvent("Tapped");
 	}
 
 	//Callback for when double tap triggered
-	private void OnDoubleTap(Vector3 pos) {
-		_touchState = IDLE;
-		_instance._narrationMgr.OnNarrativeEvent("DoubleTapped");
-	}
-
-	//Callback for when swipe triggered
-	private void OnSwipe(Vector3 start, Vector3 end) {
+	public void OnSwipe(Vector2 direction) {
+		//No swiping between rooms while an ui is open
 		if(_view.IsAnyOverlayActive()) {
 			return;
 		}
-
+		//If action not limited, change room according to swipe direction
 		if(_curState == InputState.ALL || _curState == InputState.ONLY_SWIPE) {
-			float dir = Mathf.Atan2(end.y - start.y, end.x - start.x);
-			dir = (dir * Mathf.Rad2Deg + 360) % 360;
-			float dist = Vector3.Distance(start, end);
-
-			float dirMod = (dir + 90) % 360;
-			if(dirMod > 45 && dirMod <= 135) {
+			if(direction == Vector2.right) {
 				_cameraMgr.GotoLeftView();
-			} else if(dir > 45 && dir <= 135) {
+			} else if(direction == Vector2.up) {
 				_cameraMgr.GotoLowerView();
-			} else if(dir > 135 && dir <= 225) {
+			} else if(direction == Vector2.left) {
 				_cameraMgr.GotoRightView();
-			} else if(dir > 225 && dir <= 315) {
+			} else if(direction == Vector2.down) {
 				_cameraMgr.GotoUpperView();
 			}
-
+			//Send narrative events
 			_instance._narrationMgr.OnNarrativeEvent("Swiped");
 			_instance._narrationMgr.OnNarrativeEvent("SelectedView", _cameraMgr.GetCurrentViewpoint().title);
-		}
-		_touchState = IDLE;
-	}
-
-	//
-	public void OnPinchIn() {
-		if(_curState == InputState.ALL) {
-			_cameraMgr.GotoUpperView();
-		}
-	}
-
-	//
-	public void OnPinchOut() {
-		if(_curState == InputState.ALL) {
-			_cameraMgr.GotoLowerView();
-		}
-	}
-
-	//
-	public void OnPinching(float magnitude) {
-	}
-
-	//
-	public void ResetTouch() {
-		_touchTimer = 0;
-		_doubleTimer = 0;
-		//_startPos = Input.mousePosition;
-		_touchState = IDLE;
-		_touchReset = true;
-		//Debug.Log("cotroller.resetSwipe " + _startPos);
-	}
-
-	//
-	public void UpdatePinch() {
-		if(Input.touchCount == 2) {
-			_isPinching = true;
-
-			// Store both touches.
-			Touch touchZero = Input.GetTouch(0);
-			Touch touchOne = Input.GetTouch(1);
-
-			// Find the position in the previous frame of each touch.
-			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-			// Find the magnitude of the distance between the touches in each frame.
-			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-			// Find the difference in the distances between each frame.
-			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-			OnPinching(deltaMagnitudeDiff);
-		} else if(_isPinching) {
-			_isPinching = false;
-
-			// Store both touches.
-			Touch touchZero = Input.GetTouch(0);
-			Touch touchOne = Input.GetTouch(1);
-
-			// Find the position in the previous frame of each touch.
-			Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-			Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-			// Find the magnitude of the distance between the touches in each frame.
-			float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-			// Find the difference in the distances between each frame.
-			float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-			if(deltaMagnitudeDiff > 0) {
-				OnPinchOut();
-			} else {
-				OnPinchIn();
-			}
 		}
 	}
 
@@ -367,7 +193,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			SetCurrentUI(_instance._view.GetUIPanel("Device Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
-		_instance.ResetTouch();
+		//_instance.ResetTouch();
 	}
 
 	//Open user interface
@@ -385,7 +211,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			OpenUI(ui);
 		}
 
-		_instance.ResetTouch();
+		//_instance.ResetTouch();
 	}
 
 	//
@@ -417,7 +243,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 		}
 		_instance._narrationMgr.OnNarrativeEvent(ui.name + "Opened");
-		_instance.ResetTouch();
+		//_instance.ResetTouch();
 	}
 
 	//
@@ -449,7 +275,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 		}
 		_instance._narrationMgr.OnNarrativeEvent(ui.name + "Closed");
-		_instance.ResetTouch();
+		//_instance.ResetTouch();
 	}
 
 	//Hide any open user interface
@@ -467,7 +293,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_instance._narrationMgr.OnNarrativeEvent("SelectedView", _cameraMgr.GetCurrentViewpoint().title);
 	}
 
-	//
+	//Resource crystal was tapped
 	public void OnHarvest(Gem gem) {
 		//_tempInstance._resourceMgr.AddComfort(gem.value);
 		_instance._view.CreateFeedback(gem.transform.position, "+" + gem.value);
@@ -487,7 +313,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		_instance._narrationMgr.OnNarrativeEvent("ResourceHarvested", "Satisfaction");
 	}
 
-	//
+	//Light switch was tapped
 	public void OnElectricMeterToggle(ElectricMeter meter) {
 		if(_instance._curState != InputState.ALL && _instance._curState != InputState.ONLY_SWITCH_LIGHT) { return; }
 
@@ -534,7 +360,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void ApplyEEM(Appliance app, EnergyEfficiencyMeasure eem) {
-		ResetTouch();
+		//ResetTouch();
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
@@ -686,7 +512,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnOkPressed() {
-		_instance.ResetTouch();
+		//_instance.ResetTouch();
 
 		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
 			_instance._view.messageUI.SetActive(false);
