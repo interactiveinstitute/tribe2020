@@ -77,7 +77,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 		_quizMgr = QuizManager.GetInstance();
 
-		//LoadQuiz(quizzes[_curQuiz]);
+		_view.foeEnergy.maxValue = foeCP;
+		_view.allyEnergy.maxValue = allyCP;
 	}
 	
 	// Update is called once per frame
@@ -88,12 +89,6 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
 		}
-
-		//_view.foeCPNumber.text = foeCP + "/100";
-		//_view.foeCPBar.fillAmount = foeCP / 100f;
-
-		//_view.allyCPNumber.text = allyCP + "/100";
-		//_view.allyCPBar.fillAmount = allyCP / 100f;
 
 		_view.foeEnergy.value = foeCP;
 		_view.allyEnergy.value = allyCP;
@@ -170,7 +165,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			int damage = 1;
 			_instance._view.CreateFeedback(_instance.foeObject.transform.position, "" + damage);
 			_instance.foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
-			_instance.foeCP = Mathf.Max(_instance.foeCP - damage, 0);
+			_instance.foeCP--;
+			//= Mathf.Max(_instance.foeCP - damage, 0);
 			if(_instance.foeCP == 0) {
 				_instance.OnWin();
 			} else {
@@ -180,7 +176,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			}
 		} else {
 			//Wrong answer, receive damage
-			_instance.allyCP = Mathf.Max(_instance.allyCP - 1, 0);
+			//_instance.allyCP = Mathf.Max(_instance.allyCP - 1, 0);
+			_instance.allyCP--;
 			if(_instance.allyCP == 0) {
 				_instance.OnDefeat();
 			}

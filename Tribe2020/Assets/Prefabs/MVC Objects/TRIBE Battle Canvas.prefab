@@ -1128,6 +1128,7 @@ GameObject:
   - component: {fileID: 224295187677100226}
   - component: {fileID: 114171030548545388}
   - component: {fileID: 114833061610503300}
+  - component: {fileID: 114315934254067728}
   m_Layer: 5
   m_Name: Ally Energy
   m_TagString: Untagged
@@ -2183,23 +2184,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1925949998898902
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 224632583491265164}
-  - component: {fileID: 222492165509798206}
-  - component: {fileID: 114751510619573318}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1934792558816568
 GameObject:
   m_ObjectHideFlags: 1
@@ -2295,6 +2279,7 @@ GameObject:
   - component: {fileID: 224542897298683034}
   - component: {fileID: 114217081439277686}
   - component: {fileID: 114771815796485546}
+  - component: {fileID: 114495143278429622}
   m_Layer: 5
   m_Name: Foe Energy
   m_TagString: Untagged
@@ -4080,6 +4065,22 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114315934254067728
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1499325733084302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be0ce0cad10c0641acf3a9dc8d422cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 4
+  value: 4
+  imagePrefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: b688a6d1c3c49410ab5c5311fb1f506f, type: 3}
+  tint: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114316223320547082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5359,6 +5360,22 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
+--- !u!114 &114495143278429622
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997310960334732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be0ce0cad10c0641acf3a9dc8d422cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 3
+  value: 3
+  imagePrefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: b688a6d1c3c49410ab5c5311fb1f506f, type: 3}
+  tint: {r: 0.8088235, g: 0.51876265, b: 0, a: 1}
 --- !u!114 &114495503415082016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6593,33 +6610,6 @@ MonoBehaviour:
   m_PreferredHeight: 30
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
---- !u!114 &114751510619573318
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1925949998898902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: b688a6d1c3c49410ab5c5311fb1f506f, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
 --- !u!114 &114752998432773074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6772,10 +6762,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
 --- !u!114 &114786957432873958
@@ -7107,10 +7097,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
 --- !u!114 &114833809552990908
@@ -7744,10 +7734,8 @@ MonoBehaviour:
   actionsUI: {fileID: 1260618877139422}
   levelUpUI: {fileID: 1810560863871470}
   foeName: {fileID: 114111077189617068}
-  foeCPNumber: {fileID: 114062923938284510}
-  foeCPBar: {fileID: 114768681980970380}
-  allyCPNumber: {fileID: 114304621849898970}
-  allyCPBar: {fileID: 114080340899594452}
+  foeEnergy: {fileID: 114495143278429622}
+  allyEnergy: {fileID: 114315934254067728}
   levelUpName: {fileID: 114326452210247866}
   avatarSatisfaction: {fileID: 114390271665594140}
   avatarKnowledge: {fileID: 114193995573834910}
@@ -8297,12 +8285,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1625791530788068}
---- !u!222 &222492165509798206
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1925949998898902}
 --- !u!222 &222492257985896840
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -8958,7 +8940,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224295187677100226}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9033,7 +9015,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224295187677100226}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9184,7 +9166,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 143.66}
+  m_AnchoredPosition: {x: 0, y: 143.66003}
   m_SizeDelta: {x: 0, y: 173}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224163227808574082
@@ -9578,7 +9560,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 224632583491265164}
   - {fileID: 224115403267252556}
   - {fileID: 224319478855863212}
   - {fileID: 224085715166891282}
@@ -9641,7 +9622,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224295187677100226}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -10135,7 +10116,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 32.660004}
+  m_AnchoredPosition: {x: 0, y: 32.660034}
   m_SizeDelta: {x: 0, y: 49}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224586297152628066
@@ -10214,24 +10195,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015259, y: -24.000011}
   m_SizeDelta: {x: 110, y: 24}
   m_Pivot: {x: 0, y: 0}
---- !u!224 &224632583491265164
-RectTransform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1925949998898902}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 224295187677100226}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224645543808761170
 RectTransform:
   m_ObjectHideFlags: 1
@@ -10463,7 +10426,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 215, y: -370}
+  m_AnchoredPosition: {x: 215, y: -369.99997}
   m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224725010643556512
