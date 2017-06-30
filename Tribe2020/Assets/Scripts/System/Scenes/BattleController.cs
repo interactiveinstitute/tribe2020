@@ -3,19 +3,16 @@ using UnityEngine.UI;
 using SimpleJSON;
 using System;
 
-public class BattleController : MonoBehaviour, NarrationInterface, CameraInterface {
+public class BattleController : MonoBehaviour, NarrationInterface, CameraInterface, InteractionListener {
 	//Singleton features
 	private static BattleController _instance;
 	public static BattleController GetInstance() {
 		return _instance as BattleController;
 	}
 
-	//
-	public enum InputState {
-		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT,
-		ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST, NOTHING,
-		ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
-	};
+	public enum GameState { Quizzing, Damage, Framing, Building, Gaining, Presenting, Defeat, Victory, Leveling };
+	private GameState state = GameState.Quizzing;
+	private float _stateTimer = 0;
 
 	private BattleView _view;
 	private GameTime _timeMgr;
@@ -26,21 +23,18 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	private LocalisationManager _localMgr;
 	private CameraManager _camMgr;
 	private QuizManager _quizMgr;
+	private InteractionManager _interMgr;
 
-	private bool _isTouching = false;
+	//private bool _isTouching = false;
 
 	public GameObject foeObject;
 	public GameObject allyObject;
 
-	private int foeCP = 4;
-	private int allyCP = 3;
+	private int opponentEnergy = 4;
+	private int playerEnergy = 3;
 
-	public Quiz[] quizzes;
-	private int _curQuizIndex = 0;
-	private Quiz _curQuiz;
-	private bool _hasWon = false;
-	private bool _isLeveling = false;
 	private bool _firstUpdate = false;
+	private int _pendingAnswer;
 
 	[Header("Save between sessions")]
 	public bool syncTime = true;
@@ -77,8 +71,11 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 		_quizMgr = QuizManager.GetInstance();
 
-		_view.foeEnergy.maxValue = foeCP;
-		_view.allyEnergy.maxValue = allyCP;
+		_interMgr = InteractionManager.GetInstance();
+		_interMgr.SetListener(this);
+
+		_view.opponentEnergy.maxValue = opponentEnergy;
+		_view.playerEnergy.maxValue = playerEnergy;
 	}
 	
 	// Update is called once per frame
@@ -88,40 +85,37 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			_instance.LoadGameState();
 
 			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
+			SetState(GameState.Quizzing);
 		}
 
-		_view.foeEnergy.value = foeCP;
-		_view.allyEnergy.value = allyCP;
+		_view.opponentEnergy.value = opponentEnergy;
+		_view.playerEnergy.value = playerEnergy;
 
 		_view.levelUpName.text = foeObject.GetComponent<Appliance>().title;
 		_view.avatarKnowledge.value = foeObject.GetComponent<AvatarStats>().knowledge * 100;
 		_view.avatarAttitude.value = foeObject.GetComponent<AvatarStats>().attitude * 100;
 		_view.avatarNorm.value = foeObject.GetComponent<AvatarStats>().normSensititvity * 100;
 
-		//Touch Events
-		if(Input.GetMouseButtonDown(0)) { OnTouchStart(Input.mousePosition); }
-		if(Input.GetMouseButtonUp(0)) { OnTouchEnded(Input.mousePosition); }
-	}
-
-	//
-	void OnDestroy() {
-		//_saveMgr.Save(SaveManager.currentSlot);
-	}
-
-	//
-	private void OnTouchStart(Vector3 pos) {
-		_isTouching = true;
-	}
-
-	//
-	private void OnTouchEnded(Vector3 pos) {
-		if(_isTouching && _hasWon) {
-			_camMgr.SetViewpoint("LevelUp");
-			_view.levelUpUI.SetActive(true);
-			_view.congratsPanel.SetActive(false);
-			_isLeveling = true;
-			//_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
+		if(state == GameState.Damage){
+			if(_stateTimer >= 1.5f && _stateTimer < 2) {
+				ResolveDamage();
+				_stateTimer = 2;
+			} else if(_stateTimer >= 3) {
+				SetState(GameState.Quizzing);
+			}
 		}
+		_stateTimer += Time.deltaTime;
+	}
+
+	//
+	public void OnTap(Vector3 position) {
+		if(state == GameState.Victory) {
+			SetState(GameState.Leveling);
+		}
+	}
+
+	//
+	public void OnSwipe(Vector2 direction) {
 	}
 
 	//
@@ -138,88 +132,118 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			_view.foeName.text = foeAppliance.title;
 		}
 
-		LoadQuiz(foeAppliance.title, _curQuizIndex);
+		_quizMgr.InitQuizzes(foeAppliance.title);
+		RefreshQuiz();
 	}
 
 	//
-	public void LoadQuiz(string avatarTitle, int quizIndex) {
-		QuizManager.AvatarQuizzes aq = _quizMgr.GetAvatarQuizzes(avatarTitle);
-		if(aq.avatarName != null) {
-			_curQuiz = aq.quizzes[quizIndex];
+	public void SetState(GameState nextState) {
+		switch(nextState) {
+			case GameState.Quizzing:
+				_camMgr.SetViewpoint("Battle");
+				_view.SetAnswerVisible(true);
+				break;
+			case GameState.Damage:
+				_camMgr.SetViewpoint("LevelUp");
+				_view.SetAnswerVisible(false);
+				break;
+			case GameState.Building:
+				_view.SetAnswerVisible(false);
+				break;
+			case GameState.Framing:
+				_view.SetAnswerVisible(false);
+				break;
+			case GameState.Gaining:
+				_view.SetAnswerVisible(false);
+				break;
+			case GameState.Presenting:
+				_view.SetAnswerVisible(false);
+				break;
+			case GameState.Defeat:
+				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.happy);
 
-			_view.question.text = _localMgr.GetPhrase("Quizzes", _curQuiz.name);
-			_view.answers[0].text = _localMgr.GetPhrase("Quizzes", _curQuiz.name, 0);
-			_view.answers[1].text = _localMgr.GetPhrase("Quizzes", _curQuiz.name, 1);
-			_view.answers[2].text = _localMgr.GetPhrase("Quizzes", _curQuiz.name, 2);
-			_view.answers[3].text = _localMgr.GetPhrase("Quizzes", _curQuiz.name, 3);
-		} else {
-			Debug.Log("no quizzes found for avatar " + avatarTitle);
+				_view.dialogueUI.SetActive(false);
+				_view.barsUI.SetActive(false);
+				_view.actionsUI.SetActive(false);
+
+				_sceneMgr.LoadScene(_saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
+				break;
+			case GameState.Victory:
+				_view.ShowCongratulations(_localMgr.GetPhrase("Interface", "You have won the battle!"));
+				_camMgr.SetViewpoint("Victory");
+				allyObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.euphoric);
+
+				_view.dialogueUI.SetActive(false);
+				_view.barsUI.SetActive(false);
+				_view.actionsUI.SetActive(false);
+
+				_narrationMgr.OnNarrativeEvent("BattleOver");
+				_interMgr.ResetTouch();
+				break;
+			case GameState.Leveling:
+				_camMgr.SetViewpoint("LevelUp");
+				_view.levelUpUI.SetActive(true);
+				_view.congratsPanel.SetActive(false);
+				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.happy);
+				break;
 		}
+		state = nextState;
+		_stateTimer = 0;
+	}
+
+	//
+	public void RefreshQuiz() {
+		Quiz curQuiz = _quizMgr.GetCurrentQuiz();
+		_view.question.text = _localMgr.GetPhrase("Quizzes", curQuiz.name);
+		_view.answers[0].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 0);
+		_view.answers[1].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 1);
+		_view.answers[2].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 2);
+		_view.answers[3].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 3);
 	}
 
 	//
 	public void OnArguePressed(int answerIndex) {
-		if(answerIndex == _instance._curQuiz.rightChoice) {
-			//Right answer, deal damage to foe
-			//int damage = UnityEngine.Random.Range(10, 20);
+		_instance._pendingAnswer = answerIndex;
+		_instance.SetState(GameState.Damage);
+	}
+
+	//
+	public void OnLevelUpOK() {
+		JSONClass challengeData = new JSONClass();
+		challengeData.Add("avatar", _instance.foeObject.GetComponent<Appliance>().title);
+		_instance._saveMgr.SetClass("battleReport", challengeData);
+
+		_instance.SaveGameState();
+		_instance._sceneMgr.LoadScene(_instance._saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
+	}
+
+	//
+	public void ResolveDamage() {
+		//Right answer -> deal damage to opponent or wrong answer -> receive damage
+		if(_quizMgr.IsRightAnswer(_pendingAnswer)) {
 			int damage = 1;
-			_instance._view.CreateFeedback(_instance.foeObject.transform.position, "" + damage);
-			_instance.foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
-			_instance.foeCP--;
-			//= Mathf.Max(_instance.foeCP - damage, 0);
-			if(_instance.foeCP == 0) {
-				_instance.OnWin();
+			_view.CreateFeedback(foeObject.transform.position, "" + damage);
+			int moodShuffle = UnityEngine.Random.Range(0, 3);
+			if(moodShuffle == 0) {
+				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
+			} else if(moodShuffle == 1) {
+				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.angry);
 			} else {
-				_instance._curQuizIndex = (_instance._curQuizIndex + 1) % _instance.quizzes.Length;
-				_instance.LoadQuiz(_instance.foeObject.GetComponent<Appliance>().title, _instance._curQuizIndex);
-				//_instance.LoadQuiz(_instance.quizzes[_instance._curQuiz]);
+				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.surprised);
+			}
+			opponentEnergy--;
+			if(opponentEnergy == 0) {
+				SetState(GameState.Victory);
+			} else {
+				_quizMgr.Next();
+				RefreshQuiz();
 			}
 		} else {
-			//Wrong answer, receive damage
-			//_instance.allyCP = Mathf.Max(_instance.allyCP - 1, 0);
-			_instance.allyCP--;
-			if(_instance.allyCP == 0) {
-				_instance.OnDefeat();
+			playerEnergy--;
+			if(playerEnergy == 0) {
+				SetState(GameState.Defeat);
 			}
 		}
-	}
-
-	//
-	public void OnItemPressed() {
-	}
-
-	//
-	public void OnSurrenderPressed() {
-	}
-
-	//
-	public void OnWin() {
-		_view.ShowCongratulations("You have won the battle!");
-		_isTouching = false;
-		_hasWon = true;
-
-		_camMgr.SetViewpoint("Victory");
-		allyObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.euphoric);
-		//allyObject.GetComponent<Animator>().Play("Sit");
-
-		_view.dialogueUI.SetActive(false);
-		_view.barsUI.SetActive(false);
-		_view.actionsUI.SetActive(false);
-
-		_narrationMgr.OnNarrativeEvent("BattleOver");
-		//_narrationMgr.OnQuestEvent(Quest.QuestEvent.BattleOver);
-		//_instance.SaveGameState();
-	}
-
-	//
-	public void OnDefeat() {
-		_instance.foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.happy);
-
-		_view.dialogueUI.SetActive(false);
-		_view.barsUI.SetActive(false);
-		_view.actionsUI.SetActive(false);
-
-		_instance._sceneMgr.LoadScene(_instance._saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
 	}
 
 	//
@@ -247,11 +271,6 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	}
 
 	//
-	public void SetControlState(InputState state) {
-		//_curState = state;
-	}
-
-	//
 	public string GetPhrase(string groupKey) {
 		return _localMgr.GetPhrase(groupKey);
 	}
@@ -259,11 +278,6 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	//
 	public string GetPhrase(string groupKey, string key) {
 		return _localMgr.GetPhrase(groupKey, key);
-	}
-
-	//
-	public void SetTimeScale(int timeScale) {
-		_timeMgr.VisualTimeScale = timeScale;
 	}
 
 	//
@@ -296,20 +310,6 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 	//
 	public void OnCameraArrived(Viewpoint viewpoint) {
-	}
-
-	//
-	public void OnLevelUpOK() {
-		JSONClass challengeData = new JSONClass();
-		challengeData.Add("avatar", _instance.foeObject.GetComponent<Appliance>().title);
-		_instance._saveMgr.SetClass("battleReport", challengeData);
-
-		_instance.SaveGameState();
-		_instance._sceneMgr.LoadScene(_instance._saveMgr.GetData(SaveManager.currentSlot, "curPilot"));
-	}
-
-	public void LimitInteraction(string limitation) {
-		throw new NotImplementedException();
 	}
 
 	public void ShowMessage(string cmdJSON) {
