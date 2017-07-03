@@ -181,6 +181,7 @@ MonoBehaviour:
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
   TTime: {fileID: 0}
+  debug: 0
   StartTime: 0
   StopTime: 0
   Relative: 0
@@ -221,99 +222,6 @@ RectTransform:
   m_AnchoredPosition: {x: 199.55304, y: 256.33258}
   m_SizeDelta: {x: 953, y: 544}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &332115558
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 332115559}
-  - component: {fileID: 332115560}
-  m_Layer: 0
-  m_Name: DataBuffer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &332115559
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 332115558}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1030803921}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &332115560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 332115558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: 
-  Units: []
-  Columns: []
-  Sources:
-  - Topic: test/signalA
-    DataPeriod:
-      Enabled: 0
-      Relative: 0
-      FromTime: 0
-      ToTime: 0
-    Source: {fileID: 1030803920}
-    Target: {fileID: 0}
-    LastTransmission:
-      Timestamp: 0
-      Values: []
-      Texts: []
-      origin:
-        Data: []
-        index: 0
-  Targets: []
-  LastData:
-    Timestamp: 0
-    Values: []
-    Texts: []
-    origin:
-      Data: []
-      index: 0
-  TimeOffset: 0
-  Rescales: []
-  Offsets: []
-  ScaleWithTimeSeries: {fileID: 0}
-  OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
-  StartTime: 1495634747
-  StopTime: 1495635047
-  Relative: 0
-  BufferMaxSize: 0
-  isAsync: 0
-  hasIntegral: 0
-  isTextSeries: 0
-  ReloadLimit: 0
-  Enabled: 1
-  Record: 0
-  BufferValid: 0
-  CurrentIndex: 1
-  CurrentTimestamp: 0
-  CurrentDate: 
-  CurrentValue: 0
-  CurrentIntegral: 0
-  CurrentText: 
-  CurrentSize: 0
-  Data: []
-  File: {fileID: 0}
 --- !u!114 &393235065 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114000010584203272, guid: 79769193b9ce28c45b0fa41ff393f086,
@@ -359,7 +267,7 @@ MonoBehaviour:
       Relative: 0
       FromTime: NaN
       ToTime: NaN
-    Source: {fileID: 590139809}
+    Source: {fileID: 1030803920}
     Target: {fileID: 0}
     LastTransmission:
       Timestamp: 0
@@ -1046,6 +954,53 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 669125154}
+--- !u!1001 &804018609
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 807325718}
+    m_Modifications:
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -476.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -79.41557
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0.000061035156
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114818211835969314, guid: f2e385d43405841d69fb37c71c910055,
+        type: 2}
+      propertyPath: url
+      value: ws://data.tribe2020.eu
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: f2e385d43405841d69fb37c71c910055, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &807325717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,66 +1185,17 @@ MonoBehaviour:
   runlevelUnpowered: 0
   _energyMod: 1
   energyEffeciency: 0
---- !u!1 &1030803919
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1030803921}
-  - component: {fileID: 1030803920}
-  m_Layer: 0
-  m_Name: TribeDataServer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1030803920
+--- !u!114 &1030803920 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1030803919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
+  m_PrefabParentObject: {fileID: 114818211835969314, guid: f2e385d43405841d69fb37c71c910055,
+    type: 2}
+  m_PrefabInternal: {fileID: 804018609}
   m_Script: {fileID: 11500000, guid: 45bb8ffd45b16bf47a61bc449c94dc43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: 
-  Units: []
-  Columns: []
-  Sources: []
-  Targets: []
-  LastData:
-    Timestamp: 0
-    Values: []
-    Texts: []
-    origin:
-      Data: []
-      index: 0
-  url: ws://localhost:5000
-  autoConnect: 1
-  reconnectDelay: 5
-  ackExpirationTime: 1800
-  pingInterval: 25
-  pingTimeout: 60
-  RequestCounter: 0
---- !u!4 &1030803921
+--- !u!4 &1030803921 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1030803919}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -476.5, y: -79.41557, z: 0.000061035156}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 332115559}
-  m_Father: {fileID: 807325718}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_PrefabParentObject: {fileID: 4102596066997320, guid: f2e385d43405841d69fb37c71c910055,
+    type: 2}
+  m_PrefabInternal: {fileID: 804018609}
 --- !u!224 &1031784666 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224000012618730820, guid: 0870149312751f84aafb4a79e2afe05c,
@@ -1411,6 +1317,7 @@ MonoBehaviour:
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
   TTime: {fileID: 0}
+  debug: 0
   StartTime: 0
   StopTime: 0
   Relative: 0

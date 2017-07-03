@@ -20,7 +20,8 @@
 
 namespace Facebook.Unity.Editor
 {
-    using System.Collections;
+	using Facebook.FacebookEditor;
+	using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
     using UnityEditor;

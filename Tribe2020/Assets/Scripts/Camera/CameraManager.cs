@@ -204,10 +204,8 @@ public class CameraManager : MonoBehaviour {
 			int x = 0;
 			foreach(Viewpoint vp in viewPoints) {
 				if(!vp.overview && vp.coordinates.y == y) {
-					_views[y][x] = vp;
-                    x++;
-
-                }
+					_views[y][x++] = vp;
+				}
 			}
 		}
 
@@ -620,8 +618,7 @@ public class CameraManager : MonoBehaviour {
 
 	//
 	public void StopAnimation() {
-        //animator.Stop();
-        animator.StopPlayback();
+		animator.StopPlayback();
 		overlayCanvas.GetComponentInChildren<Image>().color = new Color(0, 0, 0, 0);
 		animator.enabled = false;
 

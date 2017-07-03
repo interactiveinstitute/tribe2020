@@ -17,17 +17,22 @@ public class BattleView : MonoBehaviour {
 	public GameObject levelUpUI;
 
 	public Text foeName;
-	public Text foeCPNumber;
-	public Image foeCPBar;
+	public ImageBar opponentEnergy;
+	public ImageBar playerEnergy;
+	public RectTransform lowerUI;
+	//public Text foeCPNumber;
+	//public Image foeCPBar;
 
-	public Text allyCPNumber;
-	public Image allyCPBar;
+	//public Text allyCPNumber;
+	//public Image allyCPBar;
 
 	public Text levelUpName;
 	public Slider avatarSatisfaction;
 	public Slider avatarKnowledge;
 	public Slider avatarAttitude;
 	public Slider avatarNorm;
+
+	public GameObject minigameFrame;
 
 	public Text question;
 	public Text[] answers;
@@ -38,6 +43,8 @@ public class BattleView : MonoBehaviour {
 	public GameObject FeedbackNumber;
 	public ParticleSystem fireworks;
 
+	private bool _answerVisibility = true;
+
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
@@ -45,12 +52,25 @@ public class BattleView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if(_answerVisibility) {
+			lowerUI.position = new Vector2(lowerUI.position.x, 180);
+		} else {
+			lowerUI.position = new Vector2(lowerUI.position.x, -80);
+		}
+	}
+
+	//
+	public void SetAnswerVisible(bool visible) {
+		_answerVisibility = visible;
+	}
+
+	//
+	public void SetMinigameVisible(bool visible) {
+		minigameFrame.SetActive(visible);
 	}
 
 	//

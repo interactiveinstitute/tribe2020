@@ -28,6 +28,11 @@ public class AppServerEditor : Editor
 		{
 			myScript.GetPeriod("test/signalA",double.NaN,double.NaN,null);
 		}
+
+		if(GUILayout.Button("Publish",GUILayout.Width(100) ))
+		{
+			myScript.Publish("~/test/publish","Hello!");
+		}
 			
 	}
 }

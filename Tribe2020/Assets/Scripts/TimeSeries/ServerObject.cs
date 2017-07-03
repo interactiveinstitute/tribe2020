@@ -54,6 +54,11 @@ public class ServerObject : DataNode {
 
     }
 
+	virtual public bool Publish(string topic, string payload) {
+
+		return false;
+	}
+
     virtual public bool SubscribeTopic(string Topic)
     {
         return false;

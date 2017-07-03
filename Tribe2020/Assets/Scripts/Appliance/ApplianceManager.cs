@@ -77,6 +77,7 @@ public class ApplianceManager : MonoBehaviour {
 			_uidLookup[uid] = newApp;
 
 			newApp.appliedEEMs = oldApp.appliedEEMs;
+			newApp.RefreshEEMs();
 		}
 	}
 
