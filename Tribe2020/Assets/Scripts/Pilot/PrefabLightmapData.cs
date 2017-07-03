@@ -40,7 +40,7 @@ public class PrefabLightmapData : MonoBehaviour
         for (int i = 0; i < m_Lightmaps.Length;i++)
         {
             combinedLightmaps[i+lightmaps.Length] = new LightmapData();
-            combinedLightmaps[i+lightmaps.Length].lightmapColor = m_Lightmaps[i];
+            combinedLightmaps[i+lightmaps.Length].lightmapLight = m_Lightmaps[i];
         }
 
         ApplyRendererInfo(m_RendererInfo, lightmaps.Length);
@@ -112,7 +112,7 @@ public class PrefabLightmapData : MonoBehaviour
 				info.renderer = renderer;
 				info.lightmapOffsetScale = renderer.lightmapScaleOffset;
 				
-				Texture2D lightmap = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapColor;
+				Texture2D lightmap = LightmapSettings.lightmaps[renderer.lightmapIndex].lightmapLight;
 				
 				info.lightmapIndex = lightmaps.IndexOf(lightmap);
 				if (info.lightmapIndex == -1)

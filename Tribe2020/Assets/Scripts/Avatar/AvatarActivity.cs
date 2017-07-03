@@ -30,6 +30,7 @@ public class AvatarActivity : ScriptableObject {
 	private float _delay = 0;
 	//public float _duration = 0;
 
+	public double startTime = 0;
     [SerializeField]
     public bool hasStartTime = true;
     //public double endTime = 0;
@@ -158,6 +159,7 @@ public class AvatarActivity : ScriptableObject {
     public void Init(BehaviourAI ai, double startTime) {
 		_timeMgr = GameTime.GetInstance();
 		_ai = ai;
+		this.startTime = startTime;
         hasStartTime = true;
 		_currSession = 0;
         //If this activity for some reason doesn't have a list of sessions, create an empty one.
@@ -171,6 +173,15 @@ public class AvatarActivity : ScriptableObject {
     public void Start() {
         string curTimeView = _timeMgr.GetDateTime().ToString("HH:mm");
         double curTimeStamp = _timeMgr.GetTotalSeconds();
+        if (hasStartTime)
+        {
+            string startTimeView = _timeMgr.TimestampToDateTime(startTime).ToString("HH:mm");
+            DebugManager.Log(_ai.name + " starting activity " + name + " startTime " + startTime + ", currTime is " + curTimeStamp, this);
+        }
+        else
+        {
+            DebugManager.Log(_ai.name + " starting activity " + name + " without startTime, curTime is " + curTimeView, this);
+        }
 
         StartSession(GetCurrentSession());
 	}
@@ -537,6 +548,17 @@ public class AvatarActivity : ScriptableObject {
 	public virtual bool IsDone() {
 		return true;
 	}
+
+
+    //Checks if current time is more than startTime of this activity
+    public bool startTimePassed()
+    {
+        if (hasStartTime)
+        {
+            return startTime <= _timeMgr.GetTotalSeconds();
+        }
+        return false;
+    }
 
 	//
 	//public void ExecuteCommand(BehaviourAI ai, string command) {
