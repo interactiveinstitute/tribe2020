@@ -60,7 +60,7 @@ public class BehaviourAI : SimulationObject {
         }
 
         public bool CurrentItemIsLast() {
-            return _currentItemId >= items.Length - 1;
+            return _currentItemId + 1 >= items.Length;
         }
 
     }
@@ -108,9 +108,10 @@ public class BehaviourAI : SimulationObject {
 
         //if(_nextActivity != null) {
         AvatarActivity nextActivity = GetNextActivity();
-        if (nextActivity != null) {
+        ScheduleItem si = GetNextScheduleItem();
+        if (si != null) {
             //Add key point for _nextActivity.
-            if (_timeMgr.AddKeypoint(nextActivity.startTime, this)) {
+            if (_timeMgr.AddKeypoint(TimeStampForNextScheduledActivity(), this)) {
                 DebugManager.Log("added key action point", this, this);
             }
             else {
@@ -128,15 +129,17 @@ public class BehaviourAI : SimulationObject {
         //TODO: Try to only use the provided timestamp instead of referencing gametime
         DebugManager.Log("UpdateSim: calling keyaction registered by BehaviourAI", this, this);
         //Run everything that should be finished until now
-        SimulateUntilNextScheduledActivity();
+        AvatarActivity currentActivity = SimulateUntilNextScheduledActivity();
         //Correct activity should now be available with getCurrent()
-        GetRunningActivity().Start();
+        //GetRunningActivity().Start();
+        //currentActivity.Init(this,0.0f);
+        currentActivity.Start();
         //Find the next scheduled activity and set it as key point
         _timeMgr.AddKeypoint(TimeStampForNextScheduledActivity(), this);
         return true;
     }
 
-    private void SimulateUntilNextScheduledActivity() {
+    private AvatarActivity SimulateUntilNextScheduledActivity() {
 		//First. Simulate current activity to end
 		GetRunningActivity().SimulateToEnd();
 		//Simulate activities until we reach one with startTime
@@ -149,7 +152,7 @@ public class BehaviourAI : SimulationObject {
 		//When it reaches a scheduled activity with startTime, though, that one will NOT get started and become GetRunning().
 
 		//Thus, at this point, the above code should have simulated activities that are temporary or doesn't have starttime.
-		StepToNextActivity();//Change to next activity (sets it as _curActivity)
+		return PrepareNextActivity();//Change to next activity (sets it as _curActivity)
 	}
 
     //private double TimeStampForNextScheduledActivity() {
@@ -193,6 +196,8 @@ public class BehaviourAI : SimulationObject {
             double curTime = _timeMgr.GetTotalSeconds();
 
             int nxtActivityDayOffset = IsLastActivityOfTheDay() ? 1 : 0;
+
+            Debug.Log(nextScheduleItem.activity.name + ": " + nextScheduleItem.time + " " + nxtActivityDayOffset);
 
             return _timeMgr.ScheduleToTS(curTime, nxtActivityDayOffset, nextScheduleItem.time);
 
@@ -310,10 +315,13 @@ public class BehaviourAI : SimulationObject {
 	}
 
     public Schedule GetActiveSchedule() {
-        ////Not working when Schedule is a struct
+        //Not working when Schedule is a struct
         if (schedules.Length == 0 || _activeSchedule < 0 || _activeSchedule >= schedules.Length) {
             return null;
         }
+
+        //Assuming there are only two schedules: weekday and weekend. Update function if more schedules are needed.
+        //int scheduleID = _timeMgr.IsWeekend() ? 0 : 1;
 
         return schedules[_activeSchedule];
     }
@@ -344,7 +352,8 @@ public class BehaviourAI : SimulationObject {
         }
         else {
             //Get next activity in current schedule.
-            return schedules[_activeSchedule].items[schedules[_activeSchedule]._currentItemId + 1];
+            Schedule schedule = GetActiveSchedule();
+            return schedule.items[schedule._currentItemId + 1];
         }
     }
 
@@ -579,7 +588,7 @@ public class BehaviourAI : SimulationObject {
                 if (prevItem.time != "") {
                     prevStartTime = _timeMgr.ScheduleToTS(curTime, prevActivityDayOffset, prevItem.time);
                     SetPrevActivity(prevItem.activity, prevStartTime);
-                    DebugManager.Log("_prevActivity set: " + _prevActivity.name + " with startTime: " + _prevActivity.startTime, this.gameObject, this);
+                    //DebugManager.Log("_prevActivity set: " + _prevActivity.name + " with startTime: " + _prevActivity.startTime, this.gameObject, this);
                 }
                 else {
                     SetPrevActivity(prevItem.activity);
@@ -697,13 +706,16 @@ public class BehaviourAI : SimulationObject {
     //       }
     //}
 
-    public void StepToNextActivity() {
+    public AvatarActivity PrepareNextActivity() {
 
-        Debug.Log("STEP TO NEXT ACTIVITY: " + GetNextActivity().title);
+        //Debug.Log("PREPARE ACTIVITY: " + GetNextActivity().title);
 
         //We have already an instantiated activity in _nextActivity. So we set _curActivity as _prevActivity and _nextActivity as _curActivity. Then we instantiate a new one for _nextActivity.
         //_prevActivity = _curActivity;
         //_curActivity = _nextActivity;
+
+        Schedule currentSchedule = GetActiveSchedule();
+        AvatarActivity currentActivity = currentSchedule.items[currentSchedule._currentItemId].activity;
 
         //Step to next activity
         Schedule scheduleForNewActivity = null;
@@ -712,7 +724,7 @@ public class BehaviourAI : SimulationObject {
         scheduleForNewActivity = GetActiveSchedule();
         //scheduleForNewActivity._currentItemId++;
 
-        //Prepare/initialize upcoming activity
+        //Prepare / initialize upcoming activity
 
         if (IsLastActivityOfTheDay()) {
 
@@ -734,11 +746,13 @@ public class BehaviourAI : SimulationObject {
             scheduleForNewActivity._currentItemId++;
         }
 
-        Debug.Log("Item id for next activity: " + scheduleForNewActivity._currentItemId);
-
         if (scheduleForNewActivity != null) {
 
+            Debug.Log("Item id for next activity: " + scheduleForNewActivity._currentItemId);
+
             ScheduleItem newScheduleItem = scheduleForNewActivity.GetCurrentItem();
+
+            Debug.Log("Prepare: " + newScheduleItem.activity.title);
 
             if (newScheduleItem.time != "") {
                 //Determine startTime for nextActivity
@@ -756,6 +770,8 @@ public class BehaviourAI : SimulationObject {
         }
 
         //Debug.Log("NEW NEXT ACTIVITY: " + _nextActivity.title);
+
+        return currentActivity;
 
     }
 
@@ -1315,9 +1331,9 @@ public class BehaviourAI : SimulationObject {
 	//It also starts the next activity if it has no starttime.
 	public void OnActivityOver() {
 
-		string activityName = GetRunningActivity().name;
+		string activityName = GetRunningActivity().title;
 
-        Debug.Log("'s activity " + activityName + " is over", this);
+        Debug.Log(name + "'s activity " + activityName + " is over", this);
 
         //DebugManager.Log(name + "'s activity " + activityName + " is over", this);
 
@@ -1377,7 +1393,7 @@ public class BehaviourAI : SimulationObject {
         //if(!_nextActivity.hasStartTime) {
         if (!GetNextActivity().hasStartTime) {
             DebugManager.Log("Next activity have no startTime specified so let's start it immediately", this);
-			StepToNextActivity();
+			PrepareNextActivity();
             //_curActivity.Start();
             GetCurrentActivity().Start();
 		}
