@@ -61,7 +61,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Called once on all behaviours before any Start call
 	void Awake() {
-		_instance = this;
+        _instance = this;
 	}
 
 	//Called once on all behaviours before any Update call
@@ -731,20 +731,24 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
 			return;
 		}
-		if(debug) { Debug.Log("Loading game state"); }
+        if (debug) { Debug.Log("Loading game state"); }
 
 		if(syncPilot) _saveMgr.LoadCurrentSlot();
 
-		if(syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
-		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
-		if(syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
+        if (syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
+            _timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
+        }
+
+        if (syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
+
+        if (syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
+
+        if (syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
 		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 		if(syncAppliances) _applianceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ApplianceManager"));
 
-		if(syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
-			_timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
-		}
+		
 	}
 
 	//
