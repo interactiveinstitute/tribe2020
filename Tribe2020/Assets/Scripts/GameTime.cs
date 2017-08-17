@@ -49,6 +49,7 @@ public class GameTime : MonoBehaviour {
 	public double time = Double.NaN;
 	public double VisualTime;
 	public string CurrentDate;
+    public double _skipToOffset = -1;
 
     DateTime dateTimeCurrent;
     DateTime dateTimeLastUpdate;
@@ -83,13 +84,12 @@ public class GameTime : MonoBehaviour {
 	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
         //If trying to add a key action that should already have ben run, then run it immediately instead and return
-        if (TimeStamp < time)
-        {
-            target.UpdateSim(TimeStamp);
-            return false;
-        }
+        //if (TimeStamp < time) {
+        //    target.UpdateSim(TimeStamp);
+        //    return false;
+        //}
 
-		KeyAction keypoint = new KeyAction ();
+        KeyAction keypoint = new KeyAction ();
 
 		keypoint.Timestamp = TimeStamp;
 		keypoint.target = target;
@@ -124,11 +124,10 @@ public class GameTime : MonoBehaviour {
 
 		offset = offset + (delta/VisualTimeScale * (SimulationTimeScaleFactor - VisualTimeScale));
 
-
 		double new_time = StartTime + offset + Time.time;
 
-		//Do all key actions requiered until the new time
-		DoKeyActions(new_time);
+        //Do all key actions requiered until the new time
+        DoKeyActions(new_time);
 
         simulationDeltaTime = (float) (new_time - time);
 		time = new_time;
@@ -139,38 +138,40 @@ public class GameTime : MonoBehaviour {
 
 		lastupdate = now;
 
-        
         TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
         RealWorldTime = t.TotalSeconds;
         
 	}
 
-	private int DoKeyActions(double newtime) { 
+	private void DoKeyActions(double newtime) { 
 
-
-		int i = 0;
 		KeyAction ka = null;
 
-		while (KeyActions.Count > 0 ) {
-			//All remaning are in the future (assuming that the list is sorted). 
-			if (KeyActions [0].Timestamp > newtime)
-				return i;
-			 
-			i += 1;
-			ka = KeyActions [0];
+        //TimeProfiler tp = new TimeProfiler("Do key actions", true);
+
+        while (KeyActions.Count > 0 ) {
+            //All remaning are in the future (assuming that the list is sorted). 
+            if (KeyActions[0].Timestamp > newtime) {
+                break;
+            }
+
+            //tp.IncreaseCounter(true);
+ 
+			ka = KeyActions[0];
 
             //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
-			time = ka.Timestamp;
+            time = ka.Timestamp;
 
-			//Execute the event. 
-			ka.target.UpdateSim(time);
+            //Execute the event. 
+            ka.target.UpdateSim(time);
 
-			//Remove
-			KeyActions.Remove (ka);
+            //Remove
+            KeyActions.Remove (ka);
 
 		}
+        //tp.MillisecondsSinceCreated(true);
 
-		return 0;
+        return;
 	}
 
 	private double DateTimeToTimestamp(DateTime value)

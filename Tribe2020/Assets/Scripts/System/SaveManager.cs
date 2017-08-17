@@ -30,7 +30,7 @@ public class SaveManager : MonoBehaviour{
 
 	//Sort use instead of constructor
 	void Awake() {
-		_instance = this;
+        _instance = this;
 		_filePath = Application.persistentDataPath + "/" + fileName;
 		//_dataClone = ReadFileAsJSON();
 		Load();
@@ -236,6 +236,7 @@ public class SaveManager : MonoBehaviour{
 		if(_filePath == "") { return null; }
 		if(!File.Exists(_filePath)) { InitFile(); }
 
+
 		string fileClone = File.ReadAllText(_filePath);
 		if(fileClone == "") {
 			InitFile();
@@ -248,7 +249,7 @@ public class SaveManager : MonoBehaviour{
 			json = JSON.Parse(fileClone);
 		}
 
-		return json;
+        return json;
 	}
 
 	//

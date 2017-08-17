@@ -150,25 +150,29 @@ public class BehaviourAI : SimulationObject {
 	// Update is called once per frame
 	void Update() {
 		if(_firstUpdate) {
-			//Synchronise schedule to get current activity for time
+            //Synchronise schedule to get current activity for time
+            
 			SyncSchedule();
+
 			if(_curActivity) {
 				_curActivity.Start(); //Start this activity.
 			}
 
-			if(_nextActivity != null) {
-				//Add key point for _nextActivity.
-				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
-					DebugManager.Log("added key action point", this, this);
-				} else {
-					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
-				}
-			} else {
-				DebugManager.LogError("_nextActivity is null!!", this, this);
-			}
+            if (_nextActivity != null) {
+                //Add key point for _nextActivity.
+                if (_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+                    DebugManager.Log("added key action point", this, this);
+                }
+                else {
+                    DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
+                }
+            }
+            else {
+                DebugManager.LogError("_nextActivity is null!!", this, this);
+            }
 
-			_firstUpdate = false;
-		}
+            _firstUpdate = false;
+        }
 
 		UpdateCoffeeCup();
 
@@ -309,7 +313,8 @@ public class BehaviourAI : SimulationObject {
 
 	//Soooo. What this function is doing is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
 	private void SyncSchedule() {
-		double curTime = _timeMgr.GetTotalSeconds();
+
+        double curTime = _timeMgr.GetTotalSeconds();
 		DateTime curDateTime = _timeMgr.GetDateTime();
 		double curHour = curDateTime.Hour;
 		double curMinute = curDateTime.Minute;
@@ -418,7 +423,8 @@ public class BehaviourAI : SimulationObject {
             }
 
         }
-	}
+
+    }
 
 	//
 	private void SetCurrentActivity(AvatarActivity activity, double startTime) {
