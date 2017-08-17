@@ -660,7 +660,7 @@ public class PilotView : View{
 
 	//
 	public void PlayUIAnimation(string animation) {
-		GetComponent<Animator>().Play(animation, 0, 0);
+		GetComponent<Animator>().Play(animation);
 	}
 
 	//
