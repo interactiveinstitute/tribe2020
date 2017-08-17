@@ -18,12 +18,6 @@ public class QuizManager : MonoBehaviour {
 	public struct AvatarQuizzes {
 		public string avatarName;
 		public List<Quiz> quizzes;
-		public Minigame minigame;
-	}
-
-	[System.Serializable]
-	public struct Minigame {
-		public string name;
 	}
 
 	public List<AvatarQuizzes> avatarQuizzes;
@@ -93,5 +87,10 @@ public class QuizManager : MonoBehaviour {
 	//
 	public bool IsRightAnswer(int answerIndex) {
 		return _curQuiz.rightChoice == answerIndex;
+	}
+
+	//
+	public int GetRightAnswer() {
+		return _curQuiz.rightChoice;
 	}
 }

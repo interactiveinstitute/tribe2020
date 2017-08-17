@@ -9,6 +9,8 @@ public class BattleView : MonoBehaviour {
 		return _instance as BattleView;
 	}
 
+	private BattleController _controller;
+
 	public GameObject RisingNumberPrefab;
 
 	public GameObject dialogueUI;
@@ -52,6 +54,7 @@ public class BattleView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		_controller = BattleController.GetInstance();
 	}
 	
 	// Update is called once per frame
@@ -90,6 +93,135 @@ public class BattleView : MonoBehaviour {
 	//
 	public void ShowFireworks() {
 		_instance.fireworks.Play();
+	}
+
+	public void BuildQuiz(Quiz quiz) {
+		ClearMinigame();
+		question.text = _controller.GetPhrase("Quizzes", quiz.name);
+		answers[0].text = _controller.GetPhrase("Quizzes", quiz.name, 0);
+		answers[1].text = _controller.GetPhrase("Quizzes", quiz.name, 1);
+		answers[2].text = _controller.GetPhrase("Quizzes", quiz.name, 2);
+		answers[3].text = _controller.GetPhrase("Quizzes", quiz.name, 3);
+		SetAnswerVisible(true);
+		SetMinigameVisible(false);
+	}
+
+	//
+	public void BuildBuildGame(Quiz quiz) {
+		ClearMinigame();
+		AddBuildBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(70, 70));
+		AddBuildBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(70, 70));
+		AddBuildBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(70, 70));
+		AddBuildBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(70, 70));
+		AddBuildBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(70, 70));
+		AddBuildBlock(quiz.badImages[0], new Vector2(0, 0), 45);
+
+		AddGoalBlock(quiz.goodImages[0], new Vector2(0, 0), new Vector2(45, 45));
+		SetAnswerVisible(false);
+		SetMinigameVisible(true);
+	}
+
+	//
+	public void BuildGainingGame(Quiz quiz) {
+		ClearMinigame();
+		AddArgument(quiz.goodImages[0], new Vector2(0, 0), true);
+		AddArgument(quiz.badImages[0], new Vector2(0, 0), false);
+		SetAnswerVisible(false);
+		SetMinigameVisible(true);
+	}
+
+	//
+	public void BuildFramingGame(Quiz quiz) {
+		//ClearMinigame();
+		//AddFramingSubject(quiz.goodImages[0], new Vector2(0, 0), true);
+		//AddFramingSubject(quiz.badImages[0], new Vector2(0, 0), false);
+		//SetAnswerVisible(false);
+		//SetMinigameVisible(true);
+	}
+
+	//
+	public void AddBuildBlock(Sprite img, Vector2 pos, int radius) {
+		GameObject newBlock = new GameObject();
+		newBlock.name = "Build Circle";
+		newBlock.transform.SetParent(minigameFrame.transform, false);
+		Image newImg = newBlock.AddComponent<Image>();
+		newImg.sprite = img;
+		Rigidbody2D newRB = newBlock.AddComponent<Rigidbody2D>();
+		newRB.gravityScale = 100;
+		CircleCollider2D newColl = newBlock.AddComponent<CircleCollider2D>();
+		newColl.radius = radius;
+		newBlock.AddComponent<Draggable>();
+
+		//Instantiate(newBlock, minigameFrame.transform);
+	}
+
+	//
+	public void AddBuildBlock(Sprite img, Vector2 pos, Vector2 size) {
+		GameObject newBlock = new GameObject();
+		newBlock.name = "Build Block";
+		newBlock.transform.SetParent(minigameFrame.transform, false);
+		Image newImg = newBlock.AddComponent<Image>();
+		newImg.sprite = img;
+		Rigidbody2D newRB = newBlock.AddComponent<Rigidbody2D>();
+		newRB.gravityScale = 100;
+		BoxCollider2D newColl = newBlock.AddComponent<BoxCollider2D>();
+		newColl.size = size;
+		newBlock.AddComponent<Draggable>();
+		
+
+		//Instantiate(newBlock, minigameFrame.transform);
+	}
+
+	//
+	public void AddGoalBlock(Sprite img, Vector2 pos, Vector2 size) {
+		GameObject newBlock = new GameObject();
+		newBlock.name = "Build Goal";
+		newBlock.transform.SetParent(minigameFrame.transform, false);
+		Image newImg = newBlock.AddComponent<Image>();
+		newImg.sprite = img;
+		Rigidbody2D newRB = newBlock.AddComponent<Rigidbody2D>();
+		newRB.gravityScale = 0;
+		BoxCollider2D newColl = newBlock.AddComponent<BoxCollider2D>();
+		newColl.size = size;
+		newColl.isTrigger = true;
+		newBlock.AddComponent<BuildGoal>();
+
+		//Instantiate(newBlock, minigameFrame.transform);
+	}
+
+	//
+	public void AddArgument(Sprite img, Vector2 pos, bool isPlayers) {
+		GameObject newBlock = new GameObject();
+		Image newImg = newBlock.AddComponent<Image>();
+		newImg.sprite = img;
+		Rigidbody2D newRB = newBlock.AddComponent<Rigidbody2D>();
+		newRB.gravityScale = 100;
+		BoxCollider2D newColl = newBlock.AddComponent<BoxCollider2D>();
+		newColl.size = new Vector2(45, 45);
+
+		Instantiate(newBlock, minigameFrame.transform);
+	}
+
+	//
+	public void AddFramingSubject(Sprite img, Vector2 pos, bool isRelevant) {
+		GameObject newBlock = new GameObject();
+		Image newImg = newBlock.AddComponent<Image>();
+		newImg.sprite = img;
+		Rigidbody2D newRB = newBlock.AddComponent<Rigidbody2D>();
+		newRB.gravityScale = 100;
+		BoxCollider2D newColl = newBlock.AddComponent<BoxCollider2D>();
+		newColl.size = new Vector2(45, 45);
+
+		Instantiate(newBlock, minigameFrame.transform);
+	}
+
+	//
+	public void ClearMinigame() {
+		foreach(Transform t in minigameFrame.transform) {
+			if(t.gameObject.name != "Bounds") {
+				Destroy(t.gameObject);
+			}
+		}
 	}
 
 	//
