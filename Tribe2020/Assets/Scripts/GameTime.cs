@@ -49,6 +49,7 @@ public class GameTime : MonoBehaviour {
 	public double time = Double.NaN;
 	public double VisualTime;
 	public string CurrentDate;
+    public double _skipToOffset = -1;
 
     DateTime dateTimeCurrent;
     DateTime dateTimeLastUpdate;
@@ -83,13 +84,12 @@ public class GameTime : MonoBehaviour {
 	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
         //If trying to add a key action that should already have ben run, then run it immediately instead and return
-        if (TimeStamp < time)
-        {
-            target.UpdateSim(TimeStamp);
-            return false;
-        }
+        //if (TimeStamp < time) {
+        //    target.UpdateSim(TimeStamp);
+        //    return false;
+        //}
 
-		KeyAction keypoint = new KeyAction ();
+        KeyAction keypoint = new KeyAction ();
 
 		keypoint.Timestamp = TimeStamp;
 		keypoint.target = target;
@@ -147,25 +147,32 @@ public class GameTime : MonoBehaviour {
 
 		KeyAction ka = null;
 
-        //TimeProfiler tp = new TimeProfiler("Do key actions");
-        while (KeyActions.Count > 0 ) {
+        //TimeProfiler tp = new TimeProfiler("Do key actions", true);
+
+        //Clone list to prevent recursive calls (UpdateSim populates KeyActions) 
+        List<KeyAction> keyActionsClone = new List<KeyAction>(KeyActions);
+
+        while (keyActionsClone.Count > 0) {
             //All remaning are in the future (assuming that the list is sorted). 
-            if (KeyActions[0].Timestamp > newtime) {
+            if (keyActionsClone[0].Timestamp > newtime) {
                 break;
             }
-			 
-			ka = KeyActions [0];
+
+            //tp.IncreaseCounter(true);
+
+            ka = keyActionsClone[0];
 
             //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
-			time = ka.Timestamp;
+            time = ka.Timestamp;
 
             //Execute the event. 
             ka.target.UpdateSim(time);
 
-            //Remove
-            KeyActions.Remove (ka);
+            //Remove keyaction from both lists
+            keyActionsClone.Remove(ka);
+            KeyActions.Remove(ka);
 
-		}
+        }
         //tp.MillisecondsSinceCreated(true);
 
         return;

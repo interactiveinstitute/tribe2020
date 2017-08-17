@@ -61,13 +61,7 @@ public class DataSeriesBuffer : DataSeries {
 	[Header("CSV file")]
 	public TextAsset File;
 
-
-
 	//private GameTime TTime = null;
-
-
-
-
 
 	// Use this for initialization
 	void Start () {
@@ -99,7 +93,7 @@ public class DataSeriesBuffer : DataSeries {
 				return false;
 
 
-			CurrentValue = GetCurrentValue ();
+			CurrentValue = GetCurrentValue();
 
 
 			if (TTime != null && Data.Count - 1 > CurrentIndex )

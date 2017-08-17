@@ -53,6 +53,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Event flow state fields
 	private int _pendingTimeSkip = -1;
+    //private double _skipToOffset = -1;
 
 	private bool _firstUpdate = false;
 
@@ -137,6 +138,11 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(_timeMgr.time > endTime) {
 			OnGameOver();
 		}
+
+        //Skip forward in time, animation check
+        if (_instance._timeMgr._skipToOffset != -1 && _instance._timeMgr.offset > _instance._timeMgr._skipToOffset) {
+            FinishStepHoursForward();
+        }
 	}
 
 	//Callback for when tap is triggered
@@ -688,24 +694,34 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void StepHoursForward(int hours) {
-		PlayUIAnimation("TimeSkipped");
+		PlayUIAnimation("TimeSkippedStart");
 		SetVisualTimeScale(10);
 		switch(hours) {
 			case 1:
-				SetSimulationTimeScale(100);
+				SetSimulationTimeScale(100000);
 				break;
 			case 24:
-				SetSimulationTimeScale(1000);
+				SetSimulationTimeScale(100000);
 				break;
 			case 168:
-				SetSimulationTimeScale(100000);
+				SetSimulationTimeScale(1000000);
 				break;
-			case 5040:
-				SetSimulationTimeScale(100000);
+			case 720:
+				SetSimulationTimeScale(1000000);
 				break;
 		}
-		_instance._pendingTimeSkip = hours;
-	}
+        _instance._timeMgr._skipToOffset = _instance._timeMgr.offset + 3600 * hours;
+        //_instance._pendingTimeSkip = hours;
+    }
+
+    void FinishStepHoursForward() {
+        SetVisualTimeScale(1);
+        SetSimulationTimeScale(60);
+        _instance._timeMgr.offset = _instance._timeMgr._skipToOffset;
+        _instance._timeMgr._skipToOffset = -1;
+        PlayUIAnimation("TimeSkippedEnd");
+        
+    }
 
 	//
 	public void SaveGameState() {
@@ -737,6 +753,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
         if (syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
             _timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
+            _timeMgr.time = _timeMgr.StartTime + _timeMgr.offset;
         }
 
         if (syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));

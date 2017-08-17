@@ -8,13 +8,18 @@ public class TimeProfiler {
     long _latest;
     long _reference;
     string _name;
+    int _intCounter;
 
     static TimeProfiler _instance = new TimeProfiler();
 
-    public TimeProfiler(string name = "Time profiler") {
+    public TimeProfiler(string name = "Time profiler", bool log = false) {
         SetName(name);
         _first = System.DateTime.Now.Ticks;
         _latest = _first;
+        _intCounter = 0;
+        if (log) {
+            Debug.Log(_name + ", time profiler started");
+        }
     }
 
     public static TimeProfiler GetInstance() {
@@ -55,5 +60,17 @@ public class TimeProfiler {
 
     public void SetReference() {
         _reference = System.DateTime.Now.Ticks;
+    }
+
+    public int IncreaseCounter(bool log = false) {
+        _intCounter++;
+        return CountsSinceCreated(log);
+    }
+
+    public int CountsSinceCreated(bool log = false) {
+        if (log) {
+            Debug.Log(_name + ", counts since created: " + _intCounter);
+        }
+        return _intCounter;
     }
 }
