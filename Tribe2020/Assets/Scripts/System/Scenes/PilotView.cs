@@ -100,6 +100,7 @@ public class PilotView : View{
 	public GameObject viewGuideRowPrefab;
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
+	public GameObject mailObjectivePrefab;
 	public GameObject EEMButtonPrefab;
 	public GameObject PilotEEMButtonPrefab;
 	public GameObject EnergyPanelDevice;
@@ -566,7 +567,8 @@ public class PilotView : View{
 		RemoveChildren(inboxList);
 	}
 
-	//
+	//Build mail representative given a narrative and add to mail list
+	//TODO localization
 	public void BuildMailButton(Narrative narrative, bool isCompleted, Color color) {
 		GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
@@ -574,8 +576,10 @@ public class PilotView : View{
 		mail.content = mailButtonObj.transform.GetChild(1).gameObject;
 		mail.content.SetActive(false);
 
+		//Hook up button to show mail content if opened
 		mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMailContent(mail, narrative));
 
+		//Show closed/opened mail image if active/archived narrative
 		Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
 		images[1].color = color;
 		if(isCompleted) {
@@ -584,41 +588,38 @@ public class PilotView : View{
 			images[2].gameObject.SetActive(false);
 		}
 
+		//Show narrative title
 		Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
 		//_controller.GetPhrase(...)
 		texts[0].text = narrative.title;
+		texts[1].text = "";
 		mailButtonObj.transform.SetParent(inboxList, false);
 	}
 
-	//
+	//Build mail content given a narrative and add to mail container
+	//TODO localization
 	public void BuildMailContent(Mail mail, Narrative narrative) {
 		Transform contentTrans = mail.transform.GetChild(1);
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
-		//Text description = contentTrans.GetComponentsInChildren<Text>()[1];
-		Text steps = contentTrans.GetComponentsInChildren<Text>()[1];
+		Transform stepsContainer = contentTrans.GetChild(1);
 
-		//_controller.GetPhrase(...)
-		//title.text = narrative.title;
 		//_controller.GetPhrase(...)
 		title.text = narrative.description;
+		RemoveChildren(stepsContainer);
 
-		string stepConcat = "";
-		for(int i = 0; i < narrative.GetCurrentStepIndex(); i++) {
+		//string stepConcat = "";
+		for(int i = narrative.GetCurrentStepIndex() - 1; i >= 0; i--) {
 			if(narrative.steps[i].inChecklist) {
+				GameObject newObjective = Instantiate(mailObjectivePrefab, stepsContainer);
 				//_controller.GetPhrase(...)
-				stepConcat += "¤ " + narrative.steps[i].description + "\n";
+				newObjective.GetComponentInChildren<Text>().text = narrative.steps[i].description;
+				if(i == narrative.GetCurrentStepIndex() - 1) {
+					newObjective.GetComponentInChildren<Image>().enabled = false;
+				}
 			}
 		}
-		//foreach(Narrative.Step ns in narrative.steps) {
-		//	if(ns.inChecklist) {
-				
-		//	}
-		//}
-		steps.text = stepConcat;
 
 		mail.content.SetActive(!mail.content.activeSelf);
-
-		//mailObj.transform.SetParent(inboxList, false);
 	}
 
 	//
