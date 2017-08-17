@@ -28,7 +28,7 @@ public class AppServer : SocketIOComponentMod {
 		On("close", DoOnClose);
 		On("requested", DoOnSeries);
 
-		Debug.Log ("Starting: " + NodeName);
+		//Debug.Log ("Starting: " + NodeName);
 
         
 
