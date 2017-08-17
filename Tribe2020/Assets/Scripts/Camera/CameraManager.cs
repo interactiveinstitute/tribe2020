@@ -599,6 +599,13 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	//
+	public void UnlockViews(int y) {
+		foreach(Viewpoint vp in _views[y]) {
+			vp.locked = false;
+		}
+	}
+
+	//
 	public void UnlockView(int x, int y) {
 		_views[y][x].locked = false;
 	}

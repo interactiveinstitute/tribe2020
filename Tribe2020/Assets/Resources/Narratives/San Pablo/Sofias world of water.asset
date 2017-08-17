@@ -1,0 +1,211 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
+  m_Name: Sofias world of water
+  m_EditorClassIdentifier: 
+  title: Sofias world of water
+  description: Get to know Javier Rouch and see what's his problem.
+  steps:
+  - description: Find and talk to Sofia
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkAvatar
+      parameter1: Sofia Agua
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and talk to Javier Rough about his ligthing issues.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue
+    conditionType: AvatarSelected
+    conditionProp: Javier Rough
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Aargh! Too dark!
+    - callback: SetSimulationTimeScale
+      parameter1: 0
+      parameter2: 
+    - callback: UnmarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What seems to be the problem?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Hmm, I'll see what I can do about that.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Instructions
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can select an appliance by tapping it. Try tapping Javier's
+        computer screen.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Add Objective, Checkpoint
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkDevice
+      parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
+      parameter2: CRT Monitor
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and upgrade Javier's monitor to an LCD one.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Selected Target
+    conditionType: DeviceSelected
+    conditionProp: CRT Monitor
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What an old computer screen. These fat CRT monitors are not very
+        energy efficient neither.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Instructions
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can perform actions to appliances that change their energy efficiency.
+        However, this can cost both money and be unconvenient for the people in the
+        building.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Objective Performed
+    conditionType: EEMPerformed
+    conditionProp: EDL4
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue, Checkpoint
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What the, this is amazing! I can actually see what I am doing!
+    inChecklist: 0
+    checkpoint: 1
+  - description: Move Camera
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: GotoViewpoint
+      parameter1: Waiting Lounge
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Camera Moved
+    conditionType: CameraArrived
+    conditionProp: Waiting Lounge
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What am I look for?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Oh yeah? Prove it!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Instructions
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: To challenge the attitude and view of a person, select them and
+        choose to challenge them.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Before Challenge, Checkpoint
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: SetAvatarBattleReady
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: MarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Challenge Javier Rough's attitude towards energy efficiency.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Battle Won
+    conditionType: BattleWon
+    conditionProp: Javier Rough
+    actions:
+    - callback: UnmarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: ClearChallengeData
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Dialogue, Checkpoint
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Do you see why we have to be more energy efficient now?
+    inChecklist: 0
+    checkpoint: 1
+  - description: Congratulations
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowCongratulations
+      parameter1: 
+      parameter2: Things are not always what they seem with lighting.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Tap to continue
+    conditionType: Tapped
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  followingNarratives: []

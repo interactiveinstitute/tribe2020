@@ -628,6 +628,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
+	public void UnlockViews(int y) {
+		_cameraMgr.UnlockViews(y);
+		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
+	}
+
+	//
 	public void UnlockView(int x, int y) {
 		_cameraMgr.UnlockView(x, y);
 		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
@@ -870,6 +876,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				break;
 			case "ClearChallengeData":
 				SendMessage(callback);
+				break;
+			case "UnlockViews":
+				SendMessage(callback, int.Parse(parameters[0]));
 				break;
 			default:
 				SendMessage(callback, parameters[0]);

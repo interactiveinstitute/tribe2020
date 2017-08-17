@@ -1,0 +1,506 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae424cbcb35625f4da57e6e27dc085d5, type: 3}
+  m_Name: Valentine gotta go fast
+  m_EditorClassIdentifier: 
+  title: Valentine gotta go fast
+  description: Get to know Javier Rouch and see what's his problem.
+  steps:
+  - description: Find and talk to Valentine
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkAvatar
+      parameter1: Valentine Rapido
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and talk to Javier Rough about his ligthing issues.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Argh, too dark
+    conditionType: AvatarSelected
+    conditionProp: Javier Rough
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Aargh! Too dark!
+    - callback: SetSimulationTimeScale
+      parameter1: 0
+      parameter2: 
+    - callback: UnmarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: What's the problem
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What seems to be the problem?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Seeing is the problem
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Seeing is the problem! It's either too bright or too dark.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Why aren't you outside
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Maybe you should go outside, the light seems fine there.
+    inChecklist: 0
+    checkpoint: 0
+  - description: I wish I could
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I wish I could, but I have all this computer work I need to do.
+        Watching the screen everyday makes my eyes square!
+    inChecklist: 0
+    checkpoint: 0
+  - description: I'll see what I can do
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Hmm, I'll see what I can do about that.
+    inChecklist: 0
+    checkpoint: 0
+  - description: How to select an appliance
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can select an appliance by tapping it. Try tapping Javier's
+        computer screen.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Upgrade Javier's monitor
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkDevice
+      parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
+      parameter2: CRT Monitor
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and upgrade Javier's monitor to an LCD one.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Selected Javier's monitor
+    conditionType: DeviceSelected
+    conditionProp: CRT Monitor
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What an old computer screen. These fat CRT monitors are not very
+        energy efficient neither.
+    inChecklist: 0
+    checkpoint: 0
+  - description: How to upgrade an appliance
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: You can perform actions to appliances that change their energy efficiency.
+        However, this can cost both money and be unconvenient for the people in the
+        building.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Upgraded to LCD
+    conditionType: EEMPerformed
+    conditionProp: EDL4
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  - description: What the, amazing
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What the, this is amazing! I can actually see what I am doing!
+    inChecklist: 0
+    checkpoint: 1
+  - description: Your'e welcome
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Your'e welcome! (was he just hitting random keys before?)
+    inChecklist: 0
+    checkpoint: 0
+  - description: What is this
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Oh! But what is this!
+    inChecklist: 0
+    checkpoint: 0
+  - description: What now
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What is it now?
+    inChecklist: 0
+    checkpoint: 0
+  - description: The lamps
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Now that I can see better, I can't help but notice that there is
+        a really ugly ligthing in this room!
+    inChecklist: 0
+    checkpoint: 0
+  - description: I'll see what I can do
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: I guess I'll see what I can do...
+    inChecklist: 0
+    checkpoint: 0
+  - description: Upgrade lamp to LED
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkDevice
+      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and upgrade a cieling lamp to an LED one.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Upgraded to LED
+    conditionType: EEMPerformed
+    conditionProp: LL5
+    actions:
+    - callback: UnmarkDevice
+      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: That's it! Wonderful light
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: That's it! What a wonderful, bright and clear room ambience!
+    inChecklist: 0
+    checkpoint: 1
+  - description: Your'e welcome again
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: (Your'e welcome, again)
+    inChecklist: 0
+    checkpoint: 0
+  - description: What the
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What the! What is going on!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Silence
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: '...'
+    inChecklist: 0
+    checkpoint: 0
+  - description: Look at that thing
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Look at that thing. Look at it! What is that?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Show vending machine
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: GotoViewpoint
+      parameter1: Waiting Lounge
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Moved to waiting lounge
+    conditionType: CameraArrived
+    conditionProp: Waiting Lounge
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: What am I look for?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Don't you see it
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Don't you see it!
+    inChecklist: 0
+    checkpoint: 0
+  - description: The busy atmosphere
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: The electrical current? The flow of the air? The busy atmosphere?
+    inChecklist: 0
+    checkpoint: 0
+  - description: No, the vending machine
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: No, no, no. The vending machine, of course!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Of course, that one
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Of course (that and all other things here)
+    inChecklist: 0
+    checkpoint: 0
+  - description: It has a horrible light
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: It has a horrible light. Disgusting. Can you get rid of it?
+    inChecklist: 0
+    checkpoint: 0
+  - description: I suppose it's unnecessary
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Um? I suppose the ligth inside the machine is unnecessary as long
+        as you can see the products.
+    inChecklist: 0
+    checkpoint: 0
+  - description: De-lamp Vending Machine
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: MarkDevice
+      parameter1: b46e24c4-3a4a-43de-985e-ec047c685e7a
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Find and de-lamp the Vending Machine in the visitor's lounge.
+    inChecklist: 0
+    checkpoint: 1
+  - description: De-lamped the Vending Machine
+    conditionType: EEMPerformed
+    conditionProp: EDL9
+    actions:
+    - callback: UnmarkDevice
+      parameter1: b46e24c4-3a4a-43de-985e-ec047c685e7a
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Much easier on the eyes
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Wonderful! Much easier on the eyes!
+    inChecklist: 0
+    checkpoint: 1
+  - description: Your'e great
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: You know what, you are great! Just look at this wonderful ligthing
+        we have now.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Not to mention the energy
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Thanks! Not to mention the energy savings we have achieved with
+        the things we have done.
+    inChecklist: 0
+    checkpoint: 0
+  - description: What, I don't want that
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: What? I don't care about energy savings. That's just boring and
+        pointless. As long as we have good ligthing, nothing else matters to me.
+    inChecklist: 0
+    checkpoint: 0
+  - description: You can't be serious
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: No way! You can't mean that. Listen, I have come to change your
+        mind. If we don't become more energy efficient there won't be any lights at
+        all!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Oh yeah
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: Oh yeah? Prove it!
+    inChecklist: 0
+    checkpoint: 0
+  - description: How to challenge an avatar
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: 
+      parameter2: To challenge the attitude and view of a person, select them and
+        choose to challenge them.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Challenge Javier
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: SetAvatarBattleReady
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: MarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: AddObjective
+      parameter1: 
+      parameter2: Challenge Javier Rough's attitude towards energy efficiency.
+    inChecklist: 0
+    checkpoint: 1
+  - description: Battle won
+    conditionType: BattleWon
+    conditionProp: Javier Rough
+    actions:
+    - callback: UnmarkAvatar
+      parameter1: Javier Rough
+      parameter2: 
+    - callback: ClearChallengeData
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Do you see now
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Do you see why we have to be more energy efficient now?
+    inChecklist: 0
+    checkpoint: 1
+  - description: I do
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I do... What a journey we have done! What else can I do to be more
+        efficient?
+    inChecklist: 0
+    checkpoint: 0
+  - description: Many things
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: There are many things one can do. But to begin with, just thing
+        of the energy whenever you turn a light on or off!
+    inChecklist: 0
+    checkpoint: 0
+  - description: I will
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Javier Rough
+      parameter2: I will! Thank's a lot!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Congratulations
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowCongratulations
+      parameter1: 
+      parameter2: Things are not always what they seem with lighting.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Tap to continue
+    conditionType: Tapped
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  followingNarratives: []

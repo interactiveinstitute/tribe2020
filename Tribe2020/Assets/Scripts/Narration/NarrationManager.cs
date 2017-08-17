@@ -152,6 +152,7 @@ public class NarrationManager : MonoBehaviour {
 		}
 	}
 
+	//
     public bool IsPerformed(string eventType, string prop) {
         foreach(PerformedStep ps in _performedSteps) {
             if(ps.IsCompletedBy(eventType, prop)) {

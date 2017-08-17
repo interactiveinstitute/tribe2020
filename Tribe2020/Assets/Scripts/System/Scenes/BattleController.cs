@@ -11,7 +11,9 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	}
 
 	public enum GameState { Quizzing, Damage, Framing, Building, Gaining, Presenting, Defeat, Victory, Leveling };
+	[SerializeField]
 	private GameState state = GameState.Quizzing;
+	[SerializeField]
 	private float _stateTimer = 0;
 
 	private BattleView _view;
@@ -85,7 +87,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			_instance.LoadGameState();
 
 			LoadOpponent(_saveMgr.GetData("pendingChallenge"));
-			SetState(GameState.Quizzing);
+			//SetState(GameState.Quizzing);
 		}
 
 		_view.opponentEnergy.value = opponentEnergy;
@@ -104,6 +106,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 				SetState(GameState.Quizzing);
 			}
 		}
+		if(state == GameState.Building) {
+		}
 		_stateTimer += Time.deltaTime;
 	}
 
@@ -116,6 +120,28 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 	//
 	public void OnSwipe(Vector2 direction) {
+	}
+
+	//
+	public void OnBuildEnter() {
+		Debug.Log("enter");
+	}
+
+	//
+	public void OnBuildExit() {
+		Debug.Log("exit");
+	}
+
+	//
+	public void OnMinigameWin() {
+		_instance._pendingAnswer = _quizMgr.GetRightAnswer();
+		_instance.SetState(GameState.Damage);
+	}
+
+	//
+	public void OnMinigameLose() {
+		_instance._pendingAnswer = _quizMgr.GetRightAnswer() + 1;
+		_instance.SetState(GameState.Damage);
 	}
 
 	//
@@ -148,16 +174,20 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 				_view.SetAnswerVisible(false);
 				break;
 			case GameState.Building:
-				_view.SetAnswerVisible(false);
+				_camMgr.SetViewpoint("Battle");
+				//_view.SetAnswerVisible(false);
 				break;
 			case GameState.Framing:
-				_view.SetAnswerVisible(false);
+				_camMgr.SetViewpoint("Battle");
+				//_view.SetAnswerVisible(false);
 				break;
 			case GameState.Gaining:
-				_view.SetAnswerVisible(false);
+				_camMgr.SetViewpoint("Battle");
+				//_view.SetAnswerVisible(false);
 				break;
 			case GameState.Presenting:
-				_view.SetAnswerVisible(false);
+				_camMgr.SetViewpoint("Battle");
+				//_view.SetAnswerVisible(false);
 				break;
 			case GameState.Defeat:
 				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.happy);
@@ -194,11 +224,29 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	//
 	public void RefreshQuiz() {
 		Quiz curQuiz = _quizMgr.GetCurrentQuiz();
-		_view.question.text = _localMgr.GetPhrase("Quizzes", curQuiz.name);
-		_view.answers[0].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 0);
-		_view.answers[1].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 1);
-		_view.answers[2].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 2);
-		_view.answers[3].text = _localMgr.GetPhrase("Quizzes", curQuiz.name, 3);
+
+		switch(curQuiz.type) {
+			case Quiz.Type.Quiz:
+				SetState(GameState.Quizzing);
+				_view.BuildQuiz(curQuiz);
+				break;
+			case Quiz.Type.Build:
+				SetState(GameState.Building);
+				_view.BuildBuildGame(curQuiz);
+				break;
+			case Quiz.Type.Frame:
+				SetState(GameState.Framing);
+				_view.BuildFramingGame(curQuiz);
+				break;
+			case Quiz.Type.Gain:
+				SetState(GameState.Gaining);
+				_view.BuildGainingGame(curQuiz);
+				break;
+			case Quiz.Type.Present:
+				SetState(GameState.Presenting);
+				_view.SetMinigameVisible(true);
+				break;
+		}
 	}
 
 	//
@@ -219,10 +267,12 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 	//
 	public void ResolveDamage() {
+		Debug.Log("resolve");
 		//Right answer -> deal damage to opponent or wrong answer -> receive damage
 		if(_quizMgr.IsRightAnswer(_pendingAnswer)) {
 			int damage = 1;
 			_view.CreateFeedback(foeObject.transform.position, "" + damage);
+
 			int moodShuffle = UnityEngine.Random.Range(0, 3);
 			if(moodShuffle == 0) {
 				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.tired);
@@ -231,6 +281,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			} else {
 				foeObject.GetComponent<AvatarMood>().SetMood(AvatarMood.Mood.surprised);
 			}
+
 			opponentEnergy--;
 			if(opponentEnergy == 0) {
 				SetState(GameState.Victory);
@@ -240,6 +291,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			}
 		} else {
 			playerEnergy--;
+			RefreshQuiz();
 			if(playerEnergy == 0) {
 				SetState(GameState.Defeat);
 			}
@@ -278,6 +330,16 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	//
 	public string GetPhrase(string groupKey, string key) {
 		return _localMgr.GetPhrase(groupKey, key);
+	}
+
+	//
+	public string GetPhrase(string groupKey, string key, int index) {
+		return _localMgr.GetPhrase(groupKey, key, index);
+	}
+
+	//
+	public Transform GetMinigameFrame() {
+		return _view.minigameFrame.transform;
 	}
 
 	//
