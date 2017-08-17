@@ -149,18 +149,15 @@ public class GameTime : MonoBehaviour {
 
         //TimeProfiler tp = new TimeProfiler("Do key actions", true);
 
-        //Clone list to prevent recursive calls (UpdateSim populates KeyActions) 
-        List<KeyAction> keyActionsClone = new List<KeyAction>(KeyActions);
-
-        while (keyActionsClone.Count > 0) {
+        while (KeyActions.Count > 0 ) {
             //All remaning are in the future (assuming that the list is sorted). 
-            if (keyActionsClone[0].Timestamp > newtime) {
+            if (KeyActions[0].Timestamp > newtime) {
                 break;
             }
 
             //tp.IncreaseCounter(true);
-
-            ka = keyActionsClone[0];
+ 
+			ka = KeyActions[0];
 
             //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
             time = ka.Timestamp;
@@ -168,11 +165,10 @@ public class GameTime : MonoBehaviour {
             //Execute the event. 
             ka.target.UpdateSim(time);
 
-            //Remove keyaction from both lists
-            keyActionsClone.Remove(ka);
-            KeyActions.Remove(ka);
+            //Remove
+            KeyActions.Remove (ka);
 
-        }
+		}
         //tp.MillisecondsSinceCreated(true);
 
         return;
