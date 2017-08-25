@@ -209,6 +209,17 @@ public class NarrationManager : MonoBehaviour {
 	}
 
 	//
+	public int GetNumberOfActiveChecklists() {
+		int result = 0;
+		foreach(Narrative n in active) {
+			if(n.HasChecklist()) {
+				result++;
+			}
+		}
+		return result;
+	}
+
+	//
 	public JSONClass SerializeNarrative(Narrative narrative) {
 		JSONClass narrativeJSON = new JSONClass();
 		narrativeJSON.Add("index", GetDBIndexForNarrative(narrative).ToString());
