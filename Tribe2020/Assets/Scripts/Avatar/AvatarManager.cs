@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
 
@@ -9,13 +10,16 @@ public class AvatarManager : MonoBehaviour {
 		return _instance;
 	}
 
-    public enum Gender { Male, Female }
+    public enum Gender { Male, Female };
+	public enum Mood { Angry, Happy, Sad, Scared, Tired, Determined, Embarrassed, Satisfied, Excited };
 
 	[SerializeField]
 	private List<BehaviourAI> _avatars;
 	public AvatarConversation conversation;
     public AvatarModels models;
 	public Sprite playerPortrait;
+	public List<Sprite> femaleMoods;
+	public List<Sprite> maleMoods;
 
 	//
 	void Awake() {
@@ -76,9 +80,9 @@ public class AvatarManager : MonoBehaviour {
 		}
 	}
 
-	public BehaviourAI GetAvatar(string avatarName) {
+	public BehaviourAI GetAvatar(string aName) {
 		foreach(BehaviourAI avatar in _avatars) {
-			if(avatar.name == avatarName) {
+			if(avatar.GetComponent<Appliance>().title.Equals(aName)) {
 				return avatar;
 			}
 		}
@@ -86,13 +90,42 @@ public class AvatarManager : MonoBehaviour {
 	}
 
 	//
-	public AvatarStats GetAvatarStats(string name) {
+	public AvatarStats GetAvatarStats(string aName) {
 		foreach(BehaviourAI ai in _avatars) {
-			if(ai.GetComponent<Appliance>().name.Equals(name)) {
+			if(ai.GetComponent<Appliance>().title.Equals(aName)) {
 				return ai.GetComponent<AvatarStats>();
 			}
 		}
 		return null;
+	}
+
+	//
+	public Image GetAvatarPortrait(string aName) {
+		foreach(BehaviourAI ai in _avatars) {
+			if(ai.GetComponent<Appliance>().title.Equals(aName)) {
+				AvatarStats stats = ai.GetComponent<AvatarStats>();
+			}
+		}
+		return null;
+	}
+
+	//
+	public AvatarModel GetAvatarModel(string aName) {
+		foreach(BehaviourAI ai in _avatars) {
+			if(ai.GetComponent<Appliance>().title.Equals(aName)) {
+				return ai.GetComponent<AvatarModel>();
+			}
+		}
+		return null;
+	}
+
+	//
+	public Sprite GetMood(Gender gender, Mood expression) {
+		if(gender == Gender.Female) {
+			return femaleMoods[(int)expression];
+		} else {
+			return maleMoods[(int)expression];
+		}
 	}
 
 	//Serialize state as json for a save file

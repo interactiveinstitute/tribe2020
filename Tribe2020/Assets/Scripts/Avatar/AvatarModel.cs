@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using SimpleJSON;
 
 public class AvatarModel : MonoBehaviour {
@@ -13,6 +14,11 @@ public class AvatarModel : MonoBehaviour {
 	public Color clothesColor2;
 	public Color pantsColor;
 	public Color shoeColor;
+
+	[Header("Portrait")]
+	public Sprite hairImage;
+	public Sprite backHairImage;
+	public Sprite clothesImage;
 
 	// Use this for initialization
 	void Awake() {
