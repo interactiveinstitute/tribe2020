@@ -31,7 +31,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: When people pay for their own energy use they can be motivated to
         save energy in order to save money.
     - callback: LimitInteraction
@@ -44,7 +44,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: I don't think we will have that luck here. Nobody sees their energy
         use and no single person pays for it neither.
     - callback: LimitInteraction
@@ -57,7 +57,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: If I am to change peoples habits here I have to understand them
         better, and challenge them to do better!
     - callback: LimitInteraction
@@ -70,9 +70,55 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: I think I should start with observing the people who use this building
         and also talk to them to see what can be done.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: How to quest
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowMessage
+      parameter1: player
+      parameter2: Let's have a look in my inbox to see what can be done at the moment.
+    - callback: LimitInteraction
+      parameter1: InboxOnly
+      parameter2: 
+    - callback: PlayUIAnimation
+      parameter1: MarkInbox
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: The Inbox
+    conditionType: InboxOpened
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: This is a list of my current tasks. I can expore them further and
+        see my progress by tapping them.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    - callback: StopUIAnimation
+      parameter1: 
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Let's get to work
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ClearView
+      parameter1: 
+      parameter2: 
+    - callback: ShowPrompt
+      parameter1: player,Determined
+      parameter2: OK! Let's get to work!
     - callback: LimitInteraction
       parameter1: only_ok
       parameter2: 
@@ -85,9 +131,6 @@ MonoBehaviour:
     inChecklist: 0
     checkpoint: 0
   followingNarratives:
-  - {fileID: 11400000, guid: 22c8b45913522fc41b142893332172ec, type: 2}
-  - {fileID: 11400000, guid: 3fa2a17cafe5feb45b85cd10eb525399, type: 2}
-  - {fileID: 11400000, guid: d207976bcf56080408b04906f3fd293f, type: 2}
   - {fileID: 11400000, guid: 132154b025eb34e468991867a36d60e8, type: 2}
   - {fileID: 11400000, guid: 48eea2fa0e4339e46bc84d36ebb7a5ad, type: 2}
   - {fileID: 11400000, guid: f80387ce4dbd5394bb31b02a36b6edd6, type: 2}
