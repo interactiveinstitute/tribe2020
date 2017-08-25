@@ -576,10 +576,25 @@ public class PilotView : View{
 	public void BuildEnergyPanel(List<ElectricDevice> devices) {
 		RemoveChildren(deviceContainer);
 
+		Dictionary<string, GameObject> deviceCats = new Dictionary<string, GameObject>();
+
 		foreach(ElectricDevice device in devices) {
-			GameObject deviceCell = Instantiate(EnergyPanelDevice) as GameObject;
-			deviceCell.GetComponent<EnergyPanelDevice>().device = device;
-			deviceCell.transform.SetParent(deviceContainer, false);
+			GameObject deviceCell = null;
+			if(!deviceCats.ContainsKey(device.GetComponent<Appliance>().title)) {
+				deviceCell = Instantiate(EnergyPanelDevice, deviceContainer);
+
+				deviceCats.Add(device.GetComponent<Appliance>().title, deviceCell);
+
+
+				//deviceCats
+			} else {
+				deviceCell = deviceCats[device.GetComponent<Appliance>().title];
+			}
+			deviceCell.GetComponent<EnergyPanelDevice>().devices.Add(device);
+
+			//GameObject deviceCell = Instantiate(EnergyPanelDevice, deviceContainer);
+			//deviceCell.GetComponent<EnergyPanelDevice>().device = device;
+			//deviceCell.transform.SetParent(deviceContainer, false);
 		}
 	}
 
