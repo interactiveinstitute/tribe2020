@@ -12,7 +12,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 	public enum InputState {
 		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT, ONLY_APOCALYPSE, ONLY_ENVELOPE,
-		ONLY_TIME, ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST,
+		ONLY_TIME, InboxOnly, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST,
 		NOTHING, ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
 	};
 	[SerializeField]
@@ -132,7 +132,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
-		_view.UpdateQuestCount(_narrationMgr.active.Count);
+		_view.UpdateQuestCount(_narrationMgr.GetNumberOfActiveChecklists());
 
 		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
 		if(_timeMgr.time > endTime) {
@@ -446,6 +446,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "only_tap": _curState = InputState.ONLY_TAP; break;
 			case "only_apocalypsometer": _curState = InputState.ONLY_APOCALYPSE; break;
 			case "only_energy_panel": _curState = InputState.ONLY_ENERGY; break;
+			case "Inbox_Only": _curState = (InputState) Enum.Parse(typeof(InputState), interactionLimit, true); break;
 			default: _curState = InputState.ALL; break;
 		}
 	}
@@ -472,53 +473,51 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void ShowMessage(string[] cmd) {
-		string avatarName = cmd[0];
+		string[] avatarParse = cmd[0].Split(',');
+		string avatarName = avatarParse[0];
+		AvatarManager.Mood avatarMood = AvatarManager.Mood.Happy;
+		if(avatarParse.Length > 1) { avatarMood = (AvatarManager.Mood) Enum.Parse(typeof(AvatarManager.Mood), avatarParse[1]); }
 		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
-		Sprite portrait = null;
+		AvatarModel avatarModel = null;
 		if(avatarName != "") {
-			if(avatarName == "player") {
-				portrait = _instance._avatarMgr.playerPortrait;
-				avatarName = "F. Shaman: ";
-			} else {
-				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
-				avatarName = avatarName + ": ";
-			}
+			
+			if(avatarName == "player") { avatarName = "F. Shaman"; }
+			avatarModel = _instance._avatarMgr.GetAvatarModel(avatarName);
+			avatarName = avatarName + ": ";
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(avatarName + message, portrait, true, false);
+		_instance._view.ShowMessage(avatarName + message, avatarModel, avatarMood, false);
 	}
 
 	//
 	public void ShowPrompt(string[] cmd) {
-		string avatarName = cmd[0];
+		string[] avatarParse = cmd[0].Split(',');
+		string avatarName = avatarParse[0];
+		AvatarManager.Mood avatarMood = AvatarManager.Mood.Happy;
+		if(avatarParse.Length > 1) { avatarMood = (AvatarManager.Mood)Enum.Parse(typeof(AvatarManager.Mood), avatarParse[1]); }
 		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
-		Sprite portrait = null;
+		AvatarModel avatarModel = null;
 		if(avatarName != "") {
-			if(avatarName == "player") {
-				portrait = _instance._avatarMgr.playerPortrait;
-				avatarName = "F. Shaman: ";
-			} else {
-				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
-				avatarName = avatarName + ": ";
-			}
+			if(avatarName == "player") { avatarName = "F. Shaman"; }
+			avatarModel = _instance._avatarMgr.GetAvatarModel(avatarName);
+			avatarName = avatarName + ": ";
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(avatarName + message, portrait, true, true);
-
+		_instance._view.ShowMessage(avatarName + message, avatarModel, avatarMood, true);
 		LimitInteraction("only_ok");
 	}
 
 	//
 	public void OnOkPressed() {
-		//_instance.ResetTouch();
+		_instance._interMgr.ResetTouch();
 
 		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
 			_instance._view.messageUI.SetActive(false);

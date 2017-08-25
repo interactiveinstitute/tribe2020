@@ -516,17 +516,55 @@ public class PilotView : View{
 	}
 
 	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
-	public void ShowMessage(string message, Sprite portrait, bool showAtBottom, bool showOkButton = true) {
+	public void ShowMessage(string message, AvatarModel avatarModel, bool showOkButton = true) {
+		ShowMessage(message, avatarModel, AvatarManager.Mood.Happy, showOkButton);
+	}
+
+	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
+	public void ShowMessage(string message, AvatarModel avatarModel, AvatarManager.Mood mood, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
-		if(portrait) {
-			messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
+		ShowPortrait(avatarModel, mood);
+
+		messageButton.SetActive(showOkButton);
+	}
+
+	//
+	public void ShowPortrait(AvatarModel avatarModel, AvatarManager.Mood mood) {
+		if(avatarModel) {
+			//messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
 			messageUI.transform.GetChild(0).gameObject.SetActive(true);
+			Image[] faceParts = messageUI.transform.GetChild(0).GetComponentsInChildren<Image>();
+
+			//Back Hair
+			faceParts[0].enabled = avatarModel.backHairImage;
+			faceParts[0].sprite = avatarModel.backHairImage;
+			faceParts[0].color = avatarModel.hairColor;
+
+			//Skin
+			faceParts[1].color = avatarModel.skinColor;
+
+			//Hair
+			if(avatarModel.hairImage) {
+				faceParts[2].enabled = true;
+				faceParts[2].sprite = avatarModel.hairImage;
+				faceParts[2].color = avatarModel.hairColor;
+			} else {
+				faceParts[2].enabled = false;
+			}
+
+			//Facial expression
+			faceParts[3].sprite = AvatarManager.GetInstance().GetMood((AvatarManager.Gender)avatarModel.modelId, mood);
+
+			//Clothes
+			if(avatarModel.clothesImage) {
+				faceParts[4].sprite = avatarModel.clothesImage;
+				faceParts[4].color = avatarModel.clothesColor1;
+			}
+
 		} else {
 			messageUI.transform.GetChild(0).gameObject.SetActive(false);
 		}
-
-		messageButton.SetActive(showOkButton);
 	}
 
 	//Hide the message UI
@@ -590,8 +628,7 @@ public class PilotView : View{
 
 		//Show narrative title
 		Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
-		//_controller.GetPhrase(...)
-		texts[0].text = narrative.title;
+		texts[0].text = _controller.GetPhrase("Narrative." + narrative.title, "Title");
 		texts[1].text = "";
 		mailButtonObj.transform.SetParent(inboxList, false);
 	}
@@ -603,19 +640,23 @@ public class PilotView : View{
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
 		Transform stepsContainer = contentTrans.GetChild(1);
 
-		//_controller.GetPhrase(...)
-		title.text = narrative.description;
+		title.text = _controller.GetPhrase("Narrative." + narrative.title, "Description");
 		RemoveChildren(stepsContainer);
 
-		//string stepConcat = "";
+		//Pick out steps that are part of checklist
+		List<Narrative.Step> checklist = new List<Narrative.Step>();
 		for(int i = narrative.GetCurrentStepIndex() - 1; i >= 0; i--) {
 			if(narrative.steps[i].inChecklist) {
-				GameObject newObjective = Instantiate(mailObjectivePrefab, stepsContainer);
-				//_controller.GetPhrase(...)
-				newObjective.GetComponentInChildren<Text>().text = narrative.steps[i].description;
-				if(i == narrative.GetCurrentStepIndex() - 1) {
-					newObjective.GetComponentInChildren<Image>().enabled = false;
-				}
+				checklist.Add(narrative.steps[i]);
+			}
+		}
+
+		//Fill GUI with checklist
+		for(int i = checklist.Count - 1; i >= 0; i--){
+			GameObject newObjective = Instantiate(mailObjectivePrefab, stepsContainer);
+			newObjective.GetComponentInChildren<Text>().text = _controller.GetPhrase("Narrative." + narrative.title, "Checklist", i);
+			if(i == checklist.Count - 1) {
+				newObjective.GetComponentInChildren<Image>().enabled = false;
 			}
 		}
 
