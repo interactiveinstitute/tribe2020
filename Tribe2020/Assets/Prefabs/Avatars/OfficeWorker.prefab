@@ -204,6 +204,7 @@ MonoBehaviour:
   title: Josep Visitante
   description: 
   icon: {fileID: 0}
+  isPilot: 0
   playerAffordances:
   - {fileID: 11400000, guid: 757237e10395d394ba0f110a1f090a3b, type: 2}
   avatarAffordances:
@@ -278,15 +279,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b4dd0f9b1f2d04992c232b1863e3ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controller: {fileID: 0}
-  _stats: {fileID: 0}
-  _savedIdlePosition: {x: -1.185515, y: 0.3666649, z: -8.913963}
   _prevActivity: {fileID: 0}
   _curActivity: {fileID: 0}
   _nextActivity: {fileID: 0}
-  _isControlled: 0
-  _isSimulating: 0
-  _nrOfActiveColliders: 1
+  schedules: []
   schedule:
   - time: 07:00
     activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
@@ -355,6 +351,9 @@ MonoBehaviour:
   clothesColor2: {r: 0, g: 0, b: 0, a: 0}
   pantsColor: {r: 0, g: 0, b: 0, a: 0}
   shoeColor: {r: 0, g: 0, b: 0, a: 0}
+  hairImage: {fileID: 21300000, guid: f5472b0bc2f9e324193c4d7d4d89b52e, type: 3}
+  backHairImage: {fileID: 0}
+  clothesImage: {fileID: 21300000, guid: 7dc496fd97c37de428f5d85233d8bd3c, type: 3}
 --- !u!136 &136000012680133070
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -375,6 +374,7 @@ NavMeshAgent:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011262242068}
   m_Enabled: 1
+  m_AgentTypeID: 0
   m_Radius: 0.3
   m_Speed: 0.5
   m_Acceleration: 10
@@ -418,11 +418,16 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 82e075a597d4e824f9234b0ceff41ecd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
 --- !u!212 &212864892872355592
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -453,11 +458,16 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
 --- !u!223 &223000011740881294
 Canvas:
   m_ObjectHideFlags: 1
@@ -465,7 +475,7 @@ Canvas:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011551168724}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -474,6 +484,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
