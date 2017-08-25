@@ -838,7 +838,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				SetVisualTimeScale(1);
 				SetSimulationTimeScale(60);
 				break;
-		}
+            case "gameOverAnimationFinished":
+                LoadScene("MenuScene");
+                break;
+        }
 	}
 
 	//Callback from resouce manager for when monthly salary received
@@ -848,8 +851,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnGameOver() {
-		LoadScene("MenuScene");
-	}
+        //LoadScene("MenuScene");
+        PlayUIAnimation("GameOverAnimation");
+    }
 
 	//
 	public void OnNarrativeAction(Narrative narrative, Narrative.Step step, string callback, string[] parameters) {
