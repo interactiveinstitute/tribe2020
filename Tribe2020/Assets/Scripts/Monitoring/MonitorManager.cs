@@ -27,6 +27,9 @@ public class MonitorManager : MonoBehaviour {
 
 	private AppServer _appServer;
 
+	bool isSent = false;
+	float dTimer = 0;
+
 	//
 	void Awake() {
 		_instance = this;
@@ -38,10 +41,7 @@ public class MonitorManager : MonoBehaviour {
 			_macAddress = GetMACAddress();
 		}
 		_webSocket = new WebSocket(url + "/socket.io/?EIO=4&transport=websocket");
-
 		_appServer = GetComponent<AppServer>();
-
-		Publish("event", "event", "app started");
 	}
 
 	//
@@ -55,13 +55,25 @@ public class MonitorManager : MonoBehaviour {
 				PublishSurvey();
 			}
 
-			if(pendingData.Count > 0) {
-				//Debug.Log("sent: " + pendingData[0]);
+			if(_appServer.IsConnected && pendingData.Count > 0) {
 				string[] data = pendingData[0].Split('&');
 				_appServer.Publish(data[0], data[1]);
-				//_webSocket.Send(pendingData[0]);
+
 				pendingData.RemoveAt(0);
 			}
+		}
+
+		dTimer += Time.deltaTime;
+		if(dTimer > 1 && !isSent) {
+			Publish("event", "event", "app started");
+			isSent = true;
+		}
+
+		if(dTimer > 10) {
+			//Debug.Log("sent message?");
+			Publish("playtime", "playtime", "" + _playTime);
+			//TestPublish();
+			dTimer = 0;
 		}
 	}
 
@@ -71,7 +83,11 @@ public class MonitorManager : MonoBehaviour {
 
 	//
 	void OnDestroy() {
-		Publish("event", "event", "app closed");
+		//string topic = "gamedata/" + _macAddress + "/event";
+		//string data = "{\\\"timestamp\\\":" + GetEpoch() + ", \\\"event\\\":\\\"app closed\\\"}";
+		//_appServer.Publish(topic, data);
+
+		//Publish("event", "event", "app closed");
 	}
 
 	//
@@ -129,7 +145,9 @@ public class MonitorManager : MonoBehaviour {
 		json.Add(key, value);
 
 		string topic = "gamedata/" + _macAddress + "/" + topTopic;
-		pendingData.Add(topic + "&" + json.ToString());
+		string data = json.ToString().Replace("\"", "\\\"");
+		Debug.Log("sent: " + data);
+		pendingData.Add(topic + "&" + data);
 
 		//gamedata/[mac]/survey
 		//gamedata/[mac]/playtime {"time":[unix epoc time], "playtime":[playtime]}
@@ -138,6 +156,31 @@ public class MonitorManager : MonoBehaviour {
 		//...
 		//session started/ended
 		//event
+	}
+
+	//
+	public void TestPublish() {
+		string topic = "gamedata/" + _macAddress + "/event";
+		JSONClass json = new JSONClass();
+		//json.A
+		//json.Add("timestamp", JSONNode(GetEpoch()));
+		//json.Add("event", "app started");
+		//json.Add("loggedin", 1);
+		//json.Add("logged", 1);
+
+		Dictionary<string, string> data = new Dictionary<string, string>();
+		data["timestamp"] = "" + GetEpoch();
+		data["event"] = "\"app started\"";
+
+		//Debug.Log(topic);
+		//Debug.Log(json.ToString());
+
+		
+		_appServer.Publish(topic, "{\\\"timestamp\\\":0,\\\"playtime\\\":1337}");
+		Debug.Log("Test sent: " + "{\\\"timestamp\\\":0,\\\"playtime\\\":1337}");
+		//_appServer.Publish("~/test/publish", "Hello!");
+
+		//"{"timestamp":1503663528.984,"event":"app started","loggedin":1,"logged":1}"
 	}
 
 	//
