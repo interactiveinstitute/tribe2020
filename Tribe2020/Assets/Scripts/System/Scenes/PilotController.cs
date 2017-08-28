@@ -851,8 +851,16 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnGameOver() {
-        //LoadScene("MenuScene");
-        PlayUIAnimation("GameOverAnimation");
+
+        bool gameWon = false; //Replace with appropiate calculation/function call
+
+        if (gameWon) {
+            PlayUIAnimation("GameWonAnimation");
+        }
+        else {
+            PlayUIAnimation("GameOverAnimation");
+        }
+
     }
 
 	//
