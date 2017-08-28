@@ -113,6 +113,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4919006965841086}
   - component: {fileID: 114494944923467888}
+  - component: {fileID: 114377034984102194}
   m_Layer: 0
   m_Name: Monitor
   m_TagString: Untagged
@@ -1014,14 +1015,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5ba2da01cac2c04f8b16f557708088b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoStart: 0
+  autoStart: 1
   saveProgress: 1
   debug: 0
   curInFocus: {fileID: 0}
-  starters:
-  - {fileID: 0}
+  starters: []
   active: []
   archive: []
+  eventTypes:
+  - None
+  - OK Pressed
+  - Tapped
+  - Swiped
   interactionPoint: {fileID: 1861428572055132, guid: df5fdacd98e9bf24195b5ce249a8dd5c,
     type: 2}
   selectIndex: 0
@@ -1568,6 +1573,36 @@ MonoBehaviour:
   zoomInLevel: 0
   fracJourney: 0
   journeyLength: 0
+--- !u!114 &114377034984102194
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1256709560347248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45bb8ffd45b16bf47a61bc449c94dc43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  url: ws://data.tribe2020.eu
+  autoConnect: 1
+  reconnectDelay: 5
+  ackExpirationTime: 1800
+  pingInterval: 25
+  pingTimeout: 60
+  RequestCounter: 0
 --- !u!114 &114393767577905048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1612,7 +1647,9 @@ MonoBehaviour:
   _macAddress: 
   _questions: []
   _surveyCompleted: 0
-  playTime: 0
+  _playTime: 0
+  url: ws://data.tribe2020.eu:5000
+  pendingData: []
 --- !u!114 &114568694404567128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1696,6 +1733,26 @@ MonoBehaviour:
   conversation: {fileID: 114355430836853836}
   models: {fileID: 114607158080357560}
   playerPortrait: {fileID: 21300000, guid: 714b508274eb2e4418079696b707ae6f, type: 3}
+  femaleMoods:
+  - {fileID: 21300000, guid: cad351fd44b2c7f4b96081d8d21a32ee, type: 3}
+  - {fileID: 21300000, guid: 1f39084ac09227a4f88e3465909e9e16, type: 3}
+  - {fileID: 21300000, guid: 559b414830e685648a504447bc400028, type: 3}
+  - {fileID: 21300000, guid: 464e454ace7421a45ae31fda46e24876, type: 3}
+  - {fileID: 21300000, guid: 285b540ab98872e4e930b1a167e9b427, type: 3}
+  - {fileID: 21300000, guid: d74689f19db60da4085a3b1c2f7e123c, type: 3}
+  - {fileID: 21300000, guid: 02896905cad664b42ac846b23fbe52a2, type: 3}
+  - {fileID: 21300000, guid: 6cdc8e1565e87514a808197603fc0445, type: 3}
+  - {fileID: 21300000, guid: 07df5682942024348ae917e028aeaff0, type: 3}
+  maleMoods:
+  - {fileID: 21300000, guid: 498472c47cca8b94ab31eb1537962cc3, type: 3}
+  - {fileID: 21300000, guid: 52aee9fb1037933449bee79225d7cd91, type: 3}
+  - {fileID: 21300000, guid: e99cb118613056c4b9e3aa7b48b9c4ec, type: 3}
+  - {fileID: 21300000, guid: 341c7ffda79fc1442b12a958090d8fc2, type: 3}
+  - {fileID: 21300000, guid: 19c8d96bc7e20c145a0dee5958e62e33, type: 3}
+  - {fileID: 21300000, guid: b70272e3831a13a4c96b9f2b9be865a0, type: 3}
+  - {fileID: 21300000, guid: ae740c3a0105d184aa192be2c35bf52a, type: 3}
+  - {fileID: 21300000, guid: 3c9ecb32322e75e4da96c5a4fd571141, type: 3}
+  - {fileID: 21300000, guid: af2b194b4af7e7a40900ed62ebc7c3f7, type: 3}
 --- !u!114 &114607158080357560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3489,6 +3546,7 @@ MonoBehaviour:
   time: 1010127600
   VisualTime: 0
   CurrentDate: 
+  _skipToOffset: -1
   KeyActions: []
   VisualTimeScale: 1
   SimulationTimeScaleFactor: 60
@@ -3513,7 +3571,7 @@ MonoBehaviour:
   syncTime: 1
   syncPilot: 1
   syncCamera: 1
-  syncResources: 0
+  syncResources: 1
   syncNarrative: 1
   syncLocalization: 1
   syncAvatars: 1
