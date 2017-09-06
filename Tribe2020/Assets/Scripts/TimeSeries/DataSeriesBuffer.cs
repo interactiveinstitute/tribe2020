@@ -77,6 +77,8 @@ public class DataSeriesBuffer : DataSeries {
 
 		//List<DataPoint> [0] = new DataPoint ();
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -191,6 +193,20 @@ public class DataSeriesBuffer : DataSeries {
 
 		return TTime.time + StartTime;
 		
+	}
+
+	public double InterpolateDailyConsumption(int day, int MeterIndex, int RateIndex) 
+	{
+		//Calculate first and last time on the day.
+		double Starts,Ends;
+
+		GameTime TTime;
+		TTime = GameTime.GetInstance();
+
+		Starts = TTime.GetFirstTimeOfDay(day);
+		Ends = TTime.GetFirstTimeOfDay(day+1);
+
+		return 0;
 	}
 
 	public double getStopTime() {
