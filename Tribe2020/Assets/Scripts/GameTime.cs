@@ -235,6 +235,20 @@ public class GameTime : MonoBehaviour {
 		return date;
 	}
 
+	public double GetFirstTimeOfDay(double ts){
+		DateTime day = TimestampToDateTime(ts).Date;
+		return DateTimeToTimestamp (day);
+	}
+
+	public double GetFirstTimeOfDay(){
+		return GetFirstTimeOfDay (time);
+	}
+
+	public double GetFirstTimeOfDay(int i){
+		return GetFirstTimeOfDay (time + (3600.0*24 * i));
+	
+	}
+
 	public DateTime GetDateTime()
 	{
 		return TimestampToDateTime(time);
