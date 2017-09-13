@@ -227,7 +227,8 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
-			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
+			device.SetEnergyMod(device.GetEnergyMod() * eem.energyModifier);
+			device.SetRunlevel(device.runlevel);
 		}
 
 		return newAppGO;

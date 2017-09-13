@@ -12,17 +12,19 @@ public class EnergyEfficiencyMeasure : ScriptableObject {
 	public string category;
 	public Sprite icon;
 
-	[Header("Effects")]
-	private Appliance _relatedAppliance;
+	//private Appliance _relatedAppliance;
+	[Header("Cost")]
 	public int cashCost;
 	public int comfortCost;
 
-	public float energyFactor = 0;
-	public float gasFactor = 0;
-	public float co2Factor = 0;
-	public float moneyFactor = 0;
-	public float comfortFactor = 0;
+	[Header("Effects on Appliance")]
+	public float energyModifier = 1;
 
+	[Header("Effects on Baseline")]
+	public float baseEnergyModifier = 1;
+	public float baseGasModifier = 1;
+
+	[Header("Special Effects")]
 	public string callback;
 	public string callbackArgument;
     public Affordance callbackAffordance;
