@@ -51,6 +51,7 @@ public class DataSeriesBuffer : DataSeries {
 	public int CurrentSize;
 
 
+
 	[Header("Buffer")]
 //	public int Pointer = 0;
 //	private int lastPointer = -1;
@@ -195,19 +196,8 @@ public class DataSeriesBuffer : DataSeries {
 		
 	}
 
-	public double InterpolateDailyConsumption(int day, int MeterIndex, int RateIndex) 
-	{
-		//Calculate first and last time on the day.
-		double Starts,Ends;
 
-		GameTime TTime;
-		TTime = GameTime.GetInstance();
 
-		Starts = TTime.GetFirstTimeOfDay(day);
-		Ends = TTime.GetFirstTimeOfDay(day+1);
-
-		return 0;
-	}
 
 	public double getStopTime() {
 		if (!Relative)
