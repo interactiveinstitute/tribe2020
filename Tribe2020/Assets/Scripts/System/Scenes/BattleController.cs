@@ -26,6 +26,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 	private CameraManager _camMgr;
 	private QuizManager _quizMgr;
 	private InteractionManager _interMgr;
+	private MonitorManager _monitorMgr;
 
 	//private bool _isTouching = false;
 
@@ -75,6 +76,8 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 
 		_interMgr = InteractionManager.GetInstance();
 		_interMgr.SetListener(this);
+
+		_monitorMgr = MonitorManager.GetInstance();
 
 		_view.opponentEnergy.maxValue = opponentEnergy;
 		_view.playerEnergy.maxValue = playerEnergy;

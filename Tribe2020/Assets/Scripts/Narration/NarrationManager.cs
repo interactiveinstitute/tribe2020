@@ -33,6 +33,8 @@ public class NarrationManager : MonoBehaviour {
 	[SerializeField]
 	public List<PerformedStep> _performedSteps = new List<PerformedStep>();
 
+	public string[] eventTypes;
+
 	[Header("References")]
 	public GameObject interactionPoint;
 

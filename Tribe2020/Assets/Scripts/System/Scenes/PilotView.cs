@@ -447,9 +447,11 @@ public class PilotView : View{
 
 		//Render button decorations like resource icons and costs
 		if(eem.icon) { eemButton.eemIcon.sprite = eem.icon; }
-		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost);
-		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost);
-		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect, eem.energyFactor);
+		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost.ToString(), eem.comfortCost != 0);
+		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost.ToString(), eem.cashCost != 0);
+		
+		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect,
+			"-" + ((1 - eem.energyModifier) * 100) + "%", eem.energyModifier != 1);
 
 		Button button = buttonObj.GetComponent<Button>();
 		if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
@@ -462,10 +464,10 @@ public class PilotView : View{
 	}
 
 	//Render element of an eem button, such as a resource cost
-	private void RenderEEMProperty(Image icon, Text text, float value) {
+	private void RenderEEMProperty(Image icon, Text text, string value, bool show) {
 		if(icon) {
-			icon.gameObject.SetActive(value != 0);
-			text.gameObject.SetActive(value != 0);
+			icon.gameObject.SetActive(show);
+			text.gameObject.SetActive(show);
 			text.text = value.ToString();
 		}
 	}
