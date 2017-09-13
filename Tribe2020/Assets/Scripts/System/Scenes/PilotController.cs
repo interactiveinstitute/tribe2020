@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface, ResourceInterface, InteractionListener {
 	//Singleton features
@@ -40,6 +41,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private AvatarManager _avatarMgr;
 	private ApplianceManager _applianceMgr;
 	private InteractionManager _interMgr;
+	private MonitorManager _monitorMgr;
 
 	[Header("Save between sessions")]
 	public bool syncTime;
@@ -95,6 +97,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_interMgr = InteractionManager.GetInstance();
 		_interMgr.SetListener(this);
+
+		_monitorMgr = MonitorManager.GetInstance();
 
 		_view.ClearView();
 
@@ -366,14 +370,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void ApplyEEM(Appliance app, EnergyEfficiencyMeasure eem) {
-		//ResetTouch();
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
-			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
+			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("ComfortChanged", "" + _resourceMgr.comfort);
+
+			_instance._monitorMgr.Publish("event", "event", "MeasureApplied", "description", eem.name + ":" + eem.title);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -396,6 +401,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
+			_instance._monitorMgr.Publish("event", "event", eem.name);
 		}
 	}
 
@@ -851,16 +857,16 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnGameOver() {
-
         bool gameWon = false; //Replace with appropiate calculation/function call
 
         if (gameWon) {
             PlayUIAnimation("GameWonAnimation");
-        }
+			_instance._monitorMgr.Publish("event", "event", "won:" + SceneManager.GetActiveScene());
+		}
         else {
             PlayUIAnimation("GameOverAnimation");
-        }
-
+			_instance._monitorMgr.Publish("event", "event", "lost:" + SceneManager.GetActiveScene());
+		}
     }
 
 	//
@@ -896,6 +902,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Reset interaction limitations and save on narrative completion
 	public void OnNarrativeCompleted(Narrative narrative) {
 		_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", narrative.title, true);
+		_instance._monitorMgr.Publish("event", "event", "completed:" + narrative.title);
 		_instance.LimitInteraction("all");
 		_instance.SaveGameState();
 	}
