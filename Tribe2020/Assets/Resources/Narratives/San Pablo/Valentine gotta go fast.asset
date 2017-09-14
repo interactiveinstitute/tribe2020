@@ -26,132 +26,135 @@ MonoBehaviour:
       parameter2: Find and talk to Javier Rough about his ligthing issues.
     inChecklist: 0
     checkpoint: 0
-  - description: Argh, too dark
+  - description: Hi there
     conditionType: AvatarSelected
-    conditionProp: Javier Rough
+    conditionProp: Valentine Rapido
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: Aargh! Too dark!
-    - callback: SetSimulationTimeScale
-      parameter1: 0
-      parameter2: 
+      parameter1: player
+      parameter2: Hi there! How do you do?
     - callback: UnmarkAvatar
-      parameter1: Javier Rough
+      parameter1: Valentine Rapido
       parameter2: 
     inChecklist: 0
     checkpoint: 0
-  - description: What's the problem
+  - description: Too slow
     conditionType: OKPressed
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
-      parameter2: What seems to be the problem?
+      parameter1: Valentine Rapido,Excited
+      parameter2: Too slow! Got to go fast!
     inChecklist: 0
     checkpoint: 0
-  - description: Seeing is the problem
+  - description: What?
     conditionType: OKPressed
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: Seeing is the problem! It's either too bright or too dark.
+      parameter1: player,Scared
+      parameter2: Huh? What? Hey wait!
     inChecklist: 0
     checkpoint: 0
-  - description: Why aren't you outside
+  - description: Unselect
     conditionType: OKPressed
     conditionProp: 
     actions:
-    - callback: ShowPrompt
-      parameter1: player
-      parameter2: Maybe you should go outside, the light seems fine there.
-    inChecklist: 0
-    checkpoint: 0
-  - description: I wish I could
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: I wish I could, but I have all this computer work I need to do.
-        Watching the screen everyday makes my eyes square!
-    inChecklist: 0
-    checkpoint: 0
-  - description: I'll see what I can do
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: ShowPrompt
-      parameter1: player
-      parameter2: Hmm, I'll see what I can do about that.
-    inChecklist: 0
-    checkpoint: 0
-  - description: How to select an appliance
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: ShowPrompt
+    - callback: ClearView
       parameter1: 
-      parameter2: You can select an appliance by tapping it. Try tapping Javier's
-        computer screen.
+      parameter2: 
     inChecklist: 0
     checkpoint: 0
-  - description: Upgrade Javier's monitor
-    conditionType: 
-    conditionProp: 
-    actions:
-    - callback: MarkDevice
-      parameter1: 1f86fbfc-8cd3-4a36-b931-c6e312045abb
-      parameter2: CRT Monitor
-    - callback: AddObjective
-      parameter1: 
-      parameter2: Find and upgrade Javier's monitor to an LCD one.
-    inChecklist: 0
-    checkpoint: 1
-  - description: Selected Javier's monitor
-    conditionType: DeviceSelected
-    conditionProp: CRT Monitor
+  - description: Find Valentine, again...
+    conditionType: AvatarSelected
+    conditionProp: Valentine Rapido
     actions:
     - callback: ShowPrompt
-      parameter1: player
-      parameter2: What an old computer screen. These fat CRT monitors are not very
-        energy efficient neither.
-    inChecklist: 0
+      parameter1: player,Determined
+      parameter2: Ha ha, I caught you!
+    inChecklist: 1
     checkpoint: 0
-  - description: How to upgrade an appliance
+  - description: Well, congratulations
     conditionType: OKPressed
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: 
-      parameter2: You can perform actions to appliances that change their energy efficiency.
-        However, this can cost both money and be unconvenient for the people in the
-        building.
+      parameter1: Valentine Rapido,Excited
+      parameter2: Well, congratulations!
     inChecklist: 0
     checkpoint: 0
-  - description: Upgraded to LCD
-    conditionType: EEMPerformed
-    conditionProp: EDL4
-    actions: []
+  - description: Though
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Valentine Rapido,Satisfied
+      parameter2: I barely moved though, so don't hink you're an athlete or anything.
     inChecklist: 0
     checkpoint: 0
-  - description: What the, amazing
+  - description: The effort counts
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player,Embarrassed
+      parameter2: '... so much for my effort.'
+    inChecklist: 0
+    checkpoint: 0
+  - description: I notice you are in a hurry
     conditionType: 
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: What the, this is amazing! I can actually see what I am doing!
+      parameter1: player
+      parameter2: Anyway, I notice you run around a lot. Don't you get dizzy?
     inChecklist: 0
-    checkpoint: 1
-  - description: Your'e welcome
+    checkpoint: 0
+  - description: There is not time for dizzy
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Valentine Rapido,Excited
+      parameter2: There is no time for dizzy when you are busy!
+    inChecklist: 0
+    checkpoint: 0
+  - description: As long as you
     conditionType: OKPressed
     conditionProp: 
     actions:
     - callback: ShowPrompt
       parameter1: player
-      parameter2: Your'e welcome! (was he just hitting random keys before?)
+      parameter2: Well, as long as you make sure that you turn of electrical appliances
+        when you leave a room.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Ha ha ha
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Valentine Rapido,Excited
+      parameter2: Ha ha ha ha ha!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Confusion
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player,Scared
+      parameter2: '?'
+    inChecklist: 0
+    checkpoint: 0
+  - description: There is no time for that
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Valentine Rapido,Embarrassed
+      parameter2: There is no time for that, I'll be back it the room before the lights
+        have even turned dark.
     inChecklist: 0
     checkpoint: 0
   - description: What is this
@@ -159,68 +162,77 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: Oh! But what is this!
+      parameter1: player,Tired
+      parameter2: First off, that's not true. Secondly, unused appliance that are
+        turned on is a huge energy waste.
     inChecklist: 0
     checkpoint: 0
-  - description: What now
+  - description: Maybe automatic
     conditionType: OKPressed
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
-      parameter2: What is it now?
+      parameter1: player,Determined
+      parameter2: If Valentine won't turn off the lights, maybe I can make the lights
+        turn off by themselves.
     inChecklist: 0
     checkpoint: 0
-  - description: The lamps
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: Now that I can see better, I can't help but notice that there is
-        a really ugly ligthing in this room!
-    inChecklist: 0
-    checkpoint: 0
-  - description: I'll see what I can do
-    conditionType: OKPressed
-    conditionProp: 
-    actions:
-    - callback: ShowPrompt
-      parameter1: player
-      parameter2: I guess I'll see what I can do...
-    inChecklist: 0
-    checkpoint: 0
-  - description: Upgrade lamp to LED
+  - description: Objective, Install Timed Switches
     conditionType: 
     conditionProp: 
     actions:
     - callback: MarkDevice
-      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
-      parameter2: 
-    - callback: AddObjective
       parameter1: 
-      parameter2: Find and upgrade a cieling lamp to an LED one.
-    inChecklist: 0
+      parameter2: 
+    inChecklist: 1
     checkpoint: 1
-  - description: Upgraded to LED
+  - description: Installed Timed Switch
     conditionType: EEMPerformed
-    conditionProp: LL5
+    conditionProp: LL10
     actions:
     - callback: UnmarkDevice
-      parameter1: 602f190d-7c46-4887-bc5b-264d2b9af7b5
+      parameter1: 
       parameter2: 
     inChecklist: 0
     checkpoint: 0
-  - description: That's it! Wonderful light
+  - description: Hey, the light
     conditionType: 
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
-      parameter2: That's it! What a wonderful, bright and clear room ambience!
+      parameter1: Valentine Rapido,Scared
+      parameter2: Hey, what's up with the lights. They seem to be off when I'm not
+        in the room.
     inChecklist: 0
-    checkpoint: 1
+    checkpoint: 0
+  - description: That's spooky
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: Valentine Rapido,Angry
+      parameter2: That's spooky!
+    inChecklist: 0
+    checkpoint: 0
+  - description: Now now
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player
+      parameter2: Now now, don't be scared of progress.
+    inChecklist: 0
+    checkpoint: 0
+  - description: Maybe if faster
+    conditionType: 
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt,Tired
+      parameter1: player
+      parameter2: Maybe I can install LEDs to speed up the lights turning on and off
+        a bit.
+    inChecklist: 0
+    checkpoint: 0
   - description: Your'e welcome again
     conditionType: OKPressed
     conditionProp: 
