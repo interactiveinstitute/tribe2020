@@ -11,6 +11,8 @@ public class MonitorManager : MonoBehaviour {
 		return _instance;
 	}
 
+	public bool live = false;
+	public bool debug = false;
 	[SerializeField]
 	private string _macAddress;
 	[SerializeField]
@@ -44,9 +46,11 @@ public class MonitorManager : MonoBehaviour {
 		_appServer = GetComponent<AppServer>();
 	}
 
-	//
-	void FixedUpdate() {
+	// Update is called once per frame
+	void Update() {
 		_playTime += Time.unscaledDeltaTime;
+
+		if(!live) { return; }
 
 		if(Application.internetReachability == NetworkReachability.NotReachable) {
 			// 
@@ -57,37 +61,29 @@ public class MonitorManager : MonoBehaviour {
 
 			if(_appServer.IsConnected && pendingData.Count > 0) {
 				string[] data = pendingData[0].Split('&');
+				if(debug) { Debug.Log("topic: " + data[0] + ", payload: " + data[1]); }
 				_appServer.Publish(data[0], data[1]);
 
 				pendingData.RemoveAt(0);
 			}
 		}
 
+		//Timed app started
 		dTimer += Time.deltaTime;
 		if(dTimer > 1 && !isSent) {
 			Publish("event", "event", "app started");
 			isSent = true;
 		}
 
-		if(dTimer > 10) {
-			//Debug.Log("sent message?");
+		if(dTimer > 30) {
 			Publish("playtime", "playtime", "" + _playTime);
-			//TestPublish();
 			dTimer = 0;
 		}
 	}
 
-	// Update is called once per frame
-	void Update() {
-	}
-
 	//
-	void OnDestroy() {
-		//string topic = "gamedata/" + _macAddress + "/event";
-		//string data = "{\\\"timestamp\\\":" + GetEpoch() + ", \\\"event\\\":\\\"app closed\\\"}";
-		//_appServer.Publish(topic, data);
-
-		//Publish("event", "event", "app closed");
+	void OnApplicationQuit() {
+		PublishInstant("event", "event", "app closed");
 	}
 
 	//
@@ -146,41 +142,48 @@ public class MonitorManager : MonoBehaviour {
 
 		string topic = "gamedata/" + _macAddress + "/" + topTopic;
 		string data = json.ToString().Replace("\"", "\\\"");
-		Debug.Log("sent: " + data);
+		
 		pendingData.Add(topic + "&" + data);
+	}
 
-		//gamedata/[mac]/survey
-		//gamedata/[mac]/playtime {"time":[unix epoc time], "playtime":[playtime]}
-		//
-		//gamedata/[mac]/event {"time":[uet], "event":"app started"}
-		//...
-		//session started/ended
-		//event
+	//
+	public void Publish(string topTopic, string key, string value, string key2, string value2) {
+		JSONClass json = new JSONClass();
+		json.Add("time", GetEpoch().ToString());
+		json.Add(key, value);
+		json.Add(key2, value2);
+
+		string topic = "gamedata/" + _macAddress + "/" + topTopic;
+		string data = json.ToString().Replace("\"", "\\\"");
+
+		pendingData.Add(topic + "&" + data);
+	}
+
+	//
+	public void PublishInstant(string topTopic, string key, string value) {
+		JSONClass json = new JSONClass();
+		json.Add("time", GetEpoch().ToString());
+		json.Add(key, value);
+
+		string topic = "gamedata/" + _macAddress + "/" + topTopic;
+		string data = json.ToString().Replace("\"", "\\\"");
+
+		string[] sendData = (topic + "&" + data).Split('&');
+		if(debug) { Debug.Log("topic: " + sendData[0] + ", payload: " + sendData[1]); }
+		if(live) { _appServer.Publish(sendData[0], sendData[1]); }
 	}
 
 	//
 	public void TestPublish() {
 		string topic = "gamedata/" + _macAddress + "/event";
 		JSONClass json = new JSONClass();
-		//json.A
-		//json.Add("timestamp", JSONNode(GetEpoch()));
-		//json.Add("event", "app started");
-		//json.Add("loggedin", 1);
-		//json.Add("logged", 1);
 
 		Dictionary<string, string> data = new Dictionary<string, string>();
 		data["timestamp"] = "" + GetEpoch();
 		data["event"] = "\"app started\"";
-
-		//Debug.Log(topic);
-		//Debug.Log(json.ToString());
-
 		
 		_appServer.Publish(topic, "{\\\"timestamp\\\":0,\\\"playtime\\\":1337}");
 		Debug.Log("Test sent: " + "{\\\"timestamp\\\":0,\\\"playtime\\\":1337}");
-		//_appServer.Publish("~/test/publish", "Hello!");
-
-		//"{"timestamp":1503663528.984,"event":"app started","loggedin":1,"logged":1}"
 	}
 
 	//

@@ -31,7 +31,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: Let's have a look at the next floor and see if there is anything
         more that can be done there!
     - callback: LimitInteraction
@@ -58,6 +58,9 @@ MonoBehaviour:
     conditionType: Swiped
     conditionProp: 
     actions:
+    - callback: StopUIAnimation
+      parameter1: 
+      parameter2: 
     - callback: ShowPrompt
       parameter1: player
       parameter2: So here we are!
@@ -66,4 +69,40 @@ MonoBehaviour:
       parameter2: 
     inChecklist: 0
     checkpoint: 0
-  followingNarratives: []
+  - description: New floor, new possibilities
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player,Embarrassed
+      parameter2: Every floor of a building have different rooms. Each room has a
+        different function.
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: New rooms, new people
+    conditionType: OKPressed
+    conditionProp: 
+    actions:
+    - callback: ShowPrompt
+      parameter1: player,Determined
+      parameter2: New functions means that other persons use these rooms, and new
+        people means that we have more people to unite in the TRIBE!
+    - callback: LimitInteraction
+      parameter1: only_ok
+      parameter2: 
+    inChecklist: 0
+    checkpoint: 0
+  - description: Press OK to continue
+    conditionType: OKPressed
+    conditionProp: 
+    actions: []
+    inChecklist: 0
+    checkpoint: 0
+  followingNarratives:
+  - {fileID: 11400000, guid: 6c8b9e2e943a2e043afb337356bb370d, type: 2}
+  - {fileID: 11400000, guid: a414f8cc0d1dcb34093ed1a4a9654d2e, type: 2}
+  - {fileID: 11400000, guid: 20541be3bb902dd468e88b515084abbb, type: 2}
+  - {fileID: 11400000, guid: 69e1d4fa6762f5249a120896b8a77a3a, type: 2}
