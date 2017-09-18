@@ -21,6 +21,8 @@ public class AcopalypseBargraph : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Outcome = DataContainer.GetInstance().cO2Outcome;
+		Baseline = DataContainer.GetInstance().cO2Baseline;
 
 		Outcomes = new double[7];
 		Baselines = new double[7];
