@@ -53,6 +53,9 @@ public class DataSeries : DataModifier {
 	{
 		DataPoint data = GetDataAt (time);
 
+		if (data == null)
+			return double.NaN;
+
 		if (data.Timestamp == time)
 			return data.Values [meterindex];
 

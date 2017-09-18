@@ -59,7 +59,7 @@ public class MonitorManager : MonoBehaviour {
 				PublishSurvey();
 			}
 
-			if(_appServer.IsConnected && pendingData.Count > 0) {
+			if(_appServer != null && _appServer.IsConnected && pendingData.Count > 0) {
 				string[] data = pendingData[0].Split('&');
 				if(debug) { Debug.Log("topic: " + data[0] + ", payload: " + data[1]); }
 				_appServer.Publish(data[0], data[1]);
