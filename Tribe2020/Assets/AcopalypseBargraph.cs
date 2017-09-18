@@ -70,8 +70,8 @@ public class AcopalypseBargraph : MonoBehaviour {
 		double max=0;
 
 		for (int i = 0; i < 7; i++) {
-			if (Baselines [i] > max)
-				max = Baselines [i]
+			if(Baselines[i] > max)
+				max = Baselines[i];
 		}
 
 		MaxValue = max;
