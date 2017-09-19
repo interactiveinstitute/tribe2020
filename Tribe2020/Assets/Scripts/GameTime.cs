@@ -143,6 +143,11 @@ public class GameTime : MonoBehaviour {
         
 	}
 
+	public string GetDay(int i){
+		DateTime date = TimestampToDateTime (time + (86400 * i));
+		return date.DayOfWeek.ToString();
+	}
+
 	private void DoKeyActions(double newtime) { 
 
 		KeyAction ka = null;
