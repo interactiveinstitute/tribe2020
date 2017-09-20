@@ -66,8 +66,6 @@ public class AcopalypseBargraph : MonoBehaviour {
 		if (now - UpdateTime < UpdateIntervall)
 			return;
 
-		print ("test: " + now);
-
 		UpdateTime = now;
 
 		UpdateValues ();
@@ -122,15 +120,6 @@ public class AcopalypseBargraph : MonoBehaviour {
 		for (int i = 0; i < 7; i++) {
 			Baselines [i] = Baseline.InterpolateDailyConsumption (i*-1);
 		}
-	}
-
-	void OnEnable(){
-		
-
-		UpdateValues ();
-		CalculateMax ();
-		UpdateLegend ();
-		UpdateBars ();
 	}
 
 	void UpdateBars(){
