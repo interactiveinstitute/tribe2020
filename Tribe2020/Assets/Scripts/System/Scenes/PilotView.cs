@@ -205,6 +205,9 @@ public class PilotView : View{
 			_curUIPanel = "";
 		} else {
 			_curUIPanel = key;
+			if(_uiPanels.ContainsKey(key)) {
+				_uiPanels[_curUIPanel].gameObject.SetActive(true);
+			}
 		}
 	}
 
@@ -212,6 +215,9 @@ public class PilotView : View{
 	public void LerpTowards(RectTransform t, Vector2 target) {
 		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
 			t.anchoredPosition = target;
+			if(t.GetComponent<UIPanel>().title != "Menu" && target == t.GetComponent<UIPanel>().originalPosition) {
+				t.gameObject.SetActive(false);
+			}
 		} else {
 			float curX = target.x + (t.anchoredPosition.x - target.x) * 0.75f;
 			float curY = target.y + (t.anchoredPosition.y - target.y) * 0.75f;
@@ -694,6 +700,9 @@ public class PilotView : View{
 
 	//
 	public void ToggleMenu() {
+		if(!_showSettings) {
+			GetUIPanel("Menu").gameObject.SetActive(true);
+		}
 		_showSettings = !_showSettings;
 	}
 
