@@ -64,7 +64,15 @@ public class GameTime : MonoBehaviour {
 	public float SimulationTimeScaleFactor = 1.0f;
 
 	public bool LockScales;
+
+
+	[Space(10)]
+	public List<double> Hollidays = new List<double>();
+	[Space(10)]
+
 	private float prevVisualTimeScale,prevSimulationTimeScale;
+
+
 
 	void Awake () {
 		time = StartTime + offset;
@@ -146,6 +154,26 @@ public class GameTime : MonoBehaviour {
 	public string GetDay(int i){
 		DateTime date = TimestampToDateTime (time + (86400 * i));
 		return date.DayOfWeek.ToString();
+	}
+
+	public bool IsRedLetterDay(double timestamp)
+	{
+		DateTime date = TimestampToDateTime (timestamp);
+
+		if (date.DayOfWeek == DayOfWeek.Sunday)
+			return true;
+
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (ts).Date == date.Date)
+				return true;
+		}
+
+		return false;
+	}
+
+	public bool IsRedLetterDay()
+	{
+		return IsRedLetterDay (time);
 	}
 
 	private void DoKeyActions(double newtime) { 
