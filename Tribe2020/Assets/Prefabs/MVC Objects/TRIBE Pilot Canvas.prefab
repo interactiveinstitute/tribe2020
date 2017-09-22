@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 224421787225626132}
   - component: {fileID: 222332511647544896}
   - component: {fileID: 114687249054512044}
+  - component: {fileID: 114316366017389580}
   m_Layer: 5
   m_Name: Cooling Energy
   m_TagString: Untagged
@@ -2213,6 +2214,7 @@ GameObject:
   - component: {fileID: 224809016571648936}
   - component: {fileID: 222602932985484798}
   - component: {fileID: 114800127842401378}
+  - component: {fileID: 114488864683280666}
   m_Layer: 5
   m_Name: Heating Energy
   m_TagString: Untagged
@@ -15213,6 +15215,50 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &114316366017389580
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1078281433168886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bf743b5d1936d489640131d2d0edca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources:
+  - Topic: 
+    DataPeriod:
+      Enabled: 0
+      Relative: 0
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 0}
+    Target: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  textMesh: {fileID: 0}
+  text: {fileID: 114687249054512044}
+  Unit: kW
+  decimals: 2
+  scale: 1000
+  SubpropertyId: 0
 --- !u!114 &114317655760706814
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18556,6 +18602,50 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114488864683280666
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1268768053153098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bf743b5d1936d489640131d2d0edca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources:
+  - Topic: 
+    DataPeriod:
+      Enabled: 0
+      Relative: 0
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 0}
+    Target: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  textMesh: {fileID: 0}
+  text: {fileID: 0}
+  Unit: kW
+  decimals: 2
+  scale: 1000
+  SubpropertyId: 0
 --- !u!114 &114490276797985206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39545,10 +39635,10 @@ RectTransform:
   m_Father: {fileID: 224117582424311708}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 360, y: -145}
+  m_SizeDelta: {x: 700, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224845870396694466
 RectTransform:
