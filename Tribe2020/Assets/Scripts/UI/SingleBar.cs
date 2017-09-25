@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 public class SingleBar : MonoBehaviour {
 
-	public double Value=70;
+	public double Value=0.1;
 	public double Scale=1;
 	public double Height=100;
 	public double Duration=1;
 
 	public Image Bar;
-	public double EaseTo;
+	public double EaseTo = 0;
 	double eStart;
 	double eDiff;
 	double eStartValue;
 	bool easing = false;
-
+	bool inited = false;
 
 
 
@@ -26,8 +26,13 @@ public class SingleBar : MonoBehaviour {
 
 		var BarRectTransform = Bar.transform as RectTransform;
 		Height = BarRectTransform.sizeDelta.y;
+		BarRectTransform.sizeDelta = new Vector2 (BarRectTransform.sizeDelta.x,(float)(Value*Scale*Height));
 	}
-	
+
+	void OnEnable() {
+		Value = 0.0;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		double now = Time.unscaledTime;
@@ -43,10 +48,12 @@ public class SingleBar : MonoBehaviour {
 
 	void Ease(double now){
 
-		if (EaseTo == Value) {
+		if (EaseTo == Value && inited) {
 			easing = false;
 			return;
 		}
+
+		inited = true;
 
 		//Init new ease?
 		if (easing == false) {
@@ -55,6 +62,8 @@ public class SingleBar : MonoBehaviour {
 			eStartValue = Value;
 			easing = true;
 		}
+
+
 
 		double delta = now - eStart;
 
@@ -69,6 +78,9 @@ public class SingleBar : MonoBehaviour {
 
 		//Set rect
 		var BarRectTransform = Bar.transform as RectTransform;
+
+
+
 		BarRectTransform.sizeDelta = new Vector2 (BarRectTransform.sizeDelta.x,(float)(Value*Scale*Height));
 
 	}
