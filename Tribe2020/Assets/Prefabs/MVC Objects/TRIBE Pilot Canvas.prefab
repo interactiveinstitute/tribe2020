@@ -2983,6 +2983,7 @@ GameObject:
   - component: {fileID: 224648817711963582}
   - component: {fileID: 222849596783847610}
   - component: {fileID: 114721117698047120}
+  - component: {fileID: 114547047601707224}
   m_Layer: 5
   m_Name: Outdoor Temp
   m_TagString: Untagged
@@ -4484,6 +4485,7 @@ GameObject:
   - component: {fileID: 224434699160168106}
   - component: {fileID: 222601259298751570}
   - component: {fileID: 114393472753774692}
+  - component: {fileID: 114429204975716270}
   m_Layer: 5
   m_Name: Indoor Temp
   m_TagString: Untagged
@@ -16804,7 +16806,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "21 \xB0C"
+  m_Text: "- \xB0C"
 --- !u!114 &114393729022419794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -17407,6 +17409,35 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114429204975716270
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522705452604572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bf743b5d1936d489640131d2d0edca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  textMesh: {fileID: 0}
+  text: {fileID: 0}
+  Unit: 
+  decimals: 0
+  scale: 1
+  SubpropertyId: 0
 --- !u!114 &114430847201117940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19960,6 +19991,50 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114547047601707224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1354095563136872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bf743b5d1936d489640131d2d0edca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources:
+  - Topic: 
+    DataPeriod:
+      Enabled: 0
+      Relative: 0
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 0}
+    Target: {fileID: 0}
+    LastTransmission:
+      Timestamp: 0
+      Values: []
+      Texts: []
+      origin:
+        Data: []
+        index: 0
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  textMesh: {fileID: 0}
+  text: {fileID: 0}
+  Unit: "\xB0C"
+  decimals: 1
+  scale: 1
+  SubpropertyId: 0
 --- !u!114 &114550257011031366
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23741,7 +23816,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "17.2 \xB0C"
+  m_Text: "- \xB0C"
 --- !u!114 &114722174906423762
 MonoBehaviour:
   m_ObjectHideFlags: 1
