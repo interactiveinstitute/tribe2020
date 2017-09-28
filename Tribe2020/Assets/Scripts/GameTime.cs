@@ -45,6 +45,8 @@ public class GameTime : MonoBehaviour {
     [Space(10)]
     [Header("Game Time")]
     public double StartTime;
+	public bool StartInRealtime;
+	public bool StopAtRealtime;
 	public double offset;
 	public double time = Double.NaN;
 	public double VisualTime;
@@ -66,6 +68,7 @@ public class GameTime : MonoBehaviour {
 	public bool LockScales;
 
 
+
 	[Space(10)]
 	public List<double> Hollidays = new List<double>();
 	[Space(10)]
@@ -75,6 +78,16 @@ public class GameTime : MonoBehaviour {
 
 
 	void Awake () {
+		
+		if (StartInRealtime) {
+			TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+			RealWorldTime = t.TotalSeconds;
+
+			StartTime = RealWorldTime;
+
+
+		}
+
 		time = StartTime + offset;
 		_instance = this;
 
@@ -85,7 +98,11 @@ public class GameTime : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+
+
         CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
+
 	}
 
     //Add a reference to an object that implements simulationObject. The UpdateSim function of the passed object will be called when provided timestamp is passed. If provided timestamp is in history, the updatesim will get called immmeditely (kind of).
@@ -111,6 +128,9 @@ public class GameTime : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+		RealWorldTime = t.TotalSeconds;
+
 		//Delete expired keypoints.
 
 		//Did scales change? 
@@ -128,11 +148,19 @@ public class GameTime : MonoBehaviour {
 		VisualTime = now;
 		double delta = now - lastupdate;
 
-		Time.timeScale = VisualTimeScale;
+
 
 		offset = offset + (delta/VisualTimeScale * (SimulationTimeScaleFactor - VisualTimeScale));
 
 		double new_time = StartTime + offset + Time.time;
+
+		if (StopAtRealtime && new_time > RealWorldTime) {
+			new_time = RealWorldTime;
+			offset = 0;
+			Time.timeScale = 1;
+		} else {
+			Time.timeScale = VisualTimeScale;
+		}
 
         //Do all key actions requiered until the new time
         DoKeyActions(new_time);
@@ -146,9 +174,18 @@ public class GameTime : MonoBehaviour {
 
 		lastupdate = now;
 
-        TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
-        RealWorldTime = t.TotalSeconds;
         
+        
+	}
+
+	public void JumpToRealtime(){
+		
+
+		TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+		RealWorldTime = t.TotalSeconds;
+
+		offset = RealWorldTime - StartTime - Time.time;
+		time = RealWorldTime;
 	}
 
 	public string GetDay(int i){

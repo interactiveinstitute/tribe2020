@@ -108,7 +108,7 @@ public class ServerObject : DataNode {
         if (json_payload.IsNull) {
             //print("******************************");
             Data.Texts[0] = payload;
-            //Data.Timestamp = GameTime.GetInstance().time;
+            Data.Timestamp = GameTime.GetInstance().time;
 
             foreach (TopicMap tm in TopicMapping)
             {
