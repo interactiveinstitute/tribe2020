@@ -215,7 +215,8 @@ public class PilotView : View{
 	public void LerpTowards(RectTransform t, Vector2 target) {
 		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
 			t.anchoredPosition = target;
-			if(t.GetComponent<UIPanel>().title != "Menu" && target == t.GetComponent<UIPanel>().originalPosition) {
+			if(t.GetComponent<UIPanel>().title != "Menu" && t.GetComponent<UIPanel>().title != "Viewpoints" && 
+				target == t.GetComponent<UIPanel>().originalPosition) {
 				t.gameObject.SetActive(false);
 			}
 		} else {
