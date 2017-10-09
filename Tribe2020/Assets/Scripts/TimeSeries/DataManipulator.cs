@@ -53,20 +53,53 @@ public class DataManipulator : DataModifier
 	{
 		Manipulations.Add (manipulation);
 
-		double now = GameTime.GetInstance ().time;
 
-		//TODO add keypoint action to gametime when the maipulation becomes active. 
-		if (!manipulation.isActive (now))
+
+
+	}
+
+	public void Activate(int id)
+	{
+		if (id > Manipulations.Count - 1)
 			return;
 
+		double now = GameTime.GetInstance ().time;
+
+		Manipulations [id].Activate (now);
+
+
 		//Already active so we update LastValue. 
-		if (manipulation.Type == Manipulation.DataType.RateCounter)
-			CreateCounterRateInterpolation (now, manipulation.TimeFactor);
+		if (Manipulations [id].Type == Manipulation.DataType.RateCounter){
+			print("Interpolating new point");
+			CreateCounterRateInterpolation (now, Manipulations [id].TimeFactor);
+		}
 		else {
 
 			LastData.Timestamp = now;
 			UpdateAllTargets (LastData);
 		}
+
+
+	}
+
+	public void Deactivate(int id)
+	{
+		if (id > Manipulations.Count - 1)
+			return;
+
+		double now = GameTime.GetInstance ().time;
+
+		if (Manipulations [id].Type == Manipulation.DataType.RateCounter){
+			CreateCounterRateInterpolation (now, Manipulations [id].TimeFactor);
+		}
+		else {
+
+			LastData.Timestamp = now;
+			UpdateAllTargets (LastData);
+		}
+			
+
+		Manipulations [id].DeActivate (now);
 
 
 	}

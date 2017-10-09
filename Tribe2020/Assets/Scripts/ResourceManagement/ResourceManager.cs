@@ -224,6 +224,8 @@ public class ResourceManager : MonoBehaviour {
 
 		DataManipulator ManipulationPoint = FindManipulationPoint (series);
 
+		
+
 		if (ManipulationPoint == null)
 			return -1;
 
@@ -326,6 +328,8 @@ public class ResourceManager : MonoBehaviour {
 	}
 
 	public void Test() {
+
+		//print (FindManipulationPoint ("Heating"));
 
 		double now = _timeMgr.time;
 		ManipulateData ("Heating", 1, -100, 0, now);

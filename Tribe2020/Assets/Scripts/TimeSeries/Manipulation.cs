@@ -10,7 +10,7 @@ public class Manipulation  {
     public double From = double.NaN;
     public double To = double.NaN;
     public bool Active;
-    public bool Applied;
+    public bool Applied = true;
 
 
     
