@@ -153,16 +153,8 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-		if(_uiPanels == null) {
-			Debug.Log("here");
-		}
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
-			if(!uiPanel) {
-				Debug.Log("there");
-				Debug.Log(uiPanel.name);
-			}
-
 			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
 				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
 			} else {
@@ -214,15 +206,19 @@ public class PilotView : View{
 	//
 	public void LerpTowards(RectTransform t, Vector2 target) {
 		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
+			//Debug.Log(target);
 			t.anchoredPosition = target;
 			if(t.GetComponent<UIPanel>().title != "Menu" && t.GetComponent<UIPanel>().title != "Viewpoints" && 
 				target == t.GetComponent<UIPanel>().originalPosition) {
 				t.gameObject.SetActive(false);
 			}
 		} else {
+			//float top = Mathf.Lerp(-t.offsetMax.y, targetRect..y, 0.75f);
 			float curX = target.x + (t.anchoredPosition.x - target.x) * 0.75f;
 			float curY = target.y + (t.anchoredPosition.y - target.y) * 0.75f;
 			t.anchoredPosition = new Vector2(curX, curY);
+			//t.offsetMin = new Vector2(0, -top + 1000); // new Vector2(left, bottom)
+			//t.offsetMax = new Vector2(0, -top); // new Vector2(-right, -top)
 		}
 	}
 
