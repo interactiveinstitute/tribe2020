@@ -324,4 +324,10 @@ public class ResourceManager : MonoBehaviour {
 			DeserializeDataseries(json["gas"].AsArray, gasOutcome);
 		}
 	}
+
+	public void Test() {
+
+		double now = _timeMgr.time;
+		ManipulateData ("Heating", 1, -100, 0, now);
+	}
 }

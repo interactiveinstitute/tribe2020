@@ -141,6 +141,7 @@ public class Manipulation  {
 
         if (LastUpdate != double.NaN)
             offset[1] += RateOffset * (timestamp - LastUpdate) / TimeFactor;
+			
 
         offset[1] += CounterOffset;
 
