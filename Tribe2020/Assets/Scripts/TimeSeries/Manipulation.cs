@@ -128,6 +128,8 @@ public class Manipulation  {
             offset[i] = 0;
         }
 
+		//if (!Applied)
+		//	return;
 
 
         if (isActive(timestamp))
@@ -157,5 +159,17 @@ public class Manipulation  {
 
         return offset;
     }
+
+
+	public void SetRateCounter (double scale,double absoluteOffset,double relativeOffset){
+
+		rescale = new double[1];
+		rescale [0] = scale;
+		relativeoffsets = new double[1];
+		relativeoffsets [0] = relativeOffset;
+		absoluteoffsets = new double[1];
+		absoluteoffsets [0] = absoluteOffset;
+		Type = Manipulation.DataType.RateCounter;
+	}
 
 }
