@@ -382,13 +382,31 @@ public class GameTime : MonoBehaviour {
     }
 
     public bool IsWeekend() {
-        int dayOfWeek = (int)GetDateTime().DayOfWeek;
-        return dayOfWeek == 0 || dayOfWeek == 6;
+		DateTime date = TimestampToDateTime (time);
+
+		if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+			return true;
+
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (time).Date == date.Date)
+				return true;
+		}
+
+		return false;
     }
 
     public bool IsWeekendTomorrow() {
-        int dayOfWeek = (int)GetDateTime().DayOfWeek;
-        return dayOfWeek == 5 || dayOfWeek == 6;
+		DateTime date = TimestampToDateTime (time + 8640);
+
+		if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+			return true;
+
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (time + 8640).Date == date.Date)
+				return true;
+		}
+
+		return false;
     }
 }
 
