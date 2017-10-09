@@ -40,13 +40,15 @@ public class CustomSceneManager : MonoBehaviour{
 
 			//float progress = Application.GetStreamProgressForLevel(nextScene);
 
-			
-
 			//if(_progress >= 1) {
 
 			//	SceneManager.LoadSceneAsync(nextScene);
 			//	autoLoad = false;
 			//}
+			if(loadingBar) {
+				loadingBar.sizeDelta = new Vector2(_progress * GetComponentInParent<RectTransform>().rect.width, 
+					loadingBar.sizeDelta.y);
+			}
 		}
 		//_progress += Mathf.Min(1, Time.deltaTime * 0.5f);
 		//loadingBar.localScale = new Vector3(_progress, 1, 1);
