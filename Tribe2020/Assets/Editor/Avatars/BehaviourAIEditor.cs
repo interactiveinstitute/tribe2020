@@ -15,5 +15,10 @@ public class BehaviourAIEditor : Editor {
 		if(GUILayout.Button("CopyOldSchedule", GUILayout.Width(150))) {
 			ai.schedules[0].items = ai.schedule;
 		}
+
+		if(GUILayout.Button("Next Activity", GUILayout.Width(150))) {
+			ai.NextActivity ();
+			ai.GetRunningActivity().Start();
+		}
 	}
 }

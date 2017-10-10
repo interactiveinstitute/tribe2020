@@ -71,9 +71,12 @@ public class GameTime : MonoBehaviour {
 
 	[Space(10)]
 	public List<double> Hollidays = new List<double>();
+	public bool RedLetterDay = false;
 	[Space(10)]
 
 	private float prevVisualTimeScale,prevSimulationTimeScale;
+
+
 
 
 
@@ -153,6 +156,8 @@ public class GameTime : MonoBehaviour {
 		offset = offset + (delta/VisualTimeScale * (SimulationTimeScaleFactor - VisualTimeScale));
 
 		double new_time = StartTime + offset + Time.time;
+
+		RedLetterDay = IsRedLetterDay (new_time);
 
 		if (StopAtRealtime && new_time > RealWorldTime) {
 			new_time = RealWorldTime;
