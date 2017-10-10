@@ -192,6 +192,16 @@ public class AvatarModel : MonoBehaviour {
 		SetModel(modelId);
 
 		int skinMatIndex = modelJSON["skinMaterial"].AsInt;
+
+		//Serialize portrait fragments
+		int hairIndex = modelJSON["hairIndex"].AsInt;
+		int backHairIndex = modelJSON["backHairIndex"].AsInt;
+		int clothesIndex = modelJSON["clothesIndex"].AsInt;
+
+		if(hairIndex >= 0) { hairImage = avatarMgr.hairs[hairIndex]; }
+		if(backHairIndex >= 0) { backHairImage = avatarMgr.backHairs[backHairIndex]; }
+		if(clothesIndex >= 0) { clothesImage = avatarMgr.clothes[clothesIndex]; }
+
 		int[] clothingMatIndexes = new int[modelJSON["clotheMaterials"].Count];
 		for(int i = 0; i < _modelBundle.bodyPartsClothes.Count; i++) {
 			clothingMatIndexes[i] = modelJSON["clotheMaterials"][i].AsInt;
@@ -213,6 +223,11 @@ public class AvatarModel : MonoBehaviour {
 		Material skinMat = transform.Find("Model/" + _modelBundle.bodyPartsSkin[0].model.name).
 				GetComponent<SkinnedMeshRenderer>().sharedMaterial;
 		json.Add("skinMaterial", avatarModels.models[modelId].materialsSkin.IndexOf(skinMat) + "");
+
+		//Serialize portrait fragments
+		json.Add("hairIndex", "" + avatarMgr.hairs.IndexOf(hairImage));
+		json.Add("backHairIndex", "" + avatarMgr.backHairs.IndexOf(backHairImage));
+		json.Add("clothesIndex", "" + avatarMgr.clothes.IndexOf(clothesImage));
 
 		//Serialize clothes materials
 		JSONArray clotheMaterials = new JSONArray();

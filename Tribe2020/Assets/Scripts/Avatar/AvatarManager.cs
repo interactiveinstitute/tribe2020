@@ -21,6 +21,10 @@ public class AvatarManager : MonoBehaviour {
 	public List<Sprite> femaleMoods;
 	public List<Sprite> maleMoods;
 
+	public List<Sprite> hairs;
+	public List<Sprite> backHairs;
+	public List<Sprite> clothes;
+
 	//
 	void Awake() {
 		_instance = this;
