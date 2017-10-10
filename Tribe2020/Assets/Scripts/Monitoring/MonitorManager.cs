@@ -88,7 +88,16 @@ public class MonitorManager : MonoBehaviour {
 
 	//
 	public string GetMACAddress() {
-		IPGlobalProperties computerProperties = IPGlobalProperties.GetIPGlobalProperties();
+#if UNITY_IOS
+		return SystemInfo.deviceUniqueIdentifier;
+#endif
+#if UNITY_EDITOR_OSX
+		return SystemInfo.deviceUniqueIdentifier;
+#endif
+#if UNITY_STANDALONE_OSX
+		return SystemInfo.deviceUniqueIdentifier;
+#endif
+		//IPGlobalProperties computerProperties = IPGlobalProperties.GetIPGlobalProperties();
 		NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
 		string mac = null;
 
