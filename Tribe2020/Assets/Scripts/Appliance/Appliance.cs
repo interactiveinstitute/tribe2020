@@ -227,7 +227,14 @@ public class Appliance : MonoBehaviour, IPointerClickHandler {
 
 		if(GetComponent<ElectricDevice>()) {
 			ElectricDevice device = GetComponent<ElectricDevice>();
-			device.SetEnergyMod(device.GetEnergyMod() - eem.energyFactor);
+			device.SetEnergyMod(device.GetEnergyMod() * eem.energyModifier);
+			device.SetRunlevel(device.runlevel);
+		}
+
+		if(eem.baseGasModifier != 1) {
+			ResourceManager.GetInstance().ScaleData("GasBaseline", eem.baseGasModifier, GameTime.GetInstance().time);
+			//TODO: Something with resource manager to change offsets and scaling
+			//ResourceManager.GetInstance().gasOutcome...
 		}
 
 		return newAppGO;

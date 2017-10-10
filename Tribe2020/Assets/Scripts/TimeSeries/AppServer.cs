@@ -28,7 +28,7 @@ public class AppServer : SocketIOComponentMod {
 		On("close", DoOnClose);
 		On("requested", DoOnSeries);
 
-		Debug.Log ("Starting: " + NodeName);
+		//Debug.Log ("Starting: " + NodeName);
 
         
 
@@ -229,7 +229,7 @@ public class AppServer : SocketIOComponentMod {
 					//print(keys [i].ToString());
 					//print (keys [i].str == "time");
 
-					if (keys [i].str == "time") {
+					if (keys [i].str == "time" || keys [i].str == "Time") {
 						continue;
 					}
 

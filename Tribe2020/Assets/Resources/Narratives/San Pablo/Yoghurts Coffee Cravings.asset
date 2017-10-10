@@ -24,14 +24,14 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and talk to Yoghurt Ableton, she seems to need some help.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 0
   - description: I'm so tired
     conditionType: AvatarSelected
     conditionProp: Yoghurt Ableton
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Tired
       parameter2: I'm sooo tired!
     - callback: UnmarkAvatar
       parameter1: Yoghurt Ableton
@@ -52,7 +52,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Angry
       parameter2: What did you say!?
     inChecklist: 0
     checkpoint: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: (Ok... sorry for making a suggestion)
     inChecklist: 0
     checkpoint: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Determined
       parameter2: There is only one way to stay sharp. One true way to refresh oneself!
     inChecklist: 0
     checkpoint: 0
@@ -88,7 +88,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Determined
       parameter2: Nooo! Coffee of course!
     inChecklist: 0
     checkpoint: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: But I have read that coffee is actually not all that....
     inChecklist: 0
     checkpoint: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Scared
       parameter2: NOOO! Lies! Coffee is the liquid gold we deserve!
     inChecklist: 0
     checkpoint: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Well, I'm happy that you are passionate about your beverages.
     inChecklist: 0
     checkpoint: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Sad
       parameter2: But I'm not!
     inChecklist: 0
     checkpoint: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: You aren't?
     inChecklist: 0
     checkpoint: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Embarrassed
       parameter2: Well, passionate perhaps. But not happy!
     inChecklist: 0
     checkpoint: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Sad
       parameter2: Well, sometimes when I grasp for a cup of the black stuff, the coffee
         has gone cold.
     inChecklist: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Tired
       parameter2: And then I have to pour it all out and make a new jug...
     inChecklist: 0
     checkpoint: 0
@@ -179,7 +179,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: Wait! You just pour it all out? Coffee which was warmed using energy?
     inChecklist: 0
     checkpoint: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Satisfied
       parameter2: Of course, I don't like cold coffee. Unless sometimes with ice...
     inChecklist: 0
     checkpoint: 0
@@ -197,7 +197,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: Hmm, if I could install a thermal jug, the coffee should stay warmer
         longer. Then there would be no need to make new coffee as often.
     inChecklist: 0
@@ -222,16 +222,16 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and upgrade the coffee machine to one with a thermal jug.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Selected coffee machine
     conditionType: DeviceSelected
     conditionProp: Espresso Machine
     actions:
     - callback: ShowPrompt
-      parameter1: player
-      parameter2: Many coffee machines either warms the waiting coffee continously
-        or just lets it get cold
+      parameter1: player,Embarrassed
+      parameter2: Many coffee machines either heat the coffee all the time or just
+        let it get cold
     inChecklist: 0
     checkpoint: 0
   - description: Regardless thermal jug is good
@@ -239,9 +239,9 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
-      parameter2: Regardless it's good to have a passive thermal jug which keeps the
-        coffee warm longer without added energy.
+      parameter1: player,Determined
+      parameter2: Regardless, it's good to have a passive thermal jug which keeps
+        the coffee warm longer without added energy.
     inChecklist: 0
     checkpoint: 0
   - description: How to upgrade an appliance
@@ -275,7 +275,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Satisfied
       parameter2: '[Slurp]'
     inChecklist: 0
     checkpoint: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Embarrassed
       parameter2: But it tastes a bit... like stones or something...
     inChecklist: 0
     checkpoint: 0
@@ -293,7 +293,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: (How would you know what that taste like?)
     inChecklist: 0
     checkpoint: 0
@@ -302,7 +302,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Maybe there is too much calcium in the machine? Once in a while
         it is necessary to decalcify water systems so that the water channels stay
         clean.
@@ -313,7 +313,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: Let's decalcify the machine to make sure
     inChecklist: 0
     checkpoint: 1
@@ -327,7 +327,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Decalcify the coffee machine in the waiting lounge.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Decalcified
     conditionType: EEMPerformed
@@ -352,7 +352,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Tired
       parameter2: Mmm, the coffee tastes...
     inChecklist: 0
     checkpoint: 0
@@ -361,7 +361,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Excited
       parameter2: It's actually the best cup of coffee I ever had! I will never want
         to hand wash this cup so I can always remember it!
     inChecklist: 0
@@ -371,7 +371,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: You shouldn't! You should use the dishwasher. That way less water
         and dish soap is used and as a bonus you save time and space!
     inChecklist: 0
@@ -381,7 +381,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Embarrassed
       parameter2: Really? I'm not completely convinced by that? I mean I'm a fairly
         efficient disher.
     inChecklist: 0
@@ -416,7 +416,7 @@ MonoBehaviour:
       parameter1: 
       parameter2: Find Yoghurt and invest in convincing her to use the dishwasher
         rather than dishing by hand.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Convinced to use dishwasher
     conditionType: EEMPerformed
@@ -441,7 +441,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Embarrassed
       parameter2: Hmm, I guess I never thought of it that way. I'll probably need
         to be reminded in order to remember that but I'll try.
     inChecklist: 0
@@ -460,7 +460,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Satisfied
       parameter2: And energy efficiency!
     inChecklist: 0
     checkpoint: 0
@@ -469,7 +469,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Yoghurt Ableton
+      parameter1: Yoghurt Ableton,Embarrassed
       parameter2: Nah, as long as I have delicious coffee I don't really care.
     inChecklist: 0
     checkpoint: 0
@@ -478,7 +478,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: What? OK, I will simply have to convince you otherwise there as
         well.
     inChecklist: 0
@@ -507,7 +507,7 @@ MonoBehaviour:
       parameter1: 
       parameter2: Challenge Yoghurt Ableton and convince her of the importance of
         energy savings.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Defeated Yoghurt
     conditionType: BattleWon
@@ -526,7 +526,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: You see, even coffee may be wonderful to some. But there won't even
         be any coffee if we can't care about our planet!
     inChecklist: 0
@@ -545,7 +545,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Excited
       parameter2: No problem! That's what I'm here for!
     inChecklist: 0
     checkpoint: 0

@@ -130,6 +130,7 @@ public class LocalisationExtractor : MonoBehaviour {
 		if(source.GetComponent<NarrationManager>()) {
 			foreach(Narrative n in gameObject.GetComponent<NarrationManager>().GetAllNarratives()) {
 				List<Language.KeyValue> values = new List<Language.KeyValue>();
+				values.Add(new Language.KeyValue("Title", n.title));
 				values.Add(new Language.KeyValue("Description", n.description));
 				Language.KeyValue checklist = new Language.KeyValue("Checklist", "");
 

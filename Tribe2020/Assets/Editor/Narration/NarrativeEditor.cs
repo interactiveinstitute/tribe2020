@@ -8,6 +8,10 @@ using System.Linq;
 public class NarrativeEditor : Editor {
 	private ReorderableList list;
 
+	private string[] storyList = {
+		"Foo", "Bar" };
+	private int selectedStory;
+
 	private void OnEnable() {
 		list = new ReorderableList(serializedObject, serializedObject.FindProperty("steps"), true, true, true, true);
 		list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
@@ -39,6 +43,9 @@ public class NarrativeEditor : Editor {
 
 	public override void OnInspectorGUI() {
 		base.OnInspectorGUI();
+
+		//NarrationManager narrationMgr = Object.FindObjectOfType<NarrationManager>();
+		//selectedStory = EditorGUILayout.Popup(selectedStory, narrationMgr.eventTypes, GUILayout.Width(200));
 
 		//Narrative obj = target as Narrative;
 		//if(obj != null) {

@@ -8,6 +8,7 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 	public bool restrictX = false;
 	public bool restrictY = false;
 
+	[SerializeField]
 	private bool _isDragged = false;
 	private Rigidbody2D _rb;
 	private SpringJoint2D _spring;
@@ -95,12 +96,17 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 			}
 			meanDist /= _distSamples.Count;
 
-			Debug.Log(meanDist);
+			//Debug.Log(meanDist);
 
 			_rb.AddForce(meanDist * 1000);
 		}
 		//if(_spring) {
 		//	//_spring.enabled = false;
 		//}
+	}
+
+	//
+	public bool IsDragged() {
+		return _isDragged;
 	}
 }

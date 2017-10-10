@@ -7,6 +7,8 @@ public class UIPanel : MonoBehaviour {
 
 	public Vector2 originalPosition;
 	public Vector2 targetPosition;
+	public Rect origRect;
+	public Rect targetRect;
 	public RectTransform toggleButton;
 	public PilotController.InputState relatedAction;
 

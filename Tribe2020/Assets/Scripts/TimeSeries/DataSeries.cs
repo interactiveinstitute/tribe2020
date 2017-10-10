@@ -7,6 +7,12 @@ using System;
 public class DataSeries : DataModifier {
 	public GameTime TTime = null;
 
+
+	[Header("Interpolation parameters")]
+	public int meterindex = 1;
+	public int rateindex = 0;
+	public double RateMeterConversionFactor = 1 / 3600;
+
 	//
 	virtual public List<DataPoint> GetPeriod(double From, double To) {
 		return null;
@@ -25,6 +31,40 @@ public class DataSeries : DataModifier {
 	public virtual void InsertData(List<DataPoint> datapoint) {
 		
 	}
+
+	public double InterpolateDailyConsumption(int day) 
+	{
+		//Calculate first and last time on the day.
+		double Starts,Ends,StartValue,EndValue;
+
+		GameTime TTime;
+		TTime = GameTime.GetInstance();
+
+		Starts = TTime.GetFirstTimeOfDay(day);
+		Ends = TTime.GetFirstTimeOfDay(day+1);
+
+		StartValue = InterpolateValueAt (Starts);
+		EndValue = InterpolateValueAt (Ends);
+
+		return EndValue - StartValue;
+	}
+
+	public double InterpolateValueAt(double time)
+	{
+		DataPoint data = GetDataAt (time);
+
+		if (data == null)
+			return double.NaN;
+
+		if (data.Timestamp == time)
+			return data.Values [meterindex];
+
+		double DeltaTime = time - data.Timestamp;
+
+		return data.Values [meterindex] + DeltaTime * data.Values [rateindex] * RateMeterConversionFactor;
+
+	}
+
 
 	//
 	virtual public DataPoint GetDataAt(double ts) {

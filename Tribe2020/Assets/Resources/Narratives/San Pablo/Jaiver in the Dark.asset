@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Jaiver in the Dark
   m_EditorClassIdentifier: 
   title: Javier in the Dark
-  description: Get to know Javier Rouch and see what's his problem.
+  description: Get to know Javier Rough and see what's his problem.
   steps:
   - description: Find and talk to Javier
     conditionType: 
@@ -24,14 +24,14 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and talk to Javier Rough about his ligthing issues.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 0
   - description: Argh, too dark
     conditionType: AvatarSelected
     conditionProp: Javier Rough
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Angry
       parameter2: Aargh! Too dark!
     - callback: SetSimulationTimeScale
       parameter1: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: What seems to be the problem?
     inChecklist: 0
     checkpoint: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Tired
       parameter2: Seeing is the problem! It's either too bright or too dark.
     inChecklist: 0
     checkpoint: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Embarrassed
       parameter2: I wish I could, but I have all this computer work I need to do.
         Watching the screen everyday makes my eyes square!
     inChecklist: 0
@@ -83,7 +83,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: Hmm, I'll see what I can do about that.
     inChecklist: 0
     checkpoint: 0
@@ -107,14 +107,14 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and upgrade Javier's monitor to an LCD one.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Selected Javier's monitor
     conditionType: DeviceSelected
     conditionProp: CRT Monitor
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: What an old computer screen. These fat CRT monitors are not very
         energy efficient neither.
     inChecklist: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Your'e welcome! (was he just hitting random keys before?)
     inChecklist: 0
     checkpoint: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Sad
       parameter2: Oh! But what is this!
     inChecklist: 0
     checkpoint: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: What is it now?
     inChecklist: 0
     checkpoint: 0
@@ -177,7 +177,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Angry
       parameter2: Now that I can see better, I can't help but notice that there is
         a really ugly ligthing in this room!
     inChecklist: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: I guess I'll see what I can do...
     inChecklist: 0
     checkpoint: 0
@@ -201,7 +201,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and upgrade a cieling lamp to an LED one.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Upgraded to LED
     conditionType: EEMPerformed
@@ -226,7 +226,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: (Your'e welcome, again)
     inChecklist: 0
     checkpoint: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Scared
       parameter2: What the! What is going on!
     inChecklist: 0
     checkpoint: 0
@@ -244,7 +244,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: '...'
     inChecklist: 0
     checkpoint: 0
@@ -253,7 +253,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Scared
       parameter2: Look at that thing. Look at it! What is that?
     inChecklist: 0
     checkpoint: 0
@@ -274,7 +274,7 @@ MonoBehaviour:
     conditionProp: Waiting Lounge
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: What am I look for?
     inChecklist: 0
     checkpoint: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Angry
       parameter2: Don't you see it!
     inChecklist: 0
     checkpoint: 0
@@ -292,7 +292,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: The electrical current? The flow of the air? The busy atmosphere?
     inChecklist: 0
     checkpoint: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Angry
       parameter2: No, no, no. The vending machine, of course!
     inChecklist: 0
     checkpoint: 0
@@ -310,7 +310,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Of course (that and all other things here)
     inChecklist: 0
     checkpoint: 0
@@ -319,7 +319,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Scared
       parameter2: It has a horrible light. Disgusting. Can you get rid of it?
     inChecklist: 0
     checkpoint: 0
@@ -328,7 +328,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Um? I suppose the ligth inside the machine is unnecessary as long
         as you can see the products.
     inChecklist: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and de-lamp the Vending Machine in the visitor's lounge.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: De-lamped the Vending Machine
     conditionType: EEMPerformed
@@ -359,7 +359,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Excited
       parameter2: Wonderful! Much easier on the eyes!
     inChecklist: 0
     checkpoint: 1
@@ -388,7 +388,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Angry
       parameter2: What? I don't care about energy savings. That's just boring and
         pointless. As long as we have good ligthing, nothing else matters to me.
     inChecklist: 0
@@ -398,7 +398,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: No way! You can't mean that. Listen, I have come to change your
         mind. If we don't become more energy efficient there won't be any lights at
         all!
@@ -409,7 +409,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Determined
       parameter2: Oh yeah? Prove it!
     inChecklist: 0
     checkpoint: 0
@@ -436,7 +436,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Challenge Javier Rough's attitude towards energy efficiency.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Battle won
     conditionType: BattleWon
@@ -455,7 +455,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Satisfied
       parameter2: Do you see why we have to be more energy efficient now?
     inChecklist: 0
     checkpoint: 1
@@ -464,7 +464,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Embarrassed
       parameter2: I do... What a journey we have done! What else can I do to be more
         efficient?
     inChecklist: 0
@@ -484,7 +484,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Javier Rough
+      parameter1: Javier Rough,Satisfied
       parameter2: I will! Thank's a lot!
     inChecklist: 0
     checkpoint: 0

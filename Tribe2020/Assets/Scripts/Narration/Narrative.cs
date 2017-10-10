@@ -57,6 +57,16 @@ public class Narrative : ScriptableObject {
 	}
 
 	//
+	public bool HasChecklist() {
+		foreach(Step ns in steps) {
+			if(ns.inChecklist) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//
 	[Serializable]
 	public struct Step {
 		public string description;

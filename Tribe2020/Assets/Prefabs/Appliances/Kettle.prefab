@@ -93,6 +93,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3364778
 MeshFilter:
@@ -126,7 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Kettle
   description: 
-  icon: {fileID: 21300000, guid: 43c51c148fd914e4baed632b650686f1, type: 3}
+  icon: {fileID: 21300000, guid: 4e9949b272b83444881e02dad331ecc3, type: 3}
+  isPilot: 0
   playerAffordances: []
   avatarAffordances:
   - affordance: {fileID: 11400000, guid: ff8f3af5b1712b44fb68bb085552a593, type: 2}
@@ -208,6 +210,7 @@ MonoBehaviour:
   runlevels:
   - Name: Off
     Power: 0
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}
@@ -216,6 +219,7 @@ MonoBehaviour:
     LightsOff: []
   - Name: On
     Power: 500
+    powerByEE: []
     Target: {fileID: 0}
     materials: []
     sound: {fileID: 0}

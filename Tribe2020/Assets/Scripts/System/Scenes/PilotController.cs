@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using SimpleJSON;
 using System;
+using UnityEngine.SceneManagement;
 
 public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface, CameraInterface, ResourceInterface, InteractionListener {
 	//Singleton features
@@ -12,7 +13,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 	public enum InputState {
 		ALL, ONLY_PROMPT, ONLY_SWIPE, ONLY_TAP, ONLY_APPLIANCE_SELECT, ONLY_APPLIANCE_DESELECT, ONLY_APOCALYPSE, ONLY_ENVELOPE,
-		ONLY_TIME, ONLY_OPEN_INBOX, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST,
+		ONLY_TIME, InboxOnly, ONLY_CLOSE_INBOX, ONLY_ENERGY, ONLY_COMFORT, ONLY_SWITCH_LIGHT, ONLY_APPLY_EEM, ONLY_HARVEST,
 		NOTHING, ONLY_CLOSE_MAIL, ONLY_SELECT_OVERVIEW, ONLY_SELECT_GRIDVIEW
 	};
 	[SerializeField]
@@ -40,6 +41,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	private AvatarManager _avatarMgr;
 	private ApplianceManager _applianceMgr;
 	private InteractionManager _interMgr;
+	private MonitorManager _monitorMgr;
 
 	[Header("Save between sessions")]
 	public bool syncTime;
@@ -53,6 +55,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Event flow state fields
 	private int _pendingTimeSkip = -1;
+    //private double _skipToOffset = -1;
 
 	private bool _firstUpdate = false;
 
@@ -61,7 +64,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Called once on all behaviours before any Start call
 	void Awake() {
-		_instance = this;
+        _instance = this;
 	}
 
 	//Called once on all behaviours before any Update call
@@ -94,6 +97,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_interMgr = InteractionManager.GetInstance();
 		_interMgr.SetListener(this);
+
+		_monitorMgr = MonitorManager.GetInstance();
 
 		_view.ClearView();
 
@@ -131,12 +136,17 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		_view.cash.GetComponent<Text>().text = _resourceMgr.cash.ToString();
 		_view.comfort.GetComponent<Text>().text = _resourceMgr.comfort.ToString();
-		_view.UpdateQuestCount(_narrationMgr.active.Count);
+		_view.UpdateQuestCount(_narrationMgr.GetNumberOfActiveChecklists());
 
 		_view.UpdateTime((float)((_timeMgr.time - startTime) / playPeriod));
 		if(_timeMgr.time > endTime) {
 			OnGameOver();
 		}
+
+        //Skip forward in time, animation check
+        if (_instance._timeMgr._skipToOffset != -1 && _instance._timeMgr.offset > _instance._timeMgr._skipToOffset) {
+            FinishStepHoursForward();
+        }
 	}
 
 	//Callback for when tap is triggered
@@ -360,14 +370,15 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void ApplyEEM(Appliance app, EnergyEfficiencyMeasure eem) {
-		//ResetTouch();
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLY_EEM) { return; }
 
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
-			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
+			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("ComfortChanged", "" + _resourceMgr.comfort);
+
+			_instance._monitorMgr.Publish("event", "event", "MeasureApplied", "description", eem.name + ":" + eem.title);
 
 			if(eem.callback != "") {
 				//_instance.SendMessage(eem.callback, eem.callbackArgument);
@@ -390,6 +401,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			}
 
 			_instance._narrationMgr.OnNarrativeEvent("EEMPerformed", eem.name, true);
+			_instance._monitorMgr.Publish("event", "event", eem.name);
 		}
 	}
 
@@ -440,6 +452,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "only_tap": _curState = InputState.ONLY_TAP; break;
 			case "only_apocalypsometer": _curState = InputState.ONLY_APOCALYPSE; break;
 			case "only_energy_panel": _curState = InputState.ONLY_ENERGY; break;
+			case "Inbox_Only": _curState = (InputState) Enum.Parse(typeof(InputState), interactionLimit, true); break;
 			default: _curState = InputState.ALL; break;
 		}
 	}
@@ -466,53 +479,51 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void ShowMessage(string[] cmd) {
-		string avatarName = cmd[0];
+		string[] avatarParse = cmd[0].Split(',');
+		string avatarName = avatarParse[0];
+		AvatarManager.Mood avatarMood = AvatarManager.Mood.Happy;
+		if(avatarParse.Length > 1) { avatarMood = (AvatarManager.Mood) Enum.Parse(typeof(AvatarManager.Mood), avatarParse[1]); }
 		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
-		Sprite portrait = null;
+		AvatarModel avatarModel = null;
 		if(avatarName != "") {
-			if(avatarName == "player") {
-				portrait = _instance._avatarMgr.playerPortrait;
-				avatarName = "F. Shaman: ";
-			} else {
-				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
-				avatarName = avatarName + ": ";
-			}
+			
+			if(avatarName == "player") { avatarName = "F. Shaman"; }
+			avatarModel = _instance._avatarMgr.GetAvatarModel(avatarName);
+			avatarName = avatarName + ": ";
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(avatarName + message, portrait, true, false);
+		_instance._view.ShowMessage(avatarName + message, avatarModel, avatarMood, false);
 	}
 
 	//
 	public void ShowPrompt(string[] cmd) {
-		string avatarName = cmd[0];
+		string[] avatarParse = cmd[0].Split(',');
+		string avatarName = avatarParse[0];
+		AvatarManager.Mood avatarMood = AvatarManager.Mood.Happy;
+		if(avatarParse.Length > 1) { avatarMood = (AvatarManager.Mood)Enum.Parse(typeof(AvatarManager.Mood), avatarParse[1]); }
 		JSONNode json = JSON.Parse(cmd[1]);
 		string group = json["g"];
 		string key = json["k"];
 
-		Sprite portrait = null;
+		AvatarModel avatarModel = null;
 		if(avatarName != "") {
-			if(avatarName == "player") {
-				portrait = _instance._avatarMgr.playerPortrait;
-				avatarName = "F. Shaman: ";
-			} else {
-				portrait = _instance._avatarMgr.GetAvatarStats(avatarName).portrait;
-				avatarName = avatarName + ": ";
-			}
+			if(avatarName == "player") { avatarName = "F. Shaman"; }
+			avatarModel = _instance._avatarMgr.GetAvatarModel(avatarName);
+			avatarName = avatarName + ": ";
 		}
 		string message = GetPhrase(group, key);
 
-		_instance._view.ShowMessage(avatarName + message, portrait, true, true);
-
+		_instance._view.ShowMessage(avatarName + message, avatarModel, avatarMood, true);
 		LimitInteraction("only_ok");
 	}
 
 	//
 	public void OnOkPressed() {
-		//_instance.ResetTouch();
+		_instance._interMgr.ResetTouch();
 
 		if(_instance._curState == InputState.ALL || _instance._curState == InputState.ONLY_PROMPT) {
 			_instance._view.messageUI.SetActive(false);
@@ -622,6 +633,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	}
 
 	//
+	public void UnlockViews(int y) {
+		_cameraMgr.UnlockViews(y);
+		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
+	}
+
+	//
 	public void UnlockView(int x, int y) {
 		_cameraMgr.UnlockView(x, y);
 		_view.UpdateViewpointGuide(_cameraMgr.GetViewpoints(), _cameraMgr.GetCurrentViewpoint());
@@ -688,24 +705,34 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void StepHoursForward(int hours) {
-		PlayUIAnimation("TimeSkipped");
+		PlayUIAnimation("TimeSkippedStart");
 		SetVisualTimeScale(10);
 		switch(hours) {
 			case 1:
-				SetSimulationTimeScale(100);
+				SetSimulationTimeScale(100000);
 				break;
 			case 24:
-				SetSimulationTimeScale(1000);
+				SetSimulationTimeScale(100000);
 				break;
 			case 168:
-				SetSimulationTimeScale(100000);
+				SetSimulationTimeScale(1000000);
 				break;
-			case 5040:
-				SetSimulationTimeScale(100000);
+			case 720:
+				SetSimulationTimeScale(1000000);
 				break;
 		}
-		_instance._pendingTimeSkip = hours;
-	}
+        _instance._timeMgr._skipToOffset = _instance._timeMgr.offset + 3600 * hours;
+        //_instance._pendingTimeSkip = hours;
+    }
+
+    void FinishStepHoursForward() {
+        SetVisualTimeScale(1);
+        SetSimulationTimeScale(60);
+        _instance._timeMgr.offset = _instance._timeMgr._skipToOffset;
+        _instance._timeMgr._skipToOffset = -1;
+        PlayUIAnimation("TimeSkippedEnd");
+        
+    }
 
 	//
 	public void SaveGameState() {
@@ -731,20 +758,25 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			if(debug) { Debug.Log("save/load disabled. Will not load game data."); }
 			return;
 		}
-		if(debug) { Debug.Log("Loading game state"); }
+        if (debug) { Debug.Log("Loading game state"); }
 
 		if(syncPilot) _saveMgr.LoadCurrentSlot();
 
-		if(syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
-		if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
-		if(syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
+        if (syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
+            _timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
+            _timeMgr.time = _timeMgr.StartTime + _timeMgr.offset;
+        }
+
+        if (syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
+
+        if (syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
+
+        if (syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
 		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 		if(syncAppliances) _applianceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ApplianceManager"));
 
-		if(syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
-			_timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
-		}
+		
 	}
 
 	//
@@ -812,7 +844,10 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 				SetVisualTimeScale(1);
 				SetSimulationTimeScale(60);
 				break;
-		}
+            case "gameOverAnimationFinished":
+                LoadScene("MenuScene");
+                break;
+        }
 	}
 
 	//Callback from resouce manager for when monthly salary received
@@ -822,8 +857,17 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//
 	public void OnGameOver() {
-		LoadScene("MenuScene");
-	}
+        bool gameWon = false; //Replace with appropiate calculation/function call
+
+        if (gameWon) {
+            PlayUIAnimation("GameWonAnimation");
+			_instance._monitorMgr.Publish("event", "event", "won:" + SceneManager.GetActiveScene());
+		}
+        else {
+            PlayUIAnimation("GameOverAnimation");
+			_instance._monitorMgr.Publish("event", "event", "lost:" + SceneManager.GetActiveScene());
+		}
+    }
 
 	//
 	public void OnNarrativeAction(Narrative narrative, Narrative.Step step, string callback, string[] parameters) {
@@ -846,6 +890,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			case "ClearChallengeData":
 				SendMessage(callback);
 				break;
+			case "UnlockViews":
+				SendMessage(callback, int.Parse(parameters[0]));
+				break;
 			default:
 				SendMessage(callback, parameters[0]);
 				break;
@@ -855,6 +902,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Reset interaction limitations and save on narrative completion
 	public void OnNarrativeCompleted(Narrative narrative) {
 		_instance._narrationMgr.OnNarrativeEvent("NarrativeComplete", narrative.title, true);
+		_instance._monitorMgr.Publish("event", "event", "completed:" + narrative.title);
 		_instance.LimitInteraction("all");
 		_instance.SaveGameState();
 	}

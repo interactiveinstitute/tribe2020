@@ -24,14 +24,14 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and talk to Bob Alison, he has some mean bathroom problems.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 0
   - description: Hello!
     conditionType: AvatarSelected
     conditionProp: Bob Alison
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Satisfied
       parameter2: Hello!
     - callback: UnmarkAvatar
       parameter1: Bob Alison
@@ -52,7 +52,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: OoooOOOoo, don't make that sound!
     inChecklist: 0
     checkpoint: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Huh? What sound?
     inChecklist: 0
     checkpoint: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: Yeah, that sound! Your words are like running water... I got to
         go!
     inChecklist: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
     conditionProp: Elevator
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: Ahhh!
     inChecklist: 0
     checkpoint: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: '!?'
     inChecklist: 0
     checkpoint: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Sad
       parameter2: There is a dripping tap in here, how am I supposed to relax the
         bladder when I'll just have to go again?
     inChecklist: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: A dripping tap? Water requires energy. Whereas hot water needs to
         be heated, all water needs to be filtered and cleaned.
     inChecklist: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: A few drops of water doesn't matter that much, but a continous dripping
         will waste a lot of water and eventually be a huge waste of energy.
     inChecklist: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: As such, a dripping tap should be fixed as soon as possible, let's
         do it.
     inChecklist: 0
@@ -165,14 +165,14 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and repair the dripping tap in the Visitor's WC.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Selected sink
     conditionType: DeviceSelected
     conditionProp: Sink
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: 'Ah, here is the dripping tap. A few drops may not seem like much,
         but before long several hundreds of litres will have gone down the drain. '
     inChecklist: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Satisfied
       parameter2: There we go. Also, try to not use more water than necessary in general.
     inChecklist: 0
     checkpoint: 1
@@ -211,9 +211,9 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
-      parameter2: Oh, don't worry! I just dry my hands very thoroughly with the dryer
-        instead.
+      parameter1: Bob Alison,Satisfied
+      parameter2: Oh, don't worry! I'll just dry my hands very thoroughly with the
+        dryer instead.
     inChecklist: 0
     checkpoint: 0
   - description: Very thoroughly
@@ -221,7 +221,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: Very thoroughly? You should of course make sure to be dry, but an
         electrical hand dryer uses a lot of energy.
     inChecklist: 0
@@ -231,7 +231,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: Really? Even when you use it to dry your head and feet?
     inChecklist: 0
     checkpoint: 0
@@ -240,7 +240,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: What? How do you... Anyway you should really avoid using electrical
         dryers as much as possible.
     inChecklist: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: But, I love the hand dryers. It has a lovely noise that makes it
         impossible to hear dripping taps and watery sounds.
     inChecklist: 0
@@ -260,7 +260,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: In that case I guess we will have to remove it, so that you will
         have to dry your hands in other ways.
     inChecklist: 0
@@ -275,7 +275,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Find and replace the dryer with a non-electrical one.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Replaced dryer
     conditionType: EEMPerformed
@@ -291,7 +291,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Satisfied
       parameter2: There we go. However, remember that CO2 is emitted when paper is
         produced, so shake your hands before you use a paper.
     inChecklist: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: But now it's completely silent here. How will I ever be able to
         enjoy the bathroom again...
     inChecklist: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Embarrassed
       parameter2: Maybe I can reduce the sound of water somewhat using another measure.
     inChecklist: 0
     checkpoint: 0
@@ -325,7 +325,7 @@ MonoBehaviour:
     - callback: AddObjective
       parameter1: 
       parameter2: Install a water tap with flow reduction in the sink.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Reduced waterflow
     conditionType: EEMPerformed
@@ -341,7 +341,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Excited
       parameter2: Huh, what is that? The tap has gone all quite and calm. No noise
         to stir the stern.
     inChecklist: 0
@@ -361,7 +361,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Scared
       parameter2: Efficient what? Energy sound a bit scary.
     inChecklist: 0
     checkpoint: 0
@@ -370,7 +370,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: Listen, all you seem to care about is your bladder. I think it's
         time to teach you something new.
     inChecklist: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
       parameter1: 
       parameter2: Challenge Bob Alison and teach him something new regarding water
         usage.
-    inChecklist: 0
+    inChecklist: 1
     checkpoint: 1
   - description: Battle won
     conditionType: BattleWon
@@ -428,7 +428,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Satisfied
       parameter2: I see... warm water uses energy and sometimes a bit of discomfort
         might be worth it for the future.
     inChecklist: 0
@@ -438,7 +438,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: Bob Alison
+      parameter1: Bob Alison,Excited
       parameter2: Imagine! All this water that is going through our systems. The very
         same liquid that our ancestors, the dinosaurs, once drank...
     inChecklist: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: Well... just give it a second thought when you use energy in the
         bathroom.
     inChecklist: 0

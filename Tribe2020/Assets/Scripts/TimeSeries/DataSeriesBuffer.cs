@@ -51,6 +51,7 @@ public class DataSeriesBuffer : DataSeries {
 	public int CurrentSize;
 
 
+
 	[Header("Buffer")]
 //	public int Pointer = 0;
 //	private int lastPointer = -1;
@@ -60,14 +61,9 @@ public class DataSeriesBuffer : DataSeries {
 
 	[Header("CSV file")]
 	public TextAsset File;
-
-
+	public string Separeator = ",";
 
 	//private GameTime TTime = null;
-
-
-
-
 
 	// Use this for initialization
 	void Start () {
@@ -83,6 +79,8 @@ public class DataSeriesBuffer : DataSeries {
 
 		//List<DataPoint> [0] = new DataPoint ();
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -99,7 +97,7 @@ public class DataSeriesBuffer : DataSeries {
 				return false;
 
 
-			CurrentValue = GetCurrentValue ();
+			CurrentValue = GetCurrentValue();
 
 
 			if (TTime != null && Data.Count - 1 > CurrentIndex )
@@ -199,6 +197,9 @@ public class DataSeriesBuffer : DataSeries {
 		
 	}
 
+
+
+
 	public double getStopTime() {
 		if (!Relative)
 			return StopTime;
@@ -291,10 +292,10 @@ public class DataSeriesBuffer : DataSeries {
 		string[] lines = File.text.Split("\n"[0]);
 
         Columns.Clear();
-        Columns.AddRange((lines[0].Trim()).Split(","[0]));
+		Columns.AddRange((lines[0].Trim()).Split(Separeator[0]));
 
         Units.Clear();
-        Units.AddRange((lines[1].Trim()).Split(","[0]));
+		Units.AddRange((lines[1].Trim()).Split(Separeator[0]));
  
 
 		NodeName = File.name;
@@ -310,11 +311,11 @@ public class DataSeriesBuffer : DataSeries {
 		double tsmin = double.PositiveInfinity, tsmax=0;
 
 		for (int i = 2; i < lines.Length; i++) {
-			string[] Values = (lines[i].Trim()).Split(","[0]);
+			string[] Values = (lines[i].Trim()).Split(Separeator[0]);
 			DataPoint NewData = new DataPoint();
 			NewData.Timestamp = double.Parse( Values[0]) ;
 
-
+			print (Values);
 
 			NewData.Values = new double[Values.Length-1]; 
 

@@ -150,25 +150,29 @@ public class BehaviourAI : SimulationObject {
 	// Update is called once per frame
 	void Update() {
 		if(_firstUpdate) {
-			//Synchronise schedule to get current activity for time
+            //Synchronise schedule to get current activity for time
+            
 			SyncSchedule();
+
 			if(_curActivity) {
 				_curActivity.Start(); //Start this activity.
 			}
 
-			if(_nextActivity != null) {
-				//Add key point for _nextActivity.
-				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
-					DebugManager.Log("added key action point", this, this);
-				} else {
-					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
-				}
-			} else {
-				DebugManager.LogError("_nextActivity is null!!", this, this);
-			}
+            if (_nextActivity != null) {
+                //Add key point for _nextActivity.
+                if (_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+                    DebugManager.Log("added key action point", this, this);
+                }
+                else {
+                    DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
+                }
+            }
+            else {
+                DebugManager.LogError("_nextActivity is null!!", this, this);
+            }
 
-			_firstUpdate = false;
-		}
+            _firstUpdate = false;
+        }
 
 		UpdateCoffeeCup();
 
@@ -282,7 +286,12 @@ public class BehaviourAI : SimulationObject {
         return schedules[_activeSchedule];
     }
 
-	public AvatarActivity GetRunningActivity() {
+    public Schedule SetActiveScheduleId(int id) {
+        _activeSchedule = id;
+        return GetActiveSchedule();
+    }
+
+    public AvatarActivity GetRunningActivity() {
 		if(_tempActivities.Count > 0) {
 			return _tempActivities.Peek();
 		} else {
@@ -304,7 +313,8 @@ public class BehaviourAI : SimulationObject {
 
 	//Soooo. What this function is doing is: Choose which activity should be the current one given the current time. Also sets _prevActivity and _nextActivity
 	private void SyncSchedule() {
-		double curTime = _timeMgr.GetTotalSeconds();
+
+        double curTime = _timeMgr.GetTotalSeconds();
 		DateTime curDateTime = _timeMgr.GetDateTime();
 		double curHour = curDateTime.Hour;
 		double curMinute = curDateTime.Minute;
@@ -413,7 +423,8 @@ public class BehaviourAI : SimulationObject {
             }
 
         }
-	}
+
+    }
 
 	//
 	private void SetCurrentActivity(AvatarActivity activity, double startTime) {
@@ -474,6 +485,12 @@ public class BehaviourAI : SimulationObject {
             //Get next schedule index with potential offset in days
             int nxtIndex = (activeSchedule._currentItem + 1) % activeSchedule.items.Length;
             int nxtActivityDayOffset = (int)Mathf.Floor((activeSchedule._currentItem + 1) / activeSchedule.items.Length);
+
+            //If next activity is tomorrow, which schedule should be used?
+            if(nxtActivityDayOffset > 0) {
+                int scheduleId = _timeMgr.IsWeekendTomorrow() ? 1 : 0;
+                activeSchedule = SetActiveScheduleId(scheduleId);
+            }
 
             //Setup next schedule item
             ScheduleItem nxtItem = activeSchedule.items[nxtIndex];

@@ -100,6 +100,7 @@ public class PilotView : View{
 	public GameObject viewGuideRowPrefab;
 	public GameObject viewpointIconPrefab;
 	public GameObject mailButtonPrefab;
+	public GameObject mailObjectivePrefab;
 	public GameObject EEMButtonPrefab;
 	public GameObject PilotEEMButtonPrefab;
 	public GameObject EnergyPanelDevice;
@@ -152,16 +153,8 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-		if(_uiPanels == null) {
-			Debug.Log("here");
-		}
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
-			if(!uiPanel) {
-				Debug.Log("there");
-				Debug.Log(uiPanel.name);
-			}
-
 			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
 				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
 			} else {
@@ -204,17 +197,28 @@ public class PilotView : View{
 			_curUIPanel = "";
 		} else {
 			_curUIPanel = key;
+			if(_uiPanels.ContainsKey(key)) {
+				_uiPanels[_curUIPanel].gameObject.SetActive(true);
+			}
 		}
 	}
 
 	//
 	public void LerpTowards(RectTransform t, Vector2 target) {
 		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
+			//Debug.Log(target);
 			t.anchoredPosition = target;
+			if(t.GetComponent<UIPanel>().title != "Menu" && t.GetComponent<UIPanel>().title != "Viewpoints" && 
+				target == t.GetComponent<UIPanel>().originalPosition) {
+				t.gameObject.SetActive(false);
+			}
 		} else {
+			//float top = Mathf.Lerp(-t.offsetMax.y, targetRect..y, 0.75f);
 			float curX = target.x + (t.anchoredPosition.x - target.x) * 0.75f;
 			float curY = target.y + (t.anchoredPosition.y - target.y) * 0.75f;
 			t.anchoredPosition = new Vector2(curX, curY);
+			//t.offsetMin = new Vector2(0, -top + 1000); // new Vector2(left, bottom)
+			//t.offsetMax = new Vector2(0, -top); // new Vector2(-right, -top)
 		}
 	}
 
@@ -446,9 +450,11 @@ public class PilotView : View{
 
 		//Render button decorations like resource icons and costs
 		if(eem.icon) { eemButton.eemIcon.sprite = eem.icon; }
-		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost);
-		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost);
-		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect, eem.energyFactor);
+		RenderEEMProperty(eemButton.comfortIcon, eemButton.comfortCost, eem.comfortCost.ToString(), eem.comfortCost != 0);
+		RenderEEMProperty(eemButton.moneyIcon, eemButton.moneyCost, eem.cashCost.ToString(), eem.cashCost != 0);
+		
+		RenderEEMProperty(eemButton.efficiencyIcon, eemButton.efficiencyEffect,
+			"-" + ((1 - eem.energyModifier) * 100) + "%", eem.energyModifier != 1);
 
 		Button button = buttonObj.GetComponent<Button>();
 		if(!app.appliedEEMs.Contains(curEEM) && _resourceMgr.CanAfford(eem.cashCost, eem.comfortCost)) {
@@ -461,10 +467,10 @@ public class PilotView : View{
 	}
 
 	//Render element of an eem button, such as a resource cost
-	private void RenderEEMProperty(Image icon, Text text, float value) {
+	private void RenderEEMProperty(Image icon, Text text, string value, bool show) {
 		if(icon) {
-			icon.gameObject.SetActive(value != 0);
-			text.gameObject.SetActive(value != 0);
+			icon.gameObject.SetActive(show);
+			text.gameObject.SetActive(show);
 			text.text = value.ToString();
 		}
 	}
@@ -515,17 +521,55 @@ public class PilotView : View{
 	}
 
 	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
-	public void ShowMessage(string message, Sprite portrait, bool showAtBottom, bool showOkButton = true) {
+	public void ShowMessage(string message, AvatarModel avatarModel, bool showOkButton = true) {
+		ShowMessage(message, avatarModel, AvatarManager.Mood.Happy, showOkButton);
+	}
+
+	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
+	public void ShowMessage(string message, AvatarModel avatarModel, AvatarManager.Mood mood, bool showOkButton = true) {
 		messageUI.SetActive(true);
 		messageUI.GetComponentInChildren<Text>().text = message;
-		if(portrait) {
-			messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
+		ShowPortrait(avatarModel, mood);
+
+		messageButton.SetActive(showOkButton);
+	}
+
+	//
+	public void ShowPortrait(AvatarModel avatarModel, AvatarManager.Mood mood) {
+		if(avatarModel) {
+			//messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
 			messageUI.transform.GetChild(0).gameObject.SetActive(true);
+			Image[] faceParts = messageUI.transform.GetChild(0).GetComponentsInChildren<Image>();
+
+			//Back Hair
+			faceParts[0].enabled = avatarModel.backHairImage;
+			faceParts[0].sprite = avatarModel.backHairImage;
+			faceParts[0].color = avatarModel.hairColor;
+
+			//Skin
+			faceParts[1].color = avatarModel.skinColor;
+
+			//Hair
+			if(avatarModel.hairImage) {
+				faceParts[2].enabled = true;
+				faceParts[2].sprite = avatarModel.hairImage;
+				faceParts[2].color = avatarModel.hairColor;
+			} else {
+				faceParts[2].enabled = false;
+			}
+
+			//Facial expression
+			faceParts[3].sprite = AvatarManager.GetInstance().GetMood((AvatarManager.Gender)avatarModel.modelId, mood);
+
+			//Clothes
+			if(avatarModel.clothesImage) {
+				faceParts[4].sprite = avatarModel.clothesImage;
+				faceParts[4].color = avatarModel.clothesColor1;
+			}
+
 		} else {
 			messageUI.transform.GetChild(0).gameObject.SetActive(false);
 		}
-
-		messageButton.SetActive(showOkButton);
 	}
 
 	//Hide the message UI
@@ -537,10 +581,25 @@ public class PilotView : View{
 	public void BuildEnergyPanel(List<ElectricDevice> devices) {
 		RemoveChildren(deviceContainer);
 
+		Dictionary<string, GameObject> deviceCats = new Dictionary<string, GameObject>();
+
 		foreach(ElectricDevice device in devices) {
-			GameObject deviceCell = Instantiate(EnergyPanelDevice) as GameObject;
-			deviceCell.GetComponent<EnergyPanelDevice>().device = device;
-			deviceCell.transform.SetParent(deviceContainer, false);
+			GameObject deviceCell = null;
+			if(!deviceCats.ContainsKey(device.GetComponent<Appliance>().title)) {
+				deviceCell = Instantiate(EnergyPanelDevice, deviceContainer);
+
+				deviceCats.Add(device.GetComponent<Appliance>().title, deviceCell);
+
+
+				//deviceCats
+			} else {
+				deviceCell = deviceCats[device.GetComponent<Appliance>().title];
+			}
+			deviceCell.GetComponent<EnergyPanelDevice>().devices.Add(device);
+
+			//GameObject deviceCell = Instantiate(EnergyPanelDevice, deviceContainer);
+			//deviceCell.GetComponent<EnergyPanelDevice>().device = device;
+			//deviceCell.transform.SetParent(deviceContainer, false);
 		}
 	}
 
@@ -549,42 +608,15 @@ public class PilotView : View{
 		RemoveChildren(inboxList);
 
 		foreach(Narrative narrative in active) {
-			//Quest curQuest = quest;
-			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-
-			Mail mail = mailButtonObj.GetComponent<Mail>();
-			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
-			mail.content.SetActive(false);
-
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, narrative));
-
-			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
-			images[2].gameObject.SetActive(false);
-
-			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
-			texts[0].text = narrative.title;
-			//texts[1].text = curQuest.date;
-			mailButtonObj.transform.SetParent(inboxList, false);
+			if(narrative.HasChecklist()) {
+				BuildMailButton(narrative, false, Color.white);
+			}
 		}
 
 		foreach(Narrative narrative in archive) {
-			//Quest curQuest = quest;
-			GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
-
-			Mail mail = mailButtonObj.GetComponent<Mail>();
-			mail.content = mailButtonObj.transform.GetChild(1).gameObject;
-			mail.content.SetActive(false);
-
-			mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMail(mail, narrative));
-
-			Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
-			images[1].color = Color.gray;
-			images[2].gameObject.SetActive(false);
-
-			Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
-			texts[0].text = narrative.title;
-			//texts[1].text = curQuest.date;
-			mailButtonObj.transform.SetParent(inboxList, false);
+			if(narrative.HasChecklist()) {
+				BuildMailButton(narrative, true, Color.gray);
+			}
 		}
 	}
 
@@ -593,25 +625,62 @@ public class PilotView : View{
 		RemoveChildren(inboxList);
 	}
 
-	//
-	public void BuildMail(Mail mail, Narrative narrative) {
+	//Build mail representative given a narrative and add to mail list
+	//TODO localization
+	public void BuildMailButton(Narrative narrative, bool isCompleted, Color color) {
+		GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
+
+		Mail mail = mailButtonObj.GetComponent<Mail>();
+		mail.content = mailButtonObj.transform.GetChild(1).gameObject;
+		mail.content.SetActive(false);
+
+		//Hook up button to show mail content if opened
+		mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMailContent(mail, narrative));
+
+		//Show closed/opened mail image if active/archived narrative
+		Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
+		images[1].color = color;
+		if(isCompleted) {
+			images[1].gameObject.SetActive(false);
+		} else {
+			images[2].gameObject.SetActive(false);
+		}
+
+		//Show narrative title
+		Text[] texts = mailButtonObj.GetComponentsInChildren<Text>();
+		texts[0].text = _controller.GetPhrase("Narrative." + narrative.title, "Title");
+		texts[1].text = "";
+		mailButtonObj.transform.SetParent(inboxList, false);
+	}
+
+	//Build mail content given a narrative and add to mail container
+	//TODO localization
+	public void BuildMailContent(Mail mail, Narrative narrative) {
 		Transform contentTrans = mail.transform.GetChild(1);
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
-		Text description = contentTrans.GetComponentsInChildren<Text>()[1];
-		Text steps = contentTrans.GetComponentsInChildren<Text>()[2];
+		Transform stepsContainer = contentTrans.GetChild(1);
 
-		title.text = narrative.title;
-		//description.text = narrative.description;
+		title.text = _controller.GetPhrase("Narrative." + narrative.title, "Description");
+		RemoveChildren(stepsContainer);
 
-		//string stepConcat = "";
-		//foreach(Quest.NarrativeCheck checkStep in narrative.checkList) {
-		//	stepConcat += checkStep.description + "\n";
-		//}
-		//steps.text = stepConcat;
+		//Pick out steps that are part of checklist
+		List<Narrative.Step> checklist = new List<Narrative.Step>();
+		for(int i = narrative.GetCurrentStepIndex() - 1; i >= 0; i--) {
+			if(narrative.steps[i].inChecklist) {
+				checklist.Add(narrative.steps[i]);
+			}
+		}
+
+		//Fill GUI with checklist
+		for(int i = checklist.Count - 1; i >= 0; i--){
+			GameObject newObjective = Instantiate(mailObjectivePrefab, stepsContainer);
+			newObjective.GetComponentInChildren<Text>().text = _controller.GetPhrase("Narrative." + narrative.title, "Checklist", i);
+			if(i == checklist.Count - 1) {
+				newObjective.GetComponentInChildren<Image>().enabled = false;
+			}
+		}
 
 		mail.content.SetActive(!mail.content.activeSelf);
-
-		//mailObj.transform.SetParent(inboxList, false);
 	}
 
 	//
@@ -628,6 +697,9 @@ public class PilotView : View{
 
 	//
 	public void ToggleMenu() {
+		if(!_showSettings) {
+			GetUIPanel("Menu").gameObject.SetActive(true);
+		}
 		_showSettings = !_showSettings;
 	}
 
@@ -660,7 +732,7 @@ public class PilotView : View{
 
 	//
 	public void PlayUIAnimation(string animation) {
-		GetComponent<Animator>().Play(animation, 0, 0);
+		GetComponent<Animator>().Play(animation);
 	}
 
 	//

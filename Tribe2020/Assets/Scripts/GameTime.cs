@@ -45,10 +45,13 @@ public class GameTime : MonoBehaviour {
     [Space(10)]
     [Header("Game Time")]
     public double StartTime;
+	public bool StartInRealtime;
+	public bool StopAtRealtime;
 	public double offset;
 	public double time = Double.NaN;
 	public double VisualTime;
 	public string CurrentDate;
+    public double _skipToOffset = -1;
 
     DateTime dateTimeCurrent;
     DateTime dateTimeLastUpdate;
@@ -63,11 +66,28 @@ public class GameTime : MonoBehaviour {
 	public float SimulationTimeScaleFactor = 1.0f;
 
 	public bool LockScales;
+
+
+
+	[Space(10)]
+	public List<double> Hollidays = new List<double>();
+	[Space(10)]
+
 	private float prevVisualTimeScale,prevSimulationTimeScale;
 
 
 
 	void Awake () {
+		
+		if (StartInRealtime) {
+			TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+			RealWorldTime = t.TotalSeconds;
+
+			StartTime = RealWorldTime;
+
+
+		}
+
 		time = StartTime + offset;
 		_instance = this;
 
@@ -81,8 +101,7 @@ public class GameTime : MonoBehaviour {
 
 
 
-		CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
-
+        CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 
 	}
 
@@ -90,13 +109,12 @@ public class GameTime : MonoBehaviour {
 	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
         //If trying to add a key action that should already have ben run, then run it immediately instead and return
-        if (TimeStamp < time)
-        {
-            target.UpdateSim(TimeStamp);
-            return false;
-        }
+        //if (TimeStamp < time) {
+        //    target.UpdateSim(TimeStamp);
+        //    return false;
+        //}
 
-		KeyAction keypoint = new KeyAction ();
+        KeyAction keypoint = new KeyAction ();
 
 		keypoint.Timestamp = TimeStamp;
 		keypoint.target = target;
@@ -109,6 +127,9 @@ public class GameTime : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+		RealWorldTime = t.TotalSeconds;
 
 		//Delete expired keypoints.
 
@@ -127,15 +148,22 @@ public class GameTime : MonoBehaviour {
 		VisualTime = now;
 		double delta = now - lastupdate;
 
-		Time.timeScale = VisualTimeScale;
+
 
 		offset = offset + (delta/VisualTimeScale * (SimulationTimeScaleFactor - VisualTimeScale));
 
-
 		double new_time = StartTime + offset + Time.time;
 
-		//Do all key actions requiered until the new time
-		DoKeyActions(new_time);
+		if (StopAtRealtime && new_time > RealWorldTime) {
+			new_time = RealWorldTime;
+			offset = 0;
+			Time.timeScale = 1;
+		} else {
+			Time.timeScale = VisualTimeScale;
+		}
+
+        //Do all key actions requiered until the new time
+        DoKeyActions(new_time);
 
         simulationDeltaTime = (float) (new_time - time);
 		time = new_time;
@@ -147,40 +175,73 @@ public class GameTime : MonoBehaviour {
 		lastupdate = now;
 
         
-        TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
-        RealWorldTime = t.TotalSeconds;
         
 	}
 
-	private int DoKeyActions(double newtime) { 
+	public void JumpToRealtime(){
+		
 
+		TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+		RealWorldTime = t.TotalSeconds;
 
-		int i = 0;
-		KeyAction ka = null;
+		offset = RealWorldTime - StartTime - Time.time;
+		time = RealWorldTime;
+	}
 
-		while (KeyActions.Count > 0 ) {
-			//All remaning are in the future (assuming that the list is sorted). 
-			if (KeyActions [0].Timestamp > newtime)
-				return i;
-			 
+	public string GetDay(int i){
+		DateTime date = TimestampToDateTime (time + (86400 * i));
+		return date.DayOfWeek.ToString();
+	}
 
-			i += 1;
-			ka = KeyActions [0];
+	public bool IsRedLetterDay(double timestamp)
+	{
+		DateTime date = TimestampToDateTime (timestamp);
 
-            //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
-			time = ka.Timestamp;
+		if (date.DayOfWeek == DayOfWeek.Sunday)
+			return true;
 
-			//Execute the event. 
-			ka.target.UpdateSim(time);
-
-
-
-			//Remove
-			KeyActions.Remove (ka);
-
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (ts).Date == date.Date)
+				return true;
 		}
 
-		return 0;
+		return false;
+	}
+
+	public bool IsRedLetterDay()
+	{
+		return IsRedLetterDay (time);
+	}
+
+	private void DoKeyActions(double newtime) { 
+
+		KeyAction ka = null;
+
+        //TimeProfiler tp = new TimeProfiler("Do key actions", true);
+
+        while (KeyActions.Count > 0 ) {
+            //All remaning are in the future (assuming that the list is sorted). 
+            if (KeyActions[0].Timestamp > newtime) {
+                break;
+            }
+
+            //tp.IncreaseCounter(true);
+ 
+			ka = KeyActions[0];
+
+            //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
+            time = ka.Timestamp;
+
+            //Execute the event. 
+            ka.target.UpdateSim(time);
+
+            //Remove
+            KeyActions.Remove (ka);
+
+		}
+        //tp.MillisecondsSinceCreated(true);
+
+        return;
 	}
 
 	private double DateTimeToTimestamp(DateTime value)
@@ -244,6 +305,20 @@ public class GameTime : MonoBehaviour {
 		return date;
 	}
 
+	public double GetFirstTimeOfDay(double ts){
+		DateTime day = TimestampToDateTime(ts).Date;
+		return DateTimeToTimestamp (day);
+	}
+
+	public double GetFirstTimeOfDay(){
+		return GetFirstTimeOfDay (time);
+	}
+
+	public double GetFirstTimeOfDay(int i){
+		return GetFirstTimeOfDay (time + (3600.0*24 * i));
+	
+	}
+
 	public DateTime GetDateTime()
 	{
 		return TimestampToDateTime(time);
@@ -304,6 +379,34 @@ public class GameTime : MonoBehaviour {
             return 0;
         }
         return (dateTimeCurrent.Year - dateTimeLastUpdate.Year) * 12 + (dateTimeCurrent.Month - dateTimeLastUpdate.Month);
+    }
+
+    public bool IsWeekend() {
+		DateTime date = TimestampToDateTime (time);
+
+		if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+			return true;
+
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (time).Date == date.Date)
+				return true;
+		}
+
+		return false;
+    }
+
+    public bool IsWeekendTomorrow() {
+		DateTime date = TimestampToDateTime (time + 8640);
+
+		if (date.DayOfWeek == DayOfWeek.Sunday || date.DayOfWeek == DayOfWeek.Saturday)
+			return true;
+
+		foreach (double ts in Hollidays) {
+			if (TimestampToDateTime (time + 8640).Date == date.Date)
+				return true;
+		}
+
+		return false;
     }
 }
 

@@ -47,7 +47,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Scared
       parameter2: Wait... what's that background music.
     - callback: StopSound
       parameter1: Climbing the Mountain
@@ -62,7 +62,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowMessage
-      parameter1: player
+      parameter1: player,Sad
       parameter2: Oh no...
     - callback: GotoViewpoint
       parameter1: Waiting Lounge
@@ -74,7 +74,7 @@ MonoBehaviour:
     conditionProp: Waiting Lounge
     actions:
     - callback: ShowMessage
-      parameter1: player
+      parameter1: player,Sad
       parameter2: Oh no...
     - callback: GotoViewpoint
       parameter1: Elevator
@@ -86,7 +86,7 @@ MonoBehaviour:
     conditionProp: Elevator
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Determined
       parameter2: Well, well, well. What DO we have HERE!?
     inChecklist: 0
     checkpoint: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Tired
       parameter2: It's E. Mission. The notorious energy skeptic!
     inChecklist: 0
     checkpoint: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: He doesn't care what is right or wrong, and he wouldn't believe
         in energy efficiency if his mother's life depended on it.
     inChecklist: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Satisfied
       parameter2: Well, thank you for the introduction. I would however call myself
         a skeptic rather than a non believer.
     inChecklist: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Embarrassed
       parameter2: Who wouldn't want the weather to be a little warmer, after all?
     inChecklist: 0
     checkpoint: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: That's enough Mission! I won't let your evil mission ruin the work
         I'm doing here at San Pablo!
     inChecklist: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Determined
       parameter2: Evil?! Now, spending perfecly good money on non-sensical energy
         efficincy measure, that's just SAD!
     inChecklist: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Satisfied
       parameter2: I think it's about time that I perform a few efficiency measures
         myself in this place!
     inChecklist: 0
@@ -163,7 +163,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: I won't let you! We Fire Shamans have caused enough trouble as it
         is!
     inChecklist: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Determined
       parameter2: Let's see if you CAN stop me, or if you are just words.
     inChecklist: 0
     checkpoint: 0
@@ -218,7 +218,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Determined
       parameter2: Don't you see now E. Mission? We all have to work together in order
         to fight global warming and other environmental issues.
     inChecklist: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Satisfied
       parameter2: Bah! You haven't seen the last of me. Your obsession for flowers
         and weird animals doesn't interest me the slightest.
     inChecklist: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: What? What animals? This is not just about some fuzzy subject. The
         whole Earth is at stake!
     inChecklist: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: E. Mission
+      parameter1: E. Mission,Sad
       parameter2: You tell yourself that kid, but it won't safe you during our next
         encounter. Au revior, weirdo!
     inChecklist: 0
@@ -258,7 +258,7 @@ MonoBehaviour:
     conditionProp: 
     actions:
     - callback: ShowPrompt
-      parameter1: player
+      parameter1: player,Angry
       parameter2: That guy really gives me the creeps, but I can never give up on
         this struggle. Not until I have convinced even people like him.
     inChecklist: 0
@@ -278,4 +278,5 @@ MonoBehaviour:
     actions: []
     inChecklist: 0
     checkpoint: 0
-  followingNarratives: []
+  followingNarratives:
+  - {fileID: 11400000, guid: 304e452b3ee7fbe439e9b1bc85d2d7af, type: 2}

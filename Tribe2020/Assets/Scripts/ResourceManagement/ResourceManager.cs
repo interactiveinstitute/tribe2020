@@ -54,6 +54,9 @@ public class ResourceManager : MonoBehaviour {
 	public int comfortHarvestCount = 0;
 	public int comfortHarvestMax = 30;
 
+	[Header("Manipulations")]
+	public List<Manipulation> Manipulations = new List<Manipulation>();
+
 	[Header("DEBUG")]
 	public double c2outcome_debug, c2baseline_debug;
 	public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
@@ -198,25 +201,64 @@ public class ResourceManager : MonoBehaviour {
 		return cash >= costCash && comfort >= costComfort;
 	}
 
-	//TODO: Multiply given DataSeries
+	//Multiply given DataSeries
 	public void ScaleData(string series, double scale, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
+		ManipulateData (series, scale, 0, 0, timestamp);
+		
 	}
 
-	//TODO: Absolute offset given DataSeries
+	//Absolute offset given DataSeries
+	//Absoule offset removes the specified value from the results (original_data - absolute_offsets).
 	public void AbsoluteOffsetData(string series, double offset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
+		ManipulateData (series, 1, offset,0, timestamp);
 	}
-
-	//TODO: Relative offset given DataSeries
+		
+	//Relative offset given DataSeries
+	//A relative offset removes a certain percentage of the original data from the result (result - originaldata * relativeoffset). 
 	public void RelativeOffsetData(string series, double offset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
+		ManipulateData (series, 1, 0,offset, timestamp);
 	}
 
 	//TODO: Manipulate given DataSeries
-	public void ManipulateData(string series, double scale, double absoluteOffset, double relativeOffset, double timestamp) {
-		DataSeries data = DataContainer.GetInstance().GetSeriesByName(series);
+	public int ManipulateData(string series, double scale, double absoluteOffset, double relativeOffset, double timestamp) {
+
+		DataManipulator ManipulationPoint = FindManipulationPoint (series);
+
+		
+
+		if (ManipulationPoint == null)
+			return -1;
+
+		//Create manipulation 
+		Manipulation m = new Manipulation();
+
+		m.SetRateCounter (scale, absoluteOffset, relativeOffset);
+
+
+		//Add to manipulation point
+		ManipulationPoint.Manipulations.Add(m);
+
+		//Add to own tracking list
+		Manipulations.Add(m);
+
+		m.Activate(timestamp);
+
+
+		return Manipulations.Count-1;
 	}
+
+	public DataManipulator FindManipulationPoint(string name){
+		DataManipulator[] manipulations = FindObjectsOfType(typeof(DataManipulator)) as DataManipulator[];
+		foreach (DataManipulator manipulation in manipulations) {
+			if (manipulation.name == name)
+				return manipulation;
+				
+		}
+
+		return null;
+	}
+
+
 
     //New month test
     void NewMonthTest() {
@@ -283,5 +325,13 @@ public class ResourceManager : MonoBehaviour {
 			DeserializeDataseries(json["electricity"].AsArray, electricityOutcome);
 			DeserializeDataseries(json["gas"].AsArray, gasOutcome);
 		}
+	}
+
+	public void Test() {
+
+		//print (FindManipulationPoint ("Heating"));
+
+		double now = _timeMgr.time;
+		ManipulateData ("Heating", 1, -100, 0, now);
 	}
 }

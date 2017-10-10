@@ -33,6 +33,8 @@ public class NarrationManager : MonoBehaviour {
 	[SerializeField]
 	public List<PerformedStep> _performedSteps = new List<PerformedStep>();
 
+	public string[] eventTypes;
+
 	[Header("References")]
 	public GameObject interactionPoint;
 
@@ -152,6 +154,7 @@ public class NarrationManager : MonoBehaviour {
 		}
 	}
 
+	//
     public bool IsPerformed(string eventType, string prop) {
         foreach(PerformedStep ps in _performedSteps) {
             if(ps.IsCompletedBy(eventType, prop)) {
@@ -205,6 +208,17 @@ public class NarrationManager : MonoBehaviour {
 			count++;
 		}
 		return count;
+	}
+
+	//
+	public int GetNumberOfActiveChecklists() {
+		int result = 0;
+		foreach(Narrative n in active) {
+			if(n.HasChecklist()) {
+				result++;
+			}
+		}
+		return result;
 	}
 
 	//

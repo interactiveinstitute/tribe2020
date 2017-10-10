@@ -18,6 +18,8 @@ public class DataManipulator : DataModifier
 
     public DataPoint ApplyModifiers(DataPoint point)
     {
+		point = base.ApplyModifiers (point);
+
         if (Manipulations.Count == 0)
             return point;
 
@@ -36,6 +38,8 @@ public class DataManipulator : DataModifier
         if (selected < Manipulations.Count) {
             double now = GameTime.GetInstance().time;
             Manipulations[selected].Activate(now);
+
+
         }
     }
 
@@ -44,5 +48,61 @@ public class DataManipulator : DataModifier
         if (selected < Manipulations.Count)
             Manipulations[selected].DeActivate(GameTime.GetInstance().time);
     }
+
+	public void Add(Manipulation manipulation)
+	{
+		Manipulations.Add (manipulation);
+
+
+
+
+	}
+
+	public void Activate(int id)
+	{
+		if (id > Manipulations.Count - 1)
+			return;
+
+		double now = GameTime.GetInstance ().time;
+
+		Manipulations [id].Activate (now);
+
+
+		//Already active so we update LastValue. 
+		if (Manipulations [id].Type == Manipulation.DataType.RateCounter){
+			print("Interpolating new point");
+			CreateCounterRateInterpolation (now, Manipulations [id].TimeFactor);
+		}
+		else {
+
+			LastData.Timestamp = now;
+			UpdateAllTargets (LastData);
+		}
+
+
+	}
+
+	public void Deactivate(int id)
+	{
+		if (id > Manipulations.Count - 1)
+			return;
+
+		double now = GameTime.GetInstance ().time;
+
+		if (Manipulations [id].Type == Manipulation.DataType.RateCounter){
+			CreateCounterRateInterpolation (now, Manipulations [id].TimeFactor);
+		}
+		else {
+
+			LastData.Timestamp = now;
+			UpdateAllTargets (LastData);
+		}
+			
+
+		Manipulations [id].DeActivate (now);
+
+
+	}
+
 
 }

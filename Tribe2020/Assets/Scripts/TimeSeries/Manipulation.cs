@@ -10,7 +10,7 @@ public class Manipulation  {
     public double From = double.NaN;
     public double To = double.NaN;
     public bool Active;
-    public bool Applied;
+    public bool Applied = true;
 
 
     
@@ -128,6 +128,8 @@ public class Manipulation  {
             offset[i] = 0;
         }
 
+		//if (!Applied)
+		//	return;
 
 
         if (isActive(timestamp))
@@ -139,6 +141,7 @@ public class Manipulation  {
 
         if (LastUpdate != double.NaN)
             offset[1] += RateOffset * (timestamp - LastUpdate) / TimeFactor;
+			
 
         offset[1] += CounterOffset;
 
@@ -157,5 +160,17 @@ public class Manipulation  {
 
         return offset;
     }
+
+
+	public void SetRateCounter (double scale,double absoluteOffset,double relativeOffset){
+
+		rescale = new double[1];
+		rescale [0] = scale;
+		relativeoffsets = new double[1];
+		relativeoffsets [0] = relativeOffset;
+		absoluteoffsets = new double[1];
+		absoluteoffsets [0] = absoluteOffset;
+		Type = Manipulation.DataType.RateCounter;
+	}
 
 }

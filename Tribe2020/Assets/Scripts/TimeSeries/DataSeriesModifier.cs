@@ -64,6 +64,7 @@ public class DataSeriesModifier : DataSeries {
 		return null;
 	}
 
+
 	//
 	override public List<DataPoint> GetPeriod(double From, double To) {
 

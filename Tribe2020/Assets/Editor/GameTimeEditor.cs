@@ -11,6 +11,15 @@ public class GameTimeEditor : Editor
 
 		GameTime myScript = (GameTime)target;
 
+		if(GUILayout.Button("Minute +",GUILayout.Width(100) ))
+		{
+			myScript.Offset(60);
+		}
+
+		if(GUILayout.Button("Minute -",GUILayout.Width(100) ))
+		{
+			myScript.Offset(-60);
+		}
 
 		if(GUILayout.Button("Hour +",GUILayout.Width(100) ))
 		{
@@ -32,6 +41,10 @@ public class GameTimeEditor : Editor
 			myScript.Offset(-86400);	
 		}
 
+		if(GUILayout.Button("Jump to realtime",GUILayout.Width(100) ))
+		{
+			myScript.JumpToRealtime();	
+		}
 
 		if(GUILayout.Button("Sort keypoints",GUILayout.Width(200) ))
 		{

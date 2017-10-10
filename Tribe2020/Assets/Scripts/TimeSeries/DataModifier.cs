@@ -21,6 +21,9 @@ public class DataModifier : DataNode {
 		DataPoint NewPoint;
 		double[] ts_offsets = null, ts_scales = null;
 
+		if (point == null)
+			return null;
+
 		NewPoint = point.Clone();
 
 		//Apply timeoffset. 
