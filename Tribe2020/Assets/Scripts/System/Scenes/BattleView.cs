@@ -20,6 +20,7 @@ public class BattleView : MonoBehaviour {
 
 	public Text foeName;
 	public ImageBar opponentEnergy;
+	public Transform enemyPortrait;
 	public ImageBar playerEnergy;
 	public RectTransform lowerUI;
 	//public Text foeCPNumber;
@@ -60,9 +61,47 @@ public class BattleView : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(_answerVisibility) {
-			lowerUI.position = new Vector2(lowerUI.position.x, 180);
+			lowerUI.position = new Vector2(lowerUI.position.x, 0);
 		} else {
-			lowerUI.position = new Vector2(lowerUI.position.x, -80);
+			lowerUI.position = new Vector2(lowerUI.position.x, -160);
+		}
+	}
+
+	//
+	public void ShowPortrait(AvatarModel avatarModel, AvatarManager.Mood mood) {
+		if(avatarModel) {
+			//messageUI.transform.GetChild(0).GetComponentInChildren<Image>().sprite = portrait;
+			enemyPortrait.gameObject.SetActive(true);
+			Image[] faceParts = enemyPortrait.GetComponentsInChildren<Image>();
+
+			//Back Hair
+			faceParts[0].enabled = avatarModel.backHairImage;
+			faceParts[0].sprite = avatarModel.backHairImage;
+			faceParts[0].color = avatarModel.hairColor;
+
+			//Skin
+			faceParts[1].color = avatarModel.skinColor;
+
+			//Hair
+			if(avatarModel.hairImage) {
+				faceParts[2].enabled = true;
+				faceParts[2].sprite = avatarModel.hairImage;
+				faceParts[2].color = avatarModel.hairColor;
+			} else {
+				faceParts[2].enabled = false;
+			}
+
+			//Facial expression
+			faceParts[3].sprite = AvatarManager.GetInstance().GetMood((AvatarManager.Gender)avatarModel.modelId, mood);
+
+			//Clothes
+			if(avatarModel.clothesImage) {
+				faceParts[4].sprite = avatarModel.clothesImage;
+				faceParts[4].color = avatarModel.clothesColor1;
+			}
+
+		} else {
+			enemyPortrait.gameObject.SetActive(false);
 		}
 	}
 

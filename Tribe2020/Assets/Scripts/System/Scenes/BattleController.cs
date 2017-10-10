@@ -159,6 +159,7 @@ public class BattleController : MonoBehaviour, NarrationInterface, CameraInterfa
 			foeStats.DeserializeFromJSON(json);
 
 			_view.foeName.text = foeAppliance.title;
+			_view.ShowPortrait(foeModel, AvatarManager.Mood.Determined);
 		}
 
 		_quizMgr.InitQuizzes(foeAppliance.title);
