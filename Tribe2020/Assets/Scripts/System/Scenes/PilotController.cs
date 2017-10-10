@@ -121,7 +121,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			}
 		}
 
-		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm d MMM yyyy");
+		_view.date.GetComponent<Text>().text = _timeMgr.GetTimeWithFormat("HH:mm ddd d MMM yyyy");
+		if (_timeMgr.RedLetterDay)
+			_view.date.GetComponent<Text> ().color = Color.red;
+		else
+			_view.date.GetComponent<Text> ().color = Color.white;
+		
 		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
 		float energy = (float)_mainMeter.Energy;
 		if(energy < 1000) {
