@@ -29,13 +29,31 @@ public class ResourceManager : MonoBehaviour {
 	private int _pendingCash;
 	private double _lastHarvestTick;
 
+	[Space(10)]
+	public string CO2OutcomeName;
 	public DataSeries CO2Outcome;
+	[Space(10)]
+	public string CO2BaselineName;
 	public DataSeries CO2Baseline;
+	[Space(10)]
 	public DataSeries CO2ChangeSeries;
+	[Space(10)]
 	public DataSeries CostOutcome;
+	[Space(10)]
 	public DataSeries CostBaseline;
+	[Space(10)]
+	public string electricityBaselineName;
+	public DataSeries electricityBaseline;
+	[Space(10)]
+	public string electricityOutcomeName;
 	public DataSeries electricityOutcome;
+	[Space(10)]
+	public string gasBaselineName;
+	public DataSeries gasBaseline;
+	[Space(10)]
+	public string gasOutcomeName;
 	public DataSeries gasOutcome;
+	[Space(10)]
 	public GameTime.TimeContext timeContext;
 	private double _currentTime = 0;
 
@@ -61,9 +79,45 @@ public class ResourceManager : MonoBehaviour {
 	public double c2outcome_debug, c2baseline_debug;
 	public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
 
+	public bool initsimulation = true;
+
 	//Sort use instead of constructor
 	void Awake() {
 		_instance = this;
+
+
+		//We need access to dataseries before they are written to do initialization.  
+		if (CO2Outcome == null)
+			CO2Outcome = DataSeries.GetSeriesByName (CO2OutcomeName);
+		else
+			CO2OutcomeName = CO2Outcome.NodeName;
+
+		if (gasBaseline == null)
+			gasBaseline = DataSeries.GetSeriesByName (gasBaselineName);
+		else
+			gasBaselineName = gasBaseline.NodeName;
+
+		if (gasOutcome == null)
+			gasOutcome = DataSeries.GetSeriesByName (gasOutcomeName);
+		else
+			gasOutcomeName = gasOutcome.NodeName;
+
+		if (electricityBaseline == null)
+			electricityBaseline = DataSeries.GetSeriesByName (electricityBaselineName);
+		else
+			electricityBaselineName = electricityBaseline.NodeName;
+
+		if (electricityOutcome == null)
+			electricityOutcome = DataSeries.GetSeriesByName (electricityOutcomeName);
+		else
+			electricityOutcomeName = electricityOutcome.NodeName;
+
+
+
+
+
+
+
 	}
 
 	// Use this for initialization
@@ -76,15 +130,38 @@ public class ResourceManager : MonoBehaviour {
 
 		RefreshProduction();
 
+		if (initsimulation)
+			FillHistoricalData ();
+
 		DataContainer dataContainer = DataContainer.GetInstance();
-		CO2Outcome = dataContainer.cO2Outcome;
+		//CO2Outcome = dataContainer.cO2Outcome;
 		CO2Baseline = dataContainer.cO2Baseline;
 		CO2ChangeSeries = dataContainer.cO2ChangeSeries;
 		CostOutcome = dataContainer.costOutcome;
 		CostBaseline = dataContainer.costBaseline;
-		electricityOutcome = dataContainer.electricityOutcome;
-		gasOutcome = dataContainer.gasOutcome;
+		//electricityOutcome = dataContainer.electricityOutcome;
+		//gasOutcome = dataContainer.gasOutcome;
+
+
+		//print (electricityOutcome.FistTimestamp());
+
 		_currentTime = _timeMgr.time;
+	}
+
+	void FillHistoricalData(){
+
+
+
+		double now = GameTime.GetInstance ().time;
+
+		if (double.IsNaN(electricityOutcome.FistTimestamp()))
+			electricityOutcome.CopyPeriod (electricityBaseline, 0, now);
+
+		if (double.IsNaN(gasOutcome.FistTimestamp()))
+			gasOutcome.CopyPeriod (gasBaseline, 0, now);
+
+
+	
 	}
 
 	//

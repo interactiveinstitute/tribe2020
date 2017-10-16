@@ -11,6 +11,19 @@ public class DataManipulator : DataModifier
     [Header("Debug")]
     public int selected = 0;
 
+	public static DataManipulator GetSeriesByName(string name){
+
+
+		DataManipulator[] series = FindObjectsOfType(typeof(DataManipulator)) as DataManipulator[];
+		foreach (DataManipulator serie in series) {
+			if (serie.transform.name == name || serie.NodeName == name)
+				return serie;
+		}
+
+		return null;
+
+	}
+
     override public void UpdateAllTargets(DataPoint Data)
     {
         base.UpdateAllTargets(ApplyModifiers(Data));
@@ -100,6 +113,7 @@ public class DataManipulator : DataModifier
 			
 
 		Manipulations [id].DeActivate (now);
+
 
 
 	}

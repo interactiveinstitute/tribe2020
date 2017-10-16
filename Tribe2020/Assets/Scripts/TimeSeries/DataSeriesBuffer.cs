@@ -186,6 +186,15 @@ public class DataSeriesBuffer : DataSeries {
 			
 	}
 
+	void AddPoints(List<DataPoint> DataSet) {
+
+		foreach(var item in DataSet )
+		{
+			AddPoint (item);
+		}
+
+	}
+
 	public double getStartTime() {
 		if (!Relative)
 			return StartTime;
@@ -437,6 +446,31 @@ public class DataSeriesBuffer : DataSeries {
 	//Clear list of datapoints
 	public void Clear() {
 		Data.Clear ();
+	}
+
+
+	override public DataPoint GetFist(){ 
+		if (Data.Count > 0)
+			return Data [0];
+		else
+			return null;
+	}
+
+	override public DataPoint GetLast(){ 
+		int n = Data.Count;
+		if (n > 0)
+			return Data [n-1];
+		else
+			return null;
+
+	}
+
+	override public bool CopyPeriod(DataSeries Series,double From,double To){
+		List<DataPoint> Points = Series.GetPeriod(From,To);
+
+		AddPoints(Points);
+
+		return true;
 	}
 		
 		

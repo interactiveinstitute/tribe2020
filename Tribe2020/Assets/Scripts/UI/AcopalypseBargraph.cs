@@ -37,6 +37,8 @@ public class AcopalypseBargraph : MonoBehaviour {
 		if(Baseline == null)
 			Baseline = DataContainer.GetInstance().cO2Baseline;
 
+		print("script was started");
+
 		Outcomes = new double[7];
 		Baselines = new double[7];
 
@@ -48,6 +50,25 @@ public class AcopalypseBargraph : MonoBehaviour {
 		time = GameTime.GetInstance();
 
 		UpdateLegend();
+	}
+
+	void OnEnable() {
+		print("script was enabled");
+		if (Outcome == null)
+			return;
+		if (Baseline == null)
+			return;
+			
+		double now = Time.unscaledTime;
+		
+		AutoScale (now);
+
+		UpdateTime = now;
+
+		UpdateValues();
+		CalculateMax();
+		UpdateLegend();
+		UpdateBars();
 	}
 
 	// Update is called once per frame

@@ -12,11 +12,11 @@ public class SingleBar : MonoBehaviour {
 
 	public Image Bar;
 	public double EaseTo = 0;
-	double eStart;
-	double eDiff;
-	double eStartValue;
-	bool easing = false;
-	bool inited = false;
+	public double eStart;
+	public double eDiff;
+	public double eStartValue;
+	public bool easing = false;
+	public bool inited = false;
 
 
 
@@ -31,6 +31,8 @@ public class SingleBar : MonoBehaviour {
 
 	void OnEnable() {
 		Value = 0.0;
+		inited = false;
+		easing = false;
 	}
 
 	// Update is called once per frame

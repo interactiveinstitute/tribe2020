@@ -13,10 +13,24 @@ public class DataSeries : DataModifier {
 	public int rateindex = 0;
 	public double RateMeterConversionFactor = 1 / 3600;
 
+	public static DataSeries GetSeriesByName(string name){
+		
+
+		DataSeries[] series = FindObjectsOfType(typeof(DataSeries)) as DataSeries[];
+		foreach (DataSeries serie in series) {
+			if (serie.transform.name == name || serie.NodeName == name)
+				return serie;
+		}
+
+		return null;
+
+	}
+
 	//
 	virtual public List<DataPoint> GetPeriod(double From, double To) {
 		return null;
 	}
+		
 
 	//
 	public virtual List<DataPoint> GetData() {
@@ -83,6 +97,12 @@ public class DataSeries : DataModifier {
 		return GetDataAt(ts).Values;
 	}
 
+	virtual public bool CopyPeriod(DataSeries Series,double From,double To){
+		
+		print("Warning: CopyPeriod is ignorded since data series: " + NodeName + " is read only!");
+		return false;
+	}
+
 	//
 	public List<DataPoint> ApplyModifiers(List<DataPoint> points) {
 		List<DataPoint> modified_data;
@@ -97,5 +117,31 @@ public class DataSeries : DataModifier {
 		}
 
 		return modified_data;
+	}
+
+	virtual public DataPoint GetFist(){ 
+		return null;
+	}
+
+	virtual public DataPoint GetLast(){ 
+		return null;
+	}
+
+	public double FistTimestamp(){ 
+		DataPoint dp = GetFist ();
+
+		if (dp == null)
+			return Double.NaN;
+		
+		return dp.Timestamp;
+	}
+
+	public double LastTimestamp(){ 
+		DataPoint dp = GetLast ();
+
+		if (dp == null)
+			return Double.NaN;
+
+		return dp.Timestamp;
 	}
 }
