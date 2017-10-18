@@ -37,7 +37,7 @@ public class AcopalypseBargraph : MonoBehaviour {
 		if(Baseline == null)
 			Baseline = DataContainer.GetInstance().cO2Baseline;
 
-		print("script was started");
+		//print("script was started");
 
 		Outcomes = new double[7];
 		Baselines = new double[7];
@@ -53,7 +53,7 @@ public class AcopalypseBargraph : MonoBehaviour {
 	}
 
 	void OnEnable() {
-		print("script was enabled");
+		//print("script was enabled");
 		if (Outcome == null)
 			return;
 		if (Baseline == null)

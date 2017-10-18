@@ -74,12 +74,40 @@ public class ResourceManager : MonoBehaviour {
 
 	[Header("Manipulations")]
 	public List<Manipulation> Manipulations = new List<Manipulation>();
+	public bool initsimulation = true;
 
 	[Header("DEBUG")]
 	public double c2outcome_debug, c2baseline_debug;
 	public DataPoint CO2DataOutcome, CO2DataBaseline, CO2DataChange;
 
-	public bool initsimulation = true;
+	[Space(10)]
+	public double d_gas_out;
+	public double d_gas_base;
+	public double d_gas_diff;
+	[Space(10)]
+	public double d_el_out;
+	public double d_el_base;
+	public double d_el_diff;
+	[Space(10)]
+	public double d_co2_out;
+	public double d_co2_base;
+	public double d_CO2_diff;
+	[Space(20)]
+	public double d_30gas_out;
+	public double d_30gas_base;
+	public double d_30gas_diff;
+	[Space(10)]
+	public double d_30el_out;
+	public double d_30el_base;
+	public double d_30el_diff;
+	[Space(10)]
+	public double d_30co2_out;
+	public double d_30co2_base;
+	public double d_30CO2_diff;
+
+	//public double d_gas30, d_gas_co230, d_el30, d_el_co230, d_co230;
+
+
 
 	//Sort use instead of constructor
 	void Awake() {
@@ -227,6 +255,24 @@ public class ResourceManager : MonoBehaviour {
 		CalculateCost(now);
 
         NewMonthTest();
+
+
+		now = _timeMgr.time;
+
+		d_gas_out = gasOutcome.GetDataAt(now).Values[1];
+		d_gas_base = gasBaseline.GetDataAt(now).Values[1];
+		d_gas_diff = d_gas_out - d_gas_base;
+
+		d_el_out = electricityOutcome.GetDataAt(now).Values[1];
+		d_el_base = electricityBaseline.GetDataAt(now).Values[1];
+		d_el_diff = d_el_out - d_el_base;
+
+		d_co2_out = CO2Outcome.GetDataAt(now).Values[1];
+		d_co2_base= CO2Baseline.GetDataAt(now).Values[1];
+		d_CO2_diff = d_co2_out - d_co2_base;
+
+
+
 	}
 
 	//
@@ -410,5 +456,9 @@ public class ResourceManager : MonoBehaviour {
 
 		double now = _timeMgr.time;
 		ManipulateData ("Heating", 1, -100, 0, now);
+
+
+
+
 	}
 }
