@@ -380,6 +380,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(eem.IsAffordable(_resourceMgr.cash, _resourceMgr.comfort) && !app.IsEEMApplied(eem)) {
 			_resourceMgr.cash -= eem.cashCost;
 			_instance._narrationMgr.OnNarrativeEvent("MoneyChanged", "" + _resourceMgr.cash);
+
 			_resourceMgr.comfort -= eem.comfortCost;
 			_instance._narrationMgr.OnNarrativeEvent("ComfortChanged", "" + _resourceMgr.comfort);
 

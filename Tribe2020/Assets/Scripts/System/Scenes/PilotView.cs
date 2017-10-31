@@ -146,27 +146,19 @@ public class PilotView : View{
 
         characterPanel = GetComponentInChildren<CharacterPanel>();
         devicePanel = GetComponentInChildren<DevicePanel>();
-
-        //Clear inbox
-        //RemoveChildren(inboxList);
     }
 	
 	//Update is called once per frame
 	void Update(){
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
-			if(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel) {
-				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().targetPosition);
+			UIPanel ui = uiPanel.GetComponent<UIPanel>();
+			if((ui.title == "Menu" && _showSettings) || 
+				(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel)) {
+				ui.LerpTowardsTarget();
 			} else {
-				LerpTowards(uiPanel, uiPanel.GetComponent<UIPanel>().originalPosition);
+				ui.LerpTowardsOrigin();
 			}
-		}
-
-		//Lerp game menu separately from other ui panels
-		if(_showSettings) {
-			LerpTowards(GetUIPanel("Menu"), GetUIPanel("Menu").GetComponent<UIPanel>().targetPosition);
-		} else {
-			LerpTowards(GetUIPanel("Menu"), GetUIPanel("Menu").GetComponent<UIPanel>().originalPosition);
 		}
 
 		//Character panel
@@ -205,20 +197,17 @@ public class PilotView : View{
 
 	//
 	public void LerpTowards(RectTransform t, Vector2 target) {
-		if(Vector2.Distance(target, t.anchoredPosition) < 0.1f) {
-			//Debug.Log(target);
+		if(Vector2.Distance(target, t.anchoredPosition) > 0.1f) {
+			Vector2 newPos = t.anchoredPosition;
+			newPos.x = Mathf.Lerp(newPos.x, target.x, 0.25f);
+			newPos.y = Mathf.Lerp(newPos.y, target.y, 0.25f);
+			t.anchoredPosition = newPos;
+		} else if (t.anchoredPosition != target) {
 			t.anchoredPosition = target;
-			if(t.GetComponent<UIPanel>().title != "Menu" && t.GetComponent<UIPanel>().title != "Viewpoints" && 
-				target == t.GetComponent<UIPanel>().originalPosition) {
+			string uiTag = t.GetComponent<UIPanel>().title;
+			if(uiTag != "Menu" && uiTag != "Viewpoints" && t.GetComponent<UIPanel>().originalPosition == target) {
 				t.gameObject.SetActive(false);
 			}
-		} else {
-			//float top = Mathf.Lerp(-t.offsetMax.y, targetRect..y, 0.75f);
-			float curX = target.x + (t.anchoredPosition.x - target.x) * 0.75f;
-			float curY = target.y + (t.anchoredPosition.y - target.y) * 0.75f;
-			t.anchoredPosition = new Vector2(curX, curY);
-			//t.offsetMin = new Vector2(0, -top + 1000); // new Vector2(left, bottom)
-			//t.offsetMax = new Vector2(0, -top); // new Vector2(-right, -top)
 		}
 	}
 

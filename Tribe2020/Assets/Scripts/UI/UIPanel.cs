@@ -7,8 +7,6 @@ public class UIPanel : MonoBehaviour {
 
 	public Vector2 originalPosition;
 	public Vector2 targetPosition;
-	public Rect origRect;
-	public Rect targetRect;
 	public RectTransform toggleButton;
 	public PilotController.InputState relatedAction;
 
@@ -28,5 +26,32 @@ public class UIPanel : MonoBehaviour {
             graph.active = state;
         }
     }
+
+	//
+	public void LerpTowardsTarget() {
+		LerpTowards(targetPosition);
+	}
+
+	//
+	public void LerpTowardsOrigin() {
+		LerpTowards(originalPosition);
+	}
+
+	//
+	public void LerpTowards(Vector2 target) {
+		RectTransform rTransform = transform as RectTransform;
+
+		if(Vector2.Distance(target, rTransform.anchoredPosition) > 0.1f) {
+			Vector2 newPos = rTransform.anchoredPosition;
+			newPos.x = Mathf.Lerp(newPos.x, target.x, 0.25f);
+			newPos.y = Mathf.Lerp(newPos.y, target.y, 0.25f);
+			rTransform.anchoredPosition = newPos;
+		} else if(rTransform.anchoredPosition != target) {
+			rTransform.anchoredPosition = target;
+			if(title != "Menu" && title != "Viewpoints" && originalPosition == target) {
+				gameObject.SetActive(false);
+			}
+		}
+	}
 
 }
