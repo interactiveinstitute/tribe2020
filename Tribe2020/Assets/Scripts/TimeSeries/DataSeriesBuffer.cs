@@ -45,8 +45,8 @@ public class DataSeriesBuffer : DataSeries {
 	public int CurrentIndex;
 	public double CurrentTimestamp;
 	public string CurrentDate;
-	public double CurrentValue;
-	public double CurrentIntegral; 
+	public double[] CurrentValues;
+	//public double CurrentIntegral; 
 	public string CurrentText;
 	public int CurrentSize;
 
@@ -76,7 +76,7 @@ public class DataSeriesBuffer : DataSeries {
 		TTime = GameTime.GetInstance ();
 		RequestData ();
 
-
+		UpdateSim (TTime.time);
 		//List<DataPoint> [0] = new DataPoint ();
 	}
 
@@ -84,25 +84,37 @@ public class DataSeriesBuffer : DataSeries {
 	
 	// Update is called once per frame
 	void Update () {
-		UpdateSim (TTime.time);
+		//UpdateSim (TTime.time);
 	}
 
 	override public bool UpdateSim(double time) {
 		if ( Enabled == true ) {
 			int index = CurrentIndex;
 
+
+
 			CurrentIndex = GetIndex (time);
 
+			//Nothing has hapended we are still at the same row in the buffer. 
 			if (CurrentIndex == index)
 				return false;
 
+			if (NodeName == "Electricity baseline") {
+				print("Break");
+			}
 
-			CurrentValue = GetCurrentValue();
+
+			CurrentValues = GetCurrentValues();
 
 
+			//Add keypoint for next 
 			if (TTime != null && Data.Count - 1 > CurrentIndex )
 				TTime.AddKeypoint(Data[CurrentIndex+1].Timestamp,this);
 
+			//Update previous and next. 
+
+
+			//Handle out of range 
 			if (CurrentIndex == -1 ) {
 				CurrentTimestamp = double.NaN;
 				CurrentDate = "Out of range";
@@ -110,11 +122,13 @@ public class DataSeriesBuffer : DataSeries {
 
 			}
 
+			//Update editor properties
 			CurrentTimestamp = Data [CurrentIndex].Timestamp;
 			CurrentDate = TTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
 
+
+			//Send datapoint. 
 			DataPoint Point = Data [CurrentIndex].Clone ();
-			Point.Timestamp += TimeOffset;
 
 			//if (!Record)
 			base.UpdateAllTargets (Point);
@@ -269,8 +283,8 @@ public class DataSeriesBuffer : DataSeries {
 
 		return ApplyModifiers(Data[i]).Values[0];
 	}
+		
 
-	
 
     override public DataPoint GetDataAt(double ts)
     {
@@ -387,11 +401,14 @@ public class DataSeriesBuffer : DataSeries {
 	}
 		
 
-	override public List<DataPoint> GetPeriod(double From, double To) {
+	override public List<DataPoint> GetPeriod(double From, double To,int extra) {
 		int iFrom, iTo;
 
-		iFrom = GetIndex (From) -1;
+		iFrom = GetIndex (From);
 		iTo = GetIndex (To);
+
+		iFrom -= extra;
+		iTo += extra;
 	
 
 		if (iFrom < 0)
@@ -399,7 +416,7 @@ public class DataSeriesBuffer : DataSeries {
 		if (iTo < 0)
 			iTo = 0;
 
-		return GetRange(iFrom, iTo - iFrom + 2);
+		return GetRange(iFrom, iTo - iFrom + 1);
 
 	}
 
@@ -449,7 +466,7 @@ public class DataSeriesBuffer : DataSeries {
 	}
 
 
-	override public DataPoint GetFist(){ 
+	override public DataPoint GetFirst(){ 
 		if (Data.Count > 0)
 			return Data [0];
 		else
@@ -465,8 +482,8 @@ public class DataSeriesBuffer : DataSeries {
 
 	}
 
-	override public bool CopyPeriod(DataSeries Series,double From,double To){
-		List<DataPoint> Points = Series.GetPeriod(From,To);
+	override public bool CopyPeriod(DataSeries Series,double From,double To,int extra){
+		List<DataPoint> Points = Series.GetPeriod(From,To,extra);
 
 		AddPoints(Points);
 

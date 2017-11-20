@@ -181,13 +181,32 @@ public class ResourceManager : MonoBehaviour {
 
 
 		double now = GameTime.GetInstance ().time;
+		//DataNode.Subscription GhostSubscription;
 
-		if (double.IsNaN(electricityOutcome.FistTimestamp()))
+		if (double.IsNaN (electricityOutcome.FirstTimestamp ())) {
 			electricityOutcome.CopyPeriod (electricityBaseline, 0, now);
+			DataPoint dp = electricityOutcome.GetLast ();
+			//GhostSubscription = new DataNode.Subscription ();
+			//dp.Values [0] = 0;
+			//GhostSubscription.LastTransmission = dp;
+			//electricityOutcome.Sources.Add (GhostSubscription);
+			MainMeter meter = MainMeter.GetInstance();
+			print (dp.Values [1]);
+			meter.init (dp.Timestamp, dp.Values [0], dp.Values [1]);
+			//meter.Energy = dp.Values [1];
 
-		if (double.IsNaN(gasOutcome.FistTimestamp()))
+			
+		}
+
+		if (double.IsNaN (gasOutcome.FirstTimestamp ())) {
 			gasOutcome.CopyPeriod (gasBaseline, 0, now);
 
+			//DataPoint dp = gasOutcome.GetLast ();
+			//GhostSubscription = new DataNode.Subscription ();
+			//dp.Values [0] = 0;
+			//GhostSubscription.LastTransmission = dp;
+			//gasOutcome.Sources.Add (GhostSubscription);
+		}
 
 	
 	}
@@ -203,7 +222,7 @@ public class ResourceManager : MonoBehaviour {
 		data_oucome = CO2Outcome.GetPeriod(now - 3 * 3600, now);
 		data_baseline = CO2Baseline.GetPeriod(now - 3 * 3600, now);
 		data_change = CO2ChangeSeries.GetPeriod(now - 3 * 3600, now);
-
+			
 		//CO2DataOutcome = CO2Outcome.GetDataAt(ts);
 		//CO2DataBaseline = CO2Baseline.GetDataAt(ts);
 		if(data_oucome.Count > 0)

@@ -27,9 +27,15 @@ public class DataSeries : DataModifier {
 	}
 
 	//
-	virtual public List<DataPoint> GetPeriod(double From, double To) {
+	virtual public List<DataPoint> GetPeriod(double From, double To,int extra) {
 		return null;
 	}
+
+	public List<DataPoint> GetPeriod(double From, double To) {
+		return GetPeriod( From,  To, 0);
+	}
+
+
 		
 
 	//
@@ -97,10 +103,14 @@ public class DataSeries : DataModifier {
 		return GetDataAt(ts).Values;
 	}
 
-	virtual public bool CopyPeriod(DataSeries Series,double From,double To){
+	virtual public bool CopyPeriod(DataSeries Series,double From,double To,int extra){
 		
 		print("Warning: CopyPeriod is ignorded since data series: " + NodeName + " is read only!");
 		return false;
+	}
+
+	public bool CopyPeriod(DataSeries Series,double From,double To){
+		return CopyPeriod (Series, From, To, 0);
 	}
 
 	//
@@ -119,7 +129,7 @@ public class DataSeries : DataModifier {
 		return modified_data;
 	}
 
-	virtual public DataPoint GetFist(){ 
+	virtual public DataPoint GetFirst(){ 
 		return null;
 	}
 
@@ -127,8 +137,8 @@ public class DataSeries : DataModifier {
 		return null;
 	}
 
-	public double FistTimestamp(){ 
-		DataPoint dp = GetFist ();
+	public double FirstTimestamp(){ 
+		DataPoint dp = GetFirst ();
 
 		if (dp == null)
 			return Double.NaN;

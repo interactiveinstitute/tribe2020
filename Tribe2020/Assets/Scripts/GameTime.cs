@@ -58,6 +58,7 @@ public class GameTime : MonoBehaviour {
 
     double lastupdate=0;
 	public List<KeyAction> KeyActions = new List<KeyAction>();
+	public List<SimulationObject> SimulationObjects = new List<SimulationObject>();
 
 	[Range(0.0f, 100.0f)]
 	public float VisualTimeScale = 1.0f;
@@ -218,9 +219,26 @@ public class GameTime : MonoBehaviour {
 		return IsRedLetterDay (time);
 	}
 
+	private double UpdateSimulationObjects(double newtime,double maxtime ,bool skiptto){
+		//TODO
+		return 0;
+	}
+
+
+	public bool UpdatePrev(SimulationObject obj,double ts){
+		//TODO
+		return false;
+	}
+
+	public bool UpdateNext(SimulationObject obj,double ts){
+		//TODO
+		return false;
+	}
+
 	private void DoKeyActions(double newtime) { 
 
 		KeyAction ka = null;
+		double oldtime,delta;
 
         //TimeProfiler tp = new TimeProfiler("Do key actions", true);
 
@@ -235,10 +253,18 @@ public class GameTime : MonoBehaviour {
 			ka = KeyActions[0];
 
             //Set gameTime to the time for the key action. In case game time are referenced somewhere when executing UpdateSim.
+			oldtime = time;
             time = ka.Timestamp;
+
+			delta = time - oldtime;
+
+			if (delta < 0)
+				print ("!!!!!!!!!!!!! Game time delta:" + delta);
 
             //Execute the event. 
             ka.target.UpdateSim(time);
+
+
 
             //Remove
             KeyActions.Remove (ka);
@@ -413,5 +439,16 @@ public class GameTime : MonoBehaviour {
 
 		return false;
     }
+
+
+	public bool register(SimulationObject Obj){
+
+		if (SimulationObjects.Contains(Obj))
+			return false;
+
+		SimulationObjects.Add (Obj);
+
+		return true;
+	}
 }
 

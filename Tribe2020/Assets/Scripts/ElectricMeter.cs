@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-
+[Serializable]
 public class ElectricMeter : DataNode {
 	[Header("Electric upward connection")]
 	[Space(10)]
@@ -25,25 +25,37 @@ public class ElectricMeter : DataNode {
 	protected GameTime _timeMgr;
 
 
-	[ShowOnly] public List<ElectricMeter> Powering = new List<ElectricMeter>();
+    public List<ElectricMeter> Powering = new List<ElectricMeter>();
 
 	[Header("Readings")]
 	[Tooltip("Indicates if the device is connected to power or not.")]
 	[ShowOnly] public bool HasPower = false;
-	[ShowOnly] public float Power = 0;
-	[ShowOnly] public double Energy = 0;
-	[ShowOnly] public double lastupdate = Double.NaN;
+	[SerializeField]
+	[ShowOnly] protected float Power = 0;
+	[SerializeField]
+	[ShowOnly] protected double Energy = 0;
+	[SerializeField]
+	[ShowOnly] protected double lastupdate = Double.NaN;
+	[SerializeField]
+	[ShowOnly] protected double lastdelta =0;
 
 	[Header("Debug tools")]
 	public bool continous_updates = false;
 
-	void Awake() {
+	public void Awake() {
 		continous_updates = false;
+		lastupdate = Double.NaN;
+		Energy = 0;
+		Power = 0;
+
+		base.Awake();
 
 	}
 
 	// Use this for initialization
 	public virtual void Start () {
+
+
 
 		_timeMgr = GameTime.GetInstance();
 		lastupdate = _timeMgr.time;
@@ -113,6 +125,16 @@ public class ElectricMeter : DataNode {
 		}*/
 	}	
 
+	public double GetEnergy(){
+		return Energy;
+	}
+
+	public float GetPower(){
+		return Power;
+	}
+
+
+
 	//Connects the meter to another meter. 
 	public void Connect(ElectricMeter meter) {
 
@@ -172,21 +194,40 @@ public class ElectricMeter : DataNode {
 		//Calculate energy for the period
 		double delta;
 
+
+
 		if (Double.IsNaN(lastupdate) )
 			return;
 
 		delta = now - lastupdate;
+
+		if (delta < 0) {
+			print( NodeName + "Error in energy calculation!");
+		}
+
+		//if (delta > 3600*2)
+		//	print(this.NodeName + " : "+ delta);
+
 		Energy = Energy + ((Power * delta)/3600);
 		//Energy += Power * Time.deltaTime;
 
 		lastupdate = now;
+		lastdelta = delta;
 
 	
 
 	}
 
+	public void init(double timestamp,double power,double energy) {
+		lastupdate = timestamp;
+		//Power = (float)power;
+		Energy = energy;
+	}
+
 	public void update_power(float new_power)
 	{
+
+
 		double now;
 		now = _timeMgr.time;
 
@@ -288,6 +329,10 @@ public class ElectricMeter : DataNode {
 
 	override public void TimeDataUpdate(Subscription Con,DataPoint data) {
 		//Debug.Log ("Got data!");
+	//	if (NodeName == "AC&Ventilation"){
+	//		print ("Update from: " + Con.Source.NodeName+ " Time:" + data.Timestamp);
+	//	}
+
 		update_power(data.Timestamp,(float)data.Values[0]);
 
 
