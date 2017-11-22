@@ -127,8 +127,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		else
 			_view.date.GetComponent<Text> ().color = Color.white;
 		
-		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.Power) + " W";
-		float energy = (float)_mainMeter.Energy;
+		_view.power.GetComponent<Text>().text = Mathf.Floor(_mainMeter.GetPower()) + " W";
+		float energy = (float)_mainMeter.GetEnergy();
 		if(energy < 1000) {
 			_view.energyCounter.text = Mathf.Floor(energy) + " Wh";
 		} else if(energy < 1000000) {

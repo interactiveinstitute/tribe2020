@@ -123,6 +123,8 @@ public class PilotView : View{
 	public PilotPanel pilotPanel;
 	//public UIPanel pilotPanel;
 
+	GameObject DebugPanel;
+
 	//Sort use instead of constructor
 	void Awake(){
 		_instance = this;
@@ -146,10 +148,26 @@ public class PilotView : View{
 
         characterPanel = GetComponentInChildren<CharacterPanel>();
         devicePanel = GetComponentInChildren<DevicePanel>();
+		DebugPanel = GameObject.Find ("Debug panel");
+		DebugPanel.SetActive (false);
     }
 	
 	//Update is called once per frame
 	void Update(){
+
+
+		if (Input.GetKeyDown(KeyCode.D))
+		{
+			if (DebugPanel.activeSelf)
+				DebugPanel.SetActive (false);
+			else 
+				DebugPanel.SetActive (true);
+		}
+		else if (Input.GetKeyUp(KeyCode.D))
+		{
+			//DebugPanel.SetActive (false);
+		}
+
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
 			UIPanel ui = uiPanel.GetComponent<UIPanel>();
@@ -177,6 +195,8 @@ public class PilotView : View{
 			}
 		}
     }
+
+
 
 	//
 	public string GetCurrentUIKey() {

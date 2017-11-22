@@ -27,7 +27,7 @@ public class EnergyPanelDevice : MonoBehaviour {
 	void Update () {
 		float power = 0;
 		foreach(ElectricDevice ed in devices) {
-			power += ed.Power;
+			power += ed.GetPower();
 		}
 		energyText.text = "x " + devices.Count +": " + power + " W";
 	}

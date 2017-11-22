@@ -31,7 +31,7 @@ public class LineGraph : MonoBehaviour {
 			if(timeSeries != null) {
 				PushValue((float)timeSeries.GetCurrentValue());
 			} else {
-				PushValue(electricMeter.Power);
+				PushValue(electricMeter.GetPower());
 			}
 			_timeCount = 0;
 		}

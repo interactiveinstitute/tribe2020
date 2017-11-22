@@ -30,7 +30,7 @@ public class BarGraph : MonoBehaviour {
 		if(timeSeries != null) {
 			PushValue((float)timeSeries.GetCurrentValue());
 		} else {
-			PushValue(electricMeter.Power);
+			PushValue(electricMeter.GetPower());
 		}
 
 		if(Mathf.Abs(value - _targetValue) > 0.1f) {

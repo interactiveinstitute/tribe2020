@@ -31,11 +31,15 @@ public class Graph : DataNode {
 	public bool Staircase; 	
 
 	double Period;
-	float graphWidth;
-	float graphHeight;
+
+	public float graphWidth;
+	public float graphHeight;
 	float scalefactorX;
 	float scalefactorY;
 	double Now;
+
+	public double DataMax = 0;
+	public double DataMin = 0;
 
 	public List<Vector2> Debug;
 
@@ -49,6 +53,7 @@ public class Graph : DataNode {
 
 	// Use this for initialization
 	void Start () {
+		
 		_timeMgr = GameTime.GetInstance();
 
         msh = new Mesh();
@@ -74,6 +79,24 @@ public class Graph : DataNode {
         } 
 	}
 
+	//void OnDisable(){
+	//	print ("Disable");
+	//	ClearGraph ();
+	//	base.OnDisable();
+	//}
+
+	void OnDisable()
+	{
+		//print("PrintOnDisable: script was disabled");
+		HideGraph ();
+	}
+
+	void OnEnable()
+	{
+		//print("PrintOnEnable: script was enabled");
+		ShowGraph ();
+	}
+
 	//Update current time, ui panel height and graph scale factor in relation to height
 	public void InitParams(){
 
@@ -89,12 +112,31 @@ public class Graph : DataNode {
 
 		graphHeight = GetComponent<RectTransform>().rect.height;
 
-		scalefactorY = graphHeight / (float)Max;
+		scalefactorY = (graphHeight - 1) / (float)Max;
 
         if (Source != null) {
-            Data = Source.GetPeriod(GetStartTime(), GetStopTime());
+            Data = Source.GetPeriod(GetStartTime(), GetStopTime(),1);
         }
+
+		GetDataMinMax ();
 			
+	}
+
+	void GetDataMinMax(){
+		double value, min = double.PositiveInfinity, max = double.NegativeInfinity;
+
+		foreach (DataPoint dp in Data) {
+			value = dp.Values [ValueIndex];
+
+			if (value > max)
+				max = value;
+
+			if (value < min)
+				min = value;
+		}
+
+		DataMin = min;
+		DataMax = max;
 	}
 
 	//
@@ -137,7 +179,7 @@ public class Graph : DataNode {
 
 	//
 	public float ValueToCoordinate(double value) {
-		return (float)(value-Min) * scalefactorY;
+		return (float)((value-Min) * scalefactorY) +1;
 	}
 
 	//Generate graph mesh vertices
@@ -157,9 +199,9 @@ public class Graph : DataNode {
 			return Verts;
 
 		if (x < 0)
-			Verts.Add(new Vector2(0,-1));
+			Verts.Add(new Vector2(0,0));
 		else
-			Verts.Add(new Vector2(x,-1));
+			Verts.Add(new Vector2(x,0));
 		//Verts.Add(new Vector2(px,py));
 
 		//newVerts.Add(new Vector2(0, 0));
@@ -238,7 +280,7 @@ public class Graph : DataNode {
 		}
 
 			
-		Verts.Add(new Vector2(x,-1));
+		Verts.Add(new Vector2(x,0));
 
 
 
@@ -318,4 +360,27 @@ public class Graph : DataNode {
         pCanvasRenderer.SetMesh(msh);
 
 	}
+
+	public void SetMax(double max){
+		Max = max;
+	}
+
+	public void HideGraph(){
+		CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
+
+		pCanvasRenderer.Clear ();
+
+		//msh.Clear();
+		//pCanvasRenderer.SetMesh(msh);
+	}
+
+	public void ShowGraph(){
+		CanvasRenderer pCanvasRenderer = GetComponent<CanvasRenderer>();
+		Material pMat = new Material(_material);
+		pMat.SetColor("_TintColor", color);
+		pMat.SetColor("_Color", color);
+		pCanvasRenderer.SetMaterial(pMat, null);
+		//pCanvasRenderer.SetAlpha (1);
+	}
+
 }

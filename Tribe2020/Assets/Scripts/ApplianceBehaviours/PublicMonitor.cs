@@ -16,7 +16,7 @@ public class PublicMonitor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (GetComponent<ElectricDevice>().Power > 0.0f) {
+		if (GetComponent<ElectricDevice>().GetPower() > 0.0f) {
             _isOn = true;
             if (Time.time - timeLastChange > 1) {
                 meshRenderer.materials[1].color = new Color(Random.value, Random.value, Random.value);

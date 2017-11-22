@@ -66,17 +66,17 @@ public class DataSeriesModifier : DataSeries {
 
 
 	//
-	override public List<DataPoint> GetPeriod(double From, double To) {
+	override public List<DataPoint> GetPeriod(double From, double To,int extra) {
 
 		BasicDataSeriesCollection result = new BasicDataSeriesCollection();
 		BasicDataSeries Series;
 
 		if(SourceSeries.Count == 1)
-			return ApplyModifiers(SourceSeries[0].GetPeriod(From, To));
+			return ApplyModifiers(SourceSeries[0].GetPeriod(From, To,extra));
 
 		foreach(DataSeries serie in SourceSeries) {
 			Series = new BasicDataSeries();
-			Series.Data = serie.GetPeriod(From, To);
+			Series.Data = serie.GetPeriod(From, To,extra);
 			result.Collection.Add(Series);
 		}
 
