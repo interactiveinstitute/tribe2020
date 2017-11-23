@@ -5,13 +5,23 @@ using System;
 
 //
 public class DataSeries : DataModifier {
-	public GameTime TTime = null;
-
 
 	[Header("Interpolation parameters")]
 	public int meterindex = 1;
 	public int rateindex = 0;
 	public double RateMeterConversionFactor = 1 / 3600;
+
+
+
+	public void Awake(){
+		base.Awake ();
+	}
+
+
+	public void Start(){
+		base.Start ();
+
+	}
 
 	public static DataSeries GetSeriesByName(string name){
 		
@@ -57,11 +67,11 @@ public class DataSeries : DataModifier {
 		//Calculate first and last time on the day.
 		double Starts,Ends,StartValue,EndValue;
 
-		GameTime TTime;
-		TTime = GameTime.GetInstance();
 
-		Starts = TTime.GetFirstTimeOfDay(day);
-		Ends = TTime.GetFirstTimeOfDay(day+1);
+
+
+		Starts = SimulationTime.GetFirstTimeOfDay(day);
+		Ends = SimulationTime.GetFirstTimeOfDay(day+1);
 
 		StartValue = InterpolateValueAt (Starts);
 		EndValue = InterpolateValueAt (Ends);
@@ -93,9 +103,14 @@ public class DataSeries : DataModifier {
 
 	//
 	public double[] GetCurrentValues() {
-		double now = TTime.time;
+		double now = SimulationTime.time;
 
-		return GetDataAt(now).Values;
+		DataPoint dp = GetDataAt (now);
+
+		if (dp == null)
+			return null;
+
+		return dp.Values;
 	}
 
 	//

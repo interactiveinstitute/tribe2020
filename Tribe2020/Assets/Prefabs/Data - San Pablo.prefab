@@ -251,22 +251,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1002461283049464
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4130549936197808}
-  - component: {fileID: 114260398108680128}
-  m_Layer: 0
-  m_Name: Acumulated history
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1035571036713060
 GameObject:
   m_ObjectHideFlags: 1
@@ -386,6 +370,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4746134469360462}
+  - component: {fileID: 114729967581478464}
   m_Layer: 0
   m_Name: Workdays
   m_TagString: Untagged
@@ -589,7 +574,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4000011382092366}
-  - {fileID: 4130549936197808}
   m_Father: {fileID: 4000012603302230}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -656,19 +640,6 @@ Transform:
   - {fileID: 4000013256957014}
   m_Father: {fileID: 4000011900272710}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4130549936197808
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1002461283049464}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4000012518049694}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4149202910192810
 Transform:
@@ -829,6 +800,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Electricity baseline
   Units:
   - Epoc
@@ -854,7 +828,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -873,8 +846,7 @@ MonoBehaviour:
   CurrentIndex: 84
   CurrentTimestamp: 1010149200
   CurrentDate: 2002-01-04 13:00:00
-  CurrentValue: 52926.31
-  CurrentIntegral: 0
+  CurrentValues: []
   CurrentText: 
   CurrentSize: 0
   Data:
@@ -70971,6 +70943,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Gas outcome
   Units: []
   Columns: []
@@ -70990,7 +70965,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -71009,8 +70983,7 @@ MonoBehaviour:
   CurrentIndex: 7
   CurrentTimestamp: 1010149200
   CurrentDate: 2002-01-04 13:00:00
-  CurrentValue: 4305.624
-  CurrentIntegral: 0
+  CurrentValues: []
   CurrentText: 
   CurrentSize: 0
   Data: []
@@ -71027,6 +71000,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost
   Units: []
   Columns: []
@@ -71044,7 +71020,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -71067,6 +71042,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Gas baseline
   Units:
   - Epoc
@@ -71092,7 +71070,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -71111,8 +71088,7 @@ MonoBehaviour:
   CurrentIndex: 84
   CurrentTimestamp: 1010149200
   CurrentDate: 2002-01-04 13:00:00
-  CurrentValue: 4305.624
-  CurrentIntegral: 0
+  CurrentValues: []
   CurrentText: 
   CurrentSize: 0
   Data:
@@ -141209,6 +141185,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost Gas
   Units: []
   Columns: []
@@ -141228,7 +141207,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -141250,27 +141228,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Electricity outcome
   Units: []
   Columns: []
-  Sources:
-  - Topic: 
-    DataPeriod:
-      Enabled: 0
-      Relative: 0
-      FromTime: NaN
-      ToTime: NaN
-    Source: {fileID: 114000014104096992}
-    Target: {fileID: 114000012434811560}
-    LastTransmission:
-      Timestamp: 1010149652.1699371
-      Values:
-      - 53396.78515625
-      - 228353.86368913073
-      Texts: []
-      origin:
-        Data: []
-        index: 0
+  Sources: []
   Targets: []
   LastData:
     Timestamp: 1010149652.1699371
@@ -141286,7 +141250,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -141305,8 +141268,7 @@ MonoBehaviour:
   CurrentIndex: 65
   CurrentTimestamp: 1010149652.1699371
   CurrentDate: 2002-01-04 13:07:32
-  CurrentValue: 54925.78515625
-  CurrentIntegral: 0
+  CurrentValues: []
   CurrentText: 
   CurrentSize: 0
   Data: []
@@ -141323,6 +141285,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: 
   Units: []
   Columns: []
@@ -141344,6 +141309,7 @@ MonoBehaviour:
   Power: 0
   Energy: 0
   lastupdate: 1010127600
+  lastdelta: 0
   continous_updates: 0
 --- !u!114 &114000013508071600
 MonoBehaviour:
@@ -141356,25 +141322,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: 
   Units: []
   Columns: []
-  Sources:
-  - Topic: 
-    DataPeriod:
-      Enabled: 0
-      Relative: 0
-      FromTime: NaN
-      ToTime: NaN
-    Source: {fileID: 0}
-    Target: {fileID: 114000013508071600}
-    LastTransmission:
-      Timestamp: 0
-      Values: []
-      Texts: []
-      origin:
-        Data: []
-        index: 0
+  Sources: []
   Targets: []
   LastData:
     Timestamp: 1010149200
@@ -141392,8 +141346,9 @@ MonoBehaviour:
   Powering: []
   HasPower: 1
   Power: 51867.785
-  Energy: 212818.4979248047
+  Energy: 0
   lastupdate: 1010149200
+  lastdelta: 0
   continous_updates: 0
 --- !u!114 &114000013663346218
 MonoBehaviour:
@@ -141401,11 +141356,14 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013711240516}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4bde57dcc7234d88bbe36f1a95714f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: 
   Units:
   - W
@@ -141414,24 +141372,7 @@ MonoBehaviour:
   - Power
   - Energy
   Sources: []
-  Targets:
-  - Topic: 
-    DataPeriod:
-      Enabled: 0
-      Relative: 0
-      FromTime: NaN
-      ToTime: NaN
-    Source: {fileID: 114000013663346218}
-    Target: {fileID: 114000012434811560}
-    LastTransmission:
-      Timestamp: 1010149652.1699371
-      Values:
-      - 1529
-      - 9020.628899349636
-      Texts: []
-      origin:
-        Data: []
-        index: 0
+  Targets: []
   LastData:
     Timestamp: 1010149652.1699371
     Values:
@@ -141444,15 +141385,13 @@ MonoBehaviour:
   PowerSource: {fileID: 114000014104096992}
   AutomaticallyFindSource: 0
   AlwaysPowered: 0
-  GivesPower: 1
-  Powering:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  GivesPower: 0
+  Powering: []
   HasPower: 1
   Power: 1529
-  Energy: 9020.628899349636
+  Energy: 0
   lastupdate: 1010149652.1699371
+  lastdelta: 0
   continous_updates: 0
 --- !u!114 &114000014104096992
 MonoBehaviour:
@@ -141465,6 +141404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ac0622686de27428af1621f0ab9710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Mainmeter
   Units: []
   Columns: []
@@ -141474,15 +141416,13 @@ MonoBehaviour:
     DataPeriod:
       Enabled: 0
       Relative: 0
-      FromTime: NaN
-      ToTime: NaN
-    Source: {fileID: 114000014104096992}
+      FromTime: 0
+      ToTime: 0
+    Source: {fileID: 0}
     Target: {fileID: 114000012434811560}
     LastTransmission:
-      Timestamp: 1010149652.1699371
-      Values:
-      - 53396.78515625
-      - 228353.86368913073
+      Timestamp: 0
+      Values: []
       Texts: []
       origin:
         Data: []
@@ -141505,9 +141445,10 @@ MonoBehaviour:
   - {fileID: 114000013663346218}
   HasPower: 1
   Power: 53396.785
-  Energy: 237574.7547578177
-  lastupdate: 1010150273.8404694
-  continous_updates: 1
+  Energy: 0
+  lastupdate: 0
+  lastdelta: 0
+  continous_updates: 0
 --- !u!114 &114000014168161436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141519,6 +141460,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: CO2
   Units: []
   Columns: []
@@ -141536,7 +141480,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -141559,6 +141502,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost Electricity
   Units: []
   Columns: []
@@ -141578,7 +141524,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -141600,6 +141545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04da25fb9021c4299a4fac392dd61332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Zaragoza Climat Processed v3.xlsx - Zaragoza Climat Processed v4
   Units:
   - epoc
@@ -141639,7 +141587,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -141658,8 +141605,7 @@ MonoBehaviour:
   CurrentIndex: 0
   CurrentTimestamp: 0
   CurrentDate: 
-  CurrentValue: 0
-  CurrentIntegral: 0
+  CurrentValues: []
   CurrentText: 
   CurrentSize: 0
   Data:
@@ -281836,6 +281782,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost Gas
   Units: []
   Columns: []
@@ -281855,7 +281804,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -281877,6 +281825,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e04d807bad05b4aa54812aefe4615e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Heating
   Units: []
   Columns: []
@@ -281937,6 +281888,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost
   Units: []
   Columns: []
@@ -281954,7 +281908,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -281977,6 +281930,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: CO2 Outcome
   Units: []
   Columns: []
@@ -281994,7 +281950,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -282006,44 +281961,6 @@ MonoBehaviour:
     Data: []
     index: 0
   result: []
---- !u!114 &114260398108680128
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1002461283049464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7632515e1feb64c02a456a359fd258fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: 
-  Units: []
-  Columns: []
-  Sources: []
-  Targets:
-  - Topic: 
-    DataPeriod:
-      Enabled: 0
-      Relative: 0
-      FromTime: 0
-      ToTime: 0
-    Source: {fileID: 0}
-    Target: {fileID: 114000010674459418}
-    LastTransmission:
-      Timestamp: 0
-      Values: []
-      Texts: []
-      origin:
-        Data: []
-        index: 0
-  LastData:
-    Timestamp: 0
-    Values: []
-    Texts: []
-    origin:
-      Data: []
-      index: 0
 --- !u!114 &114416008026235836
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -282077,6 +281994,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Change
   Units: []
   Columns: []
@@ -282094,7 +282014,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -282117,6 +282036,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost Electricity
   Units: []
   Columns: []
@@ -282136,7 +282058,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -282158,6 +282079,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: Cost savings
   Units: []
   Columns: []
@@ -282175,7 +282099,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -282187,6 +282110,51 @@ MonoBehaviour:
     Data: []
     index: 0
   result: []
+--- !u!114 &114729967581478464
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1725684567870988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99d8cf18351004fdda872845206fbcc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
+  NodeName: 
+  Units: []
+  Columns: []
+  Sources: []
+  Targets: []
+  LastData:
+    Timestamp: 0
+    Values: []
+    Texts: []
+    origin:
+      Data: []
+      index: 0
+  TimeOffset: 0
+  Rescales: []
+  Offsets: []
+  ScaleWithTimeSeries: {fileID: 0}
+  OffsetWithTimeSeries: {fileID: 0}
+  meterindex: 1
+  rateindex: 0
+  RateMeterConversionFactor: 0
+  StartTime: 07:00
+  StopTime: 17:00
+  Monday: 1
+  Tuesday: 1
+  Wenesday: 1
+  Thursday: 1
+  Friday: 1
+  Saturday: 0
+  Sunday: 0
+  RedLetterDays: 0
+  ExludeRedLetterDays: 1
 --- !u!114 &114768383868669490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -282198,6 +282166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e04d807bad05b4aa54812aefe4615e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: AC&Ventilation
   Units: []
   Columns: []
@@ -282241,9 +282212,7 @@ MonoBehaviour:
       Data: []
       index: 0
   TimeOffset: 0
-  Rescales:
-  - 0.1
-  - 0.1
+  Rescales: []
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
@@ -282260,6 +282229,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: CO2e Gas
   Units: []
   Columns: []
@@ -282279,7 +282251,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0
@@ -282301,6 +282272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd94f8ca73564da9a8870f25e3de472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   NodeName: CO2e Electricity
   Units: []
   Columns: []
@@ -282320,7 +282294,6 @@ MonoBehaviour:
   Offsets: []
   ScaleWithTimeSeries: {fileID: 0}
   OffsetWithTimeSeries: {fileID: 0}
-  TTime: {fileID: 0}
   meterindex: 1
   rateindex: 0
   RateMeterConversionFactor: 0

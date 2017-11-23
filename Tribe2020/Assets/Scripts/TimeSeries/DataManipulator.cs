@@ -11,6 +11,9 @@ public class DataManipulator : DataModifier
     [Header("Debug")]
     public int selected = 0;
 
+
+
+
 	public static DataManipulator GetSeriesByName(string name){
 
 

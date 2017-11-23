@@ -69,6 +69,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	//Called once on all behaviours before any Update call
 	void Start() {
+		//RegisterKeypoints ();
 		_view = PilotView.GetInstance();
 		_view.SetController(this);
 
@@ -104,6 +105,12 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		playPeriod = endTime - startTime;
 	}
+
+	//public override bool UpdateSim(double time) {
+	//	PlayUIAnimation("TimeSkippedEnd");
+
+	//	return true;
+	//}
 
 	//Called every frame
 	void Update() {
@@ -149,7 +156,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		}
 
         //Skip forward in time, animation check
-        if (_instance._timeMgr._skipToOffset != -1 && _instance._timeMgr.offset > _instance._timeMgr._skipToOffset) {
+        if (!_instance._timeMgr.speeding) {
             FinishStepHoursForward();
         }
 	}
@@ -702,6 +709,7 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 	public void SetSimulationTimeScale(float timeScale) {
 		_instance._timeMgr.SimulationTimeScaleFactor = timeScale;
+
 	}
 
 	//
@@ -712,30 +720,33 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//
 	public void StepHoursForward(int hours) {
 		PlayUIAnimation("TimeSkippedStart");
-		SetVisualTimeScale(10);
+		double TargetTime = _instance._timeMgr.time + 3600 * hours;
+		//SetVisualTimeScale(10);
 		switch(hours) {
-			case 1:
-				SetSimulationTimeScale(100000);
+		case 1:
+				//SetSimulationTimeScale(100000);
+			_instance._timeMgr.SpeedTo (TargetTime, 4, 20);
+			//SetNext (TargetTime);
 				break;
 			case 24:
-				SetSimulationTimeScale(100000);
+			_instance._timeMgr.SpeedTo (TargetTime, 8, 204);
 				break;
 			case 168:
-				SetSimulationTimeScale(1000000);
+			_instance._timeMgr.SpeedTo (TargetTime, 10, 840);
 				break;
 			case 720:
-				SetSimulationTimeScale(1000000);
+			_instance._timeMgr.SpeedTo (TargetTime, 20, 2400);
 				break;
 		}
-        _instance._timeMgr._skipToOffset = _instance._timeMgr.offset + 3600 * hours;
+        //_instance._timeMgr._skipToOffset = _instance._timeMgr.offset + 3600 * hours;
         //_instance._pendingTimeSkip = hours;
     }
 
     void FinishStepHoursForward() {
-        SetVisualTimeScale(1);
-        SetSimulationTimeScale(60);
-        _instance._timeMgr.offset = _instance._timeMgr._skipToOffset;
-        _instance._timeMgr._skipToOffset = -1;
+        //SetVisualTimeScale(1);
+        //SetSimulationTimeScale(60);
+        //_instance._timeMgr.offset = _instance._timeMgr._skipToOffset;
+        //_instance._timeMgr._skipToOffset = -1;
         PlayUIAnimation("TimeSkippedEnd");
         
     }

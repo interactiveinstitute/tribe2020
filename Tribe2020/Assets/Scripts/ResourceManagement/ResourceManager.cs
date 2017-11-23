@@ -191,7 +191,7 @@ public class ResourceManager : MonoBehaviour {
 			//GhostSubscription.LastTransmission = dp;
 			//electricityOutcome.Sources.Add (GhostSubscription);
 			MainMeter meter = MainMeter.GetInstance();
-			print (dp.Values [1]);
+		//	print (dp.Values [1]);
 			meter.init (dp.Timestamp, dp.Values [0], dp.Values [1]);
 			//meter.Energy = dp.Values [1];
 

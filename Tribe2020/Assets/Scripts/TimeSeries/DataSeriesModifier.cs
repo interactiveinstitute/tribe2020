@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class DataSeriesModifier : DataSeries {
 
+
 	public enum Manipulation {
 		sum,
 		diff,

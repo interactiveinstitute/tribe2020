@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 
 
-public class GameTime : MonoBehaviour {
+public class GameTime : SimulationObject {
 	private static GameTime _instance;
 	public static GameTime GetInstance() {
 		return _instance;
@@ -37,13 +37,15 @@ public class GameTime : MonoBehaviour {
 		}
 	}
 
-   
+
+	[HideInInspector]
     public double RealWorldTime;
     [Space(10)]
     [HideInInspector]
     public float simulationDeltaTime;
     [Space(10)]
-    [Header("Game Time")]
+    
+	[Header("Clock")]
     public double StartTime;
 	public bool StartInRealtime;
 	public bool StopAtRealtime;
@@ -59,6 +61,10 @@ public class GameTime : MonoBehaviour {
     double lastupdate=0;
 	public List<KeyAction> KeyActions = new List<KeyAction>();
 	public List<SimulationObject> SimulationObjects = new List<SimulationObject>();
+	[SerializeField]
+	private SimulationObject closestPrev = null;
+	[SerializeField]
+	private SimulationObject closestNext = null;
 
 	[Range(0.0f, 100.0f)]
 	public float VisualTimeScale = 1.0f;
@@ -76,13 +82,14 @@ public class GameTime : MonoBehaviour {
 	[Space(10)]
 
 	private float prevVisualTimeScale,prevSimulationTimeScale;
+	private float normalVisualTimeScale,normalSimulationTimeScale;
+	private double target = double.NaN;
+	public bool speeding = false;
 
+	public void Awake () {
+		base.Awake ();
+		RegisterKeypoints ();
 
-
-
-
-	void Awake () {
-		
 		if (StartInRealtime) {
 			TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
 			RealWorldTime = t.TotalSeconds;
@@ -93,7 +100,10 @@ public class GameTime : MonoBehaviour {
 		}
 
 		time = StartTime + offset;
-		_instance = this;
+
+		//First instance.
+		if (_instance == null)
+			_instance = this;
 
 		prevVisualTimeScale = VisualTimeScale;
 		prevSimulationTimeScale = SimulationTimeScaleFactor;
@@ -101,9 +111,7 @@ public class GameTime : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
-
-
+	public void Start () {
 
         CurrentDate = TimestampToDateTime(time).ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -112,6 +120,10 @@ public class GameTime : MonoBehaviour {
     //Add a reference to an object that implements simulationObject. The UpdateSim function of the passed object will be called when provided timestamp is passed. If provided timestamp is in history, the updatesim will get called immmeditely (kind of).
 	public bool AddKeypoint(double TimeStamp,SimulationObject target)
 	{
+
+	//	print ("DEPRICTED");
+		return false;
+
         //If trying to add a key action that should already have ben run, then run it immediately instead and return
         //if (TimeStamp < time) {
         //    target.UpdateSim(TimeStamp);
@@ -170,6 +182,7 @@ public class GameTime : MonoBehaviour {
 
         //Do all key actions requiered until the new time
         DoKeyActions(new_time);
+		UpdateSimulationObjects (time,new_time,0,false);
 
         simulationDeltaTime = (float) (new_time - time);
 		time = new_time;
@@ -184,6 +197,51 @@ public class GameTime : MonoBehaviour {
         
 	}
 
+	override public bool UpdateSim(double time) {
+		
+		if (!double.IsNaN(target)){
+			print ("Returning to normal timescale");
+			print (normalVisualTimeScale);
+			VisualTimeScale = normalVisualTimeScale;
+			prevVisualTimeScale = normalVisualTimeScale;
+			SimulationTimeScaleFactor = normalSimulationTimeScale;
+			prevSimulationTimeScale = normalSimulationTimeScale;
+
+			SetNext(double.PositiveInfinity);
+
+			target = double.NaN;
+			speeding = false;
+
+			return true;
+		
+		}
+
+		return false;
+	}
+
+	//Sets a temporary speed that is mainained until a certain point in time is reached. 
+	public void SpeedTo(double ts, float VisualSpeedFactor, float SimulationSpeedFactor) {
+
+
+		if (double.IsNaN (target)) {
+			normalVisualTimeScale = VisualTimeScale;
+			normalSimulationTimeScale = SimulationTimeScaleFactor;
+
+		}
+
+		speeding = true;
+
+		target = ts;
+		VisualTimeScale = VisualTimeScale * VisualSpeedFactor;
+		SimulationTimeScaleFactor = SimulationTimeScaleFactor * SimulationSpeedFactor;
+		prevVisualTimeScale = VisualTimeScale;
+		prevSimulationTimeScale = SimulationTimeScaleFactor;
+
+		SetNext (ts);
+	
+	}
+		
+		
 	public void JumpToRealtime(){
 		
 
@@ -197,6 +255,31 @@ public class GameTime : MonoBehaviour {
 	public string GetDay(int i){
 		DateTime date = TimestampToDateTime (time + (86400 * i));
 		return date.DayOfWeek.ToString();
+	}
+
+	public DayOfWeek GetDayOfWeek(int i){
+		DateTime date = TimestampToDateTime (time + (86400 * i));
+		return date.DayOfWeek;
+	}
+
+	public DayOfWeek GetDayOfWeek(double ts){
+		DateTime date = TimestampToDateTime (ts);
+		return date.DayOfWeek;
+	}
+	public double GetTimestampForDay(double ts){
+		DateTime date = TimestampToDateTime (ts);
+		TimeSpan span = (date.Date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+
+		//return the total seconds (which is a UNIX timestamp)
+		return (double)span.TotalSeconds;
+	}
+
+	public double GetTimestampForDay(int i){
+		DateTime date = TimestampToDateTime (time + (86400 * i));
+		TimeSpan span = (date.Date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+
+		//return the total seconds (which is a UNIX timestamp)
+		return (double)span.TotalSeconds;
 	}
 
 	public bool IsRedLetterDay(double timestamp)
@@ -219,20 +302,115 @@ public class GameTime : MonoBehaviour {
 		return IsRedLetterDay (time);
 	}
 
-	private double UpdateSimulationObjects(double newtime,double maxtime ,bool skiptto){
-		//TODO
-		return 0;
+
+	// NEW Interface or callback on specific times. 
+	public bool register(SimulationObject Obj){
+
+		if (SimulationObjects.Contains(Obj))
+			return false;
+
+		SimulationObjects.Add (Obj);
+
+		UpdatePrev (Obj);
+		UpdateNext (Obj);
+
+		return true;
+	}
+
+	private double UpdateSimulationObjects(double oldtime, double newtime,double maxtime ,bool skiptto){
+
+		bool forward = ((newtime - oldtime) > 0);
+			
+
+		if (skiptto) {
+			//TODO
+			return newtime;
+		}
+			
+		if (forward) { 
+			while (closestNext.NeedUpdate (newtime)) {
+				time = closestNext.GetNext ();
+				closestNext.UpdateSim (time);
+				closestNext = FindNextClosest (time);
+			}
+			closestPrev = FindPrevClosest (time);
+
+		} else {
+			while (closestPrev.NeedUpdate (newtime)) {
+				time = closestPrev.GetPrev ();
+				closestPrev.UpdateSim (time);
+				closestPrev = FindPrevClosest (time);
+			}
+
+			closestNext = FindNextClosest (time);
+		}
+			
+
+		return newtime;
+	}
+
+	public void FindClosest (double ts){
+		closestNext = FindNextClosest (time);
+		closestPrev = FindPrevClosest (time);
+	}
+
+	public SimulationObject FindNextClosest (double ts){
+		double Current, ClosestTs = double.PositiveInfinity;
+		SimulationObject Closest = null;
+
+		foreach (SimulationObject Obj in SimulationObjects) {
+		
+			Current = Obj.GetNext ();
+
+			if (Current < ClosestTs && Current >= ts) {
+				ClosestTs = Obj.GetNext ();
+				Closest = Obj;
+			}
+		}
+
+		return Closest;
+	}
+
+	public SimulationObject FindPrevClosest (double ts){
+		double Current, ClosestTs = double.NegativeInfinity;
+		SimulationObject Closest = null;
+
+		foreach (SimulationObject Obj in SimulationObjects) {
+
+			Current = Obj.GetPrev ();
+
+			if (Current > ClosestTs && Current <= ts) {
+				ClosestTs = Obj.GetPrev ();
+				Closest = Obj;
+			}
+		}
+
+		return Closest;
 	}
 
 
-	public bool UpdatePrev(SimulationObject obj,double ts){
-		//TODO
-		return false;
+	public bool UpdatePrev(SimulationObject obj){
+
+		//In the furture 
+		if (obj.GetPrev () > time)
+			return false;
+
+		if (closestPrev == null || obj.GetPrev () > closestPrev.GetPrev ())
+			closestPrev = obj;
+
+		return true;
 	}
 
-	public bool UpdateNext(SimulationObject obj,double ts){
-		//TODO
-		return false;
+	public bool UpdateNext(SimulationObject obj){
+
+		//In the past 
+		if (obj.GetNext () < time)
+			return false;
+
+		if (closestNext == null || obj.GetNext () < closestNext.GetNext ())
+			closestNext = obj;
+
+		return true;
 	}
 
 	private void DoKeyActions(double newtime) { 
@@ -441,14 +619,6 @@ public class GameTime : MonoBehaviour {
     }
 
 
-	public bool register(SimulationObject Obj){
 
-		if (SimulationObjects.Contains(Obj))
-			return false;
-
-		SimulationObjects.Add (Obj);
-
-		return true;
-	}
 }
 

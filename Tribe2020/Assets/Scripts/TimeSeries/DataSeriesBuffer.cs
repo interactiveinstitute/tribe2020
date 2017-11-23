@@ -63,74 +63,89 @@ public class DataSeriesBuffer : DataSeries {
 	public TextAsset File;
 	public string Separeator = ",";
 
-	//private GameTime TTime = null;
+	//private GameTime SimulationTime = null;
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
+
+		base.Start ();
 
 		CurrentIndex = -2;
 
 		//Auto set if not set allready.
 		//if (Server == null)
 		//	Server = MQTT.GetInstance ();
-		TTime = GameTime.GetInstance ();
+
 		RequestData ();
 
-		UpdateSim (TTime.time);
+
+		//UpdateSim (SimulationTime.time);
 		//List<DataPoint> [0] = new DataPoint ();
+
+		RegisterKeypoints ();
 	}
 
 
 	
 	// Update is called once per frame
 	void Update () {
-		//UpdateSim (TTime.time);
+		//UpdateSim (SimulationTime.time);
 	}
 
 	override public bool UpdateSim(double time) {
-		if ( Enabled == true ) {
-			int index = CurrentIndex;
+		
+		int index = CurrentIndex;
 
 
 
-			CurrentIndex = GetIndex (time);
+		CurrentIndex = GetIndex (time);
 
-			//Nothing has hapended we are still at the same row in the buffer. 
-			if (CurrentIndex == index)
-				return false;
+		//Nothing has hapended we are still at the same row in the buffer. 
+		if (CurrentIndex == index)
+			return false;
 
-			if (NodeName == "Electricity baseline") {
-				print("Break");
-			}
-
-
-			CurrentValues = GetCurrentValues();
+		//if (NodeName == "Electricity baseline") {
+		//	print("Break");
+		//}
 
 
-			//Add keypoint for next 
-			if (TTime != null && Data.Count - 1 > CurrentIndex )
-				TTime.AddKeypoint(Data[CurrentIndex+1].Timestamp,this);
-
-			//Update previous and next. 
+		CurrentValues = GetCurrentValues();
 
 
-			//Handle out of range 
-			if (CurrentIndex == -1 ) {
-				CurrentTimestamp = double.NaN;
-				CurrentDate = "Out of range";
-				return false;
+		//Add keypoint for next 
+		if (SimulationTime != null && Data.Count - 1 > CurrentIndex) {
 
-			}
+			//Old version
+			SimulationTime.AddKeypoint (Data [CurrentIndex + 1].Timestamp, this);
 
-			//Update editor properties
-			CurrentTimestamp = Data [CurrentIndex].Timestamp;
-			CurrentDate = TTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
+			//New version
+			SetNext (Data [CurrentIndex + 1].Timestamp);
+			SetPrev (Data [CurrentIndex].Timestamp);
+		}
+
+		//Update previous and next. 
 
 
-			//Send datapoint. 
+		//Handle out of range 
+		if (CurrentIndex == -1 ) {
+			CurrentTimestamp = double.NaN;
+			CurrentDate = "Out of range";
+			return false;
+
+		}
+
+		//Update editor properties
+		CurrentTimestamp = Data [CurrentIndex].Timestamp;
+		CurrentDate = SimulationTime.TimestampToDateTime(CurrentTimestamp).ToString("yyyy-MM-dd HH:mm:ss");
+
+
+		//Send datapoint.
+		if (Enabled == true) {
+
+			//Copy
 			DataPoint Point = Data [CurrentIndex].Clone ();
 
-			//if (!Record)
+			//Send
 			base.UpdateAllTargets (Point);
 
 		}
@@ -213,10 +228,10 @@ public class DataSeriesBuffer : DataSeries {
 		if (!Relative)
 			return StartTime;
 
-		if (TTime == null)
-			TTime = GameTime.GetInstance ();
+		if (SimulationTime == null)
+			SimulationTime = GameTime.GetInstance ();
 
-		return TTime.time + StartTime;
+		return SimulationTime.time + StartTime;
 		
 	}
 
@@ -227,7 +242,7 @@ public class DataSeriesBuffer : DataSeries {
 		if (!Relative)
 			return StopTime;
 
-		return TTime.time + StopTime; 
+		return SimulationTime.time + StopTime; 
 	}
 
 
@@ -274,7 +289,7 @@ public class DataSeriesBuffer : DataSeries {
 		
 	//Get the current value form the timeseries based on the current gametime. 
 	public double GetCurrentValue () {
-		double now = TTime.time;
+		double now = SimulationTime.time;
 
 		int i = GetIndex (now);
 
@@ -300,7 +315,7 @@ public class DataSeriesBuffer : DataSeries {
 
     //TODO 
     public double InterpolateCurrentValue() {
-		double now = (double)TTime.time;
+		double now = (double)SimulationTime.time;
 
 		return Data[GetIndex(now)].Values[0];
 	}

@@ -50,5 +50,11 @@ public class GameTimeEditor : Editor
 		{
 			myScript.KeyActions.Sort(new GameTime.CompareKeyAction() );	
 		}
+
+		if(GUILayout.Button("Seek +1h",GUILayout.Width(200) ))
+		{
+			myScript.SpeedTo((myScript.time + 3600.0) , 4, 20);	
+		}
+
 	}
 }

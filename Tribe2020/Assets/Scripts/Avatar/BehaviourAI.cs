@@ -54,6 +54,8 @@ public class BehaviourAI : SimulationObject {
         public int _currentItem;
     }
 
+	public ScheduleItem DefaultActivity;
+
     public Schedule[] schedules;
     private int _activeSchedule = 0;
 
@@ -72,8 +74,9 @@ public class BehaviourAI : SimulationObject {
 
 	// Use this for initialization
 	void Start() {
+		base.Start ();
 		_controller = PilotController.GetInstance();
-		_timeMgr = GameTime.GetInstance();
+		_timeMgr = SimulationTime;
 		_avatarMgr = AvatarManager.GetInstance();
         _applianceManager = ApplianceManager.GetInstance();
 
@@ -85,6 +88,56 @@ public class BehaviourAI : SimulationObject {
 		//added by Gunnar.
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
+
+		if (DefaultActivity.activity == null) {
+			DefaultActivity = new ScheduleItem ();
+			DefaultActivity.time = "00:00";
+
+			AvatarActivity[] activities= GameObject.FindObjectsOfType<AvatarActivity>();
+
+			foreach (AvatarActivity activity in activities) {
+			
+				if (activity.title =="LeaveWork")
+					DefaultActivity.activity = activity;
+			}
+
+
+				
+		}
+
+		if(_firstUpdate) {
+			//Synchronise schedule to get current activity for time
+
+			SyncSchedule();
+
+			if(_curActivity) {
+				_curActivity.Start(); //Start this activity.
+			}
+
+			if (_nextActivity != null) {
+
+				//Add key point for _nextActivity.
+				if (_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+					DebugManager.Log("added key action point", this, this);
+
+				}
+				else {
+					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
+				}
+
+				SetNext (_nextActivity.startTime);
+				SetPrev (_curActivity.startTime);
+			}
+			else {
+				DebugManager.LogError("_nextActivity is null!!", this, this);
+			}
+
+			_firstUpdate = false;
+		}
+
+
+
+		RegisterKeypoints ();
 	}
 
 	//Update simulation
@@ -97,12 +150,23 @@ public class BehaviourAI : SimulationObject {
 		GetRunningActivity().Start();
 		//Find the next scheduled activity and set it as key point
 		_timeMgr.AddKeypoint(TimeStampForNextScheduledActivity(), this);
+
+		//New method
+		SetNext (TimeStampForNextScheduledActivity ());
+		SetPrev (_curActivity.startTime);
+
 		return true;
 	}
 
 	private void SimulateUntilNextScheduledActivity() {
 		//First. Simulate current activity to end
-		GetRunningActivity().SimulateToEnd();
+		AvatarActivity act = GetRunningActivity();
+
+		if (act == null)
+			return;
+		
+		act.SimulateToEnd();
+		
 		//Simulate activities until we reach one with startTime
 		while(!GetRunningActivity().hasStartTime) {
 			//This should do nothing if the activity is already finished. If it's not finished it'll simulate the remaining sessions.
@@ -149,30 +213,7 @@ public class BehaviourAI : SimulationObject {
 
 	// Update is called once per frame
 	void Update() {
-		if(_firstUpdate) {
-            //Synchronise schedule to get current activity for time
-            
-			SyncSchedule();
 
-			if(_curActivity) {
-				_curActivity.Start(); //Start this activity.
-			}
-
-            if (_nextActivity != null) {
-                //Add key point for _nextActivity.
-                if (_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
-                    DebugManager.Log("added key action point", this, this);
-                }
-                else {
-                    DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
-                }
-            }
-            else {
-                DebugManager.LogError("_nextActivity is null!!", this, this);
-            }
-
-            _firstUpdate = false;
-        }
 
 		UpdateCoffeeCup();
 
@@ -279,6 +320,7 @@ public class BehaviourAI : SimulationObject {
 
     public Schedule GetActiveSchedule() {
         ////Not working when Schedule is a struct
+
         if (schedules.Length == 0 || _activeSchedule < 0 || _activeSchedule >= schedules.Length) {
             return null;
         }
