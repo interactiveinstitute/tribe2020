@@ -37,6 +37,10 @@ public class WeekdaysSelector{
 
 		return false;
 	}
+
+	public bool NoneSelected(){
+		return !(Monday || Tuesday || Wenesday || Thursday || Friday || Saturday || Sunday);
+	}
 }
 
 public class Schedule : DataSeries {
@@ -82,19 +86,215 @@ public class Schedule : DataSeries {
 
 	}
 
-	overide DataPoint GetDataAt(double ts) {
-		DayOfWeek tsDay;
-		double tsTimestampOfDay;
+	public bool IsActive(double ts){
 
-		tsDay = SimulationTime.GetDayOfWeek (ts);
-		tsTimestampOfDay = SimulationTime.GetTimestampForDay (ts);
+		bool redletter = SimulationTime.IsRedLetterDay (ts);
 
+		if (ExludeRedLetterDays && redletter)
+			return false;
 
+		if (RedLetterDays && redletter)
+			return true;
 
+		return Weekdays.IsChecked(SimulationTime.GetDayOfWeek (ts));
+	}
+
+	DataPoint CreateDataPoint (double ts,double value){
 		DataPoint dp = new DataPoint();
+		dp.Values = new double[1];
+		dp.Values[0] = value;
+		dp.Timestamp = ts;
+		return dp;
+	}
 
+	double FindNextActiveDay(double ts){
+		ts += 24*60*60;
+
+		return FindActiveDay (ts,1);
+	}
+		
+
+	double FindActiveDay(double ts,int searchdir){
+
+		//Will never be active. 
+		if (Weekdays.NoneSelected() && !(RedLetterDays && !ExludeRedLetterDays) ){			
+			return double.NaN;
+		}
+
+		//Work backwards until we find the last active day. 
+		while (!IsActive(ts)){
+			ts += 24*60*60 * searchdir;
+		}
+
+		return SimulationTime.GetTimestampForDay (ts);
+	}
+
+	double FindPrevActiveDay(double ts){
+		ts -= 24*60*60;
+
+		return FindActiveDay(ts,-1);
+	}
+
+	public override DataPoint GetDataAt(double ts) {
+
+		double ActiveDay;
+		double tsTimestampOfDay;
+		double start,stop;
+
+		ActiveDay = FindActiveDay(ts,-1);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN){			
+			return CreateDataPoint(0,0);
+		}
+
+		start = ActiveDay + StartTimeEpoc;
+		stop = ActiveDay + StopTimeEpoc;
+
+		//We are on an active day and in an active period. 
+		if (ts>= start && ts < stop)
+			return CreateDataPoint(start,1);
+
+		//We are after the active period
+		if (ts >= stop)
+			return CreateDataPoint(stop,0);
+	
+
+		//We are before the active period. 
+		ActiveDay = FindPrevActiveDay(ActiveDay);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN){			
+			return CreateDataPoint(0,0);
+		}
+
+		stop = ActiveDay + StopTimeEpoc;
+
+		return CreateDataPoint(stop,0);
 
 	}
+
+	public DataPoint GetPrevDataPoint(double ts) {
+
+		double ActiveDay;
+		double tsTimestampOfDay;
+		double start,stop;
+
+		ActiveDay = FindActiveDay(ts,-1);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN){			
+			return CreateDataPoint(0,0);
+		}
+
+		start = ActiveDay + StartTimeEpoc;
+		stop = ActiveDay + StopTimeEpoc;
+
+		if (ts > stop)
+			return CreateDataPoint(start,1);
+
+		ActiveDay = FindPrevActiveDay(ActiveDay);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN){			
+			return CreateDataPoint(0,0);
+		}
+
+
+		//We are after the active period
+		if (ts > start) {
+			
+			return CreateDataPoint(ActiveDay + StopTimeEpoc,0);
+		}
+		 
+		start = ActiveDay + StartTimeEpoc;
+
+		return CreateDataPoint(start,1);
+
+	}
+
+	public DataPoint GetNextDataPoint(double ts) {
+
+		double ActiveDay;
+		double tsTimestampOfDay;
+		double start,stop;
+
+		ActiveDay = FindActiveDay(ts,1);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN) {			
+			return CreateDataPoint(0,0);
+		}
+
+		start = ActiveDay + StartTimeEpoc;
+		stop = ActiveDay + StopTimeEpoc;
+
+		//We are on an active day and in an active period. 
+		if (ts < start )
+			return CreateDataPoint(start,1);
+
+		//We are after the active period
+		if (ts < stop)
+			return CreateDataPoint(stop,0);
+
+
+		//We are before the active period. 
+		ActiveDay = FindNextActiveDay(ActiveDay);
+
+		//Will never be active. 
+		if (ActiveDay == double.NaN) {			
+			return CreateDataPoint(double.PositiveInfinity,0);
+		}
+
+		start = ActiveDay + StartTimeEpoc;
+
+		return CreateDataPoint(start,1);
+
+	}
+
+
+
+	double GetTimeOfNextEvent(double ts) {
+		
+		return GetNextDataPoint (ts).Timestamp;
+
+	}
+
+	double GetTimeOfPrevEvent(double ts) {
+
+		return GetPrevDataPoint (ts).Timestamp;
+
+	}
+
+	override public List<DataPoint> GetPeriod(double From, double To,int extra) {
+
+		List<DataPoint> Result = new List<DataPoint> ();
+		DataPoint dp;
+		double ts = From;
+
+		//Add the extras.
+		for (int i = 0; i < extra; i++) {
+			ts = GetTimeOfPrevEvent (ts);
+		}
+
+		for (int i = 0; i < extra; i++) {
+
+			dp = GetNextDataPoint (ts);
+
+			ts = dp.Timestamp;
+
+			if (ts == double.NaN)
+				return Result;
+
+			Result.Add (dp);
+
+			if (ts <= To)
+				i = -1;
+		}
+
+		return Result;
+	}
+		
 
 
 

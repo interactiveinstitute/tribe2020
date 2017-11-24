@@ -31,6 +31,7 @@ public class MonitorManager : MonoBehaviour {
 
 	bool isSent = false;
 	float dTimer = 0;
+	int playtimeupdates = 0;
 
 	//
 	void Awake() {
@@ -44,6 +45,8 @@ public class MonitorManager : MonoBehaviour {
 		}
 		_webSocket = new WebSocket(url + "/socket.io/?EIO=4&transport=websocket");
 		_appServer = GetComponent<AppServer>();
+
+		Publish("playtime", "playtime", "" + 0.0);
 	}
 
 	// Update is called once per frame
@@ -65,6 +68,8 @@ public class MonitorManager : MonoBehaviour {
 				_appServer.Publish(data[0], data[1]);
 
 				pendingData.RemoveAt(0);
+
+
 			}
 		}
 
@@ -75,9 +80,9 @@ public class MonitorManager : MonoBehaviour {
 			isSent = true;
 		}
 
-		if(dTimer > 30) {
+		if(playtimeupdates < _playTime / 10) {
 			Publish("playtime", "playtime", "" + _playTime);
-			dTimer = 0;
+			playtimeupdates++;
 		}
 	}
 
