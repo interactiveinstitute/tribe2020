@@ -32,6 +32,7 @@ public class MonitorManager : MonoBehaviour {
 	bool isSent = false;
 	float dTimer = 0;
 	int playtimeupdates = 0;
+	public int PlaytimePublishIntervall = 10;
 
 	//
 	void Awake() {
@@ -80,9 +81,10 @@ public class MonitorManager : MonoBehaviour {
 			isSent = true;
 		}
 
-		if(playtimeupdates < _playTime / 10) {
+		if(playtimeupdates < (_playTime / PlaytimePublishIntervall)) {
 			Publish("playtime", "playtime", "" + _playTime);
-			playtimeupdates++;
+			playtimeupdates = ((int)_playTime / PlaytimePublishIntervall) + 1;
+			//	print ();
 		}
 	}
 
