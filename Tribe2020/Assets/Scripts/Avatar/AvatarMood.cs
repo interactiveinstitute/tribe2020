@@ -88,12 +88,15 @@ public class AvatarMood : MonoBehaviour {
 	}
 
 	public Mood TryChangeMood(Mood moodInput) {
-		Mood moodNew = markovMood.SetToNextState(
-			new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
-		_timeLastMoodChange = _timeMgr.time;
-		UpdateLooksByCurrentMood();
-		SetUpdated();
-		return moodNew;
+		if(_timeMgr){
+			Mood moodNew = markovMood.SetToNextState(
+				new Mood[] { markovMood.GetCurrentState(), moodInput }, new float[] { 1.0f - responsivenessMood, responsivenessMood });
+			_timeLastMoodChange = _timeMgr.time;
+			UpdateLooksByCurrentMood();
+			SetUpdated();
+			return moodNew;
+		}
+		return Mood.neutral_pos;
 	}
 
 	public void SetMood(Mood mood) {
