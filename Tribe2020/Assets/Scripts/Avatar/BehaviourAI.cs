@@ -21,13 +21,11 @@ public class BehaviourAI : SimulationObject {
 	private Vector3 _savedIdlePosition;
 	private Appliance _poseAppliance = null;
 
-    //private Vector3 _curTargetPos;
     public AvatarActivity _prevActivity;
     public AvatarActivity _curActivity;
 	public AvatarActivity _nextActivity;
 
 	private Stack<AvatarActivity> _tempActivities = new Stack<AvatarActivity>();
-	//private bool _isTemporarilyUnscheduled = false;
 
 	private bool _isControlled = false;
 	private bool _isSimulating = false;
@@ -50,24 +48,17 @@ public class BehaviourAI : SimulationObject {
     //Definition of a schedule
     [System.Serializable]
     public class Schedule {
+		public string name;
         public ScheduleItem[] items;
         public int _currentItem;
     }
 
-	public ScheduleItem DefaultActivity;
-
     public Schedule[] schedules;
     private int _activeSchedule = 0;
-
-    [SerializeField]
-	public ScheduleItem[] schedule;
-	[SerializeField]
-	private int _scheduleIndex = 0;
-
-	[SerializeField]
+	
+	//Specific solution for visual state of holding a cup
 	private List<GameObject> thingsInHands;
-	[SerializeField]
-	public bool showCoffeeCup = false;
+	private bool _showCoffeeCup = false;
 
     public bool battleReady = false;
 	#endregion
@@ -81,7 +72,6 @@ public class BehaviourAI : SimulationObject {
         _applianceManager = ApplianceManager.GetInstance();
 
         _stats = GetComponent<AvatarStats>();
-
 		_agent = GetComponent<NavMeshAgent>();
 		_charController = GetComponent<ThirdPersonCharacter>();
 
@@ -89,54 +79,32 @@ public class BehaviourAI : SimulationObject {
 		_agent.updatePosition = true;
 		_agent.updateRotation = false;
 
-		if (DefaultActivity.activity == null) {
-			DefaultActivity = new ScheduleItem ();
-			DefaultActivity.time = "00:00";
-
-			AvatarActivity[] activities= GameObject.FindObjectsOfType<AvatarActivity>();
-
-			foreach (AvatarActivity activity in activities) {
-			
-				if (activity.title =="LeaveWork")
-					DefaultActivity.activity = activity;
-			}
-
-
-				
-		}
+		thingsInHands = new List<GameObject>();
 
 		if(_firstUpdate) {
 			//Synchronise schedule to get current activity for time
-
 			SyncSchedule();
 
 			if(_curActivity) {
 				_curActivity.Start(); //Start this activity.
 			}
 
-			if (_nextActivity != null) {
-
+			if(_nextActivity != null) {
 				//Add key point for _nextActivity.
-				if (_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
 					DebugManager.Log("added key action point", this, this);
-
-				}
-				else {
+				} else {
 					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
 				}
-
 				SetNext (_nextActivity.startTime);
 				SetPrev (_curActivity.startTime);
-			}
-			else {
+			} else {
 				DebugManager.LogError("_nextActivity is null!!", this, this);
 			}
 
 			_firstUpdate = false;
 		}
-
-
-
+		
 		RegisterKeypoints ();
 	}
 
@@ -213,8 +181,6 @@ public class BehaviourAI : SimulationObject {
 
 	// Update is called once per frame
 	void Update() {
-
-
 		UpdateCoffeeCup();
 
 		if(_tempActivities.Count > 0) {
@@ -254,7 +220,6 @@ public class BehaviourAI : SimulationObject {
 		//}
 
 		UpdateActivity();
-
 	}
 
 	//If no activitty reference given, Update _curActivity.
@@ -831,7 +796,7 @@ public class BehaviourAI : SimulationObject {
 	}
 
 	void UpdateCoffeeCup() {
-		if(showCoffeeCup) {
+		if(_showCoffeeCup) {
 			ShowCoffeeCup();
 		} else {
 			HideCoffeeCup();
