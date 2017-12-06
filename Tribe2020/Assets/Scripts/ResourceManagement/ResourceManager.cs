@@ -240,15 +240,13 @@ public class ResourceManager : MonoBehaviour {
 		//     else
 		//print("no data!");
 
-		if(CO2DataOutcome.Values.Length > 0) {
-			CO2 = CO2DataOutcome.Values[1];
+		CO2 = CO2DataOutcome.Values[1];
 
-			c2outcome_debug = CO2DataOutcome.Values[1];
-			c2baseline_debug = CO2DataBaseline.Values[1];
-		}
+		c2outcome_debug = CO2DataOutcome.Values[1];
+		c2baseline_debug = CO2DataBaseline.Values[1];
 
 
-		if(CO2DataChange.Values != null && CO2DataChange.Values.Length > 0)
+		if(CO2DataChange.Values != null)
 			CO2Change = CO2DataChange.Values[1];
 
 	}
