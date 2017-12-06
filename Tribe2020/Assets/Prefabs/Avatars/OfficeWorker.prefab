@@ -279,28 +279,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b4dd0f9b1f2d04992c232b1863e3ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SimulationTime: {fileID: 0}
+  Next: Infinity
+  Prev: -Infinity
   _prevActivity: {fileID: 0}
   _curActivity: {fileID: 0}
   _nextActivity: {fileID: 0}
-  schedules: []
-  schedule:
-  - time: 07:00
-    activity: {fileID: 11400000, guid: 905ee812ebacff24095df63adbd98d05, type: 2}
-  - time: 8:50
-    activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
-  - time: 10:00
-    activity: {fileID: 11400000, guid: f26194a60238de341aa0735b8af74299, type: 2}
-  - time: 10:20
-    activity: {fileID: 11400000, guid: cb8098fb65ee5104980fd09c0c6e3c5e, type: 2}
-  - time: 10:20
-    activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
-  - time: 14:00
-    activity: {fileID: 11400000, guid: f26194a60238de341aa0735b8af74299, type: 2}
-  - time: 14:20
-    activity: {fileID: 11400000, guid: f9fce8d0aa4021846b57d0085b7c26d4, type: 2}
-  _scheduleIndex: 0
-  thingsInHands: []
-  showCoffeeCup: 0
+  schedules:
+  - name: Weekday
+    items: []
+    _currentItem: 0
+  - name: Holiday
+    items: []
+    _currentItem: 0
   battleReady: 0
 --- !u!114 &114000013614353214
 MonoBehaviour:
