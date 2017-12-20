@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using SimpleJSON;
 
 
 
@@ -388,7 +389,6 @@ public class GameTime : SimulationObject {
 		return Closest;
 	}
 
-
 	public bool UpdatePrev(SimulationObject obj){
 
 		//In the furture 
@@ -618,7 +618,16 @@ public class GameTime : SimulationObject {
 		return false;
     }
 
+	public JSONClass EncodeToJSON() {
+		JSONClass json = new JSONClass();
+		json.Add("lastTime", offset.ToString());
+		return json;
+	}
 
+	public void DecodeFromJSON(JSONClass json) {
+		offset = (json["lastTime"].AsDouble);
+		time = StartTime + offset;
+	}
 
 }
 
