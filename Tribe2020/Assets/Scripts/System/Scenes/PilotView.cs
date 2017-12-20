@@ -154,25 +154,20 @@ public class PilotView : View{
 	
 	//Update is called once per frame
 	void Update(){
-
-
-		if (Input.GetKeyDown(KeyCode.D))
-		{
-			if (DebugPanel.activeSelf)
-				DebugPanel.SetActive (false);
-			else 
-				DebugPanel.SetActive (true);
-		}
-		else if (Input.GetKeyUp(KeyCode.D))
-		{
+		if (Input.GetKeyDown(KeyCode.D)) {
+			if(DebugPanel.activeSelf) {
+				DebugPanel.SetActive(false);
+			} else {
+				DebugPanel.SetActive(true);
+			}
+		} else if (Input.GetKeyUp(KeyCode.D)) {
 			//DebugPanel.SetActive (false);
 		}
 
 		//Lerp ui panels into position
 		foreach(RectTransform uiPanel in _uiPanels.Values) {
 			UIPanel ui = uiPanel.GetComponent<UIPanel>();
-			if((ui.title == "Menu" && _showSettings) || 
-				(_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel)) {
+			if((ui.title == "Menu" && _showSettings) || (_curUIPanel != "" && _uiPanels[_curUIPanel] == uiPanel)) {
 				ui.LerpTowardsTarget();
 			} else {
 				ui.LerpTowardsOrigin();
@@ -287,12 +282,6 @@ public class PilotView : View{
 				}
 			}
 		}
-
-		//if(overview) {
-		//	overviewIcon.color = currentColor;
-		//} else {          
-		//	overviewIcon.color = Color.white;
-		//}
 	}
 
 	//
@@ -381,17 +370,6 @@ public class PilotView : View{
 	//Given a UI text, look for translation using object name as key
 	public void TranslateText(Text text) {
 		text.text = _controller.GetPhrase("Interface", text.name);
-	}
-
-	//Fill INSPECTOR with details and eem options for selected appliance
-	public void BuildInspector(string title, string description, Appliance app) {
-		if(title == "") { title = app.title + "!"; }
-		if(description == "") { description = app.description + "!"; }
-
-		avatarTitle.text = title;
-		avatarDescription.text = description;
-
-		BuildEEMInterface(app);
 	}
 
     //Prepare and show interface for inspecting and avatar
@@ -493,40 +471,6 @@ public class PilotView : View{
 			return result.result;
 		}
 		return true;
-	}
-
-	//Fill EEM CONTAINER of inspector with relevant eems for selected appliance
-	public void BuildEEMInterface(Appliance app) {
-		//RemoveChildren(inspectorEEMContainer);
-		//List<EnergyEfficiencyMeasure> eems = app.GetEEMs();
-
-		//foreach(EnergyEfficiencyMeasure eem in eems) {
-		//	EnergyEfficiencyMeasure curEEM = eem;
-		//	GameObject buttonObj = Instantiate(EEMButtonPrefab);
-		//	EEMButton eemProps = buttonObj.GetComponent<EEMButton>();
-		//	Button button = buttonObj.GetComponent<Button>();
-
-		//	if(!app.appliedEEMs.Contains(curEEM)){
-		//		if(eem.callback == "") {
-		//			button.onClick.AddListener(() => _controller.ApplyEEM(app, curEEM));
-		//		} else {
-		//			button.onClick.AddListener(() => _controller.SendMessage(eem.callback, eem.callbackArgument));
-		//		}
-		//		eemProps.SetCost(eem.cashCost, eem.comfortCost);
-		//	} else {
-		//		button.interactable = false;
-		//	}
-
-		//	string eemTitle = _controller.GetPhrase("EEM." + eem.category, curEEM.name, 0);
-		//	if(eemTitle == "") { eemTitle = curEEM.name + "!"; }
-		//	eemProps.title.text = eemTitle;
-
-		//	buttonObj.GetComponent<Image>().color = eem.color;
-			
-		//	eemProps.SetImpact((int)eem.energyFactor, (int)eem.gasFactor, (int)eem.co2Factor, (int)eem.moneyFactor, (int)eem.comfortFactor);
-
-		//	buttonObj.transform.SetParent(inspectorEEMContainer, false);
-		//}
 	}
 
 	//Show message UI given a message, eventual portrait of messenger as well as orientaion properties of UI
@@ -635,7 +579,6 @@ public class PilotView : View{
 	}
 
 	//Build mail representative given a narrative and add to mail list
-	//TODO localization
 	public void BuildMailButton(Narrative narrative, bool isCompleted, Color color) {
 		GameObject mailButtonObj = Instantiate(mailButtonPrefab) as GameObject;
 
@@ -644,7 +587,7 @@ public class PilotView : View{
 		mail.content.SetActive(false);
 
 		//Hook up button to show mail content if opened
-		mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMailContent(mail, narrative));
+		mailButtonObj.GetComponentInChildren<Button>().onClick.AddListener(() => BuildMailContent(mail, narrative, isCompleted));
 
 		//Show closed/opened mail image if active/archived narrative
 		Image[] images = mailButtonObj.GetComponentsInChildren<Image>();
@@ -663,8 +606,7 @@ public class PilotView : View{
 	}
 
 	//Build mail content given a narrative and add to mail container
-	//TODO localization
-	public void BuildMailContent(Mail mail, Narrative narrative) {
+	public void BuildMailContent(Mail mail, Narrative narrative, bool isCompleted) {
 		Transform contentTrans = mail.transform.GetChild(1);
 		Text title = contentTrans.GetComponentsInChildren<Text>()[0];
 		Transform stepsContainer = contentTrans.GetChild(1);
@@ -684,7 +626,7 @@ public class PilotView : View{
 		for(int i = checklist.Count - 1; i >= 0; i--){
 			GameObject newObjective = Instantiate(mailObjectivePrefab, stepsContainer);
 			newObjective.GetComponentInChildren<Text>().text = _controller.GetPhrase("Narrative." + narrative.title, "Checklist", i);
-			if(i == checklist.Count - 1) {
+			if(i == checklist.Count - 1 && !isCompleted) {
 				newObjective.GetComponentInChildren<Image>().enabled = false;
 			}
 		}
