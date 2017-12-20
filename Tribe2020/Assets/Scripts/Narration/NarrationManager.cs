@@ -272,14 +272,6 @@ public class NarrationManager : MonoBehaviour {
 				archiveJSON.Add(SerializeNarrative(n));
 			}
 			json.Add("archive", archiveJSON);
-
-			//Store archive of stored events
-			//JSONArray storedEventsJSON = new JSONArray();
-			//foreach(PerformedStep ps in _performedSteps) {
-			//	storedEventsJSON.Add(ps.Serialize());
-			//	Debug.Log(storedEventsJSON.ToString());
-			//}
-			//json.Add("storedEvents", storedEventsJSON);
 		}
 		return json;
 	}
@@ -301,12 +293,6 @@ public class NarrationManager : MonoBehaviour {
 			foreach(JSONClass narrativeJSON in archiveJSON) {
 				archive.Add(DeserializeNarrative(narrativeJSON));
 			}
-
-			//Recover archive of stored events
-			//JSONArray storedEventsJSON = json["storedEvents"].AsArray;
-			//foreach(JSONClass storedEvent in storedEventsJSON) {
-			//	_performedSteps.Add(new PerformedStep(storedEvent["event"], storedEvent["prop"]));
-			//}
 		} else {
 			Init();
 		}
