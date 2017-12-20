@@ -157,7 +157,9 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
         //Skip forward in time, animation check
         if (!_instance._timeMgr.speeding) {
-            FinishStepHoursForward();
+			//_instance._timeMgr.speeding = false;
+
+			//FinishStepHoursForward();
         }
 	}
 
@@ -204,8 +206,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 	//Open inspector with details of appliance
 	public void SetCurrentUI(Appliance app) {
 		if(_curState != InputState.ALL && _curState != InputState.ONLY_APPLIANCE_SELECT) { return; }
-		_instance._cameraMgr.SetLookAtTarget(app);
 
+		_instance._cameraMgr.SetLookAtTarget(app);
 		if(app.GetComponent<BehaviourAI>()) {
 			_instance._view.BuildAvatarPanel(app);
 			SetCurrentUI(_instance._view.GetUIPanel("Character Panel"));
@@ -215,7 +217,6 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 			SetCurrentUI(_instance._view.GetUIPanel("Device Panel"));
 			_instance._narrationMgr.OnNarrativeEvent("DeviceSelected", app.title);
 		}
-		//_instance.ResetTouch();
 	}
 
 	//Open user interface
@@ -761,8 +762,8 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 		if(syncCamera) _saveMgr.SetCurrentSlotClass("CameraManager", _cameraMgr.SerializeAsJSON());
 		if(syncAvatars) _saveMgr.SetCurrentSlotClass("AvatarManager", _avatarMgr.SerializeAsJSON());
 		if(syncAppliances) _saveMgr.SetCurrentSlotClass("ApplianceManager", _applianceMgr.SerializeAsJSON());
+		if(syncTime) _saveMgr.SetCurrentSlotClass("Time", _timeMgr.EncodeToJSON());
 
-		if(syncTime) _saveMgr.SetCurrentSlotData("lastTime", _timeMgr.offset.ToString());
 		if(syncPilot) _saveMgr.SetCurrentSlotData("curPilot", Application.loadedLevelName);
 
 		_saveMgr.SaveCurrentSlot();
@@ -779,21 +780,14 @@ public class PilotController : MonoBehaviour, NarrationInterface, AudioInterface
 
 		if(syncPilot) _saveMgr.LoadCurrentSlot();
 
-        if (syncTime && _saveMgr.GetCurrentSlotData("lastTime") != null) {
-            _timeMgr.offset = (_saveMgr.GetCurrentSlotData("lastTime").AsDouble);
-            _timeMgr.time = _timeMgr.StartTime + _timeMgr.offset;
-        }
+		if(syncTime) _timeMgr.DecodeFromJSON(_saveMgr.GetCurrentSlotClass("Time"));
+        if(syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
+        if(syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
 
-        if (syncResources) _resourceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ResourceManager"));
-
-        if (syncNarrative) _narrationMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("NarrationManager"));
-
-        if (syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
+        if(syncLocalization) _localMgr.SetLanguage(_saveMgr.GetData("language"));
 		if(syncCamera) _cameraMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("CameraManager"));
 		if(syncAvatars) _avatarMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("AvatarManager"));
 		if(syncAppliances) _applianceMgr.DeserializeFromJSON(_saveMgr.GetCurrentSlotClass("ApplianceManager"));
-
-		
 	}
 
 	//
