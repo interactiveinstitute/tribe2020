@@ -81,35 +81,15 @@ public class BehaviourAI : SimulationObject {
 
 		thingsInHands = new List<GameObject>();
 
-		if(_firstUpdate) {
-			//Synchronise schedule to get current activity for time
-			SyncSchedule();
-
-			if(_curActivity) {
-				_curActivity.Start(); //Start this activity.
-			}
-
-			if(_nextActivity != null) {
-				//Add key point for _nextActivity.
-				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
-					DebugManager.Log("added key action point", this, this);
-				} else {
-					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
-				}
-				SetNext (_nextActivity.startTime);
-				SetPrev (_curActivity.startTime);
-			} else {
-				DebugManager.LogError("_nextActivity is null!!", this, this);
-			}
-
-			_firstUpdate = false;
-		}
+		
 		
 		RegisterKeypoints ();
 	}
 
 	//Update simulation
 	override public bool UpdateSim(double time) {
+		if(_firstUpdate) { return false; }
+
 		//TODO: Try to only use the provided timestamp instead of referencing gametime
 		DebugManager.Log("UpdateSim: calling keyaction registered by BehaviourAI", this, this);
 		//Run everything that should be finished until now
@@ -179,8 +159,36 @@ public class BehaviourAI : SimulationObject {
 		return 0;
 	}
 
+	//
+	void FirstUpdate() {
+		if(_firstUpdate) {
+			//Synchronise schedule to get current activity for time
+			SyncSchedule();
+
+			if(_curActivity) {
+				_curActivity.Start(); //Start this activity.
+			}
+
+			if(_nextActivity != null) {
+				//Add key point for _nextActivity.
+				if(_timeMgr.AddKeypoint(_nextActivity.startTime, this)) {
+					DebugManager.Log("added key action point", this, this);
+				} else {
+					DebugManager.LogError("Failed to add keyactionpoint. Instead it was run immediately", this, this);
+				}
+				SetNext(_nextActivity.startTime);
+				SetPrev(_curActivity.startTime);
+			} else {
+				DebugManager.LogError("_nextActivity is null!!", this, this);
+			}
+
+			_firstUpdate = false;
+		}
+	}
+
 	// Update is called once per frame
 	void Update() {
+		FirstUpdate();
 		UpdateCoffeeCup();
 
 		if(_tempActivities.Count > 0) {
