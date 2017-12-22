@@ -1,17 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SocketIO;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+
 
 
 
 public class AppServer : SocketIOComponentMod {
 
 	public int RequestCounter = 0;
+	//public List<JSONObject> PendingRequest = new List<JSONObject> ();
 
 	class request {
 		public int request_id;
 		public DataSeries Target;
+		public JSONObject Params;
+		public double TimeSent = double.NaN;
 	}
 
 	List<request> RequestList = new List<request>();
@@ -89,8 +93,7 @@ public class AppServer : SocketIOComponentMod {
 	}
 
 	override public bool GetPeriod(string Topic, double From, double To, DataSeries Target){
-		if (!IsConnected)
-			return false;
+
 
 		JSONObject parameters = new JSONObject(JSONObject.Type.OBJECT);
 
@@ -113,9 +116,18 @@ public class AppServer : SocketIOComponentMod {
 		request rq = new request();
 		rq.Target = Target;
 		rq.request_id = RequestCounter;
+		rq.Params = parameters;
 		RequestList.Add (rq);
 
+		if (!IsConnected) {
+			rq.TimeSent = double.NaN;
+			return false;
+
+		}
+
 		Emit("request", parameters);
+
+		rq.TimeSent = SimulationTime.RealWorldTime;
 
 		return true;
 
@@ -124,9 +136,19 @@ public class AppServer : SocketIOComponentMod {
 		
     public void DoOnOpen(SocketIOEvent e)
 	{
-   
+		//print("APPSERVER Open");
         //Debug.Log("[SocketIO] Open received: " + e.name + " " + e.data);
         //MQTTsubscribe("test/signal");
+
+		foreach (request rq in RequestList) {
+			//print (rq.TimeSent);
+			if (double.IsNaN(rq.TimeSent)){
+				//print ("requesting");
+				//print (rq.Params);
+				Emit("request", rq.Params);
+				rq.TimeSent = SimulationTime.RealWorldTime;
+			}
+		}
 
         OnConnect();
     }
@@ -218,45 +240,59 @@ public class AppServer : SocketIOComponentMod {
 				return;
 			}
 
+
+   
+
 			//Find other indexes
-			keyindex = new int[keys.Count-1];
-			keyindex_counter = 0;
+			keyindex = new int[keys.Count];
 
-			//Check if columns set. 
-			if (rq.Target.Columns.Count == 0) {
-				//If not set it. 
-				for (int i=0; i < keys.Count; i++) {
-					//print(keys [i].ToString());
-					//print (keys [i].str == "time");
+            for (int c = 0; c < keys.Count; c++)
+            {
+                keyindex[c] = rq.Target.AddColumnID(keys[c].str);
+            }
 
-					if (keys [i].str == "time" || keys [i].str == "Time") {
-						continue;
-					}
+            int icols = rq.Target.Columns.Count;
 
-					rq.Target.Columns.Add (keys [i].str);
-					keyindex [keyindex_counter] = i;
-					keyindex_counter++;
-
-				}
-
-			}
-
-				
-
-			for (int i=0;i<values.Count;i++) {
+            for (int r=0;r<values.Count;r++) {
 				dp = new DataPoint ();
 				//print ("Inserted1");
-				dp.Timestamp = values [i] [keyindex_time].n/1000.0;
+				dp.Timestamp = values [r] [keyindex_time].n/1000.0;
 				//print (dp.Timestamp);
-				dp.Values = new double[keys.Count-1];
+				dp.Values = new double[icols];
 
-				for (int f = 0; f < keys.Count - 1; f++) {
-					dp.Values[f] = values [i] [keyindex [f]].n;
+                for (int c=0; c < icols; c++)
+                {
+                    dp.Values[c] = double.NaN;
+                }
+
+				for (int c = 0; c < keys.Count; c++) {
+
+                    if (keyindex[c] != -1)
+                    {
+                        if (values[r][c].IsNumber)
+                            dp.Values[keyindex[c]] = values[r][c].n;
+                        else if (values[r][c].IsString)
+                        {
+                            try
+                            {
+                                dp.Values[keyindex[c]] = double.Parse(values[r][c].str);
+                            }
+                            catch (System.FormatException)
+                            {
+                                dp.Values[keyindex[c]] = double.NaN;
+                            }
+
+
+                        }
+                    }
 				}
 
 				rq.Target.InsertData (dp);
 
 			}
+
+			rq.Target.ForceUpdate();
+
 
 //			print ("Loop test");
 //			print (test);

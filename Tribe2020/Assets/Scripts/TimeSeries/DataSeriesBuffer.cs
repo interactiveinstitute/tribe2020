@@ -58,10 +58,19 @@ public class DataSeriesBuffer : DataSeries {
 //	public List<DataPoint> Viewer = null;
 	public List<DataPoint> Data = new List<DataPoint>();
 
+	public bool AutoRequestBuffer = false;
+	[Range(0,100)]
+	public float AutoRequestTheshhold = 10;
+	private double NextBufferUpdate;
+	private double PrevBufferUpdate;
+	public Period RequestedPerod;
+
+
 
 	[Header("CSV file")]
 	public TextAsset File;
 	public string Separeator = ",";
+
 
 	//private GameTime SimulationTime = null;
 
@@ -77,6 +86,10 @@ public class DataSeriesBuffer : DataSeries {
 		//	Server = MQTT.GetInstance ();
 
 		RequestData ();
+
+
+		if (AutoRequestBuffer)
+			RequestData ();
 
 
 		//UpdateSim (SimulationTime.time);
@@ -95,10 +108,9 @@ public class DataSeriesBuffer : DataSeries {
 	override public bool UpdateSim(double time) {
 		
 		int index = CurrentIndex;
-
-
-
 		CurrentIndex = GetIndex (time);
+
+
 
 		//Nothing has hapended we are still at the same row in the buffer. 
 		if (CurrentIndex == index)
@@ -112,15 +124,20 @@ public class DataSeriesBuffer : DataSeries {
 		CurrentValues = GetCurrentValues();
 
 
-		//Add keypoint for next 
-		if (SimulationTime != null && Data.Count - 1 > CurrentIndex) {
+		//Add keypoints 
+		if (SimulationTime != null) {
 
-			//Old version
-			SimulationTime.AddKeypoint (Data [CurrentIndex + 1].Timestamp, this);
 
-			//New version
-			SetNext (Data [CurrentIndex + 1].Timestamp);
-			SetPrev (Data [CurrentIndex].Timestamp);
+			if (Data.Count - 1 > CurrentIndex) {
+				//Old version
+				SimulationTime.AddKeypoint (Data [CurrentIndex + 1].Timestamp, this);
+
+				//New version
+				SetNext (Data [CurrentIndex + 1].Timestamp);
+			}
+
+			if (CurrentIndex >= 0)
+				SetPrev (Data [CurrentIndex].Timestamp);
 		}
 
 		//Update previous and next. 
@@ -130,6 +147,9 @@ public class DataSeriesBuffer : DataSeries {
 		if (CurrentIndex == -1 ) {
 			CurrentTimestamp = double.NaN;
 			CurrentDate = "Out of range";
+
+
+			TrimDatapoints ();
 			return false;
 
 		}
@@ -150,6 +170,7 @@ public class DataSeriesBuffer : DataSeries {
 
 		}
 
+		TrimDatapoints ();
 		return true;
 	}
 
@@ -203,6 +224,9 @@ public class DataSeriesBuffer : DataSeries {
 		if (BufferMaxSize != 0 && Data.Count > BufferMaxSize)
 			Data.RemoveRange (BufferMaxSize, BufferMaxSize - Data.Count);
 
+
+		CurrentSize = Data.Count;
+
 	}
 
 
@@ -212,6 +236,8 @@ public class DataSeriesBuffer : DataSeries {
 		{
 			AddPoint (item);
 		}
+
+		UpdateSim (SimulationTime.time);
 			
 	}
 
@@ -221,6 +247,8 @@ public class DataSeriesBuffer : DataSeries {
 		{
 			AddPoint (item);
 		}
+
+		UpdateSim (SimulationTime.time);
 
 	}
 
@@ -247,24 +275,46 @@ public class DataSeriesBuffer : DataSeries {
 
 
 	public bool RequestData () {
+		double missing,stoptime;
 		//if (Server == null)
 		//	return false;
 
 		//Server.Get(Name,StartTime,Absolute,BufferMaxSize);
 
-		if(debug) {
-			print("Request");
-		}
+	
 
 		ServerObject server;
 
 		foreach (Subscription sub in Sources) {
-			if(debug) {
-				print(sub);
-			}
+
 			if (sub.Source is ServerObject) {
 				server = (ServerObject)sub.Source;
-				server.GetPeriod (sub.Topic, getStartTime (), getStopTime (), this);
+
+				//print("Is server");
+
+
+				//If the buffer is empty request all. 
+				if (RequestedPerod.Enabled == false) {
+
+					if(debug) 
+						print("Requesting entire period");
+					server.GetPeriod (sub.Topic, getStartTime (), getStopTime (), this);
+					RequestedPerod.FromTime = getStartTime ();
+					RequestedPerod.ToTime = getStopTime ();
+					RequestedPerod.Enabled = true;
+				} else {
+					stoptime = getStopTime ();
+					missing =  stoptime - BufferEnd ();
+
+
+
+					if (missing > 0) {
+						server.GetPeriod (sub.Topic, BufferEnd (), stoptime, this);
+						RequestedPerod.ToTime = stoptime;
+					}
+
+				}
+
 			}
 		}
 
@@ -403,16 +453,50 @@ public class DataSeriesBuffer : DataSeries {
 
 	//Make sure that the number of datapoints does not exceed the max buffer size variable. 
 	public void TrimDatapoints() {
-		int excess;
+		int excess,start,stop;
+		DataPoint current = null;
+
+
+		if (getStartTime () != 0 && getStopTime () != 0) {
+		
+			start = GetIndex (getStartTime ());
+			stop = GetIndex (getStopTime ());
+
+			if (CurrentIndex != -1 && CurrentIndex < Data.Count)
+				current = Data [CurrentIndex];
+
+
+			//Remove points outside
+			if (start > 1) {
+				Data.RemoveRange (0, start - 1);
+				CurrentIndex -= start - 1;
+			}
+
+			if (stop > Data.Count - 2)
+				stop = Data.Count - 1;
+			
+
+			Data.RemoveRange (stop + 1, Data.Count - 1 - stop);
+
+		}
+
+
+
+
+
 
 		//If zero or less then no restrictions apply
-		if (BufferMaxSize < 1)
+		if (BufferMaxSize < 1) {
+			CurrentSize = Data.Count;
 			return;
+		}
 
 		excess = Data.Count - BufferMaxSize;
 
 		if (excess > 0)
 			Data.RemoveRange (0, excess);
+
+		CurrentSize = Data.Count;
 	}
 		
 
@@ -504,6 +588,89 @@ public class DataSeriesBuffer : DataSeries {
 
 		return true;
 	}
+
+	public double BufferBegin()
+	{
+		if (Data.Count > 0)
+			return Data [0].Timestamp;
+
+		return double.NaN;
+	}
+
+	public double BufferEnd()
+	{
+		if (Data.Count > 0)
+			return Data [Data.Count -1].Timestamp;
+
+		return double.NaN;
+	}
+
+
+	public double GetBufferState()
+	{
+	
+		double start, stop, begin, end, missing_start, missing_end, missing, total,real,future;
+
+		start = getStartTime ();
+		stop = getStopTime ();
+
+		begin = BufferBegin ();
+		end = BufferEnd ();
+
+		missing_start = start - begin;
+		missing_end = end - stop;
+
+		if (missing_start < 0)
+			missing_start = 0;
+
+		if (missing_end < 0)
+			missing_end = 0;
+
+		missing = missing_start + missing_end;
+
+		real = SimulationTime.RealWorldTime;
+
+		future = real - stop;
+
+		if (future < 0)
+			future = 0;
+
+		//Expected buffer lenght when full is from start to stop minus the part of the buffer that is in the future. 
+		total = stop - start - future;
+
+		return 100 * (missing_start + missing_end) / total;
+
+	}
+
+	public void CalculateNextBufferUnderrun(float percentage){
+		double start, stop, begin, end, underrunlimit, missing_start, missing_end, missing, total,real,future;
+
+
+	 
+		start = getStartTime ();
+		stop = getStopTime ();
+
+		real = SimulationTime.RealWorldTime;
+
+		future = real - stop;
+
+		if (future < 0)
+			future = 0;
+
+		//Expected buffer lenght when full is from start to stop minus the part of the buffer that is in the future. 
+		total = stop - start - future;
+
+
+		underrunlimit = total * percentage;
+
+		begin = BufferBegin ();
+		end = BufferEnd ();
+
+		NextBufferUpdate = end + underrunlimit;
+		PrevBufferUpdate = begin - underrunlimit;
+
+
+	}
 		
-		
+
 }
