@@ -144,7 +144,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindActiveDay(ts,-1);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN){			
+		if (double.IsNaN(ActiveDay)){			
 			return CreateDataPoint(0,0);
 		}
 
@@ -164,7 +164,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindPrevActiveDay(ActiveDay);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN){			
+		if (double.IsNaN(ActiveDay)){			
 			return CreateDataPoint(0,0);
 		}
 
@@ -183,7 +183,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindActiveDay(ts,-1);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN){			
+		if (double.IsNaN(ActiveDay)){			
 			return CreateDataPoint(0,0);
 		}
 
@@ -196,7 +196,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindPrevActiveDay(ActiveDay);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN){			
+		if (double.IsNaN(ActiveDay)){			
 			return CreateDataPoint(0,0);
 		}
 
@@ -222,7 +222,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindActiveDay(ts,1);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN) {			
+		if (double.IsNaN(ActiveDay)) {			
 			return CreateDataPoint(0,0);
 		}
 
@@ -242,7 +242,7 @@ public class Schedule : DataSeries {
 		ActiveDay = FindNextActiveDay(ActiveDay);
 
 		//Will never be active. 
-		if (ActiveDay == double.NaN) {			
+		if (double.IsNaN(ActiveDay)) {			
 			return CreateDataPoint(double.PositiveInfinity,0);
 		}
 
@@ -283,7 +283,7 @@ public class Schedule : DataSeries {
 
 			ts = dp.Timestamp;
 
-			if (ts == double.NaN)
+			if (double.IsNaN(ts))
 				return Result;
 
 			Result.Add (dp);

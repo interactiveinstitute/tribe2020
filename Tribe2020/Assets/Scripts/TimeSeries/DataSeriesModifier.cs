@@ -23,13 +23,31 @@ public class DataSeriesModifier : DataSeries {
 	public BasicDataSeries inspect;
 	public List<DataPoint> result;
 
+	public DataPoint CurrentData;
+
+
+	public void Start(){
+		Subscription sub;
+
+		base.Start ();
+
+		foreach(DataSeries serie in SourceSeries) {
+
+			sub = new Subscription ();
+			sub.Source = serie;
+			sub.Target = this;
+			serie.Subscribe(sub);
+		}
+
+	}
+
 	//
 	public void Test() {
 		double now = GameTime.GetInstance().time;
 
 		//result = GetPeriod (now - 3*3600, now);
 
-		DataPoint a, b, c;
+		DataPoint a, b;
 
 		a = GetDataAt(now - 3 * 3600);
 		b = GetDataAt(now);
@@ -41,11 +59,32 @@ public class DataSeriesModifier : DataSeries {
 
 	}
 
+	virtual public void TimeDataUpdate(Subscription Sub, DataPoint data) {
+
+		Subscribe(Sub);
+
+		//if (NodeName == "AC&Ventilation") {
+		//	print ("UPDATE: " + (data.Timestamp - Sub.LastTransmission.Timestamp) );
+		//}
+
+		Sub.LastTransmission = data;
+
+		DataPoint point;
+
+		point = GetDataAt(data.Timestamp);
+
+		if (CurrentData.Equals (point))
+			return;
+
+		CurrentData = point;
+
+		UpdateAllTargets(point);
+	}
+
 	//
 	override public DataPoint GetDataAt(double ts) {
-		BasicDataSeriesCollection result = new BasicDataSeriesCollection();
 		BasicDataSeries Series = new BasicDataSeries(); ;
-		DataPoint data;
+
 
 		if(SourceSeries.Count == 1)
 			return ApplyModifiers(SourceSeries[0].GetDataAt(ts));

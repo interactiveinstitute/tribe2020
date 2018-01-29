@@ -57,6 +57,18 @@ public class SimulationObject : MonoBehaviour {
 			SimulationTime.UpdateNext (this);
 	}
 
+	public void ForceUpdate(){
+
+		Next = double.NegativeInfinity;
+		Prev = double.PositiveInfinity;
+
+		if (registered && SimulationTime != null) {
+			SimulationTime.UpdateNext (this);
+			SimulationTime.UpdatePrev (this);
+		}
+
+	}
+
 	public double GetNext(){
 		return Next;
 	}
@@ -70,6 +82,14 @@ public class SimulationObject : MonoBehaviour {
 
 	public double GetPrev(){
 		return Prev;
+	}
+
+	public void ResetNext(){
+		Next = double.PositiveInfinity;
+	}
+
+	public void ResetPrev(){
+		Prev = double.NegativeInfinity;
 	}
 
 	public bool NextSet(){

@@ -15,7 +15,7 @@ public class GameTime : SimulationObject {
 	public enum TimeContext { None, GameTime, RealWorldTime };
 
 	[Serializable]
-	public class KeyAction:Event
+	public class KeyAction:DataEvent
 	{
 		public SimulationObject target;
 	}
