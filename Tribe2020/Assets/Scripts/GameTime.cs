@@ -626,7 +626,7 @@ public class GameTime : SimulationObject {
 
 	public void DecodeFromJSON(JSONClass json) {
 		offset = (json["lastTime"].AsDouble);
-		time = StartTime + offset;
+		//time = StartTime + offset;
 	}
 
 }
